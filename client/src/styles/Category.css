@@ -12,19 +12,18 @@
   margin-bottom: 5rem;
 }
 
-/* Title: "Shop By" (span) = charcoal, "Category" = clay — matches original span order */
 .category-title {
   font-size: 1.5rem;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 4px;
-  color: var(--accent-clay);    /* "Category" = clay */
+  color: var(--accent-clay);
   margin-bottom: 0.75rem;
   text-align: center;
 }
 
 .category-title span {
-  color: var(--charcoal);       /* "Shop By" = charcoal */
+  color: var(--charcoal);
 }
 
 .category-sub {
@@ -37,7 +36,7 @@
 .category-grid {
   display: flex;
   justify-content: center;
-  gap: 6rem;
+  gap: 7rem;
   flex-wrap: wrap;
 }
 
@@ -50,6 +49,7 @@
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.3s ease;
+  width: 180px; /* fixed width so label wraps consistently */
 }
 
 .category-card:hover {
@@ -58,8 +58,8 @@
 
 /* ── Circle Image ── */
 .category-circle {
-  width: 200px;
-  height: 200px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
   background: #F5F2EE;
   display: flex;
@@ -68,6 +68,7 @@
   overflow: hidden;
   transition: box-shadow 0.3s ease, background 0.3s ease;
   position: relative;
+  flex-shrink: 0;
 }
 
 .category-card:hover .category-circle {
@@ -88,12 +89,14 @@
 
 /* ── Label ── */
 .category-label {
-  font-size: 0.78rem;
+  font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2.5px;
+  letter-spacing: 1.5px;
   color: var(--charcoal);
   transition: color 0.3s ease;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .category-card:hover .category-label {
@@ -101,12 +104,14 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 768px) {
-  .category-grid {
-    gap: 2rem;
-  }
-  .category-circle {
-    width: 140px;
-    height: 140px;
-  }
+@media (max-width: 900px) {
+  .category-grid { gap: 2.5rem; }
+  .category-card { width: 140px; }
+  .category-circle { width: 140px; height: 140px; }
+}
+
+@media (max-width: 600px) {
+  .category-grid { gap: 1.5rem; }
+  .category-card { width: 120px; }
+  .category-circle { width: 120px; height: 120px; }
 }
