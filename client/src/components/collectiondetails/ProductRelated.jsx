@@ -5,25 +5,25 @@ const RELATED = [
     id: 1,
     name: 'Floral Midi Skirt',
     price: '$62.00',
-    src: '/images/products/related-1.jpg',
+    src: '/images/image1.png',
   },
   {
     id: 2,
     name: 'Linen Pinafore Dress',
     price: '$74.00',
-    src: '/images/products/related-2.jpg',
+    src: '/images/image2.png',
   },
   {
     id: 3,
     name: 'Smocked Sundress',
     price: '$68.00',
-    src: '/images/products/related-3.jpg',
+    src: '/images/image3.png',
   },
   {
     id: 4,
     name: 'Ruffle Hem Skirt',
     price: '$54.00',
-    src: '/images/products/related-4.jpg',
+    src: '/images/image1.png',
   },
 ];
 
