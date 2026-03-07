@@ -11,7 +11,7 @@ const allProducts = {
     { id: 2, name: 'Coastline Striped Shirt',  price: '$56.00', oldPrice: '$72.00', category: 'Tops & Tees',      color: 'blue',   age: '0-2Y', sustainability: false, img: '/images/img2.webp',     badge: null,         stars: 4.0, reviews: 38  },
     { id: 3, name: 'Earth Spirit Romper',      price: '$72.00', oldPrice: null,     category: 'Outerwear',        color: 'beige',  age: '0-2Y', sustainability: true,  img: '/images/img3.webp',     badge: null,         stars: 4.6, reviews: 130 },
     { id: 4, name: 'Cloud Soft Knit Cardigan', price: '$110.00',oldPrice: null,     category: 'Knitwear',         color: 'cream',  age: '0-2Y', sustainability: false, img: '/images/img1.webp',     badge: null,         stars: 4.1, reviews: 29  },
-    { id: 5, name: 'Adventure Dungarees',      price: '$65.00', oldPrice: '$82.00', category: 'Outerwear',        color: 'beige',  age: '0-2Y', sustainability: true,  img: '/images/img2.webp',     badge: 'Best Seller', stars: 4.8, reviews: 304 },
+    { id: 5, name: 'Adventure Dungarees',      price: '$65.00', oldPrice: '$82.00', category: 'Outerwear',        color: 'beige',  age: '0-2Y', sustainability: true,  img: '/images/img2.webp',     badge: null,         stars: 4.8, reviews: 304 },
     { id: 6, name: 'Heirloom Linen Blazer',    price: '$135.00',oldPrice: null,     category: 'Tops & Tees',      color: 'cream',  age: '0-2Y', sustainability: true,  img: '/images/img3.webp',     badge: null,         stars: 4.3, reviews: 82  },
     { id: 7, name: 'Waffle Textured Plush Set',price: '$14.99', oldPrice: null,     category: 'Tops & Tees',      color: 'grey',   age: '0-2Y', sustainability: false, img: '/images/product1.png',  badge: null,         stars: 4.5, reviews: 56  },
     { id: 8, name: 'Ribbed Jogging Set',       price: '$14.99', oldPrice: null,     category: 'Outerwear',        color: 'beige',  age: '0-2Y', sustainability: false, img: '/images/product2.png',  badge: null,         stars: 4.2, reviews: 31  },
@@ -89,10 +89,7 @@ export default function AgeGroupPage() {
           />
 
           <div className="agp-right">
-            <div className="agp-toolbar">
-              <span className="agp-count">
-                Showing <strong>{filtered.length}</strong> premium items
-              </span>
+            <div className="agp-toolbar" style={{ justifyContent: 'flex-end' }}>
               <div className="agp-sort">
                 <span>Sort by:</span>
                 <select

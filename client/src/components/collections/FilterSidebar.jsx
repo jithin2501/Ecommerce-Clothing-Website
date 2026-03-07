@@ -43,8 +43,6 @@ export default function FilterSidebar({
         <button className="filter-reset" onClick={onReset}>Reset</button>
       </div>
 
-      <p className="filter-section-label">REFINE SELECTION</p>
-
       {/* Age (static display) */}
       <div className="filter-group">
         <div className="filter-group-header">
