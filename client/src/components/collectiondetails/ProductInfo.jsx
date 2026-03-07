@@ -95,7 +95,7 @@ export default function ProductInfo() {
           </li>
           <li>
             <Package size={14} />
-            <span>Fulfilled by Petit Première · <a href="#">Free returns within 30 days</a></span>
+            <span>Fulfilled by Sumathi Trends</span>
           </li>
         </ul>
       </div>
@@ -105,7 +105,7 @@ export default function ProductInfo() {
         {BADGES.map(b => (
           <div key={b.label} className="pi-badge-item">
             <div className="pi-badge-icon">
-              <b.icon size={22} strokeWidth={1.5} />
+              <b.icon size={16} strokeWidth={1.5} />
             </div>
             <p className="pi-badge-text">{b.label}<br />{b.sub}</p>
           </div>
