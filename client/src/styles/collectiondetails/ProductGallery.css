@@ -9,13 +9,13 @@
 
 .pg-main {
   width: 100%;
-  aspect-ratio: 4 / 5;
-  border-radius: 16px;
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
   background: #F5EFE8;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: visible;
+  overflow: hidden;
   position: relative;
 }
 
