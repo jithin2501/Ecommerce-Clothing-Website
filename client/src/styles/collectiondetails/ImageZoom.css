@@ -1,0 +1,28 @@
+/* =========================================================
+   IMAGE ZOOM
+========================================================= */
+.iz-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+  overflow: visible;
+}
+
+.iz-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.iz-zoom-box {
+  position: absolute;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background-repeat: no-repeat;
+  pointer-events: none;
+  z-index: 10;
+}

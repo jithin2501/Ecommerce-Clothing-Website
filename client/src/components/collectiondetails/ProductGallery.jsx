@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import ImageZoom from './ImageZoom';
 import '../../styles/collectiondetails/ProductGallery.css';
 
 const IMAGES = [
-  { id: 1, src: '/images/products/garden-breeze-dress-1.jpg', alt: 'Garden Breeze Dress - Front' },
+  { id: 1, src: '/images/img1.webp',                           alt: 'Garden Breeze Dress - Front'  },
   { id: 2, src: '/images/products/garden-breeze-dress-2.jpg', alt: 'Garden Breeze Dress - Detail' },
-  { id: 3, src: '/images/products/garden-breeze-dress-3.jpg', alt: 'Garden Breeze Dress - Side' },
+  { id: 3, src: '/images/products/garden-breeze-dress-3.jpg', alt: 'Garden Breeze Dress - Side'   },
 ];
 
 export default function ProductGallery() {
@@ -13,11 +14,7 @@ export default function ProductGallery() {
   return (
     <div className="pg-wrapper">
       <div className="pg-main">
-        <img
-          src={IMAGES[active].src}
-          alt={IMAGES[active].alt}
-          className="pg-main-img"
-        />
+        <ImageZoom src={IMAGES[active].src} alt={IMAGES[active].alt} />
       </div>
       <div className="pg-thumbs">
         {IMAGES.map((img, i) => (
