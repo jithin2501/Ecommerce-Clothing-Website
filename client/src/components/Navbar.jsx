@@ -26,9 +26,31 @@ export default function Navbar() {
 
   const handleHome = (e) => {
     e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
     if (location.pathname !== '/') {
       navigate('/');
+      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const scrollToAbout = () => {
+    const el = document.getElementById('about');
+    if (!el) return;
+    // Use exact offsetTop so the section sits flush under the navbar
+    const navHeight = 76;
+    const top = el.offsetTop - navHeight;
+    window.scrollTo({ top, behavior: 'smooth' });
+  };
+
+  const handleAbout = (e) => {
+    e.preventDefault();
+    if (location.pathname !== '/') {
+      navigate('/');
+      // Wait for page to mount then scroll
+      setTimeout(scrollToAbout, 150);
+    } else {
+      scrollToAbout();
     }
   };
 
@@ -51,7 +73,7 @@ export default function Navbar() {
 
         <ul className="nav-links">
           <li><a href="/" onClick={handleHome}>Home</a></li>
-          <li><a href="#about">About Us</a></li>
+          <li><a href="#about" onClick={handleAbout}>About Us</a></li>
           <li><Link to="/collections">Collections</Link></li>
           <li><a href="#reviews">Review</a></li>
           <li><a href="#">Contact</a></li>
