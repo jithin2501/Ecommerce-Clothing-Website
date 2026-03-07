@@ -1,8 +1,19 @@
 .rv2-section {
   width: 100%;
-  padding: 8rem 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
   background: #fff;
   position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.rv2-section .section-inner {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .rv-title-label {
@@ -11,7 +22,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 4px;
-  margin-bottom: 4rem;
+  margin-bottom: 2.5rem;
   color: var(--charcoal);
 }
 
@@ -28,7 +39,8 @@
 .rv2-left {
   position: relative;
   flex: 0 0 auto;
-  width: 450px; height: 450px;
+  width: 400px;
+  height: 400px;
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -44,7 +56,7 @@
 
 .rv2-img {
   width: 100%; height: auto;
-  max-height: 450px;
+  max-height: 380px;
   object-fit: contain;
   position: relative;
   z-index: 1;
@@ -61,7 +73,7 @@
 
 .rv2-heading {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
   font-weight: 900;
   color: var(--charcoal);
   line-height: 1.1;
@@ -116,8 +128,9 @@
 .rv2-box-stars { color: #F59E0B; font-size: 0.9rem; margin-top: 2px; }
 
 @media (max-width: 1024px) {
+  .rv2-section { height: auto; padding: 4rem 0; }
   .rv2-layout { flex-direction: column; align-items: center; text-align: center; }
   .rv2-right { align-items: center; }
-  .rv2-left { width: 100%; max-width: 400px; height: auto; }
+  .rv2-left { width: 100%; max-width: 350px; height: auto; }
   .rv2-box-text { text-align: left; }
 }
