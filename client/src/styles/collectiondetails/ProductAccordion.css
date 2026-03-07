@@ -68,8 +68,6 @@
   border-color: var(--charcoal, #2C2C2C);
 }
 
-/* ── Specs ── */
-.pa-spec-section { }
 
 .pa-spec-group-label {
   font-size: 0.78rem;
@@ -125,8 +123,6 @@
   gap: 1rem 2rem;
 }
 
-.pa-highlight-cell { }
-
 .pa-hl-label {
   font-size: 0.65rem;
   font-weight: 700;
@@ -149,8 +145,14 @@
   margin-bottom: 0.75rem;
 }
 
+.pa-qa-field {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
 .pa-qa-input {
-  width: 100%;
+  flex: 1;
   padding: 0.65rem 1rem;
   border: 1.5px solid #E0D8D0;
   border-radius: 8px;
@@ -168,4 +170,22 @@
 
 .pa-qa-input::placeholder {
   color: #bbb;
+}
+
+.pa-qa-send {
+  padding: 0.65rem 1.25rem;
+  background: var(--accent-clay, #C17B5C);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.pa-qa-send:hover {
+  background: #A8624A;
 }

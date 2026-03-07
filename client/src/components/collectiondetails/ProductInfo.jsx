@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, Share2, ShoppingBag, MapPin, Truck, Package } from 'lucide-react';
+import { Heart, Share2, ShoppingBag, MapPin, Truck, Package, RotateCcw, Banknote, ShieldCheck } from 'lucide-react';
 import '../../styles/collectiondetails/ProductInfo.css';
 
 const SIZES = ['2-3Y', '4-5Y', '6-7Y', '8-9Y'];
@@ -9,6 +9,12 @@ const COLORS = [
   { name: 'cream', hex: '#EDE8DC' },
 ];
 
+const BADGES = [
+  { icon: RotateCcw,    label: '10-Day',   sub: 'Return'    },
+  { icon: Banknote,     label: 'Cash on',  sub: 'Delivery'  },
+  { icon: ShieldCheck,  label: 'Quality',  sub: 'Assured'   },
+];
+
 export default function ProductInfo() {
   const [selectedSize, setSelectedSize] = useState('4-5Y');
   const [selectedColor, setSelectedColor] = useState('blush');
@@ -16,8 +22,6 @@ export default function ProductInfo() {
 
   return (
     <div className="pi-wrapper">
-      <p className="pi-collection-tag">Dresses &amp; Skirts</p>
-
       <h1 className="pi-title">Garden Breeze Dress</h1>
 
       <div className="pi-rating">
@@ -94,6 +98,18 @@ export default function ProductInfo() {
             <span>Fulfilled by Petit Première · <a href="#">Free returns within 30 days</a></span>
           </li>
         </ul>
+      </div>
+
+      {/* Service badges */}
+      <div className="pi-badges">
+        {BADGES.map(b => (
+          <div key={b.label} className="pi-badge-item">
+            <div className="pi-badge-icon">
+              <b.icon size={22} strokeWidth={1.5} />
+            </div>
+            <p className="pi-badge-text">{b.label}<br />{b.sub}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

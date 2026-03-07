@@ -225,3 +225,39 @@
   color: var(--accent-clay, #C17B5C);
   text-decoration: underline;
 }
+
+/* Service badges */
+.pi-badges {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #EDE8E0;
+}
+
+.pi-badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+.pi-badge-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+}
+
+.pi-badge-text {
+  font-size: 0.7rem;
+  color: #666;
+  text-align: center;
+  line-height: 1.4;
+  font-weight: 500;
+}

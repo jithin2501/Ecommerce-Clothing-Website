@@ -150,13 +150,16 @@ export default function ProductAccordion() {
         {openSection === 'qa' && (
           <div className="pa-body">
             <p className="pa-qa-empty">Be the first to ask about this product</p>
-            <input
-              className="pa-qa-input"
-              type="text"
-              placeholder="Ask a question"
-              value={question}
-              onChange={e => setQuestion(e.target.value)}
-            />
+            <div className="pa-qa-field">
+              <input
+                className="pa-qa-input"
+                type="text"
+                placeholder="Ask a question"
+                value={question}
+                onChange={e => setQuestion(e.target.value)}
+              />
+              <button className="pa-qa-send" onClick={() => setQuestion('')}>Send</button>
+            </div>
           </div>
         )}
       </div>
