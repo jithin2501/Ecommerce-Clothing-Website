@@ -24,16 +24,22 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
 
-  // After navigating to '/', instantly jump to section (no smooth scroll)
+  // After navigating to '/', jump to saved section target
   useEffect(() => {
     const hash = sessionStorage.getItem('scrollTarget');
     if (!hash) return;
     if (location.pathname === '/') {
       sessionStorage.removeItem('scrollTarget');
       const el = document.getElementById(hash);
-      if (el) {
-        el.scrollIntoView({ behavior: 'instant', block: 'start' });
-      }
+      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+    }
+  }, [location.pathname]);
+
+  // After navigating to '/' for Home, scroll to top
+  useEffect(() => {
+    if (sessionStorage.getItem('goHome') === '1' && location.pathname === '/') {
+      sessionStorage.removeItem('goHome');
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }, [location.pathname]);
 
@@ -41,6 +47,7 @@ export default function Navbar() {
     e.preventDefault();
     sessionStorage.removeItem('scrollTarget');
     if (location.pathname !== '/') {
+      sessionStorage.setItem('goHome', '1');
       navigate('/');
     } else {
       window.scrollTo({ top: 0, behavior: 'instant' });
