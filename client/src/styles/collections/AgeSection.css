@@ -1,0 +1,80 @@
+/* =========================================================
+   AGE SECTION
+========================================================= */
+.age-section {
+  width: 100%;
+  padding: 6rem 0 4rem;       /* 6rem top = more gap from banner */
+}
+
+.age-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* ── Card — NO animation, NO hover effects ── */
+.age-card {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  cursor: pointer;
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Card background colors — all in CSS, no inline styles ── */
+.age-card--peach { background-color: #EDD8C8; }
+.age-card--sage  { background-color: #D4DFD0; }
+.age-card--sand  { background-color: #E8D8B4; }
+
+/* ── Image wrap ── */
+.age-img-wrap {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1.5rem 1.5rem 0;
+  overflow: hidden;
+}
+
+.age-img-wrap img {
+  width: 80%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom;
+  display: block;
+}
+
+/* ── Text info at bottom ── */
+.age-card-info {
+  padding: 1rem 1.25rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 100%);
+}
+
+.age-card-label {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.age-card-range {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+  line-height: 1.1;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .age-section { padding: 4rem 0 3rem; }
+  .age-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .age-card { aspect-ratio: 4 / 3; }
+}

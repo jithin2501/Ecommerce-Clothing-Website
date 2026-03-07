@@ -1,0 +1,57 @@
+/* =========================================================
+   CSS CUSTOM PROPERTIES
+========================================================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
+
+:root {
+  --charcoal: #2D3E50;
+  --accent-clay: #C07F5E;
+  --accent-hover: #A66B4D;
+  --slate-gray: #64748B;
+  --light-bg: #FFFFFF;
+  --cart-orange: #FF5C00;
+  --soft-glow: rgba(192, 127, 94, 0.15);
+  --side-pad: 8%;
+  --footer-bg: #2D3E50;
+  --footer-text-main: #ffffff;
+  --footer-text-muted: #cbd5e1;
+  --footer-border: rgba(255, 255, 255, 0.1);
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--light-bg);
+  color: var(--charcoal);
+  overflow-x: hidden;
+  background: radial-gradient(circle at top right, rgba(192, 127, 94, 0.03), transparent 600px);
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+img { max-width: 100%; display: block; }
+
+@keyframes glowPulse {
+  from { opacity: 0.8; transform: scale(0.95); }
+  to   { opacity: 1;   transform: scale(1.06); }
+}
+
+@keyframes orbitSpin {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+
+.section-inner {
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+  padding-left: var(--side-pad);
+  padding-right: var(--side-pad);
+}

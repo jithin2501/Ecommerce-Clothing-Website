@@ -1,0 +1,120 @@
+/* =========================================================
+   NEW ARRIVALS
+========================================================= */
+.new-arrivals-section {
+  width: 100%;
+  padding: 2rem 0 5rem;
+}
+
+/* ── Header ── */
+.new-arrivals-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Title matches Best Selling exactly:
+   "New" (strong) = charcoal, "Arrivals" = clay */
+.new-arrivals-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  color: var(--accent-clay);   /* "Arrivals" = clay */
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.new-arrivals-title strong {
+  color: var(--charcoal);      /* "New" = charcoal */
+  font-weight: 800;
+}
+
+/* ── Tabs ── */
+.na-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-bottom: 2.5rem;
+}
+
+.na-tab {
+  padding: 0.4rem 1.3rem;
+  border-radius: 50px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: transparent;
+  color: var(--slate-gray);
+  transition: all 0.25s ease;
+  font-family: 'Inter', sans-serif;
+}
+
+.na-tab.active {
+  background: var(--accent-clay);
+  color: white;
+}
+
+.na-tab:hover:not(.active) {
+  color: var(--charcoal);
+}
+
+/* ── Product Grid ── */
+.na-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.na-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  cursor: pointer;
+}
+
+.na-img-wrap {
+  background: #F5F2EE;
+  border-radius: 16px;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.na-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.na-card:hover .na-img-wrap img {
+  transform: scale(1.04);
+}
+
+.na-card-info {
+  padding: 0 0.1rem;
+}
+
+.na-card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 0.3rem;
+}
+
+.na-card-price {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent-clay);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .na-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

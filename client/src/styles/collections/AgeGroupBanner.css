@@ -1,0 +1,95 @@
+/* =========================================================
+   AGE GROUP BANNER — matches CollectionsBanner exactly
+========================================================= */
+.agb-banner {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.agb-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.agb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+.agb-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.15) 0%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+}
+
+/* Content — same layout as CollectionsBanner */
+.agb-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  max-width: 680px;
+  padding: 0 2rem;
+}
+
+.agb-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 1rem;
+}
+
+.agb-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: white;
+}
+
+.agb-desc {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 1.8rem;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.agb-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  color: var(--charcoal);
+  padding: 0.85rem 2rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.agb-btn:hover {
+  background: var(--accent-clay);
+  color: white;
+  transform: translateY(-2px);
+}

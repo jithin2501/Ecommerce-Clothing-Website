@@ -1,0 +1,137 @@
+.pg-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.pg-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--slate-gray);
+  font-size: 0.95rem;
+}
+
+/* ── Card ── */
+.pg-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #F5F5F2;        /* same light grey as Current Favorites */
+}
+
+/* ── Image — SQUARE, same as Current Favorites ── */
+.pg-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;        /* square — matches Current Favorites */
+  background: #F5F5F2;
+  overflow: hidden;
+}
+
+.pg-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;          /* fills square, no empty space */
+  display: block;
+}
+
+.pg-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--charcoal);
+  color: white;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pg-sale-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: var(--accent-clay);
+  color: white;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 50px;
+  text-transform: uppercase;
+}
+
+.pg-wishlist {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* ── Info ── */
+.pg-info {
+  padding: 0.8rem 0.9rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pg-category {
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--slate-gray);
+  display: block;
+}
+
+.pg-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--charcoal);
+}
+
+.pg-stars {
+  font-size: 0.72rem;
+  color: #F59E0B;
+}
+
+.pg-reviews {
+  font-size: 0.68rem;
+  color: var(--slate-gray);
+  margin-left: 4px;
+}
+
+.pg-price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pg-price {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--accent-clay);
+}
+
+.pg-old-price {
+  font-size: 0.78rem;
+  color: var(--slate-gray);
+  text-decoration: line-through;
+}
+
+@media (max-width: 900px) {
+  .pg-grid { grid-template-columns: repeat(2, 1fr); }
+}
