@@ -24,33 +24,37 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
 
+  // After navigating to '/', instantly jump to section (no smooth scroll)
+  useEffect(() => {
+    const hash = sessionStorage.getItem('scrollTarget');
+    if (!hash) return;
+    if (location.pathname === '/') {
+      sessionStorage.removeItem('scrollTarget');
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }
+    }
+  }, [location.pathname]);
+
   const handleHome = (e) => {
     e.preventDefault();
+    sessionStorage.removeItem('scrollTarget');
     if (location.pathname !== '/') {
       navigate('/');
-      setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 50);
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      window.scrollTo({ top: 0, behavior: 'instant' });
     }
   };
 
-  const scrollToAbout = () => {
-    const el = document.getElementById('about');
-    if (!el) return;
-    // Use exact offsetTop so the section sits flush under the navbar
-    const navHeight = 76;
-    const top = el.offsetTop - navHeight;
-    window.scrollTo({ top, behavior: 'smooth' });
-  };
-
-  const handleAbout = (e) => {
+  const handleSection = (e, sectionId) => {
     e.preventDefault();
     if (location.pathname !== '/') {
+      sessionStorage.setItem('scrollTarget', sectionId);
       navigate('/');
-      // Wait for page to mount then scroll
-      setTimeout(scrollToAbout, 150);
     } else {
-      scrollToAbout();
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
     }
   };
 
@@ -73,9 +77,9 @@ export default function Navbar() {
 
         <ul className="nav-links">
           <li><a href="/" onClick={handleHome}>Home</a></li>
-          <li><a href="#about" onClick={handleAbout}>About Us</a></li>
+          <li><a href="#about" onClick={(e) => handleSection(e, 'about')}>About Us</a></li>
           <li><Link to="/collections">Collections</Link></li>
-          <li><a href="#reviews">Review</a></li>
+          <li><a href="#reviews" onClick={(e) => handleSection(e, 'reviews')}>Review</a></li>
           <li><a href="#">Contact</a></li>
         </ul>
 
