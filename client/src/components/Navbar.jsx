@@ -5,23 +5,29 @@ import '../styles/Navbar.css';
 
 export default function Navbar() {
   const location = useLocation();
-  // Transparent nav only on collections listing and age group pages (not detail pages)
+
+  // /collections and /collections/:ageGroup → transparent banner pages
   const pathParts = location.pathname.split('/').filter(Boolean);
-  const isCollections = pathParts.length <= 2 && location.pathname.startsWith('/collections');
+  const isBannerPage = pathParts.length <= 2 && location.pathname.startsWith('/collections');
+
+  // /collections/:ageGroup/:product → detail page (white → footer on scroll)
+  const isDetailPage = pathParts.length >= 3 && location.pathname.startsWith('/collections');
+
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    if (!isCollections) return;
-
+    setScrolled(false);
+    if (!isBannerPage && !isDetailPage) return;
     const handleScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', handleScroll);
+    handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isCollections]);
+  }, [location.pathname]);
 
   const navClass = [
-    'nav-root',
-    isCollections ? 'nav-collections' : '',
-    isCollections && scrolled ? 'nav-scrolled' : '',
+    isBannerPage ? 'nav-collections' : '',
+    isBannerPage && scrolled ? 'nav-scrolled' : '',
+    isDetailPage && scrolled ? 'nav-scrolled nav-detail-scrolled' : '',
   ].filter(Boolean).join(' ');
 
   return (

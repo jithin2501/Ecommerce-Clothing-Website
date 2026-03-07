@@ -34,6 +34,24 @@ nav.nav-scrolled {
   backdrop-filter: none;
 }
 
+/* Detail page scrolled: footer bg + white text (nav is sticky not fixed) */
+nav.nav-detail-scrolled {
+  position: sticky;
+  background: var(--footer-bg, #2C2C2C);
+  border-bottom: 1px solid transparent;
+}
+
+nav.nav-detail-scrolled .logo-text,
+nav.nav-detail-scrolled .nav-links a,
+nav.nav-detail-scrolled .action-item {
+  color: white;
+}
+
+nav.nav-detail-scrolled .nav-links a:hover,
+nav.nav-detail-scrolled .action-item:hover {
+  color: #E8C5A8;
+}
+
 /* White text on collections transparent/scrolled states */
 nav.nav-collections .logo-text,
 nav.nav-collections .nav-links a,
