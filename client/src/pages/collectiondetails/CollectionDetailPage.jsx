@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import ProductGallery from '../../components/collectiondetails/ProductGallery';
 import ProductInfo from '../../components/collectiondetails/ProductInfo';
@@ -7,6 +8,10 @@ import ProductRelated from '../../components/collectiondetails/ProductRelated';
 import '../../styles/collectiondetails/CollectionDetailPage.css';
 
 export default function CollectionDetailPage() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
+
   return (
     <div className="cdp-page">
 
