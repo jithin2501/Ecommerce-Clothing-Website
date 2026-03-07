@@ -1,0 +1,154 @@
+/* =========================================================
+   PRODUCT REVIEWS
+========================================================= */
+.pr-wrapper {
+  padding: 3rem 0 2rem;
+  border-top: 1px solid #E8E4DE;
+  margin-top: 2rem;
+}
+
+.pr-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--charcoal, #2C2C2C);
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.pr-summary {
+  display: flex;
+  gap: 3rem;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding: 2rem;
+  background: #FAF8F5;
+  border-radius: 16px;
+}
+
+.pr-score-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.pr-score {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--charcoal, #2C2C2C);
+  line-height: 1;
+}
+
+.pr-stars {
+  color: #E8A020;
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
+.pr-total {
+  font-size: 0.75rem;
+  color: #999;
+}
+
+.pr-bars {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pr-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.pr-bar-label {
+  font-size: 0.75rem;
+  color: #888;
+  width: 12px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.pr-bar-track {
+  flex: 1;
+  height: 6px;
+  background: #E8E4DE;
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.pr-bar-fill {
+  height: 100%;
+  background: var(--accent-clay, #C17B5C);
+  border-radius: 50px;
+  transition: width 0.6s ease;
+}
+
+.pr-bar-count {
+  font-size: 0.72rem;
+  color: #999;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+/* Review cards */
+.pr-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pr-card {
+  background: white;
+  border: 1px solid #EDE8E0;
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+}
+
+.pr-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.pr-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #F0EBE3;
+  flex-shrink: 0;
+}
+
+.pr-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--charcoal, #2C2C2C);
+  margin-bottom: 0.1rem;
+}
+
+.pr-date {
+  font-size: 0.72rem;
+  color: #aaa;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.pr-text {
+  font-size: 0.85rem;
+  color: #555;
+  line-height: 1.7;
+}
+
+.pr-review-img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-top: 0.75rem;
+}

@@ -1,0 +1,74 @@
+/* =========================================================
+   COLLECTION DETAIL PAGE
+========================================================= */
+.cdp-page {
+  min-height: 100vh;
+  background: #FDFAF7;
+  padding-top: 76px;
+}
+
+.cdp-page {
+  min-height: 100vh;
+  background: #FDFAF7;
+  padding-top: 76px;
+}
+
+.cdp-breadcrumb {
+  padding: 0.4rem var(--side-pad, 2rem);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #aaa;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 0.5rem;
+}
+
+.cdp-breadcrumb a {
+  color: var(--accent-clay, #C17B5C);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.cdp-breadcrumb a:hover {
+  color: #A8624A;
+}
+
+.cdp-sep {
+  color: #ccc;
+  font-size: 0.8rem;
+}
+
+.cdp-crumb-active {
+  color: var(--charcoal, #2C2C2C);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.cdp-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem var(--side-pad, 2rem) 3rem;
+}
+
+.cdp-lower {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--side-pad, 2rem);
+}
+
+@media (max-width: 900px) {
+  .cdp-main {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}

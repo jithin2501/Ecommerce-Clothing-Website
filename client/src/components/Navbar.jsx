@@ -5,7 +5,9 @@ import '../styles/Navbar.css';
 
 export default function Navbar() {
   const location = useLocation();
-  const isCollections = location.pathname === '/collections' || location.pathname.startsWith('/collections/');
+  // Transparent nav only on collections listing and age group pages (not detail pages)
+  const pathParts = location.pathname.split('/').filter(Boolean);
+  const isCollections = pathParts.length <= 2 && location.pathname.startsWith('/collections');
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {

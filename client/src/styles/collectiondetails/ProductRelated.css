@@ -1,0 +1,72 @@
+/* =========================================================
+   PRODUCT RELATED
+========================================================= */
+.prelat-wrapper {
+  padding: 2.5rem 0;
+  border-top: 1px solid #E8E4DE;
+  margin-top: 1rem;
+}
+
+.prelat-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--charcoal, #2C2C2C);
+  margin-bottom: 1.75rem;
+  text-align: center;
+}
+
+.prelat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.prelat-card {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s;
+}
+
+.prelat-card:hover {
+  transform: translateY(-3px);
+}
+
+.prelat-img-wrap {
+  aspect-ratio: 3 / 4;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #F5EFE8;
+}
+
+.prelat-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.prelat-card:hover .prelat-img {
+  transform: scale(1.04);
+}
+
+.prelat-name {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--charcoal, #2C2C2C);
+}
+
+.prelat-price {
+  font-size: 0.82rem;
+  color: var(--accent-clay, #C17B5C);
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .prelat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

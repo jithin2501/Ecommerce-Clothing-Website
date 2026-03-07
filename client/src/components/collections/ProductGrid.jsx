@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import '../../styles/collections/ProductGrid.css';
 
 const Stars = ({ rating, reviews }) => (
@@ -6,6 +7,17 @@ const Stars = ({ rating, reviews }) => (
     <span className="pg-reviews">({reviews})</span>
   </div>
 );
+
+// Convert "Garden Breeze Dress" → "garden-breeze-dress"
+const toSlug = (name) =>
+  name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+// Convert age "0-2Y" → "newborn", "3-6Y" → "toddler", "7-12Y" → "junior"
+const toAgeGroup = (age) => {
+  if (age === '0-2Y') return 'newborn';
+  if (age === '3-6Y') return 'toddler';
+  return 'junior';
+};
 
 export default function ProductGrid({ products }) {
   if (!products.length) {
@@ -19,7 +31,11 @@ export default function ProductGrid({ products }) {
   return (
     <div className="pg-grid">
       {products.map((product) => (
-        <div key={product.id} className="pg-card">
+        <Link
+          key={product.id}
+          to={`/collections/${toAgeGroup(product.age)}/${toSlug(product.name)}`}
+          className="pg-card"
+        >
           {/* Image */}
           <div className="pg-img-wrap">
             <img src={product.img} alt={product.name} />
@@ -29,7 +45,13 @@ export default function ProductGrid({ products }) {
             {product.oldPrice && (
               <span className="pg-sale-badge">Sale</span>
             )}
-            <button className="pg-wishlist" aria-label="Wishlist">♡</button>
+            <button
+              className="pg-wishlist"
+              aria-label="Wishlist"
+              onClick={(e) => e.preventDefault()}
+            >
+              ♡
+            </button>
           </div>
 
           {/* Info */}
@@ -44,7 +66,7 @@ export default function ProductGrid({ products }) {
               )}
             </div>
           </div>
-        </div>
+        </Link>
       ))}
     </div>
   );

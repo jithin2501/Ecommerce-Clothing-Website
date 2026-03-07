@@ -1,0 +1,227 @@
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
+.pi-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pi-collection-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent-clay, #C17B5C);
+  margin-bottom: 0.5rem;
+}
+
+.pi-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 700;
+  color: var(--charcoal, #2C2C2C);
+  line-height: 1.2;
+  margin-bottom: 0.6rem;
+}
+
+.pi-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.pi-stars {
+  color: #E8A020;
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
+.pi-reviews {
+  font-size: 0.8rem;
+  color: #888;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.pi-price {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--charcoal, #2C2C2C);
+  margin-bottom: 1.5rem;
+}
+
+/* Sections */
+.pi-section {
+  margin-bottom: 1.25rem;
+}
+
+.pi-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #888;
+  margin-bottom: 0.6rem;
+}
+
+.pi-color-name {
+  color: var(--charcoal, #2C2C2C);
+  text-transform: capitalize;
+}
+
+/* Sizes */
+.pi-sizes {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.pi-size-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  border: 1.5px solid #E0D8D0;
+  background: white;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--charcoal, #2C2C2C);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pi-size-btn.active {
+  background: var(--accent-clay, #C17B5C);
+  border-color: var(--accent-clay, #C17B5C);
+  color: white;
+}
+
+.pi-size-btn:hover:not(.active) {
+  border-color: var(--accent-clay, #C17B5C);
+}
+
+/* Colors */
+.pi-colors {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.pi-color-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2.5px solid transparent;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.pi-color-dot.active {
+  border-color: var(--charcoal, #2C2C2C);
+  transform: scale(1.15);
+}
+
+.pi-color-dot:hover:not(.active) {
+  transform: scale(1.1);
+}
+
+/* Actions */
+.pi-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.pi-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+  justify-content: center;
+  background: var(--accent-clay, #C17B5C);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 0.9rem 1.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: background 0.25s, transform 0.2s;
+}
+
+.pi-add-btn:hover {
+  background: #A8624A;
+  transform: translateY(-1px);
+}
+
+.pi-icon-btn {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1.5px solid #E0D8D0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--charcoal, #2C2C2C);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.pi-icon-btn:hover,
+.pi-icon-btn.active {
+  border-color: var(--accent-clay, #C17B5C);
+  color: var(--accent-clay, #C17B5C);
+}
+
+/* Delivery */
+.pi-delivery {
+  margin-top: 0.25rem;
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  border-top: 1px solid #EDE8E0;
+  padding-top: 1rem;
+}
+
+.pi-delivery-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--charcoal, #2C2C2C);
+  margin-bottom: 0.75rem;
+}
+
+.pi-delivery-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.pi-delivery-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #555;
+  line-height: 1.4;
+}
+
+.pi-delivery-list li svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: var(--accent-clay, #C17B5C);
+}
+
+.pi-delivery-list a {
+  color: var(--accent-clay, #C17B5C);
+  text-decoration: underline;
+}
