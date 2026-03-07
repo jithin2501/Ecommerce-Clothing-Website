@@ -1,7 +1,12 @@
 .about-section {
   width: 100%;
-  padding: 4rem 0 8rem;
-  margin-top: 2rem;
+  height: calc(100vh - 76px);
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  margin-top: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .about-top-label {
@@ -10,7 +15,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 4px;
-  margin-bottom: 4rem;
+  margin-bottom: 5rem;
   color: var(--charcoal);
   display: flex;
   gap: 12px;
@@ -20,12 +25,20 @@
 
 .about-top-label span { color: var(--accent-clay); }
 
+.about-section .section-inner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+}
+
 .about {
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  align-items: flex-start;
-  gap: 6rem;
+  align-items: center;
+  gap: 4rem;
 }
 
 .about-visuals {
@@ -62,11 +75,18 @@
   animation: glowPulse 3s ease-in-out infinite alternate-reverse;
 }
 
+@keyframes glowPulse {
+  from { opacity: 0.7; transform: scale(0.97); }
+  to   { opacity: 1;   transform: scale(1.03); }
+}
+
 .about-img {
   position: relative;
   z-index: 2;
   width: 100%; height: auto;
-  max-width: 520px;
+  max-width: 480px;
+  max-height: 48vh;
+  object-fit: contain;
   border-radius: 20px;
   filter: drop-shadow(0 0 18px rgba(192,127,94,0.7))
           drop-shadow(0 8px 40px rgba(192,127,94,0.55))
@@ -86,17 +106,17 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  align-self: stretch;
+  gap: 0;
 }
 
 .about-sub {
-  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+  font-size: clamp(1.4rem, 2.4vw, 2.2rem);
   font-weight: 900;
   color: var(--charcoal);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
   line-height: 1.2;
   letter-spacing: -0.01em;
-  margin-top: -0.15em;
+  margin-top: 0;
 }
 
 .about-sub .accent-text {
@@ -109,17 +129,17 @@
 
 .about-desc {
   color: var(--slate-gray);
-  font-size: 1.05rem;
+  font-size: 0.98rem;
   line-height: 1.7;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.2rem;
   max-width: 500px;
 }
 
 .btn-about {
-  margin-top: auto;
+  margin-top: 0.5rem;
   background: var(--accent-clay);
   color: white;
-  padding: 1rem 2.5rem;
+  padding: 0.9rem 2.2rem;
   border-radius: 50px;
   font-weight: 700;
   font-size: 0.85rem;
@@ -132,6 +152,7 @@
   transition: all 0.3s ease;
   border: none;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .btn-about:hover {
@@ -140,9 +161,10 @@
 }
 
 @media (max-width: 1100px) {
-  .about { grid-template-columns: 1fr; gap: 4rem; align-items: center; }
+  .about-section { height: auto; padding: 4rem 0; }
+  .about { grid-template-columns: 1fr; gap: 2.5rem; align-items: center; }
   .about-visuals { order: 2; }
-  .about-content { order: 1; text-align: center; align-items: center; align-self: auto; }
+  .about-content { order: 1; text-align: center; align-items: center; }
   .about-sub, .about-desc { text-align: center; }
-  .btn-about { margin-top: 1.5rem; }
+  .btn-about { margin-top: 1rem; }
 }

@@ -3,6 +3,9 @@
 ========================================================= */
 .hero-section {
   width: 100%;
+  min-height: calc(100vh - 76px); /* fit exactly one screen minus navbar */
+  display: flex;
+  align-items: center;
 }
 
 .hero {
@@ -11,6 +14,7 @@
   align-items: center;
   padding-top: 0.5rem;
   padding-bottom: 0;
+  width: 100%;
 }
 
 /* ── Title ── */
@@ -28,7 +32,6 @@
   display: block;
 }
 
-/* gradient text for "Little" and "Legends" */
 .hero-title .accent,
 .hero-title .accent-inline {
   background: linear-gradient(135deg, var(--accent-clay) 0%, #E29578 100%);
@@ -37,7 +40,6 @@
   -webkit-text-fill-color: transparent;
 }
 
-/* "Legends" sits on its own line */
 .hero-title .accent {
   display: block;
   padding-bottom: 0.15em;
@@ -106,7 +108,7 @@
   font-size: 0.8rem;
   color: var(--accent-clay);
   font-weight: 500;
-  margin-left: 14px; /* compensate for negative margins on avatars */
+  margin-left: 14px;
 }
 
 .trust-text span {
@@ -145,6 +147,10 @@
 
 /* ── Responsive ── */
 @media (max-width: 1100px) {
+  .hero-section {
+    min-height: auto;
+    padding: 3rem 0;
+  }
   .hero {
     grid-template-columns: 1fr;
     text-align: center;

@@ -1,11 +1,12 @@
 import { ShoppingCart, User } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
   const location  = useLocation();
+  const navigate  = useNavigate();
   const { cartCount } = useCart();
 
   const pathParts    = location.pathname.split('/').filter(Boolean);
@@ -23,6 +24,14 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
 
+  const handleHome = (e) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (location.pathname !== '/') {
+      navigate('/');
+    }
+  };
+
   const navClass = [
     isBannerPage ? 'nav-collections' : '',
     isBannerPage && scrolled ? 'nav-scrolled' : '',
@@ -33,7 +42,7 @@ export default function Navbar() {
     <nav className={navClass}>
       <div className="nav-inner">
 
-        <Link to="/" className="logo-container">
+        <Link to="/" className="logo-container" onClick={handleHome}>
           <div className="logo-img">
             <img src="images/logo.png" alt="Sumathi Trends" onError={(e) => { e.target.style.opacity = '0'; }} />
           </div>
@@ -41,7 +50,7 @@ export default function Navbar() {
         </Link>
 
         <ul className="nav-links">
-          <li><Link to="/">Home</Link></li>
+          <li><a href="/" onClick={handleHome}>Home</a></li>
           <li><a href="#about">About Us</a></li>
           <li><Link to="/collections">Collections</Link></li>
           <li><a href="#reviews">Review</a></li>
