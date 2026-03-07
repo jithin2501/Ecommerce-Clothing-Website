@@ -2,18 +2,15 @@
    PRODUCT RELATED
 ========================================================= */
 .prelat-wrapper {
-  padding: 2.5rem 0;
-  border-top: 1px solid #E8E4DE;
-  margin-top: 1rem;
+  padding: 2rem 0 3rem;
+  border-top: 1px solid #eee;
 }
 
 .prelat-heading {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--charcoal, #2C2C2C);
-  margin-bottom: 1.75rem;
-  text-align: center;
+  margin-bottom: 1.5rem;
 }
 
 .prelat-grid {
@@ -22,20 +19,19 @@
   gap: 1.25rem;
 }
 
+/* Card */
 .prelat-card {
   text-decoration: none;
   color: inherit;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  transition: transform 0.2s;
+  gap: 0.4rem;
+  border-radius: 12px;
 }
 
-.prelat-card:hover {
-  transform: translateY(-3px);
-}
-
+/* Image */
 .prelat-img-wrap {
+  width: 100%;
   aspect-ratio: 3 / 4;
   border-radius: 12px;
   overflow: hidden;
@@ -46,26 +42,90 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.35s ease;
+  object-position: top center;
+  transition: transform 0.4s ease;
 }
 
 .prelat-card:hover .prelat-img {
   transform: scale(1.04);
 }
 
-.prelat-name {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--charcoal, #2C2C2C);
+/* Info row */
+.prelat-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+
+.prelat-category {
+  font-size: 0.72rem;
+  color: #999;
+  font-weight: 500;
 }
 
 .prelat-price {
-  font-size: 0.82rem;
-  color: var(--accent-clay, #C17B5C);
+  font-size: 0.88rem;
   font-weight: 700;
+  color: var(--charcoal, #2C2C2C);
 }
 
-@media (max-width: 768px) {
+.prelat-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--charcoal, #2C2C2C);
+  margin: 0;
+}
+
+/* Color dots */
+.prelat-colors {
+  display: flex;
+  gap: 0.35rem;
+  margin-top: 0.1rem;
+}
+
+.prelat-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0,0,0,0.08);
+  display: inline-block;
+}
+
+/* Quick Add — below text, hidden by default */
+.prelat-quick-add {
+  width: 100%;
+  background: #1E2A38;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.prelat-quick-add.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.prelat-quick-add:hover {
+  background: #2d3f52;
+}
+
+@media (max-width: 900px) {
   .prelat-grid {
     grid-template-columns: repeat(2, 1fr);
   }

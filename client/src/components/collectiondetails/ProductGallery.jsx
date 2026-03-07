@@ -4,7 +4,7 @@ import ImageLightbox from './ImageLightbox';
 import '../../styles/collectiondetails/ProductGallery.css';
 
 const IMAGES = [
-  { id: 1, src: '/images/image1.png',                           alt: 'Garden Breeze Dress - Front'  },
+  { id: 1, src: '/images/image1.png', alt: 'Garden Breeze Dress - Front'  },
   { id: 2, src: '/images/image2.png', alt: 'Garden Breeze Dress - Detail' },
   { id: 3, src: '/images/image3.png', alt: 'Garden Breeze Dress - Side'   },
 ];
