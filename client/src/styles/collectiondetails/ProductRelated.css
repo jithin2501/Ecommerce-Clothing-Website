@@ -130,3 +130,34 @@
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Go to Cart — shown after Quick Add is clicked */
+.prelat-go-to-cart {
+  width: 100%;
+  background: var(--accent-clay, #C17B5C);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.prelat-go-to-cart.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.prelat-go-to-cart:hover {
+  background: #a8624a;
+}

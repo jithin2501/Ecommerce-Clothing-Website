@@ -17,7 +17,7 @@ const REVIEWS = [
     date: 'Feb 12, 2025',
     avatar: '/images/reviews.png',
     text: 'The quality of this organic cotton is exceptional. It\'s incredibly soft and I know it\'ll be perfect for my 4-year-old. Love that natural botanical print!',
-    image: '/images/reviews/review-1.jpg',
+    image: '/images/img1.webp',
   },
   {
     id: 2,
