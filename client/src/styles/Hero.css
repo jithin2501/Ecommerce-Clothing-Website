@@ -1,23 +1,27 @@
 /* =========================================================
-   HERO SECTION
+   HERO SECTION — exactly one full screen
 ========================================================= */
 .hero-section {
   width: 100%;
   height: calc(100vh - 76px);
   display: flex;
   align-items: center;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
   overflow: hidden;
+}
+
+.hero-section .section-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .hero {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   align-items: center;
-  padding-top: 0.5rem;
-  padding-bottom: 0;
   width: 100%;
+  height: 100%;
 }
 
 /* ── Title ── */
@@ -91,9 +95,7 @@
   margin-top: 1.5rem;
 }
 
-.trust-avatars {
-  display: flex;
-}
+.trust-avatars { display: flex; }
 
 .avatar-pill {
   width: 30px;
@@ -104,7 +106,7 @@
   margin-right: -10px;
   background-size: cover;
   background-position: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .trust-text {
@@ -122,20 +124,22 @@
 /* ── Right Side Visuals ── */
 .hero-visuals {
   position: relative;
-  height: 540px;
+  height: 100%;
+  max-height: calc(100vh - 76px);
   display: flex;
   justify-content: center;
   align-items: flex-end;
+  overflow: hidden;
 }
 
 .main-model {
   position: relative;
   z-index: 5;
-  height: 100%;
+  height: 90%;
   width: auto;
   max-width: 100%;
   object-fit: contain;
-  filter: drop-shadow(10px 20px 40px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(10px 20px 40px rgba(0,0,0,0.1));
 }
 
 .img-bg-blob {
@@ -150,22 +154,9 @@
 
 /* ── Responsive ── */
 @media (max-width: 1100px) {
-  .hero-section {
-    height: auto;
-    padding: 3rem 0;
-  }
-  .hero {
-    grid-template-columns: 1fr;
-    text-align: center;
-  }
-  .hero-desc {
-    margin: 1.2rem auto 2rem;
-  }
-  .hero-visuals {
-    height: 400px;
-    margin-top: 1.5rem;
-  }
-  .trust-bar {
-    justify-content: center;
-  }
+  .hero-section { height: auto; padding: 3rem 0; }
+  .hero { grid-template-columns: 1fr; text-align: center; height: auto; }
+  .hero-desc { margin: 1.2rem auto 2rem; }
+  .hero-visuals { height: 400px; max-height: 400px; margin-top: 1.5rem; }
+  .trust-bar { justify-content: center; }
 }
