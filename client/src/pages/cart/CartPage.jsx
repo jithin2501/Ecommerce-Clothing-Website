@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import CartItems from '../../components/cart/CartItems';
@@ -7,14 +8,17 @@ import EmptyCart from '../../components/cart/EmptyCart';
 import '../../styles/cart/CartPage.css';
 
 const FREE_SHIPPING_THRESHOLD = 136;
+const GIFT_WRAP_COST = 6;
 
 export default function CartPage() {
   const { cartItems, updateQty, removeItem, subtotal } = useCart();
+  const [giftWrapping, setGiftWrapping] = useState(false);
 
   if (cartItems.length === 0) return <EmptyCart />;
 
   const shipping  = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
-  const total     = subtotal + shipping;
+  const giftCost  = giftWrapping ? GIFT_WRAP_COST : 0;
+  const total     = subtotal + shipping + giftCost;
   const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
 
   return (
@@ -50,8 +54,19 @@ export default function CartPage() {
         </div>
 
         <div className="cp-grid">
-          <CartItems items={cartItems} onUpdateQty={updateQty} onRemove={removeItem} />
-          <OrderSummary subtotal={subtotal} shipping={shipping} total={total} />
+          <CartItems
+            items={cartItems}
+            onUpdateQty={updateQty}
+            onRemove={removeItem}
+            onGiftChange={setGiftWrapping}
+          />
+          <OrderSummary
+            subtotal={subtotal}
+            shipping={shipping}
+            giftWrapping={giftWrapping}
+            giftCost={giftCost}
+            total={total}
+          />
         </div>
 
         <CartYouMightAlsoLike />

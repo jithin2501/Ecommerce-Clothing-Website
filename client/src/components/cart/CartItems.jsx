@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import '../../styles/cart/CartItems.css';
 
-export default function CartItems({ items, onUpdateQty, onRemove }) {
+export default function CartItems({ items, onUpdateQty, onRemove, onGiftChange }) {
   const [giftSelected, setGiftSelected] = useState(false);
   const [giftMessage,  setGiftMessage]  = useState('');
+
+  const handleGiftToggle = () => {
+    const next = !giftSelected;
+    setGiftSelected(next);
+    onGiftChange(next); // notify parent
+  };
 
   return (
     <div className="ci-wrapper">
@@ -40,21 +46,21 @@ export default function CartItems({ items, onUpdateQty, onRemove }) {
 
       {/* Gift Wrapping */}
       <div className="ci-gift">
-        <div className="ci-gift-header" onClick={() => setGiftSelected(p => !p)}>
+        <div className="ci-gift-header">
           <button
             className={`ci-gift-toggle${giftSelected ? ' selected' : ''}`}
             type="button"
-            aria-label="Toggle gift wrapping"
+            onClick={handleGiftToggle}
           >
             {giftSelected && (
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12"/>
               </svg>
             )}
           </button>
           <div className="ci-gift-title-wrap">
             <div className="ci-gift-title-row">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="20 12 20 22 4 22 4 12"/>
                 <rect x="2" y="7" width="20" height="5"/>
                 <path d="M12 22V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/>
@@ -66,18 +72,16 @@ export default function CartItems({ items, onUpdateQty, onRemove }) {
           </div>
         </div>
 
-        {giftSelected && (
-          <div className="ci-gift-message">
-            <p className="ci-gift-label">PERSONALIZED MESSAGE</p>
-            <textarea
-              className="ci-gift-input"
-              placeholder="Write your heartfelt message here..."
-              rows={3}
-              value={giftMessage}
-              onChange={e => setGiftMessage(e.target.value)}
-            />
-          </div>
-        )}
+        <div className="ci-gift-message">
+          <p className="ci-gift-label">PERSONALIZED MESSAGE</p>
+          <textarea
+            className="ci-gift-input"
+            placeholder="Write your heartfelt message here..."
+            rows={3}
+            value={giftMessage}
+            onChange={e => setGiftMessage(e.target.value)}
+          />
+        </div>
       </div>
     </div>
   );
