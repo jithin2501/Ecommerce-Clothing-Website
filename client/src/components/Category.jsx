@@ -33,7 +33,8 @@ export default function Category() {
             <span>Shop By</span> Category
           </h2>
           <p className="category-sub">
-            Discover Our Wide Range Of Products Carefully Organized.
+            Discover stylish and comfortable kidswear for girls and boys at Sumathi Trends,<br />
+            perfect for everyday wear and special occasions.
           </p>
         </div>
 
