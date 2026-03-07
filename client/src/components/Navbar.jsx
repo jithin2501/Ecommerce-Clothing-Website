@@ -1,10 +1,29 @@
 import { ShoppingCart, User } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
+  const location = useLocation();
+  const isCollections = location.pathname === '/collections';
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!isCollections) return;
+
+    const handleScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isCollections]);
+
+  const navClass = [
+    'nav-root',
+    isCollections ? 'nav-collections' : '',
+    isCollections && scrolled ? 'nav-scrolled' : '',
+  ].filter(Boolean).join(' ');
+
   return (
-    <nav>
+    <nav className={navClass}>
       <div className="nav-inner">
 
         {/* Logo */}

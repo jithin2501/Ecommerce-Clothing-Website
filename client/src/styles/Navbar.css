@@ -13,6 +13,43 @@ nav {
   top: 0;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+  transition: background 0.35s ease, border-color 0.35s ease;
+}
+
+/* Collections page: start transparent, overlaying the banner */
+nav.nav-collections {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  backdrop-filter: none;
+}
+
+/* After scrolling on collections page: use footer colour */
+nav.nav-scrolled {
+  background: var(--footer-bg, #2C2C2C);
+  border-bottom: 1px solid transparent;
+  backdrop-filter: none;
+}
+
+/* White text on collections transparent/scrolled states */
+nav.nav-collections .logo-text,
+nav.nav-collections .nav-links a,
+nav.nav-collections .action-item {
+  color: white;
+}
+
+nav.nav-collections .nav-links a:hover,
+nav.nav-collections .action-item:hover {
+  color: #E8C5A8;
+}
+
+/* Push the banner content down so it sits below the fixed nav */
+nav.nav-collections ~ * .col-banner,
+nav.nav-collections + * {
+  padding-top: 0;
 }
 
 .nav-inner {
@@ -64,6 +101,7 @@ nav {
   text-transform: uppercase;
   color: var(--charcoal);
   text-align: left;
+  transition: color 0.35s ease;
 }
 
 .nav-links {
