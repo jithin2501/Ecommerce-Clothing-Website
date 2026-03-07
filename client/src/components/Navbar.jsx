@@ -5,7 +5,7 @@ import '../styles/Navbar.css';
 
 export default function Navbar() {
   const location = useLocation();
-  const isCollections = location.pathname === '/collections';
+  const isCollections = location.pathname === '/collections' || location.pathname.startsWith('/collections/');
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
