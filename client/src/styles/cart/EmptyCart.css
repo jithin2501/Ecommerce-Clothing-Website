@@ -1,0 +1,8 @@
+.ec-page { min-height: 80vh; background: #f4f4f4; display: flex; align-items: center; justify-content: center; }
+.ec-inner { text-align: center; max-width: 340px; padding: 2rem; }
+.ec-icon-wrap { position: relative; width: 100px; height: 100px; background: #e8e8e8; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; }
+.ec-sad { position: absolute; bottom: 6px; right: 6px; font-size: 1.1rem; background: #fff; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+.ec-title { font-size: 1.25rem; font-weight: 800; color: #2C2C2C; margin-bottom: 0.6rem; }
+.ec-sub { font-size: 0.83rem; color: #888; line-height: 1.6; margin-bottom: 1.75rem; }
+.ec-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: #1E2A38; color: #fff; text-decoration: none; padding: 0.75rem 1.75rem; border-radius: 8px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.5px; transition: background 0.2s; }
+.ec-btn:hover { background: #2d3f52; }

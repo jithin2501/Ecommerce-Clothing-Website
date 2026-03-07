@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Heart, Share2, ShoppingBag, MapPin, Truck, Package, RotateCcw, Banknote, ShieldCheck, ShoppingCart } from 'lucide-react';
+import { useCart } from '../../context/CartContext';
 import '../../styles/collectiondetails/ProductInfo.css';
 
 const SIZES  = ['2-3Y', '4-5Y', '6-7Y', '8-9Y'];
@@ -19,6 +21,20 @@ export default function ProductInfo() {
   const [selectedColor, setSelectedColor] = useState('blush');
   const [wishlisted,    setWishlisted]    = useState(false);
   const [added,         setAdded]         = useState(false);
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const handleAddToBag = () => {
+    addToCart({
+      id: 1,
+      name: 'Garden Breeze Dress',
+      price: '$84.00',
+      size: selectedSize,
+      color: selectedColor,
+      img: '/images/img1.webp',
+    });
+    setAdded(true);
+  };
 
   return (
     <div className="pi-wrapper">
@@ -51,18 +67,18 @@ export default function ProductInfo() {
 
       <div className="pi-actions">
         {!added ? (
-          <button className="pi-add-btn" onClick={() => setAdded(true)}>
+          <button className="pi-add-btn" onClick={handleAddToBag}>
             <ShoppingBag size={18} /> Add to Bag
           </button>
         ) : (
-          <button className="pi-add-btn pi-go-to-bag" onClick={() => window.location.href = '/cart'}>
+          <button className="pi-add-btn pi-go-to-bag" onClick={() => navigate('/cart')}>
             <ShoppingCart size={18} /> Go to Bag
           </button>
         )}
-        <button className={`pi-icon-btn${wishlisted ? ' active' : ''}`} onClick={() => setWishlisted(p => !p)} title="Wishlist">
+        <button className={`pi-icon-btn${wishlisted ? ' active' : ''}`} onClick={() => setWishlisted(p => !p)}>
           <Heart size={18} fill={wishlisted ? 'currentColor' : 'none'} />
         </button>
-        <button className="pi-icon-btn" title="Share"><Share2 size={18} /></button>
+        <button className="pi-icon-btn"><Share2 size={18} /></button>
       </div>
 
       <div className="pi-delivery">

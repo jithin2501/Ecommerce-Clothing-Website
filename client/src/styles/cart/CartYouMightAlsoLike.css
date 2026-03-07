@@ -1,0 +1,17 @@
+.cyl-section { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid #eee; }
+.cyl-heading { font-size: 0.9rem; font-weight: 800; letter-spacing: 1px; color: #2C2C2C; margin-bottom: 1.25rem; }
+.cyl-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.cyl-card { display: flex; flex-direction: column; background: #F5F5F2; border-radius: 12px; overflow: hidden; }
+.cyl-img-wrap { position: relative; width: 100%; aspect-ratio: 1 / 1; overflow: hidden; background: #eee; }
+.cyl-img-wrap img { width: 100%; height: 100%; object-fit: contain; object-position: center; background: #F5EFE8; transition: transform 0.4s ease; }
+.cyl-card:hover .cyl-img-wrap img { transform: scale(1.04); }
+.cyl-age { position: absolute; bottom: 0.5rem; left: 0.5rem; background: rgba(0,0,0,0.55); color: #fff; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.5px; padding: 2px 7px; border-radius: 99px; }
+.cyl-wish { position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(255,255,255,0.85); border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center; }
+.cyl-info { padding: 0.6rem 0.75rem 0.25rem; }
+.cyl-name { font-size: 0.82rem; font-weight: 700; color: #2C2C2C; margin: 0 0 0.2rem; }
+.cyl-price { font-size: 0.8rem; font-weight: 700; color: #2C2C2C; margin: 0; }
+.cyl-add-btn { margin: 0.4rem 0.75rem 0.75rem; background: #1E2A38; color: #fff; border: none; border-radius: 8px; padding: 0.55rem; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.4rem; transition: background 0.2s; }
+.cyl-add-btn:hover { background: #2d3f52; }
+.cyl-go-cart { background: var(--accent-clay, #C17B5C) !important; }
+.cyl-go-cart:hover { background: #a8624a !important; }
+@media (max-width: 860px) { .cyl-grid { grid-template-columns: repeat(2, 1fr); } }

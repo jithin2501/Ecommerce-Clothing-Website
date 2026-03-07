@@ -1,16 +1,15 @@
 import { ShoppingCart, User } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useCart } from '../context/CartContext';
 import '../styles/Navbar.css';
 
 export default function Navbar() {
-  const location = useLocation();
+  const location  = useLocation();
+  const { cartCount } = useCart();
 
-  // /collections and /collections/:ageGroup → transparent banner pages
-  const pathParts = location.pathname.split('/').filter(Boolean);
+  const pathParts    = location.pathname.split('/').filter(Boolean);
   const isBannerPage = pathParts.length <= 2 && location.pathname.startsWith('/collections');
-
-  // /collections/:ageGroup/:product → detail page (white → footer on scroll)
   const isDetailPage = pathParts.length >= 3 && location.pathname.startsWith('/collections');
 
   const [scrolled, setScrolled] = useState(false);
@@ -34,21 +33,13 @@ export default function Navbar() {
     <nav className={navClass}>
       <div className="nav-inner">
 
-        {/* Logo */}
         <Link to="/" className="logo-container">
           <div className="logo-img">
-            <img
-              src="images/logo.png"
-              alt="Sumathi Trends"
-              onError={(e) => { e.target.style.opacity = '0'; }}
-            />
+            <img src="images/logo.png" alt="Sumathi Trends" onError={(e) => { e.target.style.opacity = '0'; }} />
           </div>
-          <div className="logo-text">
-            Sumathi<br />Trends
-          </div>
+          <div className="logo-text">Sumathi<br />Trends</div>
         </Link>
 
-        {/* Nav Links */}
         <ul className="nav-links">
           <li><Link to="/">Home</Link></li>
           <li><a href="#about">About Us</a></li>
@@ -57,19 +48,18 @@ export default function Navbar() {
           <li><a href="#">Contact</a></li>
         </ul>
 
-        {/* Actions */}
         <div className="nav-actions">
           <a href="#" className="action-item">
             <User size={18} />
             Account
           </a>
-          <a href="#" className="action-item">
+          <Link to="/cart" className="action-item">
             <div className="cart-wrapper">
               <ShoppingCart size={18} />
-              <span className="cart-count">2</span>
+              {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
             </div>
             Cart
-          </a>
+          </Link>
         </div>
 
       </div>
