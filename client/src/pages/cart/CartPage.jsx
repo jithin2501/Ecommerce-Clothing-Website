@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import CartItems from '../../components/cart/CartItems';
@@ -13,6 +13,10 @@ const GIFT_WRAP_COST = 6;
 export default function CartPage() {
   const { cartItems, updateQty, removeItem, subtotal } = useCart();
   const [giftWrapping, setGiftWrapping] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, []);
 
   if (cartItems.length === 0) return <EmptyCart />;
 
@@ -32,7 +36,6 @@ export default function CartPage() {
           <span className="cp-count">({cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'})</span>
         </h1>
 
-        {/* Free shipping bar */}
         <div className="cp-free-bar">
           <div className="cp-free-bar-icon">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
