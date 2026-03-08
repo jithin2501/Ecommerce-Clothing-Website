@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import '../styles/homepage/Hero.css';
+import '../../styles/homepage/Hero.css';
 
 const avatarUrls = [
   'https://i.pravatar.cc/100?u=11',

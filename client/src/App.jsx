@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles/globals.css';
 import { CartProvider } from './context/CartContext';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import Navbar from './components/navbar/Navbar';
+import Footer from './components/navbar/Footer';
 import HomePage from './pages/HomePage';
 import CollectionsPage from './pages/collections/CollectionsPage';
 import AgeGroupPage from './pages/collections/AgeGroupPage';

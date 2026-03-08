@@ -1,4 +1,4 @@
-import '../styles/navbar/Footer.css';
+import '../../styles/navbar/Footer.css';
 
 export default function Footer() {
   return (

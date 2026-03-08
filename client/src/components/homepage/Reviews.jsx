@@ -1,4 +1,4 @@
-import '../styles/homepage/Reviews.css';
+import '../../styles/homepage/Reviews.css';
 
 export default function Reviews() {
   return (

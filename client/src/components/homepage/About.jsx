@@ -1,5 +1,5 @@
 import { ArrowRight } from 'lucide-react';
-import '../styles/homepage/About.css';
+import '../../styles/homepage/About.css';
 
 export default function About() {
   return (
