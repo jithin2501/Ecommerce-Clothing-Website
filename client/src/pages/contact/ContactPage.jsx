@@ -7,7 +7,7 @@ export default function ContactPage() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
-  const [form, setForm] = useState({ name: '', email: '', subject: 'Customer Support', message: '' });
+  const [form, setForm] = useState({ name: '', phone: '', subject: '', message: '' });
   const [sent, setSent] = useState(false);
 
   const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
@@ -99,12 +99,12 @@ export default function ContactPage() {
                     />
                   </div>
                   <div className="contact-form-group">
-                    <label>Email Address</label>
+                    <label>Phone Number</label>
                     <input
-                      type="email"
-                      name="email"
-                      placeholder="hello@example.com"
-                      value={form.email}
+                      type="tel"
+                      name="phone"
+                      placeholder="+91 00000 00000"
+                      value={form.phone}
                       onChange={handleChange}
                     />
                   </div>
