@@ -33,7 +33,7 @@
 .prelat-img-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: #F5F5F2;
 }
