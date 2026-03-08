@@ -73,7 +73,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="contact-info-label">Email Us</p>
-                  <p className="contact-info-value">hello@sumathitrends.com</p>
+                  <p className="contact-info-value">sumathitrends.in@gmail.com</p>
                 </div>
               </div>
               <div className="contact-info-item">
@@ -82,7 +82,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="contact-info-label">Call Us</p>
-                  <p className="contact-info-value">+91 98765 43210</p>
+                  <p className="contact-info-value">+91 87928 88508</p>
                 </div>
               </div>
               <div className="contact-info-item">
@@ -91,7 +91,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="contact-info-label">Visit Us</p>
-                  <p className="contact-info-value">123 Fashion Street,<br />Chennai, Tamil Nadu 600001</p>
+                  <p className="contact-info-value">No.52, Saxena complex, Kodigehalli Main Rd,<br />Defence Layout, Sahakar Nagar,<br />Bengaluru, Karnataka 560092</p>
                 </div>
               </div>
             </div>
