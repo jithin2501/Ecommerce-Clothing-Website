@@ -19,7 +19,7 @@ export default function Footer() {
           </div>
           <p className="brand-description">
             Elevating children's fashion through timeless design, premium
-            materials, and exceptional craftsmanship since 2012.
+            materials, and exceptional craftsmanship since 2026.
           </p>
           <div className="social-links">
             <a href="https://facebook.com" className="social-icon" aria-label="Facebook">

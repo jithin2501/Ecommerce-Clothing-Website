@@ -93,6 +93,9 @@
   color: var(--footer-text-main, #ffffff);
   position: relative;
   padding-bottom: 12px;
+  height: 48px;
+  display: flex;
+  align-items: center;
 }
 
 .footer-column h3::after {
