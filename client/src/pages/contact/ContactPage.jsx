@@ -9,7 +9,22 @@ export default function ContactPage() {
   const [form, setForm] = useState({ name: '', phone: '', subject: '', message: '' });
   const [sent, setSent] = useState(false);
 
-  const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'name' || name === 'subject') {
+      // Only alphabets and spaces
+      if (/^[a-zA-Z\s]*$/.test(value)) {
+        setForm(f => ({ ...f, [name]: value }));
+      }
+    } else if (name === 'phone') {
+      // Only numbers, +, spaces, hyphens
+      if (/^[0-9+\s-]*$/.test(value)) {
+        setForm(f => ({ ...f, [name]: value }));
+      }
+    } else {
+      setForm(f => ({ ...f, [name]: value }));
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     setSent(true);
