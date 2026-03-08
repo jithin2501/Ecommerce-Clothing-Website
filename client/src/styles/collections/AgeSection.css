@@ -24,9 +24,9 @@
 }
 
 /* ── Card background colors — all in CSS, no inline styles ── */
-.age-card--peach { background-color: #EDD8C8; }
-.age-card--sage  { background-color: #D4DFD0; }
-.age-card--sand  { background-color: #E8D8B4; }
+.age-card--peach { background-color: #e4e2e2; }
+.age-card--sage  { background-color: #e4e2e2; }
+.age-card--sand  { background-color: #e4e2e2; }
 
 /* ── Image wrap ── */
 .age-img-wrap {
