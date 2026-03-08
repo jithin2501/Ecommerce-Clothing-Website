@@ -70,7 +70,7 @@ export default function ContactPage() {
             <div className="contact-info-list">
               <div className="contact-info-item">
                 <div className="contact-info-icon">
-                  <img src="/images/icons/gmail.png" alt="Email" className="contact-info-img" />
+                  <img src="/images/email-icon.png" alt="Email" className="contact-info-img" />
                 </div>
                 <div>
                   <p className="contact-info-label">Email Us</p>
@@ -79,7 +79,7 @@ export default function ContactPage() {
               </div>
               <div className="contact-info-item">
                 <div className="contact-info-icon">
-                  <img src="/images/icons/phone.png" alt="Phone" className="contact-info-img" />
+                  <img src="/images/phone-icon.png" alt="Phone" className="contact-info-img" />
                 </div>
                 <div>
                   <p className="contact-info-label">Call Us</p>
@@ -88,7 +88,7 @@ export default function ContactPage() {
               </div>
               <div className="contact-info-item">
                 <div className="contact-info-icon">
-                  <img src="/images/icons/map.png" alt="Location" className="contact-info-img" />
+                  <img src="/images/location-icon.png" alt="Location" className="contact-info-img" />
                 </div>
                 <div>
                   <p className="contact-info-label">Visit Us</p>
@@ -134,6 +134,7 @@ export default function ContactPage() {
                   <input
                     type="text"
                     name="subject"
+                    placeholder="Enter your subject"
                     value={form.subject}
                     onChange={handleChange}
                   />
