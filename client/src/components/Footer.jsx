@@ -4,16 +4,18 @@ export default function Footer() {
   return (
     <footer className="premium-footer">
       <div className="footer-content">
+
         {/* Brand */}
         <div className="footer-brand">
           <div className="logo-wrapper">
-            <img
-              src="./logo.png"
-              alt="Sumathi Trends"
-              className="brand-logo-img"
-              onError={(e) => { e.target.style.display = 'none'; }}
-            />
-            <span className="brand-name">Sumathi Trends</span>
+            <div className="footer-logo-img">
+              <img
+                src="./images/logo.png"
+                alt="Sumathi Trends"
+                onError={(e) => { e.target.style.display = 'none'; }}
+              />
+            </div>
+            <div className="footer-logo-text">Sumathi Trends</div>
           </div>
           <p className="brand-description">
             Elevating children's fashion through timeless design, premium
@@ -21,27 +23,15 @@ export default function Footer() {
           </p>
           <div className="social-links">
             <a href="https://facebook.com" className="social-icon" aria-label="Facebook">
-              <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="FB" />
+              <img src="/images/icons/facebook.png" alt="FB" />
             </a>
             <a href="https://instagram.com" className="social-icon" aria-label="Instagram">
-              <img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png" alt="IG" />
+              <img src="/images/icons/instagram.png" alt="IG" />
             </a>
-            <a href="https://wa.me/15551234567" className="social-icon" aria-label="WhatsApp">
-              <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WA" />
+            <a href="https://wa.me/918792888508" className="social-icon" aria-label="WhatsApp">
+              <img src="/images/icons/social.png" alt="WA" />
             </a>
           </div>
-        </div>
-
-        {/* Collections */}
-        <div className="footer-column">
-          <h3>Collections</h3>
-          <ul className="footer-links">
-            <li><a href="#">New Arrivals</a></li>
-            <li><a href="#">Best Sellers</a></li>
-            <li><a href="#">Premium Basics</a></li>
-            <li><a href="#">Occasion Wear</a></li>
-            <li><a href="#" className="highlight">Seasonal Sale</a></li>
-          </ul>
         </div>
 
         {/* Useful Links */}
@@ -56,38 +46,59 @@ export default function Footer() {
           </ul>
         </div>
 
+        {/* Category */}
+        <div className="footer-column">
+          <h3>Category</h3>
+          <ul className="footer-links">
+            <li><a href="#">Baby Frocks</a></li>
+            <li><a href="#">Birthday Frocks</a></li>
+            <li><a href="#">Tops &amp; T-Shirts</a></li>
+            <li><a href="#">Indo-Western Outfits</a></li>
+            <li><a href="#">Traditional Outfits</a></li>
+            <li><a href="#">Party Wear</a></li>
+            <li><a href="#">Boys Collection</a></li>
+          </ul>
+        </div>
+
         {/* Our Store */}
         <div className="footer-column">
           <h3>Our Store</h3>
           <ul className="contact-info">
             <li>
               <div className="contact-item">
-                <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt="Location" />
-                <span>123 Fifth Avenue,<br />New York, NY 10003</span>
+                <div className="contact-icon-circle">
+                  <img src="/images/icons/map.png" alt="Location" />
+                </div>
+                <span>No.52, Saxena complex, Kodigehalli Main Rd,<br />Defence Layout, Sahakar Nagar,<br />Bengaluru, Karnataka 560092</span>
               </div>
             </li>
             <li>
-              <div className="contact-item">
-                <img src="https://cdn-icons-png.flaticon.com/512/455/455705.png" alt="Phone" />
-                <span>+1 (555) 123-4567</span>
+              <div className="contact-item contact-item-center">
+                <div className="contact-icon-circle">
+                  <img src="/images/icons/phone.png" alt="Phone" />
+                </div>
+                <span>+91 87928 88508</span>
               </div>
             </li>
             <li>
-              <div className="contact-item">
-                <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" alt="Email" />
+              <div className="contact-item contact-item-center">
+                <div className="contact-icon-circle">
+                  <img src="/images/icons/gmail.png" alt="Email" />
+                </div>
                 <span>
-                  <a href="mailto:hello@sumathitrenez.com">hello@sumathitrenez.com</a>
+                  <a href="mailto:sumathitrends.in@gmail.com">sumathitrends.in@gmail.com</a>
                 </span>
               </div>
             </li>
           </ul>
         </div>
+
       </div>
 
       <div className="footer-divider" />
 
       <div className="footer-bottom">
-        <p>&copy; 2024 Sumathi Trends Kids' Fashion. All rights reserved.</p>
+        <p>&copy; 2026 Sumathi Trends. All rights reserved.</p>
         <div className="legal-links">
           <a href="#">Privacy Policy</a>
           <a href="#">Terms of Service</a>
