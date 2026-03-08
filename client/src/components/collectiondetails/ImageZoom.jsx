@@ -1,64 +1,72 @@
 import { useState, useRef } from 'react';
 import '../../styles/collectiondetails/ImageZoom.css';
 
-const ZOOM_SIZE  = 200;
+const ZOOM_SIZE  = 180;
 const ZOOM_LEVEL = 2.5;
-const OFFSET     = 16;
 
 export default function ImageZoom({ src, alt }) {
-  const [zoom, setZoom]         = useState(false);
-  const [fixedPos, setFixedPos] = useState({ x: 0, y: 0 });
-  const [bgPos, setBgPos]       = useState('0% 0%');
-  const containerRef            = useRef(null);
+  const [zoomEnabled, setZoomEnabled] = useState(false);
+  const [zoom, setZoom]               = useState(false);
+  const [zoomPos, setZoomPos]         = useState({ x: 0, y: 0 });
+  const [bgPos, setBgPos]             = useState('0% 0%');
+  const containerRef                  = useRef(null);
 
   const handleMouseMove = (e) => {
+    if (!zoomEnabled) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-
-    // Zoom box follows cursor — clamped to always stay inside viewport
-    let boxX = e.clientX + OFFSET;
-    let boxY = e.clientY + OFFSET;
-
-    // Flip to left if too close to right edge
-    if (boxX + ZOOM_SIZE > window.innerWidth - 8) {
-      boxX = e.clientX - ZOOM_SIZE - OFFSET;
-    }
-    // Flip upward if too close to bottom edge
-    if (boxY + ZOOM_SIZE > window.innerHeight - 8) {
-      boxY = e.clientY - ZOOM_SIZE - OFFSET;
-    }
-
-    setFixedPos({ x: boxX, y: boxY });
+    setZoomPos({ x: x - ZOOM_SIZE / 2, y: y - ZOOM_SIZE / 2 });
     setBgPos(`${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`);
   };
 
-  return (
-    <div
-      className="iz-container"
-      ref={containerRef}
-      onMouseEnter={() => setZoom(true)}
-      onMouseLeave={() => setZoom(false)}
-      onMouseMove={handleMouseMove}
-    >
-      <img src={src} alt={alt} className="iz-img" />
+  const toggleZoom = (e) => {
+    e.stopPropagation();
+    setZoomEnabled(prev => !prev);
+    setZoom(false);
+  };
 
-      {zoom && (
-        <div
-          className="iz-zoom-box"
-          style={{
-            position:           'fixed',
-            left:               fixedPos.x,
-            top:                fixedPos.y,
-            width:              ZOOM_SIZE,
-            height:             ZOOM_SIZE,
-            backgroundImage:    `url(${src})`,
-            backgroundSize:     `${ZOOM_LEVEL * 100}%`,
-            backgroundPosition: bgPos,
-            zIndex:             9999,
-          }}
-        />
-      )}
+  return (
+    <div className="iz-outer">
+      {/* Magnifier toggle button */}
+      <button
+        className={`iz-mag-btn${zoomEnabled ? ' iz-mag-active' : ''}`}
+        onClick={toggleZoom}
+        title={zoomEnabled ? 'Disable zoom' : 'Enable zoom'}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          <line x1="11" y1="8" x2="11" y2="14" />
+          <line x1="8" y1="11" x2="14" y2="11" />
+        </svg>
+      </button>
+
+      <div
+        className="iz-container"
+        ref={containerRef}
+        style={{ cursor: zoomEnabled ? 'crosshair' : 'default' }}
+        onMouseEnter={() => { if (zoomEnabled) setZoom(true); }}
+        onMouseLeave={() => setZoom(false)}
+        onMouseMove={handleMouseMove}
+      >
+        <img src={src} alt={alt} className="iz-img" />
+
+        {zoomEnabled && zoom && (
+          <div
+            className="iz-zoom-box"
+            style={{
+              left:               zoomPos.x,
+              top:                zoomPos.y,
+              width:              ZOOM_SIZE,
+              height:             ZOOM_SIZE,
+              backgroundImage:    `url(${src})`,
+              backgroundSize:     `${ZOOM_LEVEL * 100}%`,
+              backgroundPosition: bgPos,
+            }}
+          />
+        )}
+      </div>
     </div>
   );
 }
