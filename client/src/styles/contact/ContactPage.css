@@ -91,9 +91,9 @@
 }
 
 .contact-inner {
-  max-width: 1100px;
+  max-width: 1600px;
   margin: 0 auto;
-  padding: 0 var(--side-pad, 2rem);
+  padding: 0 14rem;
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 5rem;
@@ -111,11 +111,12 @@
 
 .contact-heading {
   font-family: 'Playfair Display', serif;
-  font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+  font-size: 1.6rem;
   font-weight: 900;
   color: var(--charcoal, #2C2C2C);
   line-height: 1.2;
   margin-bottom: 1rem;
+  max-width: 280px;
 }
 
 .contact-sub {
