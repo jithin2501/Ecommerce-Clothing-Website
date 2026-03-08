@@ -1,4 +1,4 @@
-import '../styles/Category.css';
+import '../styles/homepage/Category.css';
 
 const categories = [
   {

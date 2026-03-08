@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../styles/NewArrivals.css';
+import '../styles/homepage/NewArrivals.css';
 
 // Tabs: Baby, Girls, Boys — exactly as in the original HTML
 const TABS = ['Baby', 'Girls', 'Boys'];

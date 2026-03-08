@@ -1,5 +1,5 @@
 import { Truck, ShieldCheck, Headphones, CreditCard } from 'lucide-react';
-import '../styles/WhyUs.css';
+import '../styles/homepage/WhyUs.css';
 
 const items = [
   { icon: Truck, title: 'Free Shipping', desc: 'On all orders over $100' },

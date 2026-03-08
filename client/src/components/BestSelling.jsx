@@ -1,4 +1,4 @@
-import '../styles/BestSelling.css';
+import '../styles/homepage/BestSelling.css';
 
 // Arrow icon — exactly as in the original HTML SVG
 const ArrowIcon = () => (
