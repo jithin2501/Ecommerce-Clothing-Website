@@ -12,12 +12,13 @@ export default function Navbar() {
   const pathParts    = location.pathname.split('/').filter(Boolean);
   const isBannerPage = pathParts.length <= 2 && location.pathname.startsWith('/collections');
   const isDetailPage = pathParts.length >= 3 && location.pathname.startsWith('/collections');
+  const isContactPage = location.pathname === '/contact';
 
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     setScrolled(false);
-    if (!isBannerPage && !isDetailPage) return;
+    if (!isBannerPage && !isDetailPage && !isContactPage) return;
     const handleScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', handleScroll);
     handleScroll();
@@ -67,6 +68,7 @@ export default function Navbar() {
     isBannerPage ? 'nav-collections' : '',
     isBannerPage && scrolled ? 'nav-scrolled' : '',
     isDetailPage && scrolled ? 'nav-scrolled nav-detail-scrolled' : '',
+    isContactPage && scrolled ? 'nav-contact-scrolled' : '',
   ].filter(Boolean).join(' ');
 
   return (
@@ -85,7 +87,7 @@ export default function Navbar() {
           <li><a href="#about" onClick={(e) => handleSection(e, 'about')}>About Us</a></li>
           <li><Link to="/collections">Collections</Link></li>
           <li><a href="#reviews" onClick={(e) => handleSection(e, 'reviews')}>Review</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><Link to="/contact">Contact</Link></li>
         </ul>
 
         <div className="nav-actions">

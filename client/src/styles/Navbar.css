@@ -34,7 +34,22 @@ nav.nav-scrolled {
   backdrop-filter: none;
 }
 
-/* Detail page scrolled: footer bg + white text (nav is sticky not fixed) */
+/* Contact page scrolled: dark bg + white text */
+nav.nav-contact-scrolled {
+  background: var(--footer-bg, #2C2C2C);
+  border-bottom: 1px solid transparent;
+}
+
+nav.nav-contact-scrolled .logo-text,
+nav.nav-contact-scrolled .nav-links a,
+nav.nav-contact-scrolled .action-item {
+  color: white;
+}
+
+nav.nav-contact-scrolled .nav-links a:hover,
+nav.nav-contact-scrolled .action-item:hover {
+  color: #E8C5A8;
+}
 nav.nav-detail-scrolled {
   position: sticky;
   background: var(--footer-bg, #2C2C2C);
@@ -121,6 +136,7 @@ nav.nav-collections + * {
   color: var(--charcoal);
   text-align: left;
   transition: color 0.35s ease;
+  /* vertically center beside logo */
   display: flex;
   flex-direction: column;
   justify-content: center;
