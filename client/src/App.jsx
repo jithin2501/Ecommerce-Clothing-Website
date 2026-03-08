@@ -3,7 +3,7 @@ import './styles/globals.css';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/navbar/Footer';
-import HomePage from './pages/HomePage';
+import HomePage from './pages/Mainpage/HomePage';
 import CollectionsPage from './pages/collections/CollectionsPage';
 import AgeGroupPage from './pages/collections/AgeGroupPage';
 import CollectionDetailPage from './pages/collectiondetails/CollectionDetailPage';
