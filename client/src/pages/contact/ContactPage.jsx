@@ -58,7 +58,6 @@ export default function ContactPage() {
 
           {/* Left */}
           <div className="contact-left">
-            <p className="contact-eyebrow">GET IN TOUCH</p>
             <h2 className="contact-heading">
               We are here to help you and your little ones.
             </h2>
