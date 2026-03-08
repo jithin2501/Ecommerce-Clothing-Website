@@ -24,7 +24,6 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
 
-  // After navigating to '/', jump to saved section target
   useEffect(() => {
     const hash = sessionStorage.getItem('scrollTarget');
     if (!hash) return;
@@ -35,7 +34,6 @@ export default function Navbar() {
     }
   }, [location.pathname]);
 
-  // After navigating to '/' for Home, scroll to top
   useEffect(() => {
     if (sessionStorage.getItem('goHome') === '1' && location.pathname === '/') {
       sessionStorage.removeItem('goHome');

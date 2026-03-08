@@ -100,6 +100,7 @@ nav.nav-collections + * {
   background: #F8FAFC;
   border: 1px solid #E2E8F0;
   position: relative;
+  flex-shrink: 0;
 }
 
 .logo-img img {
@@ -120,6 +121,10 @@ nav.nav-collections + * {
   color: var(--charcoal);
   text-align: left;
   transition: color 0.35s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-self: center;
 }
 
 .nav-links {
