@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Mail, Phone, MapPin } from 'lucide-react';
 import '../../styles/contact/ContactPage.css';
 
 export default function ContactPage() {
@@ -55,21 +54,27 @@ export default function ContactPage() {
 
             <div className="contact-info-list">
               <div className="contact-info-item">
-                <div className="contact-info-icon"><Mail size={18} /></div>
+                <div className="contact-info-icon">
+                  <img src="/images/email-icon.png" alt="Email" className="contact-info-img" />
+                </div>
                 <div>
                   <p className="contact-info-label">Email Us</p>
                   <p className="contact-info-value">hello@sumathitrends.com</p>
                 </div>
               </div>
               <div className="contact-info-item">
-                <div className="contact-info-icon"><Phone size={18} /></div>
+                <div className="contact-info-icon">
+                  <img src="/images/phone-icon.png" alt="Phone" className="contact-info-img" />
+                </div>
                 <div>
                   <p className="contact-info-label">Call Us</p>
                   <p className="contact-info-value">+91 98765 43210</p>
                 </div>
               </div>
               <div className="contact-info-item">
-                <div className="contact-info-icon"><MapPin size={18} /></div>
+                <div className="contact-info-icon">
+                  <img src="/images/location-icon.png" alt="Location" className="contact-info-img" />
+                </div>
                 <div>
                   <p className="contact-info-label">Visit Us</p>
                   <p className="contact-info-value">123 Fashion Street,<br />Chennai, Tamil Nadu 600001</p>
