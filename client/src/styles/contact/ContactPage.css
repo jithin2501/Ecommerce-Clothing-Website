@@ -146,18 +146,18 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: rgba(193,123,92,0.1);
+  background: #ffffff;
   border: 1.5px solid rgba(193,123,92,0.2);
-  color: var(--accent-clay, #C17B5C);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
 }
 
 .contact-info-img {
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
 }
 
