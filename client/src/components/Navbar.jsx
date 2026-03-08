@@ -2,7 +2,7 @@ import { ShoppingCart, User } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useCart } from '../context/CartContext';
-import '../styles/Navbar.css';
+import '../styles/navbar/Navbar.css';
 
 export default function Navbar() {
   const location  = useLocation();
