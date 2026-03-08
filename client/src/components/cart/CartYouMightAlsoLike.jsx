@@ -10,12 +10,11 @@ const CartIcon = () => (
   </svg>
 );
 
-// Replace images with your actual src paths
 const PRODUCTS = [
-  { id: 101, name: 'Velvet Party Dress',    price: '$89.00',  age: 'AGES 0-2',  img: '/images/img1.webp', size: '2-3Y', color: 'velvet' },
-  { id: 102, name: 'Quilted Winter Jacket', price: '$135.00', age: 'AGES 4-12', img: '/images/img2.webp', size: '4-5Y', color: 'navy'   },
-  { id: 103, name: 'Classic Denim Jeans',   price: '$45.00',  age: 'AGES 1-8',  img: '/images/img3.webp', size: '2-3Y', color: 'blue'   },
-  { id: 104, name: 'Soft Knit Cardigan',    price: '$68.00',  age: 'AGES 0-10', img: '/images/img1.webp', size: '4-5Y', color: 'cream'  },
+  { id: 101, name: 'Velvet Party Dress',    price: '$89.00',  category: 'Party Wear', age: 'AGES 0-2',  img: '/images/img1.webp', size: '2-3Y', color: 'velvet', colors: ['#C17B5C', '#9B4D6E', '#3A5068'] },
+  { id: 102, name: 'Quilted Winter Jacket', price: '$135.00', category: 'Outerwear',  age: 'AGES 4-12', img: '/images/img2.webp', size: '4-5Y', color: 'navy',   colors: ['#1E2D3D', '#C8A882'] },
+  { id: 103, name: 'Classic Denim Jeans',   price: '$45.00',  category: 'Playwear',   age: 'AGES 1-8',  img: '/images/img3.webp', size: '2-3Y', color: 'blue',   colors: ['#7EB8D4', '#3A5068'] },
+  { id: 104, name: 'Soft Knit Cardigan',    price: '$68.00',  category: 'Knitwear',   age: 'AGES 0-10', img: '/images/img1.webp', size: '4-5Y', color: 'cream',  colors: ['#E8C8A8', '#C8B89A', '#7EB8D4'] },
 ];
 
 function AlsoLikeCard({ product }) {
@@ -36,8 +35,16 @@ function AlsoLikeCard({ product }) {
         <button className="cyl-wish">♡</button>
       </div>
       <div className="cyl-info">
-        <p className="cyl-name">{product.name}</p>
-        <p className="cyl-price">{product.price}</p>
+        <div className="cyl-top-row">
+          <span className="cyl-category">{product.category}</span>
+          <span className="cyl-price">{product.price}</span>
+        </div>
+        <div className="cyl-name">{product.name}</div>
+        <div className="cyl-colors">
+          {product.colors.map((c, i) => (
+            <span key={i} className="cyl-color-dot" style={{ backgroundColor: c }} />
+          ))}
+        </div>
       </div>
       {!added ? (
         <button className="cyl-add-btn" onClick={handleAdd}>
