@@ -22,10 +22,10 @@ export default function Footer() {
             materials, and exceptional craftsmanship since 2026.
           </p>
           <div className="social-links">
-            <a href="https://facebook.com" className="social-icon" aria-label="Facebook">
+            <a href="https://www.facebook.com/share/14U8LwvzzXa/?mibextid=wwXIfr" className="social-icon" aria-label="Facebook">
               <img src="/images/icons/facebook.png" alt="FB" />
             </a>
-            <a href="https://instagram.com" className="social-icon" aria-label="Instagram">
+            <a href="https://www.instagram.com/sumathitrends?igsh=MXE2OWtoeWNsZndz&utm_source=qr" className="social-icon" aria-label="Instagram">
               <img src="/images/icons/instagram.png" alt="IG" />
             </a>
             <a href="https://wa.me/918792888508" className="social-icon" aria-label="WhatsApp">
