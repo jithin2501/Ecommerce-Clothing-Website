@@ -130,13 +130,9 @@
 
 .contact-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   color: var(--footer-text-muted, rgba(255,255,255,0.6));
-}
-
-.contact-item-center {
-  align-items: center;
 }
 
 .contact-item-center {
