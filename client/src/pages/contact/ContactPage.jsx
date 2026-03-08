@@ -5,26 +5,6 @@ import '../../styles/contact/ContactPage.css';
 export default function ContactPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-
-    // Same scroll logic as collections: transparent nav → dark on scroll
-    const nav = document.querySelector('nav');
-    if (!nav) return;
-    const onScroll = () => {
-      if (window.scrollY > 60) {
-        nav.classList.add('nav-scrolled');
-        nav.classList.remove('nav-collections');
-      } else {
-        nav.classList.remove('nav-scrolled');
-        nav.classList.add('nav-collections');
-      }
-    };
-    nav.classList.add('nav-collections');
-    nav.classList.remove('nav-scrolled');
-    window.addEventListener('scroll', onScroll);
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      nav.classList.remove('nav-collections', 'nav-scrolled');
-    };
   }, []);
 
   const [form, setForm] = useState({ name: '', email: '', subject: 'Customer Support', message: '' });
@@ -42,7 +22,7 @@ export default function ContactPage() {
       {/* ── Banner ── */}
       <section className="contact-banner">
         <div className="contact-banner-bg">
-          <img src="/images/contact-banner.jpg" alt="Contact Banner" className="contact-banner-img" />
+          <img src="/images/banner.jpg" alt="Contact Banner" className="contact-banner-img" />
           <div className="contact-banner-overlay" />
         </div>
         <div className="contact-banner-content">

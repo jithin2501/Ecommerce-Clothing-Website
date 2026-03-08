@@ -14,11 +14,14 @@ export default function Navbar() {
   const isDetailPage = pathParts.length >= 3 && location.pathname.startsWith('/collections');
   const isContactPage = location.pathname === '/contact';
 
+  // Pages where nav starts fixed+transparent over a banner
+  const isFixedBanner = isBannerPage || isContactPage;
+
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     setScrolled(false);
-    if (!isBannerPage && !isDetailPage && !isContactPage) return;
+    if (!isFixedBanner && !isDetailPage) return;
     const handleScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', handleScroll);
     handleScroll();
@@ -64,12 +67,13 @@ export default function Navbar() {
     }
   };
 
-  const navClass = [
-    isBannerPage ? 'nav-collections' : '',
-    isBannerPage && scrolled ? 'nav-scrolled' : '',
-    isDetailPage && scrolled ? 'nav-scrolled nav-detail-scrolled' : '',
-    isContactPage && scrolled ? 'nav-contact-scrolled' : '',
-  ].filter(Boolean).join(' ');
+  // navClass: fixed+transparent on banner pages, dark when scrolled, sticky on detail
+  let navClass = '';
+  if (isFixedBanner) {
+    navClass = scrolled ? 'nav-banner-scrolled' : 'nav-collections';
+  } else if (isDetailPage && scrolled) {
+    navClass = 'nav-detail-scrolled';
+  }
 
   return (
     <nav className={navClass}>

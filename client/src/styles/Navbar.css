@@ -13,10 +13,10 @@ nav {
   top: 0;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
-  transition: background 0.35s ease, border-color 0.35s ease;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-/* Collections page: start transparent, overlaying the banner */
+/* ── Banner pages (collections + contact): fixed + transparent ── */
 nav.nav-collections {
   position: fixed;
   top: 0;
@@ -25,53 +25,14 @@ nav.nav-collections {
   background: transparent;
   border-bottom: 1px solid transparent;
   backdrop-filter: none;
+  transition: background 0.3s ease;
 }
 
-/* After scrolling on collections page: use footer colour */
-nav.nav-scrolled {
-  background: var(--footer-bg, #2C2C2C);
-  border-bottom: 1px solid transparent;
-  backdrop-filter: none;
-}
-
-/* Contact page scrolled: dark bg + white text */
-nav.nav-contact-scrolled {
-  background: var(--footer-bg, #2C2C2C);
-  border-bottom: 1px solid transparent;
-}
-
-nav.nav-contact-scrolled .logo-text,
-nav.nav-contact-scrolled .nav-links a,
-nav.nav-contact-scrolled .action-item {
-  color: white;
-}
-
-nav.nav-contact-scrolled .nav-links a:hover,
-nav.nav-contact-scrolled .action-item:hover {
-  color: #E8C5A8;
-}
-nav.nav-detail-scrolled {
-  position: sticky;
-  background: var(--footer-bg, #2C2C2C);
-  border-bottom: 1px solid transparent;
-}
-
-nav.nav-detail-scrolled .logo-text,
-nav.nav-detail-scrolled .nav-links a,
-nav.nav-detail-scrolled .action-item {
-  color: white;
-}
-
-nav.nav-detail-scrolled .nav-links a:hover,
-nav.nav-detail-scrolled .action-item:hover {
-  color: #E8C5A8;
-}
-
-/* White text on collections transparent/scrolled states */
 nav.nav-collections .logo-text,
 nav.nav-collections .nav-links a,
 nav.nav-collections .action-item {
   color: white;
+  transition: color 0.3s ease;
 }
 
 nav.nav-collections .nav-links a:hover,
@@ -79,12 +40,57 @@ nav.nav-collections .action-item:hover {
   color: #E8C5A8;
 }
 
-/* Push the banner content down so it sits below the fixed nav */
+/* ── Banner pages scrolled: STILL fixed, now dark ── */
+nav.nav-banner-scrolled {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--footer-bg, #2C2C2C);
+  border-bottom: 1px solid transparent;
+  backdrop-filter: none;
+  transition: background 0.3s ease;
+}
+
+nav.nav-banner-scrolled .logo-text,
+nav.nav-banner-scrolled .nav-links a,
+nav.nav-banner-scrolled .action-item {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+nav.nav-banner-scrolled .nav-links a:hover,
+nav.nav-banner-scrolled .action-item:hover {
+  color: #E8C5A8;
+}
+
+/* ── Detail page scrolled: sticky + dark ── */
+nav.nav-detail-scrolled {
+  position: sticky;
+  background: var(--footer-bg, #2C2C2C);
+  border-bottom: 1px solid transparent;
+  transition: background 0.3s ease;
+}
+
+nav.nav-detail-scrolled .logo-text,
+nav.nav-detail-scrolled .nav-links a,
+nav.nav-detail-scrolled .action-item {
+  color: white;
+  transition: color 0.3s ease;
+}
+
+nav.nav-detail-scrolled .nav-links a:hover,
+nav.nav-detail-scrolled .action-item:hover {
+  color: #E8C5A8;
+}
+
+/* Push content below fixed nav */
 nav.nav-collections ~ * .col-banner,
 nav.nav-collections + * {
   padding-top: 0;
 }
 
+/* ── Layout ── */
 .nav-inner {
   display: flex;
   justify-content: space-between;
@@ -135,8 +141,7 @@ nav.nav-collections + * {
   text-transform: uppercase;
   color: var(--charcoal);
   text-align: left;
-  transition: color 0.35s ease;
-  /* vertically center beside logo */
+  transition: color 0.3s ease;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -160,12 +165,10 @@ nav.nav-collections + * {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  transition: color 0.3s;
+  transition: color 0.3s ease;
 }
 
-.nav-links a:hover {
-  color: var(--accent-clay);
-}
+.nav-links a:hover { color: var(--accent-clay); }
 
 .nav-actions {
   display: flex;
@@ -189,12 +192,10 @@ nav.nav-collections + * {
   background: none;
   border: none;
   font-family: 'Inter', sans-serif;
-  transition: color 0.3s;
+  transition: color 0.3s ease;
 }
 
-.action-item:hover {
-  color: var(--accent-clay);
-}
+.action-item:hover { color: var(--accent-clay); }
 
 .cart-wrapper {
   position: relative;
