@@ -3,7 +3,7 @@
 ========================================================= */
 .new-arrivals-section {
   width: 100%;
-  padding: 2rem 0 5rem;
+  padding: 3rem 0;
 }
 
 /* ── Header ── */
@@ -20,7 +20,7 @@
   text-transform: uppercase;
   letter-spacing: 4px;
   color: var(--accent-clay);   /* "Arrivals" = clay */
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   text-align: center;
 }
 
@@ -34,7 +34,7 @@
   display: flex;
   justify-content: center;
   gap: 0.4rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .na-tab {

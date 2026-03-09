@@ -4,7 +4,7 @@
 .arrivals-section {
   width: 100%;
   background: #ffffff;
-  padding: 5rem 0 4rem;
+  padding: 3rem 0;
   position: relative;
   overflow: hidden;
 }
@@ -45,8 +45,6 @@
   align-items: center;
   justify-content: center;
   perspective: 1200px;
-  padding: 0 8%;
-  box-sizing: border-box;
 }
 
 .orbit-ring {

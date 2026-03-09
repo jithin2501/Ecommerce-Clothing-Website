@@ -32,10 +32,6 @@ export default function Category() {
           <h2 className="category-title">
             <span>Shop By</span> Category
           </h2>
-          <p className="category-sub">
-            Discover stylish and comfortable kidswear for girls and boys at Sumathi Trends,<br />
-            perfect for everyday wear and special occasions.
-          </p>
         </div>
 
         <div className="category-grid">
