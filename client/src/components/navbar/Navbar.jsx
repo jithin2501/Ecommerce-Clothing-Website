@@ -17,7 +17,6 @@ export default function Navbar() {
   const isCartPage = location.pathname === '/cart';
   const isHomePage = location.pathname === '/';
 
-  // Pages where nav starts fixed+transparent over a banner
   const isFixedBanner = isBannerPage || isContactPage;
 
   const [scrolled, setScrolled] = useState(false);
@@ -70,7 +69,6 @@ export default function Navbar() {
     }
   };
 
-  // navClass: fixed+transparent on banner pages, dark when scrolled, sticky on detail
   let navClass = '';
   if (isFixedBanner) {
     navClass = scrolled ? 'nav-banner-scrolled' : 'nav-collections';
@@ -98,10 +96,10 @@ export default function Navbar() {
         </ul>
 
         <div className="nav-actions">
-          <a href="#" className="action-item">
+          <Link to="/account" className="action-item">
             <User size={18} />
             Account
-          </a>
+          </Link>
           <Link to="/cart" className="action-item">
             <div className="cart-wrapper">
               <ShoppingCart size={18} />

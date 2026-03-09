@@ -9,6 +9,7 @@ import AgeGroupPage from './pages/collections/AgeGroupPage';
 import CollectionDetailPage from './pages/collectiondetails/CollectionDetailPage';
 import CartPage from './pages/cart/CartPage';
 import ContactPage from './pages/contact/ContactPage';
+import PersonInformation from './pages/personinformation/PersonInformation';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/collections/:ageGroup/:productSlug" element={<CollectionDetailPage />} />
           <Route path="/cart"                               element={<CartPage />} />
           <Route path="/contact"                            element={<ContactPage />} />
+          <Route path="/account"                            element={<PersonInformation />} />
         </Routes>
         <Footer />
       </CartProvider>
