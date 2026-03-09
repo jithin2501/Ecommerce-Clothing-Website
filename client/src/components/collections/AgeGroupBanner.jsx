@@ -6,7 +6,7 @@ export default function AgeGroupBanner({ meta }) {
       <div className="agb-bg">
         {/* Same image as CollectionsPage banner */}
         <img
-          src="/images/banner.jpg"
+          src="/images/poster2.jpg"
           alt={meta.label}
           className="agb-img"
         />
