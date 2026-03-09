@@ -15,6 +15,13 @@ export default function Hero() {
 
           {/* Left: Content */}
           <div className="hero-content">
+
+            {/* Typewriter tag */}
+            <div className="hero-tag">
+              <span className="dot" />
+              <span className="typewriter">Premium Kids Fashion</span>
+            </div>
+
             <h1 className="hero-title">
               <span className="line-1">Modern Style</span>
               <span className="line-2">
@@ -67,4 +74,3 @@ export default function Hero() {
     </section>
   );
 }
-
