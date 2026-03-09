@@ -4,13 +4,13 @@
 
 .new-arrivals-section {
   width: 100%;
-  padding: 5rem 0;   /* increased spacing between sections */
+  padding: 4rem 0; /* balanced spacing */
 }
 
 /* ── Header ── */
 .new-arrivals-header {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .new-arrivals-title {
@@ -19,7 +19,7 @@
   text-transform: uppercase;
   letter-spacing: 4px;
   color: var(--accent-clay);
-  margin-bottom: 0.8rem;
+  margin-bottom: 0.7rem;
 }
 
 .new-arrivals-title strong {
@@ -44,7 +44,6 @@
   background: transparent;
   color: var(--slate-gray);
   transition: all 0.25s ease;
-  font-family: 'Inter', sans-serif;
 }
 
 .na-tab.active {
@@ -93,19 +92,28 @@
   transform: scale(1.05);
 }
 
-.na-card-info {
-  padding: 0 0.1rem;
-}
-
 .na-card-name {
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--charcoal);
-  margin-bottom: 0.3rem;
 }
 
 .na-card-price {
   font-size: 0.88rem;
   font-weight: 700;
   color: var(--accent-clay);
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 1024px) {
+  .na-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .na-grid {
+    grid-template-columns: 1fr;
+  }
 }
