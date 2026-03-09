@@ -45,6 +45,8 @@
   align-items: center;
   justify-content: center;
   perspective: 1200px;
+  padding: 0 8%;
+  box-sizing: border-box;
 }
 
 .orbit-ring {
