@@ -3,13 +3,12 @@
 ========================================================= */
 .hero-section {
   width: 100%;
-  padding: 40px 0 40px;
+  padding: 40px 0;          /* keep top/bottom padding balanced */
   display: flex;
   align-items: center;
   overflow: hidden;
-  min-height: calc(100vh - 76px);
+  /* REMOVED min-height — this was causing the giant gap */
 }
-
 .hero-section .section-inner {
   width: 100%;
   display: flex;
@@ -54,24 +53,27 @@
   50%       { opacity: 0.4; transform: scale(0.7); }
 }
 
-.typewriter {
-  overflow: hidden;
+/* ── JS-driven Typewriter ── */
+.typewriter-js {
   white-space: nowrap;
-  border-right: 2px solid var(--accent-clay);
-  animation:
-    typing 2.5s steps(20, end) forwards,
-    blink 0.75s step-end infinite;
-  width: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-clay);
+  letter-spacing: 0.04em;
+  min-width: 0;
 }
 
-@keyframes typing {
-  from { width: 0; }
-  to   { width: 100%; }
+.typewriter-js .cursor {
+  display: inline-block;
+  margin-left: 1px;
+  color: var(--accent-clay);
+  animation: blink-cursor 0.75s step-end infinite;
+  font-weight: 300;
 }
 
-@keyframes blink {
-  0%, 100% { border-color: var(--accent-clay); }
-  50%       { border-color: transparent; }
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
 }
 
 /* ── Title ── */

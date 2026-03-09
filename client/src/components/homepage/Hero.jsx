@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import '../../styles/homepage/Hero.css';
 
 const avatarUrls = [
@@ -7,7 +8,62 @@ const avatarUrls = [
   'https://i.pravatar.cc/100?u=33',
 ];
 
+const PHRASES = [
+  'Premium Kids Fashion',
+  'Organic Cotton & Linen',
+  'Ages 0–12 Essentials',
+  'Loved by 2,400+ Parents',
+  'Adventure-Ready Styles',
+];
+
+const TYPING_SPEED = 60;    // ms per character
+const DELETING_SPEED = 35;  // ms per character
+const PAUSE_AFTER_TYPE = 1600;  // ms before deleting
+const PAUSE_AFTER_DELETE = 400; // ms before next phrase
+
 export default function Hero() {
+  const [displayed, setDisplayed] = useState('');
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    if (isPaused) return;
+
+    const currentPhrase = PHRASES[phraseIndex];
+
+    if (!isDeleting && displayed === currentPhrase) {
+      // Finished typing — pause then start deleting
+      setIsPaused(true);
+      setTimeout(() => {
+        setIsDeleting(true);
+        setIsPaused(false);
+      }, PAUSE_AFTER_TYPE);
+      return;
+    }
+
+    if (isDeleting && displayed === '') {
+      // Finished deleting — pause then move to next phrase
+      setIsPaused(true);
+      setTimeout(() => {
+        setPhraseIndex((i) => (i + 1) % PHRASES.length);
+        setIsDeleting(false);
+        setIsPaused(false);
+      }, PAUSE_AFTER_DELETE);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setDisplayed((prev) =>
+        isDeleting
+          ? prev.slice(0, -1)
+          : currentPhrase.slice(0, prev.length + 1)
+      );
+    }, isDeleting ? DELETING_SPEED : TYPING_SPEED);
+
+    return () => clearTimeout(timeout);
+  }, [displayed, isDeleting, isPaused, phraseIndex]);
+
   return (
     <section className="hero-section">
       <div className="section-inner">
@@ -19,7 +75,7 @@ export default function Hero() {
             {/* Typewriter tag */}
             <div className="hero-tag">
               <span className="dot" />
-              <span className="typewriter">Premium Kids Fashion</span>
+              <span className="typewriter-js">{displayed}<span className="cursor">|</span></span>
             </div>
 
             <h1 className="hero-title">
