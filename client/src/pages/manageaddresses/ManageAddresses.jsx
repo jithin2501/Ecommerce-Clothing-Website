@@ -22,7 +22,20 @@ export default function ManageAddresses() {
   const [activeSubNav, setActiveSubNav] = useState('address');
   const [form, setForm]                 = useState(emptyForm);
   const [errors, setErrors]             = useState({});
-  const [addresses, setAddresses]       = useState([]);
+  const [addresses, setAddresses_] = useState(() => {
+    try {
+      const saved = localStorage.getItem('sumathi_addresses');
+      return saved ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+
+  const setAddresses = (updater) => {
+    setAddresses_(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      try { localStorage.setItem('sumathi_addresses', JSON.stringify(next)); } catch {}
+      return next;
+    });
+  };
   const [saved, setSaved]               = useState(false);
   const [menuOpen, setMenuOpen]         = useState(null); // address id with open menu
   const [editingId, setEditingId]       = useState(null); // id being edited
