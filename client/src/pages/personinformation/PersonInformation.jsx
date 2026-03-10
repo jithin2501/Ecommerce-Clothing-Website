@@ -2,10 +2,17 @@ import { useState } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/personinformation/PersonInformation.css';
 
-function SaveButton({ section }) {
+function SaveButton({ section, onValidate }) {
   const [state, setState] = useState('idle');
+  const [error, setError] = useState('');
 
   const handleClick = () => {
+    if (onValidate && !onValidate()) {
+      setError('Please fill in all fields.');
+      setTimeout(() => setError(''), 2500);
+      return;
+    }
+    setError('');
     setState('saving');
     setTimeout(() => {
       setState('saved');
@@ -19,6 +26,7 @@ function SaveButton({ section }) {
 
   return (
     <div className="save-btn-container">
+      {error && <span className="save-error">{error}</span>}
       <button
         className="btn-save"
         onClick={handleClick}
@@ -71,11 +79,11 @@ export default function PersonInformation() {
             <div className="form-grid">
               <div className="input-group">
                 <label>First Name</label>
-                <input type="text" value={firstName} placeholder="e.g. Sumathi" onChange={e => setFirstName(e.target.value)} />
+                <input type="text" value={firstName} placeholder="e.g. Sumathi" onChange={e => setFirstName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))} required />
               </div>
               <div className="input-group">
                 <label>Last Name</label>
-                <input type="text" value={lastName} placeholder="e.g." onChange={e => setLastName(e.target.value)} />
+                <input type="text" value={lastName} placeholder="e.g." onChange={e => setLastName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))} required />
               </div>
             </div>
 
@@ -97,7 +105,7 @@ export default function PersonInformation() {
               </div>
             </div>
 
-            <SaveButton section="Personal Information" />
+            <SaveButton section="Personal Information" onValidate={() => firstName.trim() !== '' && lastName.trim() !== '' && gender !== ''} />
           </div>
 
           {/* Email Card */}
@@ -110,10 +118,10 @@ export default function PersonInformation() {
             </div>
             <div className="form-grid">
               <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                <input type="email" value={email} placeholder="email@example.com" onChange={e => setEmail(e.target.value)} />
+                <input type="email" value={email} placeholder="email@example.com" onChange={e => setEmail(e.target.value)} required />
               </div>
             </div>
-            <SaveButton section="Email Address" />
+            <SaveButton section="Email Address" onValidate={() => email.trim() !== ''} />
           </div>
 
           {/* Mobile Card */}
@@ -129,13 +137,13 @@ export default function PersonInformation() {
                 <input
                   type="tel"
                   value={mobile}
-                  placeholder="+91 XXXXX XXXXX"
-                  maxLength={14}
-                  onChange={e => setMobile(e.target.value.replace(/[^0-9+ ]/g, ''))}
+                  placeholder="Enter 10-digit mobile number"
+                  maxLength={10}
+                  onChange={e => setMobile(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
                 />
               </div>
             </div>
-            <SaveButton section="Mobile Number" />
+            <SaveButton section="Mobile Number" onValidate={() => mobile.trim().length >= 10} />
           </div>
 
           <div className="delete-account-wrapper">

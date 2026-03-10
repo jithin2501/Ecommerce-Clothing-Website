@@ -217,3 +217,17 @@
   object-fit: contain;
   flex-shrink: 0;
 }
+
+.save-error {
+  font-size: 12px;
+  color: #ff3f6c;
+  margin-right: 12px;
+  font-weight: 500;
+}
+
+.save-btn-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 10px;
+}
