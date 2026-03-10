@@ -86,7 +86,10 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
           <div className="logout-icon-wrap">
             <img src="/images/sidebar/switch.png" alt="logout" className="nav-icon-img" />
           </div>
-          <span className="logout-label">LOGOUT</span>
+          <div>
+            <div className="logout-label-small">LOGOUT</div>
+            <div className="logout-title">Sign Out</div>
+          </div>
         </button>
       </div>
 

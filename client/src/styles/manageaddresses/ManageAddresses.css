@@ -55,7 +55,7 @@
 .ma-form-title {
   font-size: 12px;
   font-weight: 700;
-  color: #2874f0;
+  color: #2C3E50;
   letter-spacing: 0.06em;
 }
 
@@ -66,7 +66,7 @@
   padding: 6px 14px;
   font-size: 12px;
   font-weight: 600;
-  color: #2874f0;
+  color: #2C3E50;
   cursor: pointer;
   font-family: 'Inter', sans-serif;
   transition: background 0.15s;
@@ -116,7 +116,7 @@
 .ma-field textarea::placeholder { color: #bbb; }
 .ma-field input:focus,
 .ma-field select:focus,
-.ma-field textarea:focus { border-color: #2874f0; }
+.ma-field textarea:focus { border-color: #2C3E50; }
 .ma-field textarea { resize: none; }
 .ma-field select { appearance: auto; cursor: pointer; }
 
@@ -133,7 +133,7 @@
   font-size: 14px; cursor: pointer; color: #212121;
 }
 .ma-radio input[type="radio"] {
-  accent-color: #2874f0;
+  accent-color: #2C3E50;
   width: 16px; height: 16px; cursor: pointer;
 }
 
@@ -146,7 +146,7 @@
 }
 
 .ma-btn-save {
-  background: #2874f0;
+  background: #2C3E50;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -159,7 +159,7 @@
   text-transform: uppercase;
   transition: background 0.2s;
 }
-.ma-btn-save:hover { background: #1a5fd4; }
+.ma-btn-save:hover { background: #1a2d3d; }
 
 .ma-btn-cancel {
   background: none;
