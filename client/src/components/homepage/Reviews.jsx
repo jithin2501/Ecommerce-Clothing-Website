@@ -1,6 +1,23 @@
+import { useEffect } from 'react';
 import '../../styles/homepage/Reviews.css';
 
 export default function Reviews() {
+  useEffect(() => {
+    const handleReviewLink = (e) => {
+      e.preventDefault();
+      const section = document.getElementById('reviews');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    const links = document.querySelectorAll('a[href="#reviews"]');
+    links.forEach((link) => link.addEventListener('click', handleReviewLink));
+    return () => {
+      links.forEach((link) => link.removeEventListener('click', handleReviewLink));
+    };
+  }, []);
+
   return (
     <section id="reviews" className="rv2-section">
       <div className="section-inner">

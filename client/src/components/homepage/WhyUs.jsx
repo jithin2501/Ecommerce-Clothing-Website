@@ -10,7 +10,7 @@ const items = [
 
 export default function WhyUs() {
   return (
-    <section className="why-section">
+    <section className="why-section" style={{ paddingBottom: '0', marginBottom: '0' }}>
       <div className="section-inner">
         <h2 className="why-title-label">
           Why <span>Choosing Us</span>

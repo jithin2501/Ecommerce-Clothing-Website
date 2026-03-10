@@ -1,7 +1,8 @@
 .rv2-section {
+  scroll-margin-top: 70px;
   width: 100%;
-  height: auto;
-  padding: 3rem 0;
+  min-height: calc(100vh - 70px);
+  padding: 0;
   display: flex;
   align-items: center;
   background: #fff;
@@ -129,7 +130,10 @@
 .rv2-box-stars { color: #F59E0B; font-size: 0.9rem; margin-top: 2px; }
 
 @media (max-width: 1024px) {
-  .rv2-section { height: auto; padding: 4rem 0; }
+  .rv2-section {
+    min-height: calc(100vh - 70px);
+    padding: 2rem 0;
+  }
   .rv2-layout { flex-direction: column; align-items: center; text-align: center; }
   .rv2-right { align-items: center; }
   .rv2-left { width: 100%; max-width: 350px; height: auto; }
