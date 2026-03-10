@@ -12,12 +12,10 @@ export default function ContactPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'name' || name === 'subject') {
-      // Only alphabets and spaces
       if (/^[a-zA-Z\s]*$/.test(value)) {
         setForm(f => ({ ...f, [name]: value }));
       }
     } else if (name === 'phone') {
-      // Only numbers, +, spaces, hyphens
       if (/^[0-9+\s-]*$/.test(value)) {
         setForm(f => ({ ...f, [name]: value }));
       }
@@ -25,6 +23,7 @@ export default function ContactPage() {
       setForm(f => ({ ...f, [name]: value }));
     }
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setSent(true);
@@ -39,6 +38,8 @@ export default function ContactPage() {
           <img src="/images/banner.jpg" alt="Contact Banner" className="contact-banner-img" />
           <div className="contact-banner-overlay" />
         </div>
+        {/* Bottom white fade */}
+        <div className="contact-banner-fade" />
         <div className="contact-banner-content">
           <p className="contact-banner-tag">Get In Touch</p>
           <h1 className="contact-banner-title">

@@ -6,7 +6,7 @@
   background: #fff;
 }
 
-/* ── Banner (same design as CollectionsBanner) ── */
+/* ── Banner ── */
 .contact-banner {
   position: relative;
   width: 100%;
@@ -39,12 +39,24 @@
   background: rgba(0,0,0,0.35);
 }
 
+/* ── Bottom fade to white ── */
+.contact-banner-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.85));
+  z-index: 2;
+  pointer-events: none;
+}
+
 .contact-banner-content {
   position: absolute;
   top: calc(50% + 38px);
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 2;
+  z-index: 3;
   text-align: center;
   color: white;
   max-width: 680px;
