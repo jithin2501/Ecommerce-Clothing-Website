@@ -3,7 +3,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/personinformation/PersonInformation.css';
 
 function SaveButton({ section }) {
-  const [state, setState] = useState('idle'); // idle | saving | saved
+  const [state, setState] = useState('idle');
 
   const handleClick = () => {
     setState('saving');
@@ -34,11 +34,11 @@ function SaveButton({ section }) {
 export default function PersonInformation() {
   const [activeNav, setActiveNav]       = useState('account-settings');
   const [activeSubNav, setActiveSubNav] = useState('profile');
-  const [gender, setGender]             = useState('male');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [mobile, setMobile] = useState('');
+  const [gender, setGender]             = useState('');
+  const [firstName, setFirstName]       = useState('');
+  const [lastName, setLastName]         = useState('');
+  const [email, setEmail]               = useState('');
+  const [mobile, setMobile]             = useState('');
 
   return (
     <div className="pi-page">
@@ -63,7 +63,7 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <img src="" alt="personal" className="card-icon-img" /> Personal Information
+                <img src="images/personalinfor/profile.png" alt="personal" className="card-icon-img" /> Personal Information
               </div>
               <span className="edit-cancel">Cancel</span>
             </div>
@@ -104,7 +104,7 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <img src="" alt="email" className="card-icon-img" /> Email Address
+                <img src="images/personalinfor/emails.png" alt="email" className="card-icon-img" /> Email Address
               </div>
               <span className="edit-cancel">Cancel</span>
             </div>
@@ -120,19 +120,27 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <img src="" alt="mobile" className="card-icon-img" /> Mobile Number
+                <img src="images/personalinfor/number.png" alt="mobile" className="card-icon-img" /> Mobile Number
               </div>
               <span className="edit-cancel">Cancel</span>
             </div>
             <div className="form-grid">
               <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                <input type="text" value={mobile} placeholder="+1 (555) 000-0000" onChange={e => setMobile(e.target.value)} />
+                <input
+                  type="tel"
+                  value={mobile}
+                  placeholder="+91 XXXXX XXXXX"
+                  maxLength={14}
+                  onChange={e => setMobile(e.target.value.replace(/[^0-9+ ]/g, ''))}
+                />
               </div>
             </div>
             <SaveButton section="Mobile Number" />
           </div>
 
-          <div className="delete-account-wrapper"><span className="delete-account">Delete Account</span></div>
+          <div className="delete-account-wrapper">
+            <span className="delete-account">Delete Account</span>
+          </div>
 
         </main>
       </div>
