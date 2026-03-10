@@ -3,11 +3,10 @@
 ========================================================= */
 .hero-section {
   width: 100%;
-  padding: 40px 0;          /* keep top/bottom padding balanced */
+  padding: 40px 0;
   display: flex;
   align-items: center;
   overflow: hidden;
-  /* REMOVED min-height — this was causing the giant gap */
 }
 .hero-section .section-inner {
   width: 100%;
@@ -183,26 +182,13 @@
   align-items: center;
 }
 
-/* ── Glow behind image ── */
-.hero-visuals::before {
-  content: '';
-  position: absolute;
-  width: 80%;
-  height: 80%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(210, 140, 100, 0.5) 0%,
-    rgba(240, 180, 140, 0.3) 40%,
-    rgba(255, 245, 238, 0.0) 70%
-  );
-  border-radius: 50%;
-  z-index: 0;
-  filter: blur(60px);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+/* Remove all pseudo-element orbs */
+.hero-visuals::before,
+.hero-visuals::after {
+  display: none;
 }
 
+/* ── Glow only via drop-shadow on the image itself ── */
 .main-model {
   position: relative;
   z-index: 5;
@@ -210,7 +196,26 @@
   max-width: 780px;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0px 0px 60px rgba(210, 140, 100, 0.4));
+  filter:
+    drop-shadow(0 0 18px rgba(210, 140, 100, 0.75))
+    drop-shadow(0 0 45px rgba(210, 140, 100, 0.45))
+    drop-shadow(0 0 80px rgba(230, 160, 110, 0.25));
+  animation: imageGlow 3s ease-in-out infinite alternate;
+}
+
+@keyframes imageGlow {
+  from {
+    filter:
+      drop-shadow(0 0 15px rgba(210, 140, 100, 0.65))
+      drop-shadow(0 0 40px rgba(210, 140, 100, 0.35))
+      drop-shadow(0 0 70px rgba(230, 160, 110, 0.2));
+  }
+  to {
+    filter:
+      drop-shadow(0 0 22px rgba(210, 140, 100, 0.85))
+      drop-shadow(0 0 55px rgba(210, 140, 100, 0.55))
+      drop-shadow(0 0 100px rgba(230, 160, 110, 0.3));
+  }
 }
 
 /* ── Responsive ── */
