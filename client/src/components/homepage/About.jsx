@@ -1,7 +1,24 @@
 import { ArrowRight } from 'lucide-react';
+import { useEffect } from 'react';
 import '../../styles/homepage/About.css';
 
 export default function About() {
+  useEffect(() => {
+    const handleAboutLink = (e) => {
+      e.preventDefault();
+      const section = document.getElementById('about');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+
+    const links = document.querySelectorAll('a[href="#about"]');
+    links.forEach((link) => link.addEventListener('click', handleAboutLink));
+    return () => {
+      links.forEach((link) => link.removeEventListener('click', handleAboutLink));
+    };
+  }, []);
+
   return (
     <section id="about" className="about-section">
       <div className="section-inner">
@@ -15,8 +32,7 @@ export default function About() {
               alt="About Sumathi Trends"
               className="about-img"
               onError={(e) => {
-                e.target.src =
-                  'images/about.png';
+                e.target.src = 'images/about.png';
               }}
             />
           </div>

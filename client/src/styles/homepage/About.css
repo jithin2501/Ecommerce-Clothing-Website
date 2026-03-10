@@ -5,6 +5,7 @@
   align-items: center;
   box-sizing: border-box;
   position: relative;
+  scroll-margin-top: 70px; /* adjust to match your navbar height */
 }
 
 .about-top-label {
