@@ -14,13 +14,15 @@
 }
 
 .pi-page {
-  background-color: var(--bg-gray);
+  background-color: #ffffff;
   min-height: 100vh;
   display: flex;
   justify-content: center;
-  padding: 20px;
+  padding: 40px 20px;
   font-family: 'Inter', sans-serif;
   color: var(--text-dark);
+  margin-top: 35px;
+  margin-bottom: 35px;
 }
 
 .pi-container {
@@ -35,7 +37,7 @@
 .main-content {
   flex-grow: 1;
   background: var(--white);
-  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
   border-radius: 12px;
   padding: 28px 32px 24px;
   min-width: 0;
