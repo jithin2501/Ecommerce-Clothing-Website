@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/manageaddresses/ManageAddresses.css';
 
@@ -18,6 +18,8 @@ const emptyForm = {
 };
 
 export default function ManageAddresses() {
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+
   const [activeNav, setActiveNav]       = useState('account-settings');
   const [activeSubNav, setActiveSubNav] = useState('address');
   const [form, setForm]                 = useState(emptyForm);
