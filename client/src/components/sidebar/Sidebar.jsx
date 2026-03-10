@@ -14,10 +14,8 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
           />
           <div className="status-dot" />
         </div>
-        <div className="profile-info">
-          <div className="welcome-text">Welcome back,</div>
-          <div className="user-name">Alex Johnston</div>
-        </div>
+        <div className="welcome-text">Welcome back,</div>
+        <div className="user-name">Alex Johnston</div>
       </div>
 
       {/* My Orders */}
@@ -75,10 +73,13 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
       <div className="sidebar-spacer" />
 
       {/* Logout */}
-      <div className="nav-section">
-        <div className="nav-item logout-btn">
-          <i>⏻</i> LOGOUT
-        </div>
+      <div className="logout-wrap">
+        <button className="logout-card">
+          <div className="logout-icon-wrap">⏻</div>
+          <div className="logout-text">
+            <span className="logout-label">LOGOUT</span>
+          </div>
+        </button>
       </div>
 
       {/* Help Center */}

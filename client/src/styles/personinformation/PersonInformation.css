@@ -26,7 +26,7 @@
 .pi-container {
   display: flex;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1100px;
   gap: 16px;
   align-items: stretch;
 }
@@ -37,11 +37,11 @@
   background: var(--white);
   box-shadow: 0 2px 4px rgba(0,0,0,0.08);
   border-radius: 12px;
-  padding: 24px 32px;
+  padding: 28px 32px 24px;
   min-width: 0;
 }
 
-.content-header { margin-bottom: 30px; }
+.content-header { margin-bottom: 24px; }
 
 .content-header h1 {
   font-size: 18px;
@@ -181,7 +181,7 @@
 /* Delete Account */
 .delete-account {
   display: inline-block;
-  margin-top: 40px;
+  margin-top: 20px;
   color: var(--danger-red);
   font-size: 13px;
   cursor: pointer;
@@ -201,6 +201,7 @@
   display: flex;
   justify-content: center;
   margin-top: 8px;
+  margin-bottom: 16px;
 }
 
 /* Responsive */

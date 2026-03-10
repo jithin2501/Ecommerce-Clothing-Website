@@ -12,22 +12,26 @@
   border-radius: 12px;
   flex-shrink: 0;
   align-self: stretch;
+  padding-bottom: 20px;
 }
 
 /* Profile Header */
 .profile-header {
-  padding: 28px 16px 12px;
+  padding: 28px 16px 20px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  text-align: center;
+  gap: 8px;
   border-bottom: 1px solid #f1f3f6;
 }
 
 .avatar-container {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 72px;
+  height: 72px;
   flex-shrink: 0;
+  margin-bottom: 4px;
 }
 
 .avatar {
@@ -35,6 +39,7 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  border: 3px solid #e2e8f0;
 }
 
 .status-dot {
@@ -53,12 +58,14 @@
   text-transform: uppercase;
   color: #878787;
   letter-spacing: 0.5px;
+  text-align: center;
 }
 
 .user-name {
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 700;
   color: #212121;
+  text-align: center;
 }
 
 /* Nav Sections */
@@ -127,9 +134,8 @@
 
 /* Help Center */
 .help-center-card {
-  margin: 0 16px 20px;
-  margin-top: auto;
-  padding: 12px;
+  margin: 0 16px 0;
+  padding: 10px;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   display: flex;
@@ -163,3 +169,39 @@
 }
 
 .sidebar-spacer { flex: 1; }
+
+/* ── Logout Card (matches Help Center style) ── */
+.logout-wrap { padding: 0 16px 8px; }
+
+.logout-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  background: #fff0f3;
+  border: 1px solid #ffd6de;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.15s;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.logout-card:hover { background: #ffe0e6; }
+
+.logout-icon-wrap {
+  background: #ffe0e6;
+  padding: 6px;
+  border-radius: 4px;
+  font-style: normal;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.logout-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ff3f6c;
+}
