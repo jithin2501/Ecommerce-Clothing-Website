@@ -16,6 +16,7 @@ export default function Navbar() {
 
   const isCartPage = location.pathname === '/cart';
   const isHomePage = location.pathname === '/';
+  const isAccountPage = location.pathname === '/account' || location.pathname.startsWith('/account/');
 
   const isFixedBanner = isBannerPage || isContactPage;
 
@@ -23,7 +24,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setScrolled(false);
-    if (!isFixedBanner && !isDetailPage && !isCartPage && !isHomePage) return;
+    if (!isFixedBanner && !isDetailPage && !isCartPage && !isHomePage && !isAccountPage) return;
     const handleScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', handleScroll);
     handleScroll();
@@ -72,7 +73,7 @@ export default function Navbar() {
   let navClass = '';
   if (isFixedBanner) {
     navClass = scrolled ? 'nav-banner-scrolled' : 'nav-collections';
-  } else if ((isDetailPage || isCartPage || isHomePage) && scrolled) {
+  } else if ((isDetailPage || isCartPage || isHomePage || isAccountPage) && scrolled) {
     navClass = 'nav-detail-scrolled';
   }
 

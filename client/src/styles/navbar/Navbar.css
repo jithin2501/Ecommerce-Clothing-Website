@@ -16,12 +16,8 @@ nav {
   transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-/* ── Banner pages (collections + contact): fixed + transparent ── */
 nav.nav-collections {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: fixed; top: 0; left: 0; right: 0;
   background: transparent;
   border-bottom: 1px solid transparent;
   backdrop-filter: none;
@@ -30,22 +26,12 @@ nav.nav-collections {
 
 nav.nav-collections .logo-text,
 nav.nav-collections .nav-links a,
-nav.nav-collections .action-item {
-  color: white;
-  transition: color 0.3s ease;
-}
-
+nav.nav-collections .action-item { color: white; transition: color 0.3s ease; }
 nav.nav-collections .nav-links a:hover,
-nav.nav-collections .action-item:hover {
-  color: #E8C5A8;
-}
+nav.nav-collections .action-item:hover { color: #E8C5A8; }
 
-/* ── Banner pages scrolled: STILL fixed, now dark ── */
 nav.nav-banner-scrolled {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  position: fixed; top: 0; left: 0; right: 0;
   background: var(--footer-bg, #2C2C2C);
   border-bottom: 1px solid transparent;
   backdrop-filter: none;
@@ -54,43 +40,27 @@ nav.nav-banner-scrolled {
 
 nav.nav-banner-scrolled .logo-text,
 nav.nav-banner-scrolled .nav-links a,
-nav.nav-banner-scrolled .action-item {
-  color: white;
-  transition: color 0.3s ease;
-}
-
+nav.nav-banner-scrolled .action-item { color: white; transition: color 0.3s ease; }
 nav.nav-banner-scrolled .nav-links a:hover,
-nav.nav-banner-scrolled .action-item:hover {
-  color: #E8C5A8;
-}
+nav.nav-banner-scrolled .action-item:hover { color: #E8C5A8; }
 
-/* ── Detail page scrolled: sticky + dark ── */
+/* ── Scrolled on account/detail/cart/home pages → #2C3E50 ── */
 nav.nav-detail-scrolled {
   position: sticky;
-  background: var(--footer-bg, #2C2C2C);
+  background: #2C3E50;
   border-bottom: 1px solid transparent;
   transition: background 0.3s ease;
 }
 
 nav.nav-detail-scrolled .logo-text,
 nav.nav-detail-scrolled .nav-links a,
-nav.nav-detail-scrolled .action-item {
-  color: white;
-  transition: color 0.3s ease;
-}
-
+nav.nav-detail-scrolled .action-item { color: white; transition: color 0.3s ease; }
 nav.nav-detail-scrolled .nav-links a:hover,
-nav.nav-detail-scrolled .action-item:hover {
-  color: #E8C5A8;
-}
+nav.nav-detail-scrolled .action-item:hover { color: #E8C5A8; }
 
-/* Push content below fixed nav */
 nav.nav-collections ~ * .col-banner,
-nav.nav-collections + * {
-  padding-top: 0;
-}
+nav.nav-collections + * { padding-top: 0; }
 
-/* ── Layout ── */
 .nav-inner {
   display: flex;
   justify-content: space-between;
@@ -102,123 +72,70 @@ nav.nav-collections + * {
 }
 
 .logo-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  color: inherit;
-  flex: 1;
+  display: flex; align-items: center; gap: 12px;
+  text-decoration: none; color: inherit; flex: 1;
 }
 
 .logo-img {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  background: #F8FAFC;
-  border: 1px solid #E2E8F0;
-  position: relative;
-  flex-shrink: 0;
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; background: #F8FAFC;
+  border: 1px solid #E2E8F0; position: relative; flex-shrink: 0;
 }
 
 .logo-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  position: absolute;
-  z-index: 2;
+  width: 100%; height: 100%; object-fit: cover;
+  position: absolute; z-index: 2;
 }
 
 .logo-text {
   font-family: 'Playfair Display', serif;
-  font-size: 1.05rem;
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--charcoal);
-  text-align: left;
+  font-size: 1.05rem; font-weight: 900; line-height: 1.1;
+  letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--charcoal); text-align: left;
   transition: color 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-self: center;
+  display: flex; flex-direction: column;
+  justify-content: center; align-self: center;
 }
 
 .nav-links {
-  display: flex;
-  gap: 2.5rem;
-  list-style: none;
-  flex: 0 0 auto;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
+  display: flex; gap: 2.5rem; list-style: none;
+  flex: 0 0 auto; justify-content: center; padding: 0; margin: 0;
 }
 
 .nav-links a {
-  text-decoration: none;
-  color: var(--charcoal);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  text-decoration: none; color: var(--charcoal);
+  font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
   transition: color 0.3s ease;
 }
 
 .nav-links a:hover { color: var(--accent-clay); }
 
 .nav-actions {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex: 1;
-  justify-content: flex-end;
+  display: flex; align-items: center; gap: 2rem;
+  flex: 1; justify-content: flex-end;
 }
 
 .action-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  text-decoration: none;
-  color: var(--charcoal);
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-family: 'Inter', sans-serif;
-  transition: color 0.3s ease;
+  display: flex; align-items: center; gap: 8px;
+  text-decoration: none; color: var(--charcoal);
+  font-size: 0.8rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.5px;
+  cursor: pointer; background: none; border: none;
+  font-family: 'Inter', sans-serif; transition: color 0.3s ease;
 }
 
 .action-item:hover { color: var(--accent-clay); }
 
-.cart-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
+.cart-wrapper { position: relative; display: flex; align-items: center; }
 
 .cart-count {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: var(--cart-orange);
-  color: white;
-  font-size: 0.6rem;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  font-weight: bold;
+  position: absolute; top: -8px; right: -8px;
+  background: var(--cart-orange); color: white;
+  font-size: 0.6rem; width: 16px; height: 16px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; font-weight: bold;
 }
 
-@media (max-width: 1100px) {
-  .nav-links { display: none; }
-}
+@media (max-width: 1100px) { .nav-links { display: none; } }

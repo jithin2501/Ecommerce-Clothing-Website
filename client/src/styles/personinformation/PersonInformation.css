@@ -10,7 +10,7 @@
   --white: #ffffff;
   --border-color: #e0e0e0;
   --button-dark: #1e293b;
-  --danger-red: #ff3f6c;
+  --danger-red: #ff0000;
 }
 
 .pi-page {
@@ -192,11 +192,6 @@
   padding: 10px 28px;
   font-weight: 600;
   transition: background 0.2s, color 0.2s;
-}
-
-.delete-account:hover {
-  background: var(--danger-red);
-  color: #fff;
 }
 
 .delete-account-wrapper {
