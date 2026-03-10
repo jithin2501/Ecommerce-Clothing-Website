@@ -7,6 +7,7 @@ export default function CollectionsBanner() {
         <img src="/images/banner.jpg" alt="Collections Banner" className="col-banner-img" />
         <div className="col-banner-overlay" />
       </div>
+      <div className="col-banner-fade" />
       <div className="col-banner-content">
         <p className="col-banner-tag">New Season</p>
         <h1 className="col-banner-title">
@@ -17,9 +18,6 @@ export default function CollectionsBanner() {
           Curated seasonal essentials tailored to your child's developmental
           milestones and adventures.
         </p>
-        <a href="#age-sections" className="col-banner-btn">
-          Explore Collection
-        </a>
       </div>
     </section>
   );
