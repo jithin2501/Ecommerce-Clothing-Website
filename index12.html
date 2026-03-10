@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings UI</title>
+    <!-- Inter Font for modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #2874f0;
+            --bg-gray: #f1f3f6;
+            --text-dark: #212121;
+            --text-muted: #878787;
+            --white: #ffffff;
+            --sidebar-active-bg: #f5faff;
+            --sidebar-active-text: #2874f0;
+            --border-color: #e0e0e0;
+            --button-dark: #1e293b;
+            --danger-red: #ff3f6c;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-gray);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            gap: 16px;
+        }
+
+        /* --- Sidebar Styles --- */
+        .sidebar {
+            width: 280px;
+            background: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .profile-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--bg-gray);
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 50px;
+            height: 50px;
+        }
+
+        .avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #eee;
+        }
+
+        .status-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: #4caf50;
+            border: 2px solid white;
+            border-radius: 50%;
+        }
+
+        .profile-info .welcome-text {
+            font-size: 10px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+        }
+
+        .profile-info .user-name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .nav-section {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--bg-gray);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--text-dark);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            margin-right: 15px;
+            color: var(--primary-blue);
+            width: 18px;
+            text-align: center;
+        }
+
+        .nav-item:hover {
+            background-color: var(--sidebar-active-bg);
+        }
+
+        .nav-item.active {
+            background-color: var(--sidebar-active-bg);
+            color: var(--sidebar-active-text);
+        }
+
+        .nav-sub-item {
+            padding: 8px 20px 8px 53px;
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .nav-sub-item:hover {
+            color: var(--primary-blue);
+        }
+
+        .logout-btn {
+            color: var(--danger-red);
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .help-center-card {
+            margin: auto 16px 20px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+        }
+
+        .help-icon {
+            color: var(--primary-blue);
+            background: #e3f2fd;
+            padding: 6px;
+            border-radius: 4px;
+        }
+
+        /* --- Main Content Styles --- */
+        .main-content {
+            flex-grow: 1;
+            background: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border-radius: 2px;
+            padding: 24px 32px;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .content-header p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* Form Card Component */
+        .form-card {
+            border: 1px solid transparent;
+            margin-bottom: 24px;
+            border-radius: 8px;
+            transition: background 0.3s;
+        }
+
+        .form-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .card-title span.icon {
+            color: var(--danger-red);
+        }
+
+        .edit-cancel {
+            font-size: 13px;
+            color: var(--primary-blue);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .input-group input {
+            padding: 12px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary-blue);
+        }
+
+        .gender-section {
+            margin-top: 10px;
+        }
+
+        .gender-section label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 24px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .radio-option input[type="radio"] {
+            accent-color: var(--primary-blue);
+            width: 18px;
+            height: 18px;
+        }
+
+        .save-btn-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 10px;
+        }
+
+        .btn-save {
+            background-color: var(--button-dark);
+            color: white;
+            border: none;
+            padding: 12px 48px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-save:hover {
+            background-color: #000;
+        }
+
+        .delete-account {
+            display: block;
+            text-align: center;
+            margin-top: 40px;
+            color: var(--danger-red);
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* --- Icons --- */
+        .icon-email { color: #5c6bc0 !important; }
+        .icon-phone { color: #66bb6a !important; }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="profile-header">
+                <div class="avatar-container">
+                    <img src="https://ui-avatars.com/api/?name=Alex+Johnston&background=0D8ABC&color=fff" alt="Profile" class="avatar">
+                    <div class="status-dot"></div>
+                </div>
+                <div class="profile-info">
+                    <div class="welcome-text">Welcome back,</div>
+                    <div class="user-name">Alex Johnston</div>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <a href="#" class="nav-item">
+                    <i>📦</i> MY ORDERS <span style="margin-left: auto; color: #ccc;">›</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <a href="#" class="nav-item active">
+                    <i>👤</i> ACCOUNT SETTINGS
+                </a>
+                <div class="nav-sub-item" style="color: var(--primary-blue); font-weight: 500;">Profile Information</div>
+                <div class="nav-sub-item">Manage Addresses</div>
+            </div>
+
+            <div class="nav-section">
+                <a href="#" class="nav-item">
+                    <i>❤️</i> MY STUFF
+                </a>
+                <div class="nav-sub-item">My Reviews & Ratings</div>
+                <div class="nav-sub-item">My Wishlist</div>
+            </div>
+
+            <div class="nav-section">
+                <a href="#" class="nav-item logout-btn">
+                    <i>⏻</i> LOGOUT
+                </a>
+            </div>
+
+            <div class="help-center-card">
+                <div class="help-icon">❓</div>
+                <div>
+                    <div style="color: #888; font-size: 10px;">HELP CENTER</div>
+                    <div style="font-weight: 500;">Contact Support</div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-header">
+                <h1>Personal Information</h1>
+                <p>Manage your personal information and security settings</p>
+            </div>
+
+            <!-- Personal Info Card -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <div class="card-title">
+                        <span class="icon">👤</span> Personal Information
+                    </div>
+                    <a href="#" class="edit-cancel">Cancel</a>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>First Name</label>
+                        <input type="text" value="Alex" placeholder="e.g. Sumathi">
+                    </div>
+                    <div class="input-group">
+                        <label>Last Name</label>
+                        <input type="text" value="Johnston" placeholder="e.g.">
+                    </div>
+                </div>
+
+                <div class="gender-section">
+                    <label>Your Gender</label>
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="male" checked> Male
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="gender" value="female"> Female
+                        </label>
+                    </div>
+                </div>
+
+                <div class="save-btn-container">
+                    <button class="btn-save" onclick="handleSave('Personal Information')">SAVE</button>
+                </div>
+            </div>
+
+            <!-- Email Address Card -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <div class="card-title">
+                        <span class="icon icon-email">@</span> Email Address
+                    </div>
+                    <a href="#" class="edit-cancel">Cancel</a>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="input-group" style="grid-column: span 2;">
+                        <input type="email" value="alexjohnston@example.com" placeholder="email@example.com">
+                    </div>
+                </div>
+
+                <div class="save-btn-container">
+                    <button class="btn-save" onclick="handleSave('Email Address')">SAVE</button>
+                </div>
+            </div>
+
+            <!-- Mobile Number Card -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <div class="card-title">
+                        <span class="icon icon-phone">📱</span> Mobile Number
+                    </div>
+                    <a href="#" class="edit-cancel">Cancel</a>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="input-group" style="grid-column: span 2;">
+                        <input type="text" value="+1 (555) 123-4567" placeholder="+1 (555) 000-0000">
+                    </div>
+                </div>
+
+                <div class="save-btn-container">
+                    <button class="btn-save" onclick="handleSave('Mobile Number')">SAVE</button>
+                </div>
+            </div>
+
+            <a href="#" class="delete-account">Delete Account</a>
+        </main>
+    </div>
+
+    <script>
+        // Simple feedback for interaction
+        function handleSave(section) {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            
+            btn.innerText = "SAVING...";
+            btn.style.opacity = "0.7";
+            btn.disabled = true;
+
+            // Mock saving process
+            setTimeout(() => {
+                btn.innerText = "SAVED!";
+                btn.style.backgroundColor = "#4caf50";
+                
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = "";
+                    btn.style.opacity = "1";
+                    btn.disabled = false;
+                }, 1500);
+            }, 800);
+        }
+
+        // Handle navigation clicks
+        document.querySelectorAll('.nav-item, .nav-sub-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                // If it's a sub-item, handle selection
+                if (item.classList.contains('nav-sub-item')) {
+                    document.querySelectorAll('.nav-sub-item').forEach(s => {
+                        s.style.color = "";
+                        s.style.fontWeight = "400";
+                    });
+                    item.style.color = "var(--primary-blue)";
+                    item.style.fontWeight = "500";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
