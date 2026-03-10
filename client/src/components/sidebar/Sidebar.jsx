@@ -1,6 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import '../../styles/sidebar/Sidebar.css';
 
 export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActiveSubNav }) {
+  const navigate = useNavigate();
+
+  const handleSubNav = (key, path) => {
+    setActiveSubNav(key);
+    if (path) navigate(path);
+  };
+
   return (
     <aside className="sidebar">
 
@@ -21,7 +29,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
       {/* My Orders */}
       <div className="nav-section">
         <div className="nav-item" onClick={() => setActiveNav('orders')}>
-          <img src="images/sidebar/logistics.png" alt="orders" className="nav-icon-img" /> MY ORDERS
+          <img src="/images/sidebar/logistics.png" alt="orders" className="nav-icon-img" /> MY ORDERS
           <span className="nav-arrow">›</span>
         </div>
       </div>
@@ -32,17 +40,17 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
           className={`nav-item ${activeNav === 'account-settings' ? 'active' : ''}`}
           onClick={() => setActiveNav('account-settings')}
         >
-          <img src="images/sidebar/user.png" alt="account" className="nav-icon-img" /> ACCOUNT SETTINGS
+          <img src="/images/sidebar/user.png" alt="account" className="nav-icon-img" /> ACCOUNT SETTINGS
         </div>
         <div
           className={`nav-sub-item ${activeSubNav === 'profile' ? 'sub-active' : ''}`}
-          onClick={() => setActiveSubNav('profile')}
+          onClick={() => handleSubNav('profile', '/account')}
         >
           Profile Information
         </div>
         <div
           className={`nav-sub-item ${activeSubNav === 'address' ? 'sub-active' : ''}`}
-          onClick={() => setActiveSubNav('address')}
+          onClick={() => handleSubNav('address', '/account/addresses')}
         >
           Manage Addresses
         </div>
@@ -54,7 +62,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
           className={`nav-item ${activeNav === 'mystuff' ? 'active' : ''}`}
           onClick={() => setActiveNav('mystuff')}
         >
-          <img src="images/sidebar/box.png" alt="stuff" className="nav-icon-img" /> MY STUFF
+          <img src="/images/sidebar/box.png" alt="stuff" className="nav-icon-img" /> MY STUFF
         </div>
         <div
           className={`nav-sub-item ${activeSubNav === 'reviews' ? 'sub-active' : ''}`}
@@ -75,19 +83,23 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
       {/* Logout */}
       <div className="logout-wrap">
         <button className="logout-card">
-          <div className="logout-icon-wrap"><img src="images/sidebar/switch.png" alt="logout" className="nav-icon-img" /></div>
-          <div className="logout-text">
-            <span className="logout-label">LOGOUT</span>
+          <div className="logout-icon-wrap">
+            <img src="/images/sidebar/switch.png" alt="logout" className="nav-icon-img" />
           </div>
+          <span className="logout-label">LOGOUT</span>
         </button>
       </div>
 
       {/* Help Center */}
-      <div className="help-center-card">
-        <div className="help-icon"><img src="images/sidebar/customer-support.png" alt="help" className="nav-icon-img" /></div>
-        <div>
-          <div className="help-label">HELP CENTER</div>
-          <div className="help-title">Contact Support</div>
+      <div className="help-center-wrap">
+        <div className="help-center-card">
+          <div className="help-icon">
+            <img src="/images/sidebar/customer-support.png" alt="help" className="nav-icon-img" />
+          </div>
+          <div>
+            <div className="help-label">HELP CENTER</div>
+            <div className="help-title">Contact Support</div>
+          </div>
         </div>
       </div>
 
