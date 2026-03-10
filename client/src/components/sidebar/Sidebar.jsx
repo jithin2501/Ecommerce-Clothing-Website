@@ -21,7 +21,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
       {/* My Orders */}
       <div className="nav-section">
         <div className="nav-item" onClick={() => setActiveNav('orders')}>
-          <i>📦</i> MY ORDERS
+          <img src="" alt="orders" className="nav-icon-img" /> MY ORDERS
           <span className="nav-arrow">›</span>
         </div>
       </div>
@@ -32,7 +32,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
           className={`nav-item ${activeNav === 'account-settings' ? 'active' : ''}`}
           onClick={() => setActiveNav('account-settings')}
         >
-          <i>👤</i> ACCOUNT SETTINGS
+          <img src="" alt="account" className="nav-icon-img" /> ACCOUNT SETTINGS
         </div>
         <div
           className={`nav-sub-item ${activeSubNav === 'profile' ? 'sub-active' : ''}`}
@@ -54,7 +54,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
           className={`nav-item ${activeNav === 'mystuff' ? 'active' : ''}`}
           onClick={() => setActiveNav('mystuff')}
         >
-          <i>❤️</i> MY STUFF
+          <img src="" alt="stuff" className="nav-icon-img" /> MY STUFF
         </div>
         <div
           className={`nav-sub-item ${activeSubNav === 'reviews' ? 'sub-active' : ''}`}
@@ -75,7 +75,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
       {/* Logout */}
       <div className="logout-wrap">
         <button className="logout-card">
-          <div className="logout-icon-wrap">⏻</div>
+          <div className="logout-icon-wrap"><img src="" alt="logout" className="nav-icon-img" /></div>
           <div className="logout-text">
             <span className="logout-label">LOGOUT</span>
           </div>
@@ -84,7 +84,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
 
       {/* Help Center */}
       <div className="help-center-card">
-        <div className="help-icon">❓</div>
+        <div className="help-icon"><img src="" alt="help" className="nav-icon-img" /></div>
         <div>
           <div className="help-label">HELP CENTER</div>
           <div className="help-title">Contact Support</div>

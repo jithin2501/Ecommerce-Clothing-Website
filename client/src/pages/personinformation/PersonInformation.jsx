@@ -34,7 +34,7 @@ function SaveButton({ section }) {
 export default function PersonInformation() {
   const [activeNav, setActiveNav]       = useState('account-settings');
   const [activeSubNav, setActiveSubNav] = useState('profile');
-  const [gender, setGender]             = useState('');
+  const [gender, setGender]             = useState('male');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -63,7 +63,7 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <span className="icon">👤</span> Personal Information
+                <img src="" alt="personal" className="card-icon-img" /> Personal Information
               </div>
               <span className="edit-cancel">Cancel</span>
             </div>
@@ -104,7 +104,7 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <span className="icon icon-email">@</span> Email Address
+                <img src="" alt="email" className="card-icon-img" /> Email Address
               </div>
               <span className="edit-cancel">Cancel</span>
             </div>
@@ -120,16 +120,13 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <span className="icon icon-phone">📱</span> Mobile Number
+                <img src="" alt="mobile" className="card-icon-img" /> Mobile Number
               </div>
               <span className="edit-cancel">Cancel</span>
             </div>
             <div className="form-grid">
               <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                <input type="tel" value={mobile} placeholder="+91 XXXXX XXXXX" maxLength={14} onChange={e => {
-                const val = e.target.value.replace(/[^0-9+\s]/g, '');
-                setMobile(val);
-              }} />
+                <input type="text" value={mobile} placeholder="+1 (555) 000-0000" onChange={e => setMobile(e.target.value)} />
               </div>
             </div>
             <SaveButton section="Mobile Number" />

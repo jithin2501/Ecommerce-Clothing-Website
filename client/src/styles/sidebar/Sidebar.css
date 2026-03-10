@@ -205,3 +205,10 @@
   font-weight: 600;
   color: #ff3f6c;
 }
+
+.nav-icon-img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
