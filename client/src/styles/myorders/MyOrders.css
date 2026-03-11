@@ -2,7 +2,7 @@
 .mo-page {
   min-height: 100vh;
   background: #ffffff;
-  padding: 40px 20px;
+  padding: 70px 20px 120px;
 }
 
 .mo-content {
@@ -32,28 +32,30 @@
 /* ===== SEARCH BAR ===== */
 .mo-search-row {
   display: flex;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 28px;
 }
 
 .mo-search-input-wrapper {
   position: relative;
-  flex: 1;
+  width: 320px;
 }
 
-.mo-search-icon {
+.mo-search-icon-img {
   position: absolute;
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #aaa;
-  font-size: 15px;
+  width: 16px;
+  height: 16px;
+  opacity: 0.4;
   pointer-events: none;
 }
 
 .mo-search-input {
   width: 100%;
-  padding: 11px 12px 11px 38px;
+  padding: 11px 12px 11px 36px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 14px;
@@ -72,19 +74,25 @@
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 11px 22px;
+  padding: 11px 20px;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   white-space: nowrap;
   transition: background 0.2s;
 }
 
 .mo-search-btn:hover {
   background: #444;
+}
+
+.mo-search-btn-icon {
+  width: 15px;
+  height: 15px;
+  filter: invert(1);
 }
 
 /* ===== ORDER LIST ===== */
@@ -139,22 +147,10 @@
   margin-bottom: 6px;
 }
 
-.mo-card-pricing {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
 .mo-card-price {
   font-weight: 700;
   font-size: 15px;
   color: #1a1a1a;
-}
-
-.mo-card-points {
-  color: #f59e0b;
-  font-weight: 600;
-  font-size: 13px;
 }
 
 /* ===== STATUS SECTION ===== */
@@ -199,7 +195,7 @@
 .mo-review-btn {
   background: none;
   border: none;
-  color: #4f6ef7;
+  color: #2C3E50;
   cursor: pointer;
   font-size: 13px;
   font-weight: 500;
@@ -214,31 +210,6 @@
 .mo-review-btn:hover {
   opacity: 0.75;
   text-decoration: underline;
-}
-
-/* ===== EXCHANGE INFO ===== */
-.mo-exchange-info {
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
-}
-
-.mo-exchange-label {
-  font-size: 13px;
-  color: #22c55e;
-  font-weight: 600;
-}
-
-.mo-exchange-id {
-  font-size: 13px;
-  color: #aaa;
-  margin-left: 8px;
-}
-
-.mo-exchange-note {
-  font-size: 13px;
-  color: #777;
-  margin-top: 2px;
 }
 
 /* ===== PAGINATION ===== */
@@ -278,6 +249,19 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
+  .mo-search-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .mo-search-input-wrapper {
+    width: 100%;
+  }
+
+  .mo-search-btn {
+    justify-content: center;
+  }
+
   .mo-card-top {
     flex-wrap: wrap;
   }
@@ -294,13 +278,5 @@
 
   .mo-review-btn {
     margin-left: 0;
-  }
-
-  .mo-search-row {
-    flex-direction: column;
-  }
-
-  .mo-search-btn {
-    justify-content: center;
   }
 }

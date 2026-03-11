@@ -8,12 +8,10 @@ const orders = [
     color: 'Sage Green',
     size: '12-18m',
     price: '₹2,499',
-    points: 12,
     image: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=80&h=80&fit=crop',
     status: 'delivered',
     statusLabel: 'Delivered on Oct 22, 2025',
     statusSub: 'Your item has been delivered',
-    exchange: null,
   },
   {
     id: 2,
@@ -21,12 +19,10 @@ const orders = [
     color: 'Oatmeal',
     size: '2-3Y',
     price: '₹3,850',
-    points: 45,
     image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=80&h=80&fit=crop',
-    status: 'exchange',
-    statusLabel: 'Exchange Completed',
-    statusSub: 'Exchanged for a larger size',
-    exchange: { id: 'EX123384755', note: 'We have completed your request for exchange.' },
+    status: 'delivered',
+    statusLabel: 'Delivered on Nov 10, 2025',
+    statusSub: 'Your item has been delivered',
   },
   {
     id: 3,
@@ -34,12 +30,10 @@ const orders = [
     color: 'Sky Blue',
     size: '4Y',
     price: '₹1,250',
-    points: 10,
     image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=80&h=80&fit=crop',
     status: 'delivered',
     statusLabel: 'Delivered on Sep 11, 2025',
     statusSub: 'Your item has been delivered',
-    exchange: null,
   },
   {
     id: 4,
@@ -47,12 +41,10 @@ const orders = [
     color: 'Burgundy',
     size: '6Y',
     price: '₹5,400',
-    points: 85,
     image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=80&h=80&fit=crop',
-    status: 'cancelled',
-    statusLabel: 'Refund Cancelled',
-    statusSub: 'Request was withdrawn by user',
-    exchange: null,
+    status: 'delivered',
+    statusLabel: 'Delivered on Dec 01, 2025',
+    statusSub: 'Your item has been delivered',
   },
 ];
 
@@ -92,7 +84,7 @@ export default function MyOrders() {
         {/* Search */}
         <div className="mo-search-row">
           <div className="mo-search-input-wrapper">
-            <span className="mo-search-icon">🔍</span>
+            <img src="/images/myorders/search.png" alt="search" className="mo-search-icon-img" />
             <input
               type="text"
               className="mo-search-input"
@@ -103,7 +95,7 @@ export default function MyOrders() {
             />
           </div>
           <button className="mo-search-btn" onClick={() => setQuery(search)}>
-            🔍 Search Orders
+            Search Orders
           </button>
         </div>
 
@@ -118,10 +110,7 @@ export default function MyOrders() {
                 <div className="mo-card-info">
                   <div className="mo-card-name">{order.name}</div>
                   <div className="mo-card-meta">Color: {order.color} | Size: {order.size}</div>
-                  <div className="mo-card-pricing">
-                    <span className="mo-card-price">{order.price}</span>
-                    <span className="mo-card-points">✦{order.points} Points</span>
-                  </div>
+                  <div className="mo-card-price">{order.price}</div>
                 </div>
 
                 <div className="mo-card-status">
@@ -131,14 +120,6 @@ export default function MyOrders() {
                 </div>
 
               </div>
-
-              {order.exchange && (
-                <div className="mo-exchange-info">
-                  <span className="mo-exchange-label">Exchange Completed</span>
-                  <span className="mo-exchange-id">(Exchange ID: {order.exchange.id})</span>
-                  <div className="mo-exchange-note">• {order.exchange.note}</div>
-                </div>
-              )}
             </div>
           ))}
         </div>
