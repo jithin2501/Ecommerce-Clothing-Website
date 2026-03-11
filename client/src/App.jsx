@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './styles/globals.css';
 import { CartProvider } from './context/CartContext';
+import { WishlistProvider } from './context/WishlistContext';
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/navbar/Footer';
 import HomePage from './pages/Mainpage/HomePage';
@@ -18,20 +19,22 @@ function App() {
   return (
     <BrowserRouter>
       <CartProvider>
-        <Navbar />
-        <Routes>
-          <Route path="/"                                   element={<HomePage />} />
-          <Route path="/collections"                        element={<CollectionsPage />} />
-          <Route path="/collections/:ageGroup"              element={<AgeGroupPage />} />
-          <Route path="/collections/:ageGroup/:productSlug" element={<CollectionDetailPage />} />
-          <Route path="/cart"                               element={<CartPage />} />
-          <Route path="/contact"                            element={<ContactPage />} />
-          <Route path="/account"                            element={<PersonInformation />} />
-          <Route path="/account/addresses"                  element={<ManageAddresses />} />
-          <Route path="/account/orders"                     element={<MyOrders />} />
-          <Route path="/account/wishlist"                   element={<Wishlist />} />
-        </Routes>
-        <Footer />
+        <WishlistProvider>
+          <Navbar />
+          <Routes>
+            <Route path="/"                                   element={<HomePage />} />
+            <Route path="/collections"                        element={<CollectionsPage />} />
+            <Route path="/collections/:ageGroup"              element={<AgeGroupPage />} />
+            <Route path="/collections/:ageGroup/:productSlug" element={<CollectionDetailPage />} />
+            <Route path="/cart"                               element={<CartPage />} />
+            <Route path="/contact"                            element={<ContactPage />} />
+            <Route path="/account"                            element={<PersonInformation />} />
+            <Route path="/account/addresses"                  element={<ManageAddresses />} />
+            <Route path="/account/orders"                     element={<MyOrders />} />
+            <Route path="/account/wishlist"                   element={<Wishlist />} />
+          </Routes>
+          <Footer />
+        </WishlistProvider>
       </CartProvider>
     </BrowserRouter>
   );
