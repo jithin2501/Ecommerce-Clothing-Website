@@ -1,22 +1,32 @@
 /* ===== PAGE WRAPPER ===== */
 .wl-page {
+  background-color: #ffffff;
   min-height: 100vh;
-  background: #ffffff;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  color: #212121;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .wl-container {
   display: flex;
   width: 100%;
   max-width: 1100px;
-  margin: 0 auto;
-  padding: 32px 16px;
-  gap: 0;
+  gap: 16px;
+  align-items: stretch;
 }
 
 /* ===== MAIN ===== */
 .wl-main {
-  flex: 1;
-  padding-left: 32px;
+  flex-grow: 1;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 28px 32px 24px;
+  min-width: 0;
 }
 
 /* ===== HEADER ===== */
@@ -62,9 +72,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border-radius: 0;
   overflow: hidden;
   margin-bottom: 36px;
 }
@@ -210,15 +218,20 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 16px;
-  color: #bbb;
-  padding: 0;
+  padding: 4px;
   flex-shrink: 0;
-  transition: color 0.2s;
+  transition: opacity 0.2s;
 }
 
 .wl-remove-btn:hover {
-  color: #ef4444;
+  opacity: 0.6;
+}
+
+.wl-remove-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: block;
 }
 
 /* ===== RECENTLY VIEWED ===== */

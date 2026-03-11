@@ -103,12 +103,6 @@ export default function Wishlist() {
 
                     <div className="wl-card-pricing">
                       <span className="wl-price">${item.price.toFixed(2)}</span>
-                      {item.originalPrice && (
-                        <span className="wl-original-price">${item.originalPrice.toFixed(2)}</span>
-                      )}
-                      {item.discount && (
-                        <span className="wl-discount">{item.discount}</span>
-                      )}
                       {item.limitedStock && (
                         <span className="wl-limited">Limited Stock</span>
                       )}
@@ -125,8 +119,8 @@ export default function Wishlist() {
                     )}
                   </div>
 
-                  <button className="wl-remove-btn" onClick={() => removeItem(item.id)} title="Remove">
-                    🗑
+                  <button className="wl-remove-btn" onClick={() => removeItem(item.id)}>
+                    <img src="/images/wishlist/delete.png" alt="delete" className="wl-remove-icon" />
                   </button>
                 </div>
               </div>
