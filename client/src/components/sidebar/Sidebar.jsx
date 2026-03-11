@@ -75,7 +75,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
         </div>
         <div
           className={`nav-sub-item ${activeSubNav === 'wishlist' ? 'sub-active' : ''}`}
-          onClick={() => setActiveSubNav('wishlist')}
+          onClick={() => handleSubNav('wishlist', '/account/wishlist')}
         >
           My Wishlist
         </div>

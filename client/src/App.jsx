@@ -12,6 +12,7 @@ import ContactPage from './pages/contact/ContactPage';
 import PersonInformation from './pages/personinformation/PersonInformation';
 import ManageAddresses from './pages/manageaddresses/ManageAddresses';
 import MyOrders from './pages/myorders/MyOrders';
+import Wishlist from './pages/wishlist/Wishlist';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/account"                            element={<PersonInformation />} />
           <Route path="/account/addresses"                  element={<ManageAddresses />} />
           <Route path="/account/orders"                     element={<MyOrders />} />
+          <Route path="/account/wishlist"                   element={<Wishlist />} />
         </Routes>
         <Footer />
       </CartProvider>
