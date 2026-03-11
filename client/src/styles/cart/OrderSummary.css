@@ -1,6 +1,20 @@
-.os-wrapper { background: #fff; border-radius: 14px; padding: 1.5rem; position: sticky; top: 100px; }
-.os-title { font-size: 1rem; font-weight: 800; color: #2C2C2C; margin-bottom: 1.25rem; }
-.os-rows { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1rem; }
+.os-wrapper { 
+  background: #fff; 
+  border-radius: 14px; 
+  padding: 1.5rem; 
+  position: sticky; 
+  top: 100px; }
+.os-title { 
+  font-size: 1rem; 
+  font-weight: 800; 
+  color: #2C2C2C; 
+  margin-bottom: 1.25rem; 
+}
+.os-rows { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 0.6rem; 
+  margin-bottom: 1rem; }
 .os-row { display: flex; justify-content: space-between; font-size: 0.83rem; color: #555; }
 .os-total { display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 700; color: #2C2C2C; border-top: 1px solid #eee; padding-top: 0.85rem; margin-bottom: 1.25rem; }
 .os-total-amount { color: var(--accent-clay, #C17B5C); font-size: 1.1rem; }

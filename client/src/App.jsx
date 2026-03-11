@@ -11,6 +11,7 @@ import CartPage from './pages/cart/CartPage';
 import ContactPage from './pages/contact/ContactPage';
 import PersonInformation from './pages/personinformation/PersonInformation';
 import ManageAddresses from './pages/manageaddresses/ManageAddresses';
+import MyOrders from './pages/myorders/MyOrders';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/contact"                            element={<ContactPage />} />
           <Route path="/account"                            element={<PersonInformation />} />
           <Route path="/account/addresses"                  element={<ManageAddresses />} />
+          <Route path="/account/orders"                     element={<MyOrders />} />
         </Routes>
         <Footer />
       </CartProvider>

@@ -28,7 +28,10 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
 
       {/* My Orders */}
       <div className="nav-section">
-        <div className="nav-item" onClick={() => setActiveNav('orders')}>
+        <div
+          className="nav-item"
+          onClick={() => { setActiveNav('orders'); navigate('/account/orders'); }}
+        >
           <img src="/images/sidebar/logistics.png" alt="orders" className="nav-icon-img" /> MY ORDERS
           <span className="nav-arrow">›</span>
         </div>
