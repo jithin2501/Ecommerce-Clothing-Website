@@ -69,7 +69,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
         </div>
         <div
           className={`nav-sub-item ${activeSubNav === 'reviews' ? 'sub-active' : ''}`}
-          onClick={() => setActiveSubNav('reviews')}
+          onClick={() => handleSubNav('reviews', '/account/reviews')}
         >
           My Reviews &amp; Ratings
         </div>

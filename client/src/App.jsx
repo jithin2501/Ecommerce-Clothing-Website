@@ -14,6 +14,7 @@ import PersonInformation from './pages/personinformation/PersonInformation';
 import ManageAddresses from './pages/manageaddresses/ManageAddresses';
 import MyOrders from './pages/myorders/MyOrders';
 import Wishlist from './pages/wishlist/Wishlist';
+import MyReviews from './pages/myreviews/MyReviews';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/account/addresses"                  element={<ManageAddresses />} />
             <Route path="/account/orders"                     element={<MyOrders />} />
             <Route path="/account/wishlist"                   element={<Wishlist />} />
+            <Route path="/account/reviews"                    element={<MyReviews />} />
           </Routes>
           <Footer />
         </WishlistProvider>

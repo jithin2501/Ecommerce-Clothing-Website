@@ -1,0 +1,180 @@
+/* =========================================================
+   MY REVIEWS — layout
+========================================================= */
+
+.mr-page {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  color: #212121;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.mr-container {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.mr-main {
+  flex-grow: 1;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border-radius: 12px;
+  padding: 28px 32px 24px;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .mr-container { flex-direction: column; }
+  .mr-product-grid { grid-template-columns: 1fr; }
+}
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.mr-empty-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 20px 40px;
+  border-bottom: 1px solid #f1f3f6;
+  margin-bottom: 32px;
+}
+
+.mr-icon-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 20px;
+}
+
+.mr-icon-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: #f1f3f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mr-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  background: #2C3E50;
+  color: white;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mr-empty-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #212121;
+  margin: 0 0 12px;
+}
+
+.mr-empty-text {
+  font-size: 14px;
+  color: #878787;
+  max-width: 340px;
+  line-height: 1.6;
+  margin: 0 0 24px;
+}
+
+.mr-shop-btn {
+  background: #2C3E50;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 36px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+}
+.mr-shop-btn:hover { background: #1a2d3d; }
+
+/* =========================================================
+   SUGGESTED PRODUCTS
+========================================================= */
+
+.mr-suggested-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #212121;
+  margin: 0 0 20px;
+}
+
+.mr-product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.mr-product-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid #f1f3f6;
+  border-radius: 8px;
+  padding: 14px;
+  background: #fafafa;
+}
+
+.mr-product-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+  background: #f1f3f6;
+}
+
+.mr-product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mr-product-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: #212121;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.mr-stars { display: flex; gap: 2px; }
+.mr-star  { font-size: 16px; color: #e0e0e0; }
+
+.mr-rate-btn {
+  background: none;
+  border: none;
+  color: #2C3E50;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  text-align: left;
+}
+.mr-rate-btn:hover { text-decoration: underline; }
