@@ -39,22 +39,17 @@ export default function MyReviews() {
           {/* Empty State */}
           <div className="mr-empty-section">
             <div className="mr-icon-wrap">
-              <div className="mr-icon-circle">
-                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                  <rect x="4" y="8" width="32" height="26" rx="4" fill="#e0e0e0"/>
-                  <polygon points="4,34 12,20 20,26 28,16 36,28 36,34" fill="#ccc"/>
-                </svg>
-              </div>
-              <div className="mr-badge">!</div>
+              <img
+                src="/images/reviews/no-reviews.png"
+                alt="No Reviews"
+                className="mr-empty-img"
+              />
             </div>
 
             <h2 className="mr-empty-title">No Reviews &amp; Ratings</h2>
             <p className="mr-empty-text">
               You haven't shared your thoughts on any products yet. Your feedback helps other parents find the perfect fit for their little ones!
             </p>
-            <button className="mr-shop-btn" onClick={() => navigate('/collections')}>
-              Start Shopping
-            </button>
           </div>
 
           {/* Suggested Products */}
