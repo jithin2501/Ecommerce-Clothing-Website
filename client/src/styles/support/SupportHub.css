@@ -1,0 +1,378 @@
+/* =========================================================
+   SUPPORT HUB PAGE
+========================================================= */
+
+.sh-page {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  color: #212121;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.sh-container {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* ── MAIN ── */
+.sh-main {
+  flex-grow: 1;
+  background: #fff;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border-radius: 12px;
+  overflow: hidden;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── HERO — inside main, not full width ── */
+.sh-hero {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  padding: 40px 32px 36px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px 12px 0 0;
+}
+
+.sh-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0);
+  background-size: 28px 28px;
+  pointer-events: none;
+}
+
+.sh-hero-title {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 8px;
+  position: relative;
+}
+
+.sh-hero-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.65);
+  margin: 0 0 22px;
+  position: relative;
+}
+
+.sh-search-wrap {
+  display: flex;
+  align-items: center;
+  max-width: 400px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.sh-search-icon {
+  padding: 0 10px 0 14px;
+  font-size: 13px;
+  color: #aaa;
+  flex-shrink: 0;
+}
+
+.sh-search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 11px 8px;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  color: #212121;
+  background: transparent;
+}
+.sh-search-input::placeholder { color: #bbb; }
+
+.sh-search-btn {
+  background: #2874f0;
+  color: #fff;
+  border: none;
+  padding: 11px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.sh-search-btn:hover { background: #1a5fc0; }
+
+/* ── BODY ── */
+.sh-body {
+  padding: 28px 32px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  flex: 1;
+  background: #fff;
+  border-radius: 0 0 12px 12px;
+}
+
+/* ── SECTION ── */
+.sh-section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #212121;
+  margin: 0 0 14px;
+}
+
+/* ── ORDER CARD ── */
+.sh-order-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+}
+
+.sh-order-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+.sh-order-info { flex: 1; }
+
+.sh-order-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #aaa;
+  letter-spacing: 0.5px;
+  margin-bottom: 3px;
+}
+
+.sh-order-id {
+  font-size: 14px;
+  font-weight: 700;
+  color: #212121;
+  margin-bottom: 4px;
+}
+
+.sh-order-status { font-size: 12px; color: #666; }
+
+.sh-status-delivered { color: #22c55e; font-weight: 600; }
+
+.sh-need-help-btn {
+  background: none;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 7px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #444;
+  cursor: pointer;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.sh-need-help-btn:hover { border-color: #2874f0; color: #2874f0; }
+
+
+
+/* ── STILL NEED HELP ── */
+.sh-still-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+}
+
+.sh-still-title { font-size: 18px; font-weight: 700; color: #212121; margin: 0 0 10px; }
+.sh-still-sub   { font-size: 13px; color: #888; line-height: 1.6; max-width: 340px; margin: 0 auto 22px; }
+
+.sh-channels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.sh-channel-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+.sh-channel-card:hover { background: #eef3ff; }
+
+.sh-channel-icon {
+  width: 36px;
+  height: 36px;
+  background: #2874f0;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.sh-channel-title { font-size: 13px; font-weight: 700; color: #212121; margin-bottom: 3px; }
+.sh-channel-sub   { font-size: 11px; color: #888; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .sh-container { flex-direction: column; }
+  .sh-categories { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 500px) {
+  .sh-categories { grid-template-columns: 1fr; }
+  .sh-channels   { grid-template-columns: 1fr; }
+}
+
+/* ── ORDERS LIST ── */
+.sh-orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sh-order-card {
+  position: relative;
+}
+
+.sh-order-badge {
+  position: absolute;
+  top: -8px;
+  left: 16px;
+  background: #2874f0;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+/* ── ORDER HELP PAGE ── */
+.sh-hero--compact {
+  padding: 28px 32px 24px;
+  text-align: left;
+}
+
+.sh-oh-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  margin-bottom: 12px;
+}
+
+.sh-bc-link {
+  color: rgba(255,255,255,0.65);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.sh-bc-link:hover { color: #fff; }
+.sh-bc-sep    { color: rgba(255,255,255,0.35); }
+.sh-bc-current { color: #fff; font-weight: 600; }
+
+.sh-oh-order-strip {
+  background: #f7f9ff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 1px solid #e8eeff;
+}
+
+/* ── STILL NEED HELP ── */
+.sh-still-section {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  border: 1px solid #f0f0f0;
+}
+
+.sh-still-title { font-size: 18px; font-weight: 700; color: #212121; margin: 0 0 10px; }
+.sh-still-sub   { font-size: 13px; color: #888; line-height: 1.6; max-width: 340px; margin: 0 auto 22px; }
+
+.sh-channels {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  max-width: 280px;
+  margin: 0 auto;
+}
+
+.sh-channel-card {
+  background: #f7f9ff;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: left;
+}
+.sh-channel-card:hover { background: #eef3ff; }
+
+.sh-channel-icon {
+  width: 36px;
+  height: 36px;
+  background: #2874f0;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.sh-channel-title { font-size: 13px; font-weight: 700; color: #212121; margin-bottom: 3px; }
+.sh-channel-sub   { font-size: 11px; color: #888; }
+
+.sh-channels--two {
+  grid-template-columns: 1fr 1fr;
+  max-width: 440px;
+}
+
+.sh-channel-sub {
+  white-space: nowrap;
+}
+
+/* OrderHelp — stretch Need Help box full height */
+.sh-body--stretch {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.sh-still-section--stretch {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

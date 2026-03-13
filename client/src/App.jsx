@@ -16,6 +16,9 @@ import MyOrders from './pages/myorders/MyOrders';
 import Wishlist from './pages/wishlist/Wishlist';
 import MyReviews from './pages/myreviews/MyReviews';
 import WriteReview from './pages/myorders/WriteReview';
+import SupportHub from './pages/support/SupportHub';
+import OrderHelp from './pages/support/OrderHelp';
+import ChatSupport from './pages/support/ChatSupport';
 
 function App() {
   return (
@@ -36,6 +39,9 @@ function App() {
             <Route path="/account/wishlist"                   element={<Wishlist />} />
             <Route path="/account/reviews"                    element={<MyReviews />} />
             <Route path="/account/write-review"               element={<WriteReview />} />
+            <Route path="/support"                            element={<SupportHub />} />
+            <Route path="/support/order-help"                   element={<OrderHelp />} />
+            <Route path="/support/chat"                          element={<ChatSupport />} />
           </Routes>
           <Footer />
         </WishlistProvider>

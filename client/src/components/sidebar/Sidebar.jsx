@@ -92,7 +92,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
 
       {/* Contact Support — no border below */}
       <div className="nav-section nav-section-last">
-        <div className="nav-item" onClick={() => {}}>
+        <div className="nav-item" onClick={() => navigate('/support')}>
           <img src="/images/sidebar/customer-support.png" alt="help" className="nav-icon-img" /> Contact Support
         </div>
       </div>
