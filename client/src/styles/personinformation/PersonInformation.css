@@ -1,5 +1,5 @@
 /* =========================================================
-   PERSONAL INFORMATION PAGE — converted from HTML reference
+   PERSONAL INFORMATION PAGE
 ========================================================= */
 
 :root {
@@ -80,16 +80,22 @@
   color: var(--text-dark);
 }
 
-.card-title .icon { font-style: normal; color: var(--danger-red); }
-.card-title .icon-email { color: #5c6bc0 !important; }
-.card-title .icon-phone { color: #66bb6a !important; }
+/* Edit button — blue, matches your screenshot */
+.edit-btn {
+  font-size: 13px;
+  color: #2874f0;
+  cursor: pointer;
+  font-weight: 500;
+}
+.edit-btn:hover { text-decoration: underline; }
 
+/* Cancel button */
 .edit-cancel {
   font-size: 13px;
   color: var(--primary-blue);
   cursor: pointer;
+  font-weight: 500;
 }
-
 .edit-cancel:hover { text-decoration: underline; }
 
 /* Form Grid */
@@ -127,6 +133,14 @@
 .input-group input:focus { border-color: var(--primary-blue); }
 .input-group input::placeholder { color: #bbb; }
 
+/* Read-only state — no border, gray bg like Flipkart style */
+.input-group input.input-readonly {
+  background: #f5f5f5;
+  border-color: transparent;
+  color: var(--text-dark);
+  cursor: default;
+}
+
 /* Gender */
 .gender-section { margin-top: 10px; }
 
@@ -155,10 +169,16 @@
   cursor: pointer;
 }
 
+.radio-option input[type="radio"]:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
 /* Save Button */
 .save-btn-container {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   margin-top: 10px;
 }
 
@@ -178,7 +198,7 @@
 }
 
 .btn-save:hover:not(:disabled) { background-color: #000; }
-.btn-save:disabled { cursor: not-allowed; }
+.btn-save:disabled { cursor: not-allowed; opacity: 0.7; }
 
 /* Delete Account */
 .delete-account {
@@ -201,11 +221,6 @@
   margin-bottom: 16px;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .pi-container { flex-direction: column; }
-  .form-grid { grid-template-columns: 1fr; }
-}
 .card-icon-img {
   width: 18px;
   height: 18px;
@@ -213,16 +228,8 @@
   flex-shrink: 0;
 }
 
-.save-error {
-  font-size: 12px;
-  color: #ff3f6c;
-  margin-right: 12px;
-  font-weight: 500;
-}
-
-.save-btn-container {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  margin-top: 10px;
+/* Responsive */
+@media (max-width: 900px) {
+  .pi-container { flex-direction: column; }
+  .form-grid { grid-template-columns: 1fr; }
 }
