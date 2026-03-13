@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/myorders/MyOrders.css';
 
 const orders = [
@@ -60,6 +61,7 @@ function StatusBadge({ status, label }) {
 export default function MyOrders() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
+  const navigate = useNavigate();
   const [search, setSearch]           = useState('');
   const [query, setQuery]             = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -123,7 +125,10 @@ export default function MyOrders() {
                 <div className="mo-card-status">
                   <StatusBadge status={order.status} label={order.statusLabel} />
                   <div className="mo-status-sub">{order.statusSub}</div>
-                  <button className="mo-review-btn">☆ Rate &amp; Review Product</button>
+                  <button
+                    className="mo-review-btn"
+                    onClick={() => navigate('/account/write-review', { state: { order } })}
+                  >☆ Rate &amp; Review Product</button>
                 </div>
 
               </div>

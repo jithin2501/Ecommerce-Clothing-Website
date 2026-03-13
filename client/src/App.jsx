@@ -15,6 +15,7 @@ import ManageAddresses from './pages/manageaddresses/ManageAddresses';
 import MyOrders from './pages/myorders/MyOrders';
 import Wishlist from './pages/wishlist/Wishlist';
 import MyReviews from './pages/myreviews/MyReviews';
+import WriteReview from './pages/myorders/WriteReview';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="/account/orders"                     element={<MyOrders />} />
             <Route path="/account/wishlist"                   element={<Wishlist />} />
             <Route path="/account/reviews"                    element={<MyReviews />} />
+            <Route path="/account/write-review"               element={<WriteReview />} />
           </Routes>
           <Footer />
         </WishlistProvider>
