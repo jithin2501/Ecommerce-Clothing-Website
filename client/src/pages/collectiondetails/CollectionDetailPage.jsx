@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import ProductGallery from '../../components/collectiondetails/ProductGallery';
 import ProductInfo from '../../components/collectiondetails/ProductInfo';
@@ -11,6 +11,9 @@ export default function CollectionDetailPage() {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
+
+  const [zoomState, setZoomState] = useState({ active: false });
+  const handleZoomChange = useCallback((state) => setZoomState(state), []);
 
   return (
     <div className="cdp-page">
@@ -28,10 +31,34 @@ export default function CollectionDetailPage() {
 
       {/* Main product grid */}
       <div className="cdp-main">
-        <ProductGallery />
-        <div>
-          <ProductInfo />
-          <ProductAccordion />
+
+        {/* LEFT — Gallery */}
+        <ProductGallery onZoomChange={handleZoomChange} />
+
+        {/* RIGHT — zoom panel + product info */}
+        <div className="cdp-right-col">
+
+          {/* Zoom panel — same aspect ratio as left image */}
+          {zoomState.active && (
+            <div className="cdp-zoom-panel-wrap">
+              <div
+                className="cdp-zoom-panel"
+                style={{
+                  backgroundImage:    `url(${zoomState.src})`,
+                  backgroundSize:     zoomState.bgSize,
+                  backgroundPosition: zoomState.bgPos,
+                  backgroundRepeat:   'no-repeat',
+                }}
+              />
+            </div>
+          )}
+
+          {/* Product info — fades out during zoom */}
+          <div className={`cdp-info-wrap${zoomState.active ? ' cdp-info-hidden' : ''}`}>
+            <ProductInfo />
+            <ProductAccordion />
+          </div>
+
         </div>
       </div>
 

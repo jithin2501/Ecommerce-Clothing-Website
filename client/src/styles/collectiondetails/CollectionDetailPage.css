@@ -29,22 +29,15 @@
   text-decoration: none;
   transition: color 0.2s;
 }
-
-.cdp-breadcrumb a:hover {
-  color: #A8624A;
-}
-
-.cdp-sep {
-  color: #ccc;
-  font-size: 0.8rem;
-}
-
+.cdp-breadcrumb a:hover { color: #A8624A; }
+.cdp-sep { color: #ccc; font-size: 0.8rem; }
 .cdp-crumb-active {
   color: var(--charcoal, #2C2C2C);
   font-weight: 700;
   text-transform: uppercase;
 }
 
+/* ── Main 2-col grid ── */
 .cdp-main {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -54,6 +47,44 @@
   padding: 1.5rem var(--side-pad, 2rem) 3rem;
 }
 
+/* ── Right column ── */
+.cdp-right-col {
+  position: relative;
+}
+
+/* Wrapper gives zoom panel the SAME aspect-ratio as .pg-main (3/4) */
+.cdp-zoom-panel-wrap {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 20px;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+}
+
+/* The actual zoom image fill */
+.cdp-zoom-panel {
+  width: 100%;
+  height: 100%;
+  background-color: #F5EFE8;
+  pointer-events: none;
+}
+
+/* Product info hidden while zoom active */
+.cdp-info-wrap {
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.1s;
+}
+.cdp-info-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Lower sections ── */
 .cdp-lower {
   max-width: 1200px;
   margin: 0 auto;
@@ -61,8 +92,6 @@
 }
 
 @media (max-width: 900px) {
-  .cdp-main {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
+  .cdp-main { grid-template-columns: 1fr; gap: 2rem; }
+  .cdp-zoom-panel-wrap { display: none; }
 }
