@@ -24,6 +24,7 @@ export default function ManageAddresses() {
   const [activeSubNav, setActiveSubNav] = useState('address');
   const [form, setForm]                 = useState(emptyForm);
   const [errors, setErrors]             = useState({});
+  const [showForm, setShowForm]         = useState(false); // hidden by default
   const [addresses, setAddresses_] = useState(() => {
     try {
       const saved = localStorage.getItem('sumathi_addresses');
@@ -38,9 +39,10 @@ export default function ManageAddresses() {
       return next;
     });
   };
-  const [saved, setSaved]               = useState(false);
-  const [menuOpen, setMenuOpen]         = useState(null); // address id with open menu
-  const [editingId, setEditingId]       = useState(null); // id being edited
+
+  const [saved, setSaved]       = useState(false);
+  const [menuOpen, setMenuOpen] = useState(null);
+  const [editingId, setEditingId] = useState(null);
 
   const handleChange = (field, value) => {
     setForm(f => ({ ...f, [field]: value }));
@@ -65,7 +67,6 @@ export default function ManageAddresses() {
     if (Object.keys(e).length) { setErrors(e); return; }
 
     if (editingId !== null) {
-      // Update existing
       setAddresses(a => a.map(x => x.id === editingId ? {
         ...x,
         type: form.type.toUpperCase(),
@@ -77,7 +78,6 @@ export default function ManageAddresses() {
       } : x));
       setEditingId(null);
     } else {
-      // Add new
       setAddresses(a => [...a, {
         id: Date.now(),
         type: form.type.toUpperCase(),
@@ -92,18 +92,11 @@ export default function ManageAddresses() {
     setForm(emptyForm);
     setErrors({});
     setSaved(true);
+    setShowForm(false);
     setTimeout(() => setSaved(false), 2000);
   };
 
   const handleEdit = (addr) => {
-    const [locality, rest] = addr.line2.split(', ').reduce((acc, part, i) => {
-      if (i === 0) acc[0] = part;
-      else acc[1] = (acc[1] ? acc[1] + ', ' : '') + part;
-      return acc;
-    }, ['', '']);
-    const statePart = rest ? rest.replace(' -', '').trim() : '';
-    const cityPart  = addr.line2.split(', ')[1] || '';
-
     setForm({
       fullName: addr.name,
       mobile: addr.phone,
@@ -118,19 +111,21 @@ export default function ManageAddresses() {
     });
     setEditingId(addr.id);
     setMenuOpen(null);
+    setShowForm(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = (id) => {
     setAddresses(a => a.filter(x => x.id !== id));
     setMenuOpen(null);
-    if (editingId === id) { setEditingId(null); setForm(emptyForm); }
+    if (editingId === id) { setEditingId(null); setForm(emptyForm); setShowForm(false); }
   };
 
   const handleCancel = () => {
     setForm(emptyForm);
     setErrors({});
     setEditingId(null);
+    setShowForm(false);
   };
 
   const handleLocation = () => {
@@ -160,109 +155,119 @@ export default function ManageAddresses() {
             <p>Add or edit your shipping details for a faster checkout experience.</p>
           </div>
 
-          {/* Add / Edit Address Form */}
-          <div className="ma-form-section">
-            <div className="ma-form-title-row">
-              <span className="ma-form-title">{editingId ? 'EDIT ADDRESS' : 'ADD A NEW ADDRESS'}</span>
-              <button className="ma-location-btn" onClick={handleLocation}>
-                📍 Use my current location
-              </button>
+          {/* ADD A NEW ADDRESS trigger — always visible */}
+          {!showForm && (
+            <div className="ma-add-trigger" onClick={() => setShowForm(true)}>
+              <span className="ma-add-plus">+</span>
+              <span className="ma-add-label">ADD A NEW ADDRESS</span>
             </div>
+          )}
 
-            <div className="ma-form-grid">
-              <div className="ma-field">
-                <label>FULL NAME</label>
-                <input type="text" placeholder="Enter recipient's name"
-                  value={form.fullName}
-                  onChange={e => handleChange('fullName', e.target.value.replace(/[^a-zA-Z\s]/g, ''))} />
-                {errors.fullName && <span className="ma-error">{errors.fullName}</span>}
+          {/* Form — only shown when showForm is true */}
+          {showForm && (
+            <div className="ma-form-section">
+              <div className="ma-form-title-row">
+                <span className="ma-form-title">{editingId ? 'EDIT ADDRESS' : 'ADD A NEW ADDRESS'}</span>
+                <button className="ma-location-btn" onClick={handleLocation}>
+                  📍 Use my current location
+                </button>
               </div>
-              <div className="ma-field">
-                <label>MOBILE NUMBER</label>
-                <input type="tel" placeholder="10-digit mobile number"
-                  value={form.mobile} maxLength={10}
-                  onChange={e => handleChange('mobile', e.target.value.replace(/\D/g, ''))} />
-                {errors.mobile && <span className="ma-error">{errors.mobile}</span>}
-              </div>
-              <div className="ma-field">
-                <label>PINCODE</label>
-                <input type="text" placeholder="6-digit pincode"
-                  value={form.pincode} maxLength={6}
-                  onChange={e => handleChange('pincode', e.target.value.replace(/\D/g, ''))} />
-                {errors.pincode && <span className="ma-error">{errors.pincode}</span>}
-              </div>
-              <div className="ma-field">
-                <label>LOCALITY</label>
-                <input type="text" placeholder="e.g. Bandra West"
-                  value={form.locality}
-                  onChange={e => handleChange('locality', e.target.value)} />
-                {errors.locality && <span className="ma-error">{errors.locality}</span>}
-              </div>
-              <div className="ma-field ma-field-full">
-                <label>ADDRESS (AREA AND STREET)</label>
-                <textarea placeholder="Flat, House no., Building, Company, Apartment"
-                  value={form.address}
-                  onChange={e => handleChange('address', e.target.value)} rows={3} />
-                {errors.address && <span className="ma-error">{errors.address}</span>}
-              </div>
-              <div className="ma-field">
-                <label>CITY / DISTRICT / TOWN</label>
-                <input type="text" placeholder="e.g. Mumbai"
-                  value={form.city}
-                  onChange={e => handleChange('city', e.target.value)} />
-                {errors.city && <span className="ma-error">{errors.city}</span>}
-              </div>
-              <div className="ma-field">
-                <label>STATE</label>
-                <select value={form.state} onChange={e => handleChange('state', e.target.value)}>
-                  <option value="">Select State</option>
-                  {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-                {errors.state && <span className="ma-error">{errors.state}</span>}
-              </div>
-              <div className="ma-field">
-                <label>LANDMARK (OPTIONAL)</label>
-                <input type="text" placeholder="e.g. Near Apollo Hospital"
-                  value={form.landmark}
-                  onChange={e => handleChange('landmark', e.target.value)} />
-              </div>
-              <div className="ma-field">
-                <label>ALTERNATE PHONE (OPTIONAL)</label>
-                <input type="tel" placeholder="Alternate mobile number"
-                  value={form.altPhone} maxLength={10}
-                  onChange={e => handleChange('altPhone', e.target.value.replace(/\D/g, ''))} />
-              </div>
-              <div className="ma-field ma-field-full">
-                <label>ADDRESS TYPE</label>
-                <div className="ma-radio-group">
-                  <label className={`ma-radio ${form.type === 'Home' ? 'ma-radio-selected' : ''}`}>
-                    <input type="radio" name="addrType" value="Home"
-                      checked={form.type === 'Home'}
-                      onChange={() => handleChange('type', 'Home')}
-                      onClick={() => { if (form.type === 'Home') handleChange('type', ''); }} />
-                    Home
-                  </label>
-                  <label className={`ma-radio ${form.type === 'Work' ? 'ma-radio-selected' : ''}`}>
-                    <input type="radio" name="addrType" value="Work"
-                      checked={form.type === 'Work'}
-                      onChange={() => handleChange('type', 'Work')}
-                      onClick={() => { if (form.type === 'Work') handleChange('type', ''); }} />
-                    Work
-                  </label>
+
+              <div className="ma-form-grid">
+                <div className="ma-field">
+                  <label>FULL NAME</label>
+                  <input type="text" placeholder="Enter recipient's name"
+                    value={form.fullName}
+                    onChange={e => handleChange('fullName', e.target.value.replace(/[^a-zA-Z\s]/g, ''))} />
+                  {errors.fullName && <span className="ma-error">{errors.fullName}</span>}
                 </div>
-                {errors.type && <span className="ma-error">{errors.type}</span>}
+                <div className="ma-field">
+                  <label>MOBILE NUMBER</label>
+                  <input type="tel" placeholder="10-digit mobile number"
+                    value={form.mobile} maxLength={10}
+                    onChange={e => handleChange('mobile', e.target.value.replace(/\D/g, ''))} />
+                  {errors.mobile && <span className="ma-error">{errors.mobile}</span>}
+                </div>
+                <div className="ma-field">
+                  <label>PINCODE</label>
+                  <input type="text" placeholder="6-digit pincode"
+                    value={form.pincode} maxLength={6}
+                    onChange={e => handleChange('pincode', e.target.value.replace(/\D/g, ''))} />
+                  {errors.pincode && <span className="ma-error">{errors.pincode}</span>}
+                </div>
+                <div className="ma-field">
+                  <label>LOCALITY</label>
+                  <input type="text" placeholder="e.g. Bandra West"
+                    value={form.locality}
+                    onChange={e => handleChange('locality', e.target.value)} />
+                  {errors.locality && <span className="ma-error">{errors.locality}</span>}
+                </div>
+                <div className="ma-field ma-field-full">
+                  <label>ADDRESS (AREA AND STREET)</label>
+                  <textarea placeholder="Flat, House no., Building, Company, Apartment"
+                    value={form.address}
+                    onChange={e => handleChange('address', e.target.value)} rows={3} />
+                  {errors.address && <span className="ma-error">{errors.address}</span>}
+                </div>
+                <div className="ma-field">
+                  <label>CITY / DISTRICT / TOWN</label>
+                  <input type="text" placeholder="e.g. Mumbai"
+                    value={form.city}
+                    onChange={e => handleChange('city', e.target.value)} />
+                  {errors.city && <span className="ma-error">{errors.city}</span>}
+                </div>
+                <div className="ma-field">
+                  <label>STATE</label>
+                  <select value={form.state} onChange={e => handleChange('state', e.target.value)}>
+                    <option value="">Select State</option>
+                    {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                  {errors.state && <span className="ma-error">{errors.state}</span>}
+                </div>
+                <div className="ma-field">
+                  <label>LANDMARK (OPTIONAL)</label>
+                  <input type="text" placeholder="e.g. Near Apollo Hospital"
+                    value={form.landmark}
+                    onChange={e => handleChange('landmark', e.target.value)} />
+                </div>
+                <div className="ma-field">
+                  <label>ALTERNATE PHONE (OPTIONAL)</label>
+                  <input type="tel" placeholder="Alternate mobile number"
+                    value={form.altPhone} maxLength={10}
+                    onChange={e => handleChange('altPhone', e.target.value.replace(/\D/g, ''))} />
+                </div>
+                <div className="ma-field ma-field-full">
+                  <label>ADDRESS TYPE</label>
+                  <div className="ma-radio-group">
+                    <label className={`ma-radio ${form.type === 'Home' ? 'ma-radio-selected' : ''}`}>
+                      <input type="radio" name="addrType" value="Home"
+                        checked={form.type === 'Home'}
+                        onChange={() => handleChange('type', 'Home')}
+                        onClick={() => { if (form.type === 'Home') handleChange('type', ''); }} />
+                      Home
+                    </label>
+                    <label className={`ma-radio ${form.type === 'Work' ? 'ma-radio-selected' : ''}`}>
+                      <input type="radio" name="addrType" value="Work"
+                        checked={form.type === 'Work'}
+                        onChange={() => handleChange('type', 'Work')}
+                        onClick={() => { if (form.type === 'Work') handleChange('type', ''); }} />
+                      Work
+                    </label>
+                  </div>
+                  {errors.type && <span className="ma-error">{errors.type}</span>}
+                </div>
+              </div>
+
+              <div className="ma-form-actions">
+                <button className="ma-btn-save" onClick={handleSave}>
+                  {saved ? 'SAVED!' : editingId ? 'UPDATE ADDRESS' : 'SAVE ADDRESS'}
+                </button>
+                <button className="ma-btn-cancel" onClick={handleCancel}>CANCEL</button>
               </div>
             </div>
+          )}
 
-            <div className="ma-form-actions">
-              <button className="ma-btn-save" onClick={handleSave}>
-                {saved ? 'SAVED!' : editingId ? 'UPDATE ADDRESS' : 'SAVE ADDRESS'}
-              </button>
-              <button className="ma-btn-cancel" onClick={handleCancel}>CANCEL</button>
-            </div>
-          </div>
-
-          {/* Saved Addresses */}
+          {/* Saved Addresses — always visible below */}
           {addresses.length > 0 && (
             <div className="ma-saved-section">
               <div className="ma-saved-header">

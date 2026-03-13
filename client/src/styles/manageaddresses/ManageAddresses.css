@@ -37,6 +37,37 @@
 .ma-header h1 { font-size: 18px; font-weight: 700; margin: 0 0 4px; color: #212121; }
 .ma-header p  { font-size: 13px; color: #878787; margin: 0; }
 
+/* ===== ADD A NEW ADDRESS trigger ===== */
+.ma-add-trigger {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.ma-add-trigger:hover {
+  background: #f5f8ff;
+}
+
+.ma-add-plus {
+  font-size: 20px;
+  font-weight: 700;
+  color: #2874f0;
+  line-height: 1;
+}
+
+.ma-add-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #2874f0;
+  letter-spacing: 0.04em;
+}
+
 /* Form Section */
 .ma-form-section {
   border: 1px solid #e0e0e0;
