@@ -84,28 +84,16 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
       <div className="sidebar-spacer" />
 
       {/* Logout */}
-      <div className="logout-wrap">
-        <button className="logout-card">
-          <div className="logout-icon-wrap">
-            <img src="/images/sidebar/switch.png" alt="logout" className="nav-icon-img" />
-          </div>
-          <div>
-            <div className="logout-label-small">LOGOUT</div>
-            <div className="logout-title">Sign Out</div>
-          </div>
-        </button>
+      <div className="nav-section">
+        <div className="nav-item" onClick={() => {}}>
+          <img src="/images/sidebar/switch.png" alt="logout" className="nav-icon-img" /> Logout
+        </div>
       </div>
 
-      {/* Help Center */}
-      <div className="help-center-wrap">
-        <div className="help-center-card">
-          <div className="help-icon">
-            <img src="/images/sidebar/customer-support.png" alt="help" className="nav-icon-img" />
-          </div>
-          <div>
-            <div className="help-label">HELP CENTER</div>
-            <div className="help-title">Contact Support</div>
-          </div>
+      {/* Contact Support — no border below */}
+      <div className="nav-section nav-section-last">
+        <div className="nav-item" onClick={() => {}}>
+          <img src="/images/sidebar/customer-support.png" alt="help" className="nav-icon-img" /> Contact Support
         </div>
       </div>
 
