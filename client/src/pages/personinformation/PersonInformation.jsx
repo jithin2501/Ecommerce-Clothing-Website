@@ -85,7 +85,7 @@ export default function PersonInformation() {
               </div>
               <div className="input-group">
                 <label>Last Name</label>
-                <input type="text" value={lastName} placeholder="e.g." onChange={e => setLastName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))} required />
+                <input type="text" value={lastName} placeholder="e.g. Raj" onChange={e => setLastName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))} required />
               </div>
             </div>
 

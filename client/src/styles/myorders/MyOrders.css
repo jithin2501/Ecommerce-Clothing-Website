@@ -10,6 +10,38 @@
   margin: 0 auto;
 }
 
+/* ===== BREADCRUMB ===== */
+/* Sits left-aligned, directly above the "My Orders History" heading */
+.mo-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+  margin-bottom: 12px;   /* tight gap to the heading below */
+  font-size: 13px;
+}
+
+.mo-breadcrumb-link {
+  color: #999;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.mo-breadcrumb-link:hover {
+  color: #333;
+}
+
+.mo-breadcrumb-sep {
+  color: #bbb;
+  font-size: 14px;
+  line-height: 1;
+  user-select: none;
+}
+
+.mo-breadcrumb-current {
+  color: #555;
+}
+
 /* ===== HEADER ===== */
 .mo-header {
   text-align: center;

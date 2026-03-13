@@ -75,6 +75,13 @@ export default function MyOrders() {
     <div className="mo-page">
       <div className="mo-content">
 
+        {/* Breadcrumb — using div instead of nav to avoid inheriting global nav { position: sticky } */}
+        <div className="mo-breadcrumb">
+          <a href="/account" className="mo-breadcrumb-link">Account</a>
+          <span className="mo-breadcrumb-sep">›</span>
+          <span className="mo-breadcrumb-current">My Orders</span>
+        </div>
+
         {/* Header */}
         <div className="mo-header">
           <h1>My Orders History</h1>

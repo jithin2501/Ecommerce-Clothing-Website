@@ -8,9 +8,9 @@ nav {
   padding: 1.25rem 0;
   width: 100%;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  z-index: 100;
   position: sticky;
   top: 0;
+  z-index: 1000;                          /* ← ensures all content scrolls behind */
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   transition: background 0.3s ease, border-color 0.3s ease;
@@ -18,6 +18,7 @@ nav {
 
 nav.nav-collections {
   position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
   background: transparent;
   border-bottom: 1px solid transparent;
   backdrop-filter: none;
@@ -32,6 +33,7 @@ nav.nav-collections .action-item:hover { color: #E8C5A8; }
 
 nav.nav-banner-scrolled {
   position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
   background: var(--footer-bg, #2C2C2C);
   border-bottom: 1px solid transparent;
   backdrop-filter: none;
@@ -44,9 +46,9 @@ nav.nav-banner-scrolled .action-item { color: white; transition: color 0.3s ease
 nav.nav-banner-scrolled .nav-links a:hover,
 nav.nav-banner-scrolled .action-item:hover { color: #E8C5A8; }
 
-/* ── Scrolled on account/detail/cart/home pages → #2C3E50 ── */
 nav.nav-detail-scrolled {
   position: sticky;
+  z-index: 1000;
   background: #2C3E50;
   border-bottom: 1px solid transparent;
   transition: background 0.3s ease;
