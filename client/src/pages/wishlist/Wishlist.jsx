@@ -55,7 +55,17 @@ export default function Wishlist() {
           {/* Empty State or List */}
           {wishlist.length === 0 ? (
             <div className="wl-empty">
-              <div className="wl-empty-icon">♡</div>
+              <div className="wl-empty-icon">
+                <img
+                  src="/images/wishlist/heart.png"
+                  alt="Empty wishlist"
+                  className="wl-empty-img"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = 'https://cdn-icons-png.flaticon.com/512/4379/4379479.png';
+                  }}
+                />
+              </div>
               <p className="wl-empty-title">Your wishlist is empty</p>
               <p className="wl-empty-sub">Press the ♡ on any product to save it here.</p>
               <button className="wl-shop-btn" onClick={() => navigate('/collections')}>
