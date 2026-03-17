@@ -27,13 +27,15 @@ export default function ChatSupport() {
   const location = useLocation();
   const order    = location.state?.order || null;
 
+  // ✅ Session key unique per order
+  const sessionKey = `chat_ended_${order?.id || 'no-order'}`;
+
   const [activeNav,    setActiveNav]    = useState('');
   const [activeSubNav, setActiveSubNav] = useState('support');
   const [messages,     setMessages]     = useState([]);
   const [step,         setStep]         = useState(STEP.INIT);
   const [input,        setInput]        = useState('');
   const [typing,       setTyping]       = useState(false);
-  // mediaFiles: array of { url, type }
   const [mediaFiles,   setMediaFiles]   = useState([]);
   const [showEnded,    setShowEnded]    = useState(false);
 
@@ -50,6 +52,20 @@ export default function ChatSupport() {
   useEffect(() => {
     if (initiated.current) return;
     initiated.current = true;
+
+    // ✅ If this order's chat already ended, restore it immediately
+    const saved = sessionStorage.getItem(sessionKey);
+    if (saved) {
+      try {
+        const { messages: savedMsgs } = JSON.parse(saved);
+        setMessages(savedMsgs);
+        setStep(STEP.DONE);
+        setShowEnded(true);
+        return;
+      } catch (_) {}
+    }
+
+    // Normal intro flow
     const orderMsg = order
       ? `Hi, I need help with my order #${order.id} — ${order.name}`
       : 'Hi, I need help with a recent order.';
@@ -86,7 +102,6 @@ export default function ChatSupport() {
     const trimmed = input.trim();
     if (step === STEP.WAIT_MEDIA) {
       if (mediaFiles.length === 0) return;
-      // Send media message
       const newMsg = { from: 'user', text: trimmed || '', mediaFiles: [...mediaFiles], time: now() };
       setMessages(prev => [...prev, newMsg]);
       setInput('');
@@ -98,7 +113,14 @@ export default function ChatSupport() {
         2000,
         () => {
           setStep(STEP.DONE);
-          setTimeout(() => setShowEnded(true), 400);
+          setTimeout(() => {
+            setShowEnded(true);
+            // ✅ Save the full ended conversation to sessionStorage
+            setMessages(prev => {
+              sessionStorage.setItem(sessionKey, JSON.stringify({ messages: prev }));
+              return prev;
+            });
+          }, 400);
         }
       );
     } else {
@@ -213,7 +235,6 @@ export default function ChatSupport() {
             <div className="cs-input-area">
               {step === STEP.DONE ? null : (
                 <>
-                  {/* Media previews */}
                   {mediaFiles.length > 0 && (
                     <div className="cs-media-thumbs">
                       {mediaFiles.map((mf, i) => (
@@ -229,7 +250,6 @@ export default function ChatSupport() {
                   )}
 
                   <div className="cs-input-row">
-                    {/* Attach button — image icon, only active in WAIT_MEDIA */}
                     <button
                       className={`cs-attach-btn ${step === STEP.WAIT_MEDIA ? 'cs-attach-btn--active' : ''}`}
                       onClick={() => step === STEP.WAIT_MEDIA && canAddMore && fileRef.current?.click()}
