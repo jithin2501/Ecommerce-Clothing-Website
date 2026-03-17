@@ -67,13 +67,13 @@ export default function OrderHelp() {
                     <div className="sh-channel-sub">Typical response time · 2 min</div>
                   </div>
                 </div>
-                <div className="sh-channel-card">
-                  <div className="sh-channel-icon">✉️</div>
-                  <div>
-                    <div className="sh-channel-title">Email us</div>
-                    <div className="sh-channel-sub">Typical response time · 2 min</div>
-                  </div>
-                </div>
+                <div className="sh-channel-card" onClick={() => window.location.href = 'mailto:sumathitrends.in@gmail.com'}>
+                <div className="sh-channel-icon">✉️</div>
+              <div>
+                  <div className="sh-channel-title">Email us</div>
+                  <div className="sh-channel-sub">sumathitrends.in@gmail.com</div>
+              </div>
+              </div>
               </div>
             </section>
 
