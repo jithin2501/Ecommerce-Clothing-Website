@@ -7,37 +7,50 @@ nav {
   align-items: center;
   padding: 1.25rem 0;
   width: 100%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: none;
   position: sticky;
   top: 0;
-  z-index: 1000;                          /* ← ensures all content scrolls behind */
-  background: rgba(255, 255, 255, 0.95);
+  z-index: 1000;
+  background: #ffffff;
   backdrop-filter: blur(10px);
   transition: background 0.3s ease, border-color 0.3s ease;
 }
 
+/* Default text — #2D3E50 on white */
+nav .logo-text,
+nav .nav-links a,
+nav .action-item {
+  color: #2D3E50;
+  transition: color 0.3s ease;
+}
+
+nav .nav-links a:hover,
+nav .action-item:hover { color: #E8C5A8; }
+
+/* Collections banner page — fixed, white initially */
 nav.nav-collections {
   position: fixed; top: 0; left: 0; right: 0;
   z-index: 1000;
-  background: transparent;
-  border-bottom: 1px solid transparent;
+  background: #ffffff;
+  border-bottom: none;
   backdrop-filter: none;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 nav.nav-collections .logo-text,
 nav.nav-collections .nav-links a,
-nav.nav-collections .action-item { color: white; transition: color 0.3s ease; }
+nav.nav-collections .action-item { color: #2D3E50; transition: color 0.3s ease; }
 nav.nav-collections .nav-links a:hover,
 nav.nav-collections .action-item:hover { color: #E8C5A8; }
 
+/* Scrolled on banner pages */
 nav.nav-banner-scrolled {
   position: fixed; top: 0; left: 0; right: 0;
   z-index: 1000;
-  background: var(--footer-bg, #2C2C2C);
-  border-bottom: 1px solid transparent;
+  background: #2D3E50;
+  border-bottom: none;
   backdrop-filter: none;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 nav.nav-banner-scrolled .logo-text,
@@ -46,12 +59,13 @@ nav.nav-banner-scrolled .action-item { color: white; transition: color 0.3s ease
 nav.nav-banner-scrolled .nav-links a:hover,
 nav.nav-banner-scrolled .action-item:hover { color: #E8C5A8; }
 
+/* Scrolled on detail/age pages */
 nav.nav-detail-scrolled {
   position: sticky;
   z-index: 1000;
-  background: #2C3E50;
-  border-bottom: 1px solid transparent;
-  transition: background 0.3s ease;
+  background: #2D3E50;
+  border-bottom: none;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
 nav.nav-detail-scrolled .logo-text,
@@ -82,7 +96,7 @@ nav.nav-collections + * { padding-top: 0; }
   width: 48px; height: 48px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   overflow: hidden; background: #F8FAFC;
-  border: 1px solid #E2E8F0; position: relative; flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.1); position: relative; flex-shrink: 0;
 }
 
 .logo-img img {
@@ -94,7 +108,7 @@ nav.nav-collections + * { padding-top: 0; }
   font-family: 'Playfair Display', serif;
   font-size: 1.05rem; font-weight: 900; line-height: 1.1;
   letter-spacing: 0.5px; text-transform: uppercase;
-  color: var(--charcoal); text-align: left;
+  color: #2D3E50; text-align: left;
   transition: color 0.3s ease;
   display: flex; flex-direction: column;
   justify-content: center; align-self: center;
@@ -106,13 +120,13 @@ nav.nav-collections + * { padding-top: 0; }
 }
 
 .nav-links a {
-  text-decoration: none; color: var(--charcoal);
+  text-decoration: none; color: #2D3E50;
   font-size: 0.8rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.5px;
   transition: color 0.3s ease;
 }
 
-.nav-links a:hover { color: var(--accent-clay); }
+.nav-links a:hover { color: #E8C5A8; }
 
 .nav-actions {
   display: flex; align-items: center; gap: 2rem;
@@ -121,14 +135,14 @@ nav.nav-collections + * { padding-top: 0; }
 
 .action-item {
   display: flex; align-items: center; gap: 8px;
-  text-decoration: none; color: var(--charcoal);
+  text-decoration: none; color: #2D3E50;
   font-size: 0.8rem; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.5px;
   cursor: pointer; background: none; border: none;
   font-family: 'Inter', sans-serif; transition: color 0.3s ease;
 }
 
-.action-item:hover { color: var(--accent-clay); }
+.action-item:hover { color: #E8C5A8; }
 
 .cart-wrapper { position: relative; display: flex; align-items: center; }
 

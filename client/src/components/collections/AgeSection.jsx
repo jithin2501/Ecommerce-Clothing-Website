@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../../styles/collections/AgeSection.css';
 
 const ageGroups = [
@@ -31,6 +31,14 @@ export default function AgeSection() {
   return (
     <section id="age-sections" className="age-section">
       <div className="section-inner">
+
+        {/* Breadcrumb */}
+        <div className="page-breadcrumb">
+          <Link to="/" className="breadcrumb-link">Home</Link>
+          <span className="breadcrumb-sep"> › </span>
+          <span className="breadcrumb-current">Collections</span>
+        </div>
+
         <div className="age-grid">
           {ageGroups.map((group) => (
             <div
@@ -48,6 +56,7 @@ export default function AgeSection() {
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );

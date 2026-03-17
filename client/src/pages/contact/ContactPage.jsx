@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import '../../styles/contact/ContactPage.css';
 
 export default function ContactPage() {
@@ -32,32 +33,20 @@ export default function ContactPage() {
   return (
     <div className="contact-page">
 
-      {/* ── Banner ── */}
-      <section className="contact-banner">
-        <div className="contact-banner-bg">
-          <img src="/images/banner.jpg" alt="Contact Banner" className="contact-banner-img" />
-          <div className="contact-banner-overlay" />
-        </div>
-        {/* Bottom white fade */}
-        <div className="contact-banner-fade" />
-        <div className="contact-banner-content">
-          <p className="contact-banner-tag">Get In Touch</p>
-          <h1 className="contact-banner-title">
-            Personal Support,<br />
-            <span>just for you.</span>
-          </h1>
-          <p className="contact-banner-desc">
-            Have a question about sizing, shipping, or our collections?<br />
-            Our team is ready to assist you and your little ones.
-          </p>
-        </div>
-      </section>
+      <div className="nav-spacer" />
 
       {/* ── Body ── */}
       <section className="contact-body">
         <div className="contact-inner">
 
-          {/* Left */}
+          {/* ── Breadcrumb ── */}
+          <div className="contact-breadcrumb">
+            <Link to="/" className="breadcrumb-link">Home</Link>
+            <span className="breadcrumb-sep"> › </span>
+            <span className="breadcrumb-current">Contact</span>
+          </div>
+
+          {/* ── Left ── */}
           <div className="contact-left">
             <h2 className="contact-heading">
               We are here to help you and your little ones.
@@ -92,13 +81,17 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="contact-info-label">Visit Us</p>
-                  <p className="contact-info-value">No.52, Saxena complex, Kodigehalli Main Rd,<br />Defence Layout, Sahakar Nagar,<br />Bengaluru, Karnataka 560092</p>
+                  <p className="contact-info-value">
+                    No.52, Saxena complex, Kodigehalli Main Rd,<br />
+                    Defence Layout, Sahakar Nagar,<br />
+                    Bengaluru, Karnataka 560092
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Right */}
+          {/* ── Right ── */}
           <div className="contact-right">
             <h3 className="contact-form-title">Send us a Message</h3>
             {sent ? (
