@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../assets/usermanagement.css';
 
 const API = 'http://localhost:5000/api/users';
@@ -8,29 +9,34 @@ const authHeaders = () => ({
 });
 
 export default function UserManagement() {
-  const [users, setUsers]       = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [form, setForm]         = useState({ username: '', password: '' });
-  const [passForm, setPassForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  const [userForm, setUserForm] = useState({ newUsername: '', currentPassword: '' });
-  const [msg, setMsg]           = useState({ text: '', type: '' });
-  const [passMsg, setPassMsg]   = useState({ text: '', type: '' });
-  const [userMsg, setUserMsg]   = useState({ text: '', type: '' });
+  const [users, setUsers]     = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [form, setForm]       = useState({ username: '', password: '' });
+  const [msg, setMsg]         = useState({ text: '', type: '' });
+  const navigate = useNavigate();
 
   const fetchUsers = async () => {
     try {
       const res  = await fetch(API, { headers: authHeaders() });
       const data = await res.json();
-      if (data.success) setUsers(data.data);
+      if (data.success) {
+        // Sort: superadmin always first
+        const sorted = [...data.data].sort((a, b) => {
+          if (a.role === 'superadmin') return -1;
+          if (b.role === 'superadmin') return 1;
+          return 0;
+        });
+        setUsers(sorted);
+      }
     } catch (err) { console.error(err); }
     finally { setLoading(false); }
   };
 
   useEffect(() => { fetchUsers(); }, []);
 
-  const flash = (setter, text, type = 'success') => {
-    setter({ text, type });
-    setTimeout(() => setter({ text: '', type: '' }), 3000);
+  const flash = (text, type = 'success') => {
+    setMsg({ text, type });
+    setTimeout(() => setMsg({ text: '', type: '' }), 3000);
   };
 
   const handleCreate = async (e) => {
@@ -39,11 +45,14 @@ export default function UserManagement() {
       const res  = await fetch(API, { method: 'POST', headers: authHeaders(), body: JSON.stringify(form) });
       const data = await res.json();
       if (data.success) {
-        setUsers(u => [data.data, ...u]);
+        setUsers(u => {
+          const newList = [data.data, ...u];
+          return newList.sort((a, b) => a.role === 'superadmin' ? -1 : b.role === 'superadmin' ? 1 : 0);
+        });
         setForm({ username: '', password: '' });
-        flash(setMsg, 'Admin user created successfully.');
-      } else { flash(setMsg, data.message, 'error'); }
-    } catch { flash(setMsg, 'Server error.', 'error'); }
+        flash('Admin user created successfully.');
+      } else { flash(data.message, 'error'); }
+    } catch { flash('Server error.', 'error'); }
   };
 
   const handleToggle = async (id) => {
@@ -51,7 +60,7 @@ export default function UserManagement() {
       const res  = await fetch(`${API}/${id}/toggle`, { method: 'PATCH', headers: authHeaders() });
       const data = await res.json();
       if (data.success) setUsers(u => u.map(x => x._id === id ? { ...x, isActive: data.isActive } : x));
-    } catch { flash(setMsg, 'Server error.', 'error'); }
+    } catch { flash('Server error.', 'error'); }
   };
 
   const handleDelete = async (id, username) => {
@@ -59,42 +68,8 @@ export default function UserManagement() {
     try {
       const res  = await fetch(`${API}/${id}`, { method: 'DELETE', headers: authHeaders() });
       const data = await res.json();
-      if (data.success) { setUsers(u => u.filter(x => x._id !== id)); flash(setMsg, 'User deleted.'); }
-    } catch { flash(setMsg, 'Server error.', 'error'); }
-  };
-
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    if (passForm.newPassword !== passForm.confirmPassword) {
-      flash(setPassMsg, 'New passwords do not match.', 'error'); return;
-    }
-    if (passForm.newPassword.length < 6) {
-      flash(setPassMsg, 'New password must be at least 6 characters.', 'error'); return;
-    }
-    try {
-      const res  = await fetch(`${API}/change-password`, {
-        method: 'PATCH', headers: authHeaders(),
-        body: JSON.stringify({ currentPassword: passForm.currentPassword, newPassword: passForm.newPassword }),
-      });
-      const data = await res.json();
-      if (data.success) { setPassForm({ currentPassword: '', newPassword: '', confirmPassword: '' }); flash(setPassMsg, 'Password changed successfully.'); }
-      else { flash(setPassMsg, data.message, 'error'); }
-    } catch { flash(setPassMsg, 'Server error.', 'error'); }
-  };
-
-  const handleChangeUsername = async (e) => {
-    e.preventDefault();
-    try {
-      const res  = await fetch(`${API}/change-username`, {
-        method: 'PATCH', headers: authHeaders(),
-        body: JSON.stringify(userForm),
-      });
-      const data = await res.json();
-      if (data.success) {
-        setUserForm({ newUsername: '', currentPassword: '' });
-        flash(setUserMsg, 'Username changed. Please sign out and log in again.');
-      } else { flash(setUserMsg, data.message, 'error'); }
-    } catch { flash(setUserMsg, 'Server error.', 'error'); }
+      if (data.success) { setUsers(u => u.filter(x => x._id !== id)); flash('User deleted.'); }
+    } catch { flash('Server error.', 'error'); }
   };
 
   return (
@@ -121,51 +96,6 @@ export default function UserManagement() {
         </form>
       </div>
 
-      {/* ── Change Username ── */}
-      <div className="um-card">
-        <h3 className="um-card-title">Change Your Username</h3>
-        <p className="um-card-sub">Update your superadmin login username. You'll need to sign in again after changing.</p>
-        {userMsg.text && <div className={`um-msg ${userMsg.type === 'error' ? 'um-msg-error' : 'um-msg-success'}`}>{userMsg.text}</div>}
-        <form className="um-form" onSubmit={handleChangeUsername}>
-          <div className="um-form-group">
-            <label>New Username:</label>
-            <input type="text" placeholder="Enter new username" value={userForm.newUsername}
-              onChange={e => setUserForm(f => ({ ...f, newUsername: e.target.value }))} required />
-          </div>
-          <div className="um-form-group">
-            <label>Current Password:</label>
-            <input type="password" placeholder="Confirm with current password" value={userForm.currentPassword}
-              onChange={e => setUserForm(f => ({ ...f, currentPassword: e.target.value }))} required />
-          </div>
-          <button type="submit" className="um-create-btn um-username-btn">Change Username</button>
-        </form>
-      </div>
-
-      {/* ── Change Password ── */}
-      <div className="um-card">
-        <h3 className="um-card-title">Change Your Password</h3>
-        <p className="um-card-sub">Update your superadmin login password.</p>
-        {passMsg.text && <div className={`um-msg ${passMsg.type === 'error' ? 'um-msg-error' : 'um-msg-success'}`}>{passMsg.text}</div>}
-        <form className="um-form" onSubmit={handleChangePassword}>
-          <div className="um-form-group">
-            <label>Current Password:</label>
-            <input type="password" placeholder="Enter current password" value={passForm.currentPassword}
-              onChange={e => setPassForm(f => ({ ...f, currentPassword: e.target.value }))} required />
-          </div>
-          <div className="um-form-group">
-            <label>New Password:</label>
-            <input type="password" placeholder="Enter new password" value={passForm.newPassword}
-              onChange={e => setPassForm(f => ({ ...f, newPassword: e.target.value }))} required />
-          </div>
-          <div className="um-form-group">
-            <label>Confirm New Password:</label>
-            <input type="password" placeholder="Re-enter new password" value={passForm.confirmPassword}
-              onChange={e => setPassForm(f => ({ ...f, confirmPassword: e.target.value }))} required />
-          </div>
-          <button type="submit" className="um-create-btn um-change-btn">Change Password</button>
-        </form>
-      </div>
-
       {/* ── Existing Users ── */}
       <h2 className="um-section-title">Existing Admin Users</h2>
       <div className="um-table-outer">
@@ -186,14 +116,23 @@ export default function UserManagement() {
                   <td><span className={`um-role-badge ${u.role}`}>{u.role}</span></td>
                   <td className="um-lastlogin">{u.lastLogin ? new Date(u.lastLogin).toLocaleString('en-IN') : '—'}</td>
                   <td className="um-actions">
-                    {u.role !== 'superadmin' ? (
+                    {u.role === 'superadmin' ? (
+                      <>
+                        <button className="um-edit-btn username" onClick={() => navigate('/admin/change-username')}>
+                          Change Username
+                        </button>
+                        <button className="um-edit-btn password" onClick={() => navigate('/admin/change-password')}>
+                          Change Password
+                        </button>
+                      </>
+                    ) : (
                       <>
                         <button className={`um-toggle-btn ${u.isActive ? 'active' : 'inactive'}`} onClick={() => handleToggle(u._id)}>
                           {u.isActive ? 'Deactivate' : 'Activate'}
                         </button>
                         <button className="um-delete-btn" onClick={() => handleDelete(u._id, u.username)}>Delete</button>
                       </>
-                    ) : <span className="um-protected">—</span>}
+                    )}
                   </td>
                 </tr>
               ))}

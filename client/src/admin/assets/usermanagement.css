@@ -8,7 +8,6 @@
   letter-spacing: 0.4px;
 }
 
-/* ── Create card ── */
 .um-card {
   background: #ffffff;
   border-radius: 12px;
@@ -41,17 +40,9 @@
 .um-msg-success { background: #f0fdf4; color: #16a34a; }
 .um-msg-error   { background: #fef2f2; color: #ef4444; }
 
-.um-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+.um-form { display: flex; flex-direction: column; gap: 1rem; }
 
-.um-form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
+.um-form-group { display: flex; flex-direction: column; gap: 0.4rem; }
 
 .um-form-group label {
   font-size: 0.84rem;
@@ -69,7 +60,6 @@
   color: #1e2139;
   transition: border-color 0.2s;
 }
-
 .um-form-group input:focus { border-color: #4f46e5; }
 
 .um-create-btn {
@@ -87,7 +77,6 @@
 }
 .um-create-btn:hover { background: #15803d; }
 
-/* ── Table section ── */
 .um-section-title {
   font-size: 1.2rem;
   font-weight: 800;
@@ -110,15 +99,9 @@
   font-size: 0.9rem;
 }
 
-.um-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
+.um-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
 
-.um-table thead tr {
-  border-bottom: 1.5px solid #e5e7eb;
-}
+.um-table thead tr { border-bottom: 1.5px solid #e5e7eb; }
 
 .um-table th {
   padding: 1rem 1.5rem;
@@ -152,7 +135,22 @@
 
 .um-lastlogin { color: #6b7280; font-size: 0.83rem; }
 
-.um-actions { display: flex; gap: 0.5rem; align-items: center; }
+.um-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+
+.um-edit-btn {
+  border: none;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: opacity 0.2s;
+}
+.um-edit-btn.username { background: #4f46e5; color: #fff; }
+.um-edit-btn.username:hover { opacity: 0.85; }
+.um-edit-btn.password { background: #2D3E50; color: #fff; }
+.um-edit-btn.password:hover { opacity: 0.85; }
 
 .um-toggle-btn {
   border: none;
@@ -183,29 +181,3 @@
 .um-delete-btn:hover { background: #dc2626; }
 
 .um-protected { color: #d1d5db; font-size: 0.85rem; }
- 
-.um-change-btn {
-  background: #2D3E50 !important;
-}
-.um-change-btn:hover {
-  background: #1e2d3d !important;
-}
-.um-change-btn {
-  background: #2D3E50 !important;
-}
-.um-change-btn:hover {
-  background: #1e2d3d !important;
-}
-
-.um-username-btn {
-  background: #4f46e5 !important;
-}
-.um-username-btn:hover {
-  background: #4338ca !important;
-}
-.um-change-btn {
-  background: #2D3E50 !important;
-}
-.um-change-btn:hover {
-  background: #1e2d3d !important;
-}

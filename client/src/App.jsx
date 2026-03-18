@@ -3,11 +3,8 @@ import './styles/globals.css';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 
-// ── Public layout
 import Navbar from './components/navbar/Navbar';
 import Footer from './components/navbar/Footer';
-
-// ── Public pages
 import HomePage             from './pages/Mainpage/HomePage';
 import CollectionsPage      from './pages/collections/CollectionsPage';
 import AgeGroupPage         from './pages/collections/AgeGroupPage';
@@ -24,12 +21,13 @@ import SupportHub           from './pages/support/SupportHub';
 import OrderHelp            from './pages/support/OrderHelp';
 import ChatSupport          from './pages/support/ChatSupport';
 
-// ── Admin
-import AdminLayout    from './admin/layout/AdminLayout';
-import Contact        from './admin/views/Contactmessage';
-import UserManagement from './admin/views/UserManagement';
-import Login          from './admin/login/Login';
-import ProtectedRoute from './admin/login/Protectedroute';
+import AdminLayout      from './admin/layout/AdminLayout';
+import Contact          from './admin/views/Contactmessage';
+import UserManagement   from './admin/views/UserManagement';
+import ChangeUsername   from './admin/views/ChangeUsername';
+import ChangePassword   from './admin/views/ChangePassword';
+import Login            from './admin/login/Login';
+import ProtectedRoute   from './admin/login/Protectedroute';
 
 function PublicLayout() {
   return (
@@ -73,8 +71,10 @@ function App() {
               }
             >
               <Route index element={<Navigate to="/admin/contact" replace />} />
-              <Route path="contact" element={<Contact />} />
-              <Route path="users"   element={<UserManagement />} />
+              <Route path="contact"         element={<Contact />} />
+              <Route path="users"           element={<UserManagement />} />
+              <Route path="change-username" element={<ChangeUsername />} />
+              <Route path="change-password" element={<ChangePassword />} />
             </Route>
             <Route path="/*" element={<PublicLayout />} />
           </Routes>
