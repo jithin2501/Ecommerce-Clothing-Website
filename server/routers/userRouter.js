@@ -9,10 +9,12 @@ const getAllUsers     = userController.getAllUsers;
 const createUser     = userController.createUser;
 const toggleUser     = userController.toggleUser;
 const deleteUser     = userController.deleteUser;
+const changePassword = userController.changePassword;
 
-router.get('/',             protect, superAdminOnly, getAllUsers);
-router.post('/',            protect, superAdminOnly, createUser);
-router.patch('/:id/toggle', protect, superAdminOnly, toggleUser);
-router.delete('/:id',       protect, superAdminOnly, deleteUser);
+router.get('/',                protect, superAdminOnly, getAllUsers);
+router.post('/',               protect, superAdminOnly, createUser);
+router.patch('/:id/toggle',    protect, superAdminOnly, toggleUser);
+router.delete('/:id',          protect, superAdminOnly, deleteUser);
+router.patch('/change-password', protect, superAdminOnly, changePassword);
 
 module.exports = router;

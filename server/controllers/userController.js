@@ -1,37 +1,27 @@
 const AdminUser = require('../models/adminUserModel');
 
-// ── GET /api/users  — list all admin users
+// ── GET /api/users
 const getAllUsers = async (req, res) => {
   try {
-    const users = await AdminUser.find()
-      .select('-password')
-      .sort({ createdAt: -1 });
+    const users = await AdminUser.find().select('-password').sort({ createdAt: -1 });
     res.status(200).json({ success: true, data: users });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error.' });
   }
 };
 
-// ── POST /api/users  — create new admin
+// ── POST /api/users
 const createUser = async (req, res) => {
   try {
     const { username, password } = req.body;
-
     if (!username || !password) {
       return res.status(400).json({ success: false, message: 'Username and password are required.' });
     }
-
     const exists = await AdminUser.findOne({ username: username.toLowerCase() });
     if (exists) {
       return res.status(400).json({ success: false, message: 'Username already exists.' });
     }
-
-    const user = await AdminUser.create({
-      username: username.toLowerCase(),
-      password,
-      role: 'admin',
-    });
-
+    const user = await AdminUser.create({ username: username.toLowerCase(), password, role: 'admin' });
     res.status(201).json({
       success: true,
       message: 'Admin user created.',
@@ -42,7 +32,7 @@ const createUser = async (req, res) => {
   }
 };
 
-// ── PATCH /api/users/:id/toggle  — activate/deactivate
+// ── PATCH /api/users/:id/toggle
 const toggleUser = async (req, res) => {
   try {
     const user = await AdminUser.findById(req.params.id);
@@ -73,4 +63,26 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, createUser, toggleUser, deleteUser };
+// ── PATCH /api/users/change-password (superadmin only)
+const changePassword = async (req, res) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Both fields are required.' });
+    }
+    const user = await AdminUser.findById(req.admin.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+
+    const match = await user.matchPassword(currentPassword);
+    if (!match) {
+      return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
+    }
+    user.password = newPassword;
+    await user.save();
+    res.status(200).json({ success: true, message: 'Password changed successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
+module.exports = { getAllUsers, createUser, toggleUser, deleteUser, changePassword };
