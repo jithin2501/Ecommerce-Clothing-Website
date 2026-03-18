@@ -12,7 +12,7 @@ html, body, #root {
 }
 
 .admin-sidebar {
-  width: 260px;
+  width: 240px;
   background: #2D3E50;
   display: flex;
   flex-direction: column;
@@ -20,16 +20,16 @@ html, body, #root {
   top: 0;
   left: 0;
   bottom: 0;
-  right: calc(100% - 260px);
+  right: calc(100% - 240px);
   z-index: 100;
   overflow-y: auto;
 }
 
 .admin-brand {
   color: #ffffff;
-  font-size: 1.05rem;
+  font-size: 1.3rem;
   font-weight: 800;
-  padding: 1.6rem 1.5rem 1.4rem;
+  padding: 1.6rem 1.2rem 1.4rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
 }
@@ -38,18 +38,19 @@ html, body, #root {
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 1rem 0;
+  padding: 0;
   background: #2D3E50;
 }
 
 .admin-nav-link {
   color: #ffffff;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
-  padding: 0.78rem 1.5rem;
+  padding: 1.6rem 1.2rem 1.4rem;
   transition: background 0.2s;
   background: transparent;
+  text-align: left;
 }
 
 .admin-nav-link:hover {
@@ -62,7 +63,7 @@ html, body, #root {
 }
 
 .admin-main {
-  margin-left: 260px;
+  margin-left: 240px;
   flex: 1;
   background: #f3f4f6;
   min-height: 100vh;

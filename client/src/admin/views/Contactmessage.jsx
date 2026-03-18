@@ -50,7 +50,7 @@ export default function Contact() {
 
   return (
     <div className="contact-page">
-      <h1 className="contact-title">Contact Messages</h1>
+      <h1 className="contact-title">CONTACT MESSAGES</h1>
 
       {loading ? (
         <div className="contact-outer">
