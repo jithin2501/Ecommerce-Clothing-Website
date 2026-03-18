@@ -3,19 +3,24 @@ const express = require('express');
 const cors    = require('cors');
 const connectDB = require('./conf/db');
 
-const contactRouter = require('./routers/contactRouter');
-const authRouter    = require('./routers/authRouter');
+const contactRouter  = require('./routers/contactRouter');
+const authRouter     = require('./routers/authRouter');
+const userRouter     = require('./routers/userRouter');
+const { seedSuperAdmin } = require('./controllers/authController');
 
 const app = express();
 
-connectDB();
+connectDB().then(() => {
+  // Seed superadmin after DB connects
+  seedSuperAdmin();
+});
 
 app.use(cors());
 app.use(express.json());
 
-// ── Routes
 app.use('/api/auth',    authRouter);
 app.use('/api/contact', contactRouter);
+app.use('/api/users',   userRouter);
 
 app.get('/', (req, res) => res.json({ message: 'Sumathi Trends API running.' }));
 

@@ -27,6 +27,7 @@ import ChatSupport          from './pages/support/ChatSupport';
 // ── Admin
 import AdminLayout    from './admin/layout/AdminLayout';
 import Contact        from './admin/views/Contactmessage';
+import UserManagement from './admin/views/UserManagement';
 import Login          from './admin/login/Login';
 import ProtectedRoute from './admin/login/Protectedroute';
 
@@ -62,11 +63,7 @@ function App() {
       <CartProvider>
         <WishlistProvider>
           <Routes>
-
-            {/* ── Admin login (public) ── */}
             <Route path="/admin/login" element={<Login />} />
-
-            {/* ── Admin panel (protected) ── */}
             <Route
               path="/admin"
               element={
@@ -77,11 +74,9 @@ function App() {
             >
               <Route index element={<Navigate to="/admin/contact" replace />} />
               <Route path="contact" element={<Contact />} />
+              <Route path="users"   element={<UserManagement />} />
             </Route>
-
-            {/* ── Public routes ── */}
             <Route path="/*" element={<PublicLayout />} />
-
           </Routes>
         </WishlistProvider>
       </CartProvider>

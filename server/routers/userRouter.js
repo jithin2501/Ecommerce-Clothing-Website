@@ -1,0 +1,18 @@
+const express        = require('express');
+const router         = express.Router();
+const authMiddleware = require('../middleware/authMiddleware');
+const userController = require('../controllers/userController');
+
+const protect        = authMiddleware.protect;
+const superAdminOnly = authMiddleware.superAdminOnly;
+const getAllUsers     = userController.getAllUsers;
+const createUser     = userController.createUser;
+const toggleUser     = userController.toggleUser;
+const deleteUser     = userController.deleteUser;
+
+router.get('/',             protect, superAdminOnly, getAllUsers);
+router.post('/',            protect, superAdminOnly, createUser);
+router.patch('/:id/toggle', protect, superAdminOnly, toggleUser);
+router.delete('/:id',       protect, superAdminOnly, deleteUser);
+
+module.exports = router;
