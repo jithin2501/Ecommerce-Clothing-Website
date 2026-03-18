@@ -52,48 +52,56 @@ export default function Contact() {
     <div className="contact-page">
       <h1 className="contact-title">Contact Messages</h1>
 
-      <div className="contact-card">
-        {loading ? (
+      {loading ? (
+        <div className="contact-outer">
           <p className="contact-empty">Loading...</p>
-        ) : contacts.length === 0 ? (
+        </div>
+      ) : contacts.length === 0 ? (
+        /* ── Empty: single box ── */
+        <div className="contact-outer empty">
           <p className="contact-empty">No contact submissions yet.</p>
-        ) : (
-          <table className="contact-table">
-            <thead>
-              <tr>
-                <th>DATE</th>
-                <th>TYPE</th>
-                <th>APPLICANT</th>
-                <th>CONTACT</th>
-                <th>CLASS / MESSAGE</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contacts.map((c) => (
-                <tr key={c._id}>
-                  <td>{formatDate(c.createdAt)}</td>
-                  <td><span className="type-badge">{c.type}</span></td>
-                  <td className="td-name">{c.name}</td>
-                  <td className="td-contact">
-                    <span>{c.phone}</span>
-                    {c.email && <span className="td-email">{c.email}</span>}
-                  </td>
-                  <td className="td-msg">
-                    {c.subject
-                      ? `Subj: ${c.subject}`
-                      : `Msg: ${c.message.slice(0, 45)}...`}
-                  </td>
-                  <td className="td-action">
-                    <button className="btn-view"   onClick={() => handleView(c._id)}>View</button>
-                    <button className="btn-delete" onClick={() => handleDelete(c._id)}>Delete</button>
-                  </td>
+        </div>
+      ) : (
+        /* ── Has data: outer box wrapping inner table box ── */
+        <div className="contact-outer">
+          <div className="contact-card">
+            <table className="contact-table">
+              <thead>
+                <tr>
+                  <th>DATE</th>
+                  <th>TYPE</th>
+                  <th>APPLICANT</th>
+                  <th>CONTACT</th>
+                  <th>MESSAGE</th>
+                  <th>ACTION</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+              </thead>
+              <tbody>
+                {contacts.map((c) => (
+                  <tr key={c._id}>
+                    <td>{formatDate(c.createdAt)}</td>
+                    <td><span className="type-badge">{c.type}</span></td>
+                    <td className="td-name">{c.name}</td>
+                    <td className="td-contact">
+                      <span>{c.phone}</span>
+                      {c.email && <span className="td-email">{c.email}</span>}
+                    </td>
+                    <td className="td-msg">
+                      {c.subject
+                        ? `Subj: ${c.subject}`
+                        : `Msg: ${c.message.slice(0, 45)}...`}
+                    </td>
+                    <td className="td-action">
+                      <button className="btn-view"   onClick={() => handleView(c._id)}>View</button>
+                      <button className="btn-delete" onClick={() => handleDelete(c._id)}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {selected && (
         <div className="modal-overlay" onClick={() => setSelected(null)}>
@@ -115,9 +123,6 @@ export default function Contact() {
             <div className="modal-msg-section">
               <h4>Message Content</h4>
               <div className="modal-msg-box">{selected.message}</div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn-close-modal" onClick={() => setSelected(null)}>Close</button>
             </div>
           </div>
         </div>
