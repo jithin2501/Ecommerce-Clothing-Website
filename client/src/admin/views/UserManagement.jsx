@@ -1,42 +1,36 @@
 import { useEffect, useState } from 'react';
 import '../assets/usermanagement.css';
 
-const API      = 'http://localhost:5000/api/users';
+const API = 'http://localhost:5000/api/users';
 const authHeaders = () => ({
   'Content-Type': 'application/json',
   Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
 });
 
 export default function UserManagement() {
-  const [users, setUsers]     = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [form, setForm]       = useState({ username: '', password: '' });
+  const [users, setUsers]       = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [form, setForm]         = useState({ username: '', password: '' });
   const [passForm, setPassForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-  const [msg, setMsg]         = useState({ text: '', type: '' });
-  const [passMsg, setPassMsg] = useState({ text: '', type: '' });
+  const [userForm, setUserForm] = useState({ newUsername: '', currentPassword: '' });
+  const [msg, setMsg]           = useState({ text: '', type: '' });
+  const [passMsg, setPassMsg]   = useState({ text: '', type: '' });
+  const [userMsg, setUserMsg]   = useState({ text: '', type: '' });
 
   const fetchUsers = async () => {
     try {
       const res  = await fetch(API, { headers: authHeaders() });
       const data = await res.json();
       if (data.success) setUsers(data.data);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
+    } catch (err) { console.error(err); }
+    finally { setLoading(false); }
   };
 
   useEffect(() => { fetchUsers(); }, []);
 
-  const showMsg = (text, type = 'success') => {
-    setMsg({ text, type });
-    setTimeout(() => setMsg({ text: '', type: '' }), 3000);
-  };
-
-  const showPassMsg = (text, type = 'success') => {
-    setPassMsg({ text, type });
-    setTimeout(() => setPassMsg({ text: '', type: '' }), 3000);
+  const flash = (setter, text, type = 'success') => {
+    setter({ text, type });
+    setTimeout(() => setter({ text: '', type: '' }), 3000);
   };
 
   const handleCreate = async (e) => {
@@ -47,13 +41,9 @@ export default function UserManagement() {
       if (data.success) {
         setUsers(u => [data.data, ...u]);
         setForm({ username: '', password: '' });
-        showMsg('Admin user created successfully.');
-      } else {
-        showMsg(data.message, 'error');
-      }
-    } catch {
-      showMsg('Server error.', 'error');
-    }
+        flash(setMsg, 'Admin user created successfully.');
+      } else { flash(setMsg, data.message, 'error'); }
+    } catch { flash(setMsg, 'Server error.', 'error'); }
   };
 
   const handleToggle = async (id) => {
@@ -61,9 +51,7 @@ export default function UserManagement() {
       const res  = await fetch(`${API}/${id}/toggle`, { method: 'PATCH', headers: authHeaders() });
       const data = await res.json();
       if (data.success) setUsers(u => u.map(x => x._id === id ? { ...x, isActive: data.isActive } : x));
-    } catch {
-      showMsg('Server error.', 'error');
-    }
+    } catch { flash(setMsg, 'Server error.', 'error'); }
   };
 
   const handleDelete = async (id, username) => {
@@ -71,44 +59,42 @@ export default function UserManagement() {
     try {
       const res  = await fetch(`${API}/${id}`, { method: 'DELETE', headers: authHeaders() });
       const data = await res.json();
-      if (data.success) {
-        setUsers(u => u.filter(x => x._id !== id));
-        showMsg('User deleted.');
-      }
-    } catch {
-      showMsg('Server error.', 'error');
-    }
+      if (data.success) { setUsers(u => u.filter(x => x._id !== id)); flash(setMsg, 'User deleted.'); }
+    } catch { flash(setMsg, 'Server error.', 'error'); }
   };
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
     if (passForm.newPassword !== passForm.confirmPassword) {
-      showPassMsg('New passwords do not match.', 'error');
-      return;
+      flash(setPassMsg, 'New passwords do not match.', 'error'); return;
     }
     if (passForm.newPassword.length < 6) {
-      showPassMsg('New password must be at least 6 characters.', 'error');
-      return;
+      flash(setPassMsg, 'New password must be at least 6 characters.', 'error'); return;
     }
     try {
       const res  = await fetch(`${API}/change-password`, {
-        method:  'PATCH',
-        headers: authHeaders(),
-        body:    JSON.stringify({
-          currentPassword: passForm.currentPassword,
-          newPassword:     passForm.newPassword,
-        }),
+        method: 'PATCH', headers: authHeaders(),
+        body: JSON.stringify({ currentPassword: passForm.currentPassword, newPassword: passForm.newPassword }),
+      });
+      const data = await res.json();
+      if (data.success) { setPassForm({ currentPassword: '', newPassword: '', confirmPassword: '' }); flash(setPassMsg, 'Password changed successfully.'); }
+      else { flash(setPassMsg, data.message, 'error'); }
+    } catch { flash(setPassMsg, 'Server error.', 'error'); }
+  };
+
+  const handleChangeUsername = async (e) => {
+    e.preventDefault();
+    try {
+      const res  = await fetch(`${API}/change-username`, {
+        method: 'PATCH', headers: authHeaders(),
+        body: JSON.stringify(userForm),
       });
       const data = await res.json();
       if (data.success) {
-        setPassForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-        showPassMsg('Password changed successfully.');
-      } else {
-        showPassMsg(data.message, 'error');
-      }
-    } catch {
-      showPassMsg('Server error.', 'error');
-    }
+        setUserForm({ newUsername: '', currentPassword: '' });
+        flash(setUserMsg, 'Username changed. Please sign out and log in again.');
+      } else { flash(setUserMsg, data.message, 'error'); }
+    } catch { flash(setUserMsg, 'Server error.', 'error'); }
   };
 
   return (
@@ -123,7 +109,7 @@ export default function UserManagement() {
         <form className="um-form" onSubmit={handleCreate}>
           <div className="um-form-group">
             <label>Username:</label>
-            <input type="text" placeholder="Enter new username (e.g., admin2)" value={form.username}
+            <input type="text" placeholder="Enter new username" value={form.username}
               onChange={e => setForm(f => ({ ...f, username: e.target.value }))} required />
           </div>
           <div className="um-form-group">
@@ -132,6 +118,26 @@ export default function UserManagement() {
               onChange={e => setForm(f => ({ ...f, password: e.target.value }))} required />
           </div>
           <button type="submit" className="um-create-btn">Create Admin Account</button>
+        </form>
+      </div>
+
+      {/* ── Change Username ── */}
+      <div className="um-card">
+        <h3 className="um-card-title">Change Your Username</h3>
+        <p className="um-card-sub">Update your superadmin login username. You'll need to sign in again after changing.</p>
+        {userMsg.text && <div className={`um-msg ${userMsg.type === 'error' ? 'um-msg-error' : 'um-msg-success'}`}>{userMsg.text}</div>}
+        <form className="um-form" onSubmit={handleChangeUsername}>
+          <div className="um-form-group">
+            <label>New Username:</label>
+            <input type="text" placeholder="Enter new username" value={userForm.newUsername}
+              onChange={e => setUserForm(f => ({ ...f, newUsername: e.target.value }))} required />
+          </div>
+          <div className="um-form-group">
+            <label>Current Password:</label>
+            <input type="password" placeholder="Confirm with current password" value={userForm.currentPassword}
+              onChange={e => setUserForm(f => ({ ...f, currentPassword: e.target.value }))} required />
+          </div>
+          <button type="submit" className="um-create-btn um-username-btn">Change Username</button>
         </form>
       </div>
 
@@ -163,9 +169,7 @@ export default function UserManagement() {
       {/* ── Existing Users ── */}
       <h2 className="um-section-title">Existing Admin Users</h2>
       <div className="um-table-outer">
-        {loading ? (
-          <p className="um-empty">Loading...</p>
-        ) : (
+        {loading ? <p className="um-empty">Loading...</p> : (
           <table className="um-table">
             <thead>
               <tr>
@@ -189,9 +193,7 @@ export default function UserManagement() {
                         </button>
                         <button className="um-delete-btn" onClick={() => handleDelete(u._id, u.username)}>Delete</button>
                       </>
-                    ) : (
-                      <span className="um-protected">—</span>
-                    )}
+                    ) : <span className="um-protected">—</span>}
                   </td>
                 </tr>
               ))}

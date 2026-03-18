@@ -190,4 +190,22 @@
 .um-change-btn:hover {
   background: #1e2d3d !important;
 }
- 
+.um-change-btn {
+  background: #2D3E50 !important;
+}
+.um-change-btn:hover {
+  background: #1e2d3d !important;
+}
+
+.um-username-btn {
+  background: #4f46e5 !important;
+}
+.um-username-btn:hover {
+  background: #4338ca !important;
+}
+.um-change-btn {
+  background: #2D3E50 !important;
+}
+.um-change-btn:hover {
+  background: #1e2d3d !important;
+}

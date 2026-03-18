@@ -1,6 +1,5 @@
 const AdminUser = require('../models/adminUserModel');
 
-// ── GET /api/users
 const getAllUsers = async (req, res) => {
   try {
     const users = await AdminUser.find().select('-password').sort({ createdAt: -1 });
@@ -10,21 +9,17 @@ const getAllUsers = async (req, res) => {
   }
 };
 
-// ── POST /api/users
 const createUser = async (req, res) => {
   try {
     const { username, password } = req.body;
-    if (!username || !password) {
+    if (!username || !password)
       return res.status(400).json({ success: false, message: 'Username and password are required.' });
-    }
     const exists = await AdminUser.findOne({ username: username.toLowerCase() });
-    if (exists) {
+    if (exists)
       return res.status(400).json({ success: false, message: 'Username already exists.' });
-    }
     const user = await AdminUser.create({ username: username.toLowerCase(), password, role: 'admin' });
     res.status(201).json({
-      success: true,
-      message: 'Admin user created.',
+      success: true, message: 'Admin user created.',
       data: { _id: user._id, username: user.username, role: user.role, isActive: user.isActive },
     });
   } catch (err) {
@@ -32,14 +27,12 @@ const createUser = async (req, res) => {
   }
 };
 
-// ── PATCH /api/users/:id/toggle
 const toggleUser = async (req, res) => {
   try {
     const user = await AdminUser.findById(req.params.id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
-    if (user.role === 'superadmin') {
+    if (user.role === 'superadmin')
       return res.status(403).json({ success: false, message: 'Cannot deactivate superadmin.' });
-    }
     user.isActive = !user.isActive;
     await user.save();
     res.status(200).json({ success: true, isActive: user.isActive });
@@ -48,14 +41,12 @@ const toggleUser = async (req, res) => {
   }
 };
 
-// ── DELETE /api/users/:id
 const deleteUser = async (req, res) => {
   try {
     const user = await AdminUser.findById(req.params.id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
-    if (user.role === 'superadmin') {
+    if (user.role === 'superadmin')
       return res.status(403).json({ success: false, message: 'Cannot delete superadmin.' });
-    }
     await AdminUser.findByIdAndDelete(req.params.id);
     res.status(200).json({ success: true, message: 'User deleted.' });
   } catch (err) {
@@ -63,20 +54,16 @@ const deleteUser = async (req, res) => {
   }
 };
 
-// ── PATCH /api/users/change-password (superadmin only)
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    if (!currentPassword || !newPassword) {
+    if (!currentPassword || !newPassword)
       return res.status(400).json({ success: false, message: 'Both fields are required.' });
-    }
     const user = await AdminUser.findById(req.admin.id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
-
     const match = await user.matchPassword(currentPassword);
-    if (!match) {
+    if (!match)
       return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
-    }
     user.password = newPassword;
     await user.save();
     res.status(200).json({ success: true, message: 'Password changed successfully.' });
@@ -85,4 +72,25 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, createUser, toggleUser, deleteUser, changePassword };
+const changeUsername = async (req, res) => {
+  try {
+    const { newUsername, currentPassword } = req.body;
+    if (!newUsername || !currentPassword)
+      return res.status(400).json({ success: false, message: 'All fields are required.' });
+    const user = await AdminUser.findById(req.admin.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    const match = await user.matchPassword(currentPassword);
+    if (!match)
+      return res.status(401).json({ success: false, message: 'Current password is incorrect.' });
+    const exists = await AdminUser.findOne({ username: newUsername.toLowerCase() });
+    if (exists)
+      return res.status(400).json({ success: false, message: 'Username already taken.' });
+    user.username = newUsername.toLowerCase();
+    await user.save();
+    res.status(200).json({ success: true, message: 'Username changed successfully. Please log in again.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
+module.exports = { getAllUsers, createUser, toggleUser, deleteUser, changePassword, changeUsername };
