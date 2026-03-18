@@ -3,14 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import './login.css';
 
 export default function Login() {
-  const circleRef    = useRef(null);
-  const [form, setForm]       = useState({ username: '', password: '' });
+  const circleRef = useRef(null);
+  const [form, setForm]         = useState({ username: '', password: '' });
   const [showPass, setShowPass] = useState(false);
-  const [error, setError]      = useState('');
-  const [loading, setLoading]  = useState(false);
+  const [error, setError]       = useState('');
+  const [loading, setLoading]   = useState(false);
   const navigate = useNavigate();
 
-  // ── Animated bars
   useEffect(() => {
     const container = circleRef.current;
     const numBars   = 64;
@@ -109,7 +108,10 @@ export default function Login() {
                 required
               />
               <span className="login-eye" onClick={() => setShowPass(s => !s)}>
-                {showPass ? '🙈' : '👁️'}
+                {showPass
+                  ? <img src="/images/login/view.png"   alt="hide" className="login-eye-img" />
+                  : <img src="/images/login/hide.png" alt="show" className="login-eye-img" />
+                }
               </span>
             </div>
             <button type="submit" className="login-btn" disabled={loading}>

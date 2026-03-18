@@ -61,20 +61,23 @@
 }
 
 .admin-signout {
-  margin: 0 1.2rem 1.5rem;
-  background: none;
+  align-self: center;
+  margin: auto 1.2rem 1.5rem;
+  background: #ef4444;
   border: none;
-  color: #ef4444;
+  border-radius: 8px;
+  color: #ffffff;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  text-align: left;
-  padding: 0.6rem 0;
+  text-align: center;
+  padding: 0.7rem 2rem;
   font-family: 'Inter', sans-serif;
-  transition: opacity 0.2s;
+  transition: background 0.2s;
+  width: calc(100% - 2.4rem);
 }
 
-.admin-signout:hover { opacity: 0.75; }
+.admin-signout:hover { background: #dc2626; }
 
 .admin-main {
   margin-left: 240px;
