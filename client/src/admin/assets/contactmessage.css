@@ -1,23 +1,34 @@
 .contact-page { background: transparent; }
 
 .contact-title {
-  font-size: 1.65rem;
+  font-size: 1.3rem;
   font-weight: 900;
   color: #1e2139;
   margin-bottom: 1.2rem;
   letter-spacing: 0.4px;
 }
 
-.contact-card {
+.contact-outer {
   background: #ffffff;
-  
+  border-radius: 12px;
+  padding: 1.5rem;
   box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
   border: 1px solid #e5e7eb;
-  
+}
+
+.contact-outer.empty {
+  max-width: 400px;
+}
+
+.contact-card {
+  background: #ffffff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
 }
 
 .contact-empty {
-  padding: 3rem;
+  padding: 1.2rem;
   text-align: center;
   color: #9ca3af;
   font-size: 0.9rem;
@@ -30,7 +41,7 @@
 }
 
 .contact-table thead tr {
-  border-bottom: 1.5px solid #f0f0f0;
+  border-bottom: 1.5px solid #e5e7eb;
 }
 
 .contact-table th {
@@ -97,7 +108,6 @@
 }
 .btn-delete:hover { background: #dc2626; }
 
-/* ── Modal ── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -170,366 +180,10 @@
   line-height: 1.75;
 }
 
-.contact-outer {
-  background: #ffffff;
-  border-radius: 16px;
+.contact-outer.empty {
+  max-width: 1200px !important;
+}
+
+.contact-outer.empty .contact-empty {
   padding: 1.5rem;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-}.contact-page { background: transparent; }
-
-.contact-title {
-  font-size: 1.65rem;
-  font-weight: 900;
-  color: #1e2139;
-  margin-bottom: 1.2rem;
-  letter-spacing: 0.4px;
-}
-
-.contact-card {
-  background: #ffffff;
-  
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  
-}
-
-.contact-empty {
-  padding: 3rem;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 0.9rem;
-}
-
-.contact-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-
-.contact-table thead tr {
-  border-bottom: 1.5px solid #f0f0f0;
-}
-
-.contact-table th {
-  min-width: 160px;
-  padding: 1rem 1.8rem;
-  text-align: center;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #9ca3af;
-  letter-spacing: 0.9px;
-}
-
-.contact-table td {
-  padding: 1rem 1.8rem;
-  border-bottom: 1.5px solid #e5e7eb;
-  color: #374151;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.contact-table tbody tr:last-child td { border-bottom: none; }
-.contact-table tbody tr:hover { background: #fafafa; }
-
-.type-badge {
-  background: #fef9c3;
-  color: #854d0e;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 3px 12px;
-  border-radius: 20px;
-}
-
-.td-name { font-weight: 700; color: #1e2139; }
-.td-contact { display: flex; flex-direction: column; gap: 2px; align-items: center; }
-.td-email { font-size: 0.78rem; color: #6b7280; }
-.td-msg { color: #6b7280; max-width: 600px; min-width: 250px; }
-.td-action { display: flex; gap: 0.5rem; align-items: center; justify-content: center; }
-
-.btn-view {
-  background: #3b82f6;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 5px 18px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s;
-}
-.btn-view:hover { background: #2563eb; }
-
-.btn-delete {
-  background: #ef4444;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 5px 18px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s;
-}
-.btn-delete:hover { background: #dc2626; }
-
-/* ── Modal ── */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal-box {
-  background: #fff;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 560px;
-  padding: 2rem 2.5rem 2rem;
-  position: relative;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
-}
-
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1.2rem;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #6b7280;
-  line-height: 1;
-}
-.modal-close:hover { color: #1e2139; }
-
-.modal-title {
-  font-size: 1.1rem;
-  font-weight: 900;
-  color: #1e2139;
-  margin-bottom: 1rem;
-}
-
-.modal-divider {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin-bottom: 1.2rem;
-}
-
-.modal-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  font-size: 0.88rem;
-  color: #374151;
-  margin-bottom: 1.4rem;
-}
-.modal-fields a { color: #4f46e5; text-decoration: none; }
-
-.modal-msg-section h4 {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #1e2139;
-  margin-bottom: 0.6rem;
-}
-
-.modal-msg-box {
-  background: #f3f4f6;
-  border-radius: 10px;
-  padding: 1rem 1.2rem;
-  font-size: 0.85rem;
-  color: #4b5563;
-  line-height: 1.75;
-}
-
-.contact-outer {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-}.contact-page { background: transparent; }
-
-.contact-title {
-  font-size: 1.65rem;
-  font-weight: 900;
-  color: #1e2139;
-  margin-bottom: 1.2rem;
-  letter-spacing: 0.4px;
-}
-
-.contact-card {
-  background: #ffffff;
-  
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
-  
-}
-
-.contact-empty {
-  padding: 3rem;
-  text-align: center;
-  color: #9ca3af;
-  font-size: 0.9rem;
-}
-
-.contact-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.85rem;
-}
-
-.contact-table thead tr {
-  border-bottom: 1.5px solid #f0f0f0;
-}
-
-.contact-table th {
-  min-width: 160px;
-  padding: 1rem 1.8rem;
-  text-align: center;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #9ca3af;
-  letter-spacing: 0.9px;
-}
-
-.contact-table td {
-  padding: 1rem 1.8rem;
-  border-bottom: 1.5px solid #e5e7eb;
-  color: #374151;
-  vertical-align: middle;
-  text-align: center;
-}
-
-.contact-table tbody tr:last-child td { border-bottom: none; }
-.contact-table tbody tr:hover { background: #fafafa; }
-
-.type-badge {
-  background: #fef9c3;
-  color: #854d0e;
-  font-size: 0.72rem;
-  font-weight: 700;
-  padding: 3px 12px;
-  border-radius: 20px;
-}
-
-.td-name { font-weight: 700; color: #1e2139; }
-.td-contact { display: flex; flex-direction: column; gap: 2px; align-items: center; }
-.td-email { font-size: 0.78rem; color: #6b7280; }
-.td-msg { color: #6b7280; max-width: 600px; min-width: 250px; }
-.td-action { display: flex; gap: 0.5rem; align-items: center; justify-content: center; }
-
-.btn-view {
-  background: #3b82f6;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 5px 18px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s;
-}
-.btn-view:hover { background: #2563eb; }
-
-.btn-delete {
-  background: #ef4444;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 5px 18px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s;
-}
-.btn-delete:hover { background: #dc2626; }
-
-/* ── Modal ── */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.modal-box {
-  background: #fff;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 560px;
-  padding: 2rem 2.5rem 2rem;
-  position: relative;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.15);
-}
-
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1.2rem;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #6b7280;
-  line-height: 1;
-}
-.modal-close:hover { color: #1e2139; }
-
-.modal-title {
-  font-size: 1.1rem;
-  font-weight: 900;
-  color: #1e2139;
-  margin-bottom: 1rem;
-}
-
-.modal-divider {
-  border: none;
-  border-top: 1px solid #e5e7eb;
-  margin-bottom: 1.2rem;
-}
-
-.modal-fields {
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  font-size: 0.88rem;
-  color: #374151;
-  margin-bottom: 1.4rem;
-}
-.modal-fields a { color: #4f46e5; text-decoration: none; }
-
-.modal-msg-section h4 {
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: #1e2139;
-  margin-bottom: 0.6rem;
-}
-
-.modal-msg-box {
-  background: #f3f4f6;
-  border-radius: 10px;
-  padding: 1rem 1.2rem;
-  font-size: 0.85rem;
-  color: #4b5563;
-  line-height: 1.75;
-}
-
-.contact-outer {
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 1.5rem;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
 }
