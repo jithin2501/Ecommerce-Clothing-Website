@@ -2,12 +2,14 @@ import { useEffect } from 'react';
 import { NavLink, Outlet } from 'react-router-dom';
 import '../assets/AdminLayout.css';
 
+
 export default function AdminLayout() {
   useEffect(() => {
-    const prev = document.body.getAttribute('style');
-    document.body.setAttribute('style', 'background: #f3f4f6 !important; background-image: none !important;');
+    document.body.style.cssText = 'background: #f3f4f6 !important; background-image: none !important; overflow: hidden !important; height: 100% !important;';
+    document.documentElement.style.cssText = 'overflow: hidden !important; height: 100% !important;';
     return () => {
-      document.body.setAttribute('style', prev || '');
+      document.body.style.cssText = '';
+      document.documentElement.style.cssText = '';
     };
   }, []);
 
