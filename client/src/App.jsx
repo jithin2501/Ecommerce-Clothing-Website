@@ -25,8 +25,10 @@ import OrderHelp            from './pages/support/OrderHelp';
 import ChatSupport          from './pages/support/ChatSupport';
 
 // ── Admin
-import AdminLayout from './admin/layout/AdminLayout';
-import Contact     from './admin/views/Contactmessage';
+import AdminLayout    from './admin/layout/AdminLayout';
+import Contact        from './admin/views/Contactmessage';
+import Login          from './admin/login/Login';
+import ProtectedRoute from './admin/login/Protectedroute';
 
 function PublicLayout() {
   return (
@@ -61,8 +63,18 @@ function App() {
         <WishlistProvider>
           <Routes>
 
-            {/* ── Admin routes ── */}
-            <Route path="/admin" element={<AdminLayout />}>
+            {/* ── Admin login (public) ── */}
+            <Route path="/admin/login" element={<Login />} />
+
+            {/* ── Admin panel (protected) ── */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout />
+                </ProtectedRoute>
+              }
+            >
               <Route index element={<Navigate to="/admin/contact" replace />} />
               <Route path="contact" element={<Contact />} />
             </Route>
