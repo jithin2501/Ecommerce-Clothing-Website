@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Share2, ShoppingBag, MapPin, Truck, Package, RotateCcw, Banknote, ShieldCheck, ShoppingCart } from 'lucide-react';
+import { Heart, Share2, MapPin, Truck, Package, RotateCcw, Banknote, ShieldCheck } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import AddToCartBtn from './AddToCartBtn';
 import '../../styles/collectiondetails/ProductInfo.css';
 
 const SIZES  = ['2-3Y', '4-5Y', '6-7Y', '8-9Y'];
@@ -20,7 +21,6 @@ export default function ProductInfo() {
   const [selectedSize,  setSelectedSize]  = useState('4-5Y');
   const [selectedColor, setSelectedColor] = useState('blush');
   const [wishlisted,    setWishlisted]    = useState(false);
-  const [added,         setAdded]         = useState(false);
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
@@ -33,7 +33,6 @@ export default function ProductInfo() {
       color: selectedColor,
       img: '/images/img1.webp',
     });
-    setAdded(true);
   };
 
   return (
@@ -66,15 +65,10 @@ export default function ProductInfo() {
       </div>
 
       <div className="pi-actions">
-        {!added ? (
-          <button className="pi-add-btn" onClick={handleAddToBag}>
-            <ShoppingBag size={18} /> Add to Bag
-          </button>
-        ) : (
-          <button className="pi-add-btn pi-go-to-bag" onClick={() => navigate('/cart')}>
-            <ShoppingCart size={18} /> Go to Bag
-          </button>
-        )}
+        <AddToCartBtn
+          onAdd={handleAddToBag}
+          onGoToBag={() => navigate('/cart')}
+        />
         <button className={`pi-icon-btn${wishlisted ? ' active' : ''}`} onClick={() => setWishlisted(p => !p)}>
           <Heart size={18} fill={wishlisted ? 'currentColor' : 'none'} />
         </button>
