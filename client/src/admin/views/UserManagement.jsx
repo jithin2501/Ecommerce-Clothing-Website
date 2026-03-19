@@ -127,10 +127,12 @@ export default function UserManagement() {
                       </>
                     ) : (
                       <>
-                        <button className={`um-toggle-btn ${u.isActive ? 'active' : 'inactive'}`} onClick={() => handleToggle(u._id)}>
-                          {u.isActive ? 'Deactivate' : 'Activate'}
+                        <button className="um-img-btn" onClick={() => handleToggle(u._id)} title={u.isActive ? 'Deactivate' : 'Activate'}>
+                          <img src={u.isActive ? '/images/usermanagement/Activate.png' : '/images/usermanagement/Deactivate.png'} alt={u.isActive ? 'Deactivate' : 'Activate'} />
                         </button>
-                        <button className="um-delete-btn" onClick={() => handleDelete(u._id, u.username)}>Delete</button>
+                        <button className="um-img-btn" onClick={() => handleDelete(u._id, u.username)} title="Delete">
+                          <img src="/images/usermanagement/Delete.png" alt="Delete" />
+                        </button>
                       </>
                     )}
                   </td>

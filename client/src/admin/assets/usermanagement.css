@@ -20,7 +20,7 @@
 .um-card-title {
   font-size: 1.1rem;
   font-weight: 800;
-  color: #4f46e5;
+  color: #3b82f6;
   margin-bottom: 0.4rem;
 }
 
@@ -112,6 +112,12 @@
   letter-spacing: 0.9px;
 }
 
+.um-table th:nth-child(2),
+.um-table th:nth-child(3),
+.um-table th:last-child {
+  text-align: center;
+}
+
 .um-table td {
   padding: 1rem 1.5rem;
   border-bottom: 1.5px solid #f0f0f0;
@@ -129,13 +135,17 @@
   font-weight: 700;
   padding: 3px 12px;
   border-radius: 20px;
+  display: inline-block;
 }
-.um-role-badge.superadmin { background: #ede9fe; color: #7c3aed; }
+
+.um-table td:nth-child(2) { text-align: center; }
+.um-table td:nth-child(3) { text-align: center; }
+.um-role-badge.superadmin { background: #eff6ff; color: #3b82f6; }
 .um-role-badge.admin      { background: #f3f4f6; color: #374151; }
 
 .um-lastlogin { color: #6b7280; font-size: 0.83rem; }
 
-.um-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.um-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; justify-content: center; }
 
 .um-edit-btn {
   border: none;
@@ -147,37 +157,33 @@
   font-family: 'Inter', sans-serif;
   transition: opacity 0.2s;
 }
-.um-edit-btn.username { background: #4f46e5; color: #fff; }
+.um-edit-btn.username { background: #3b82f6; color: #fff; }
 .um-edit-btn.username:hover { opacity: 0.85; }
 .um-edit-btn.password { background: #2D3E50; color: #fff; }
 .um-edit-btn.password:hover { opacity: 0.85; }
 
-.um-toggle-btn {
+.um-img-btn {
+  background: none;
   border: none;
-  border-radius: 20px;
-  padding: 5px 16px;
-  font-size: 0.78rem;
-  font-weight: 600;
   cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: opacity 0.2s;
+  padding: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: opacity 0.2s, background 0.2s;
 }
-.um-toggle-btn.active   { background: #e5e7eb; color: #374151; }
-.um-toggle-btn.inactive { background: #dcfce7; color: #16a34a; }
-.um-toggle-btn:hover { opacity: 0.8; }
 
-.um-delete-btn {
-  background: #ef4444;
-  color: #fff;
-  border: none;
-  border-radius: 20px;
-  padding: 5px 16px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s;
+.um-img-btn:hover {
+  opacity: 0.75;
+  background: #f3f4f6;
 }
-.um-delete-btn:hover { background: #dc2626; }
+
+.um-img-btn img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  display: block;
+}
 
 .um-protected { color: #d1d5db; font-size: 0.85rem; }
