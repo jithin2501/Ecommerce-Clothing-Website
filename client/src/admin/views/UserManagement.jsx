@@ -74,7 +74,7 @@ export default function UserManagement() {
 
   return (
     <div className="um-page">
-      <h1 className="um-title">User Management</h1>
+      <h1 className="um-title">USER MANAGEMENT</h1>
 
       {/* ── Create Admin ── */}
       <div className="um-card">
