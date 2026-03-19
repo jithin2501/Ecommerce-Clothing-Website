@@ -219,3 +219,7 @@
   .contact-form-row { grid-template-columns: 1fr; }
   .contact-right { padding: 1.5rem; }
 }
+.contact-required {
+  color: var(--accent-clay, #C17B5C);
+  margin-left: 2px;
+}

@@ -17,7 +17,7 @@ export default function ContactPage() {
         setForm(f => ({ ...f, [name]: value }));
       }
     } else if (name === 'phone') {
-      if (/^[0-9+\s-]*$/.test(value)) {
+      if (/^[0-9]*$/.test(value) && value.length <= 10) {
         setForm(f => ({ ...f, [name]: value }));
       }
     } else {
@@ -29,7 +29,11 @@ export default function ContactPage() {
     e.preventDefault();
 
     if (!form.name || !form.phone || !form.message) {
-      alert('Name, phone and message are required.');
+      alert('Name, phone number and message are required.');
+      return;
+    }
+    if (form.phone.length !== 10) {
+      alert('Please enter a valid 10-digit phone number.');
       return;
     }
 
@@ -115,7 +119,7 @@ export default function ContactPage() {
 
           {/* ── Right ── */}
           <div className="contact-right">
-            <h3 className="contact-form-title">Send us a Message</h3>
+            {!sent && <h3 className="contact-form-title">Send us a Message</h3>}
             {sent ? (
               <div className="contact-success">
                 <p>✓ Thank you! We'll get back to you shortly.</p>
@@ -124,7 +128,7 @@ export default function ContactPage() {
               <div className="contact-form">
                 <div className="contact-form-row">
                   <div className="contact-form-group">
-                    <label>Name</label>
+                    <label>Name <span className="contact-required">*</span></label>
                     <input
                       type="text"
                       name="name"
@@ -134,13 +138,14 @@ export default function ContactPage() {
                     />
                   </div>
                   <div className="contact-form-group">
-                    <label>Phone Number</label>
+                    <label>Phone Number <span className="contact-required">*</span></label>
                     <input
                       type="tel"
                       name="phone"
-                      placeholder="+91 00000 00000"
+                      placeholder="Your Phone Number"
                       value={form.phone}
                       onChange={handleChange}
+                      maxLength={10}
                     />
                   </div>
                 </div>
@@ -155,7 +160,7 @@ export default function ContactPage() {
                   />
                 </div>
                 <div className="contact-form-group">
-                  <label>Message</label>
+                  <label>Message <span className="contact-required">*</span></label>
                   <textarea
                     name="message"
                     placeholder="How can we help you?"
