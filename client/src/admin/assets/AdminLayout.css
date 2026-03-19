@@ -49,15 +49,32 @@
   transition: background 0.2s;
   background: transparent;
   text-align: left;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 .admin-nav-link:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
+  opacity: 0.75;
+}
+
+.admin-nav-link:focus,
+.admin-nav-link:focus-visible,
+.admin-nav-link:active {
+  background: transparent;
+  outline: none;
+  box-shadow: none;
 }
 
 .admin-nav-link.active {
   background: transparent;
   font-weight: 500;
+}
+
+.admin-nav-link.active:hover {
+  background: transparent;
+  opacity: 0.75;
 }
 
 .admin-signout {
@@ -75,6 +92,15 @@
   font-family: 'Inter', sans-serif;
   transition: background 0.2s;
   width: calc(100% - 2.4rem);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.admin-signout:focus,
+.admin-signout:focus-visible,
+.admin-signout:active {
+  outline: none;
+  box-shadow: none;
 }
 
 .admin-signout:hover { background: #dc2626; }
