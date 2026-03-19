@@ -118,11 +118,11 @@ export default function UserManagement() {
                   <td className="um-actions">
                     {u.role === 'superadmin' ? (
                       <>
-                        <button className="um-edit-btn username" onClick={() => navigate('/admin/change-username')}>
-                          Change Username
+                        <button className="um-img-btn" onClick={() => navigate('/admin/change-username')} title="Change Username">
+                          <img src="/images/usermanagement/Username.png" alt="Change Username" />
                         </button>
-                        <button className="um-edit-btn password" onClick={() => navigate('/admin/change-password')}>
-                          Change Password
+                        <button className="um-img-btn" onClick={() => navigate('/admin/change-password')} title="Change Password">
+                          <img src="/images/usermanagement/Password.png" alt="Change Password" />
                         </button>
                       </>
                     ) : (
