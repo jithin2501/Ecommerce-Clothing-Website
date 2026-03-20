@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { QRCodeCanvas } from 'qrcode.react';
 import '../assets/reviewmanagement.css';
 
 const API = 'http://localhost:5000/api/reviews';
@@ -38,10 +37,7 @@ export default function ReviewManagement() {
     try {
       const res  = await fetch(`${API}/admin/${id}/approve`, { method: 'PATCH', headers: authHeaders() });
       const data = await res.json();
-      if (data.success) {
-        setReviews(r => r.map(x => x._id === id ? { ...x, status: 'approved' } : x));
-        flash('Review approved — now visible on website.');
-      }
+      if (data.success) setReviews(r => r.map(x => x._id === id ? { ...x, status: 'approved' } : x));
     } catch { flash('Server error.', 'error'); }
   };
 
@@ -49,10 +45,7 @@ export default function ReviewManagement() {
     try {
       const res  = await fetch(`${API}/admin/${id}/unapprove`, { method: 'PATCH', headers: authHeaders() });
       const data = await res.json();
-      if (data.success) {
-        setReviews(r => r.map(x => x._id === id ? { ...x, status: 'pending' } : x));
-        flash('Review unapproved — hidden from website.');
-      }
+      if (data.success) setReviews(r => r.map(x => x._id === id ? { ...x, status: 'pending' } : x));
     } catch { flash('Server error.', 'error'); }
   };
 
@@ -61,10 +54,7 @@ export default function ReviewManagement() {
     try {
       const res  = await fetch(`${API}/admin/${id}`, { method: 'DELETE', headers: authHeaders() });
       const data = await res.json();
-      if (data.success) {
-        setReviews(r => r.filter(x => x._id !== id));
-        flash('Review deleted.');
-      }
+      if (data.success) setReviews(r => r.filter(x => x._id !== id));
     } catch { flash('Server error.', 'error'); }
   };
 
@@ -105,16 +95,6 @@ export default function ReviewManagement() {
 
         {/* QR card */}
         <div className="rm-stat-card rm-stat-qr">
-          <div className="rm-qr-preview">
-            <QRCodeCanvas
-              value={REVIEW_URL}
-              size={64}
-              fgColor="#2D3E50"
-              bgColor="#FFFFFF"
-              level="H"
-            />
-          </div>
-          <div className="rm-stat-label">Review QR</div>
           <button className="rm-qr-open-btn" onClick={() => navigate('/admin/review-qr')}>
             View QR
           </button>
