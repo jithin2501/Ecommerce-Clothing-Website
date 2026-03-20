@@ -2,15 +2,12 @@ import { useEffect } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import '../assets/AdminLayout.css';
 
-// Decode JWT role without a library
 const getRole = () => {
   try {
     const token = localStorage.getItem('adminToken');
     if (!token) return null;
     return JSON.parse(atob(token.split('.')[1])).role;
-  } catch {
-    return null;
-  }
+  } catch { return null; }
 };
 
 export default function AdminLayout() {
@@ -42,30 +39,14 @@ export default function AdminLayout() {
       <aside className="admin-sidebar">
         <div className="admin-brand">Admin Dashboard</div>
         <nav className="admin-nav">
-          <NavLink
-            to="/admin/contact"
-            className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}
-          >
-            Contact Messages
-          </NavLink>
-          <NavLink
-            to="/admin/reviews"
-            className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}
-          >
-            Review Management
-          </NavLink>
+          <NavLink to="/admin/contact"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Contact Messages</NavLink>
+          <NavLink to="/admin/reviews"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Review Management</NavLink>
+          <NavLink to="/admin/products" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Product Management</NavLink>
           {role === 'superadmin' && (
-            <NavLink
-              to="/admin/users"
-              className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}
-            >
-              User Management
-            </NavLink>
+            <NavLink to="/admin/users"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>User Management</NavLink>
           )}
         </nav>
-        <button className="admin-signout" onClick={handleSignOut}>
-          Sign Out
-        </button>
+        <button className="admin-signout" onClick={handleSignOut}>Sign Out</button>
       </aside>
       <main className="admin-main">
         <Outlet />

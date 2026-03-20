@@ -27,7 +27,8 @@ import Contact          from './admin/views/Contactmessage';
 import UserManagement   from './admin/views/UserManagement';
 import ChangeUsername   from './admin/views/ChangeUsername';
 import ChangePassword   from './admin/views/ChangePassword';
-import ReviewManagement from './admin/views/reviewmanagement';
+import ReviewManagement  from './admin/views/reviewmanagement';
+import ProductManagement from './admin/views/ProductManagement';
 import ReviewQRPage     from './admin/views/ReviewQRPage';
 import Login            from './admin/login/Login';
 import ProtectedRoute   from './admin/login/Protectedroute';
@@ -81,6 +82,7 @@ function App() {
               <Route path="change-password" element={<ChangePassword />} />
               <Route path="reviews"         element={<ReviewManagement />} />
               <Route path="review-qr"       element={<ReviewQRPage />} />
+              <Route path="products"        element={<ProductManagement />} />
             </Route>
             <Route path="/*" element={<PublicLayout />} />
           </Routes>
