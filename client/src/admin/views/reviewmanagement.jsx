@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from 'react';
-import QRCode from 'qrcode';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { QRCodeCanvas } from 'qrcode.react';
 import '../assets/reviewmanagement.css';
 
 const API = 'http://localhost:5000/api/reviews';
@@ -15,18 +16,7 @@ export default function ReviewManagement() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter]   = useState('all');
   const [msg, setMsg]         = useState({ text: '', type: '' });
-  const qrRef = useRef(null);
-
-  // Generate QR code
-  useEffect(() => {
-    if (qrRef.current) {
-      QRCode.toCanvas(qrRef.current, REVIEW_URL, {
-        width: 180,
-        margin: 2,
-        color: { dark: '#2D3E50', light: '#FFFFFF' },
-      });
-    }
-  }, []);
+  const navigate = useNavigate();
 
   const fetchReviews = async () => {
     try {
@@ -78,14 +68,6 @@ export default function ReviewManagement() {
     } catch { flash('Server error.', 'error'); }
   };
 
-  const downloadQR = () => {
-    const canvas = qrRef.current;
-    const link   = document.createElement('a');
-    link.download = 'sumathi-trends-review-qr.png';
-    link.href = canvas.toDataURL();
-    link.click();
-  };
-
   const filtered = filter === 'all'
     ? reviews
     : reviews.filter(r => r.status === filter);
@@ -103,37 +85,41 @@ export default function ReviewManagement() {
     <div className="rm-page">
       <h1 className="rm-title">Review Management</h1>
 
-      {/* ── Top layout: QR + stats ── */}
-      <div className="rm-top">
+      {/* ── 4 stat cards in a row ── */}
+      <div className="rm-stats-row">
 
-        {/* QR Card */}
-        <div className="rm-qr-card">
-          <h3 className="rm-qr-title">Customer Review QR</h3>
-          <p className="rm-qr-sub">Print and display this at your store or on packaging.</p>
-          <div className="rm-qr-wrap">
-            <canvas ref={qrRef} />
+        <div className="rm-stat-card rm-stat-total">
+          <div className="rm-stat-num">{counts.all}</div>
+          <div className="rm-stat-label">Total Reviews</div>
+        </div>
+
+        <div className="rm-stat-card rm-stat-pending">
+          <div className="rm-stat-num">{counts.pending}</div>
+          <div className="rm-stat-label">Pending</div>
+        </div>
+
+        <div className="rm-stat-card rm-stat-approved">
+          <div className="rm-stat-num">{counts.approved}</div>
+          <div className="rm-stat-label">Approved</div>
+        </div>
+
+        {/* QR card */}
+        <div className="rm-stat-card rm-stat-qr">
+          <div className="rm-qr-preview">
+            <QRCodeCanvas
+              value={REVIEW_URL}
+              size={64}
+              fgColor="#2D3E50"
+              bgColor="#FFFFFF"
+              level="H"
+            />
           </div>
-          <p className="rm-qr-url">{REVIEW_URL}</p>
-          <button className="rm-qr-download" onClick={downloadQR}>
-            ↓ Download QR
+          <div className="rm-stat-label">Review QR</div>
+          <button className="rm-qr-open-btn" onClick={() => navigate('/admin/review-qr')}>
+            View QR
           </button>
         </div>
 
-        {/* Stats */}
-        <div className="rm-stats">
-          <div className="rm-stat-card rm-stat-total">
-            <div className="rm-stat-num">{counts.all}</div>
-            <div className="rm-stat-label">Total Reviews</div>
-          </div>
-          <div className="rm-stat-card rm-stat-pending">
-            <div className="rm-stat-num">{counts.pending}</div>
-            <div className="rm-stat-label">Pending</div>
-          </div>
-          <div className="rm-stat-card rm-stat-approved">
-            <div className="rm-stat-num">{counts.approved}</div>
-            <div className="rm-stat-label">Approved</div>
-          </div>
-        </div>
       </div>
 
       {/* ── Flash message ── */}
@@ -179,9 +165,7 @@ export default function ReviewManagement() {
                 <tr key={r._id}>
                   <td className="rm-date">{formatDate(r.createdAt)}</td>
                   <td className="rm-name">{r.name}</td>
-                  <td className="rm-rating">
-                    {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
-                  </td>
+                  <td className="rm-rating">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</td>
                   <td className="rm-message">{r.message}</td>
                   <td>
                     <span className={`rm-status-badge ${r.status}`}>
@@ -190,17 +174,11 @@ export default function ReviewManagement() {
                   </td>
                   <td className="rm-actions">
                     {r.status === 'pending' ? (
-                      <button className="rm-approve-btn" onClick={() => handleApprove(r._id)}>
-                        Approve
-                      </button>
+                      <button className="rm-approve-btn" onClick={() => handleApprove(r._id)}>Approve</button>
                     ) : (
-                      <button className="rm-unapprove-btn" onClick={() => handleUnapprove(r._id)}>
-                        Unapprove
-                      </button>
+                      <button className="rm-unapprove-btn" onClick={() => handleUnapprove(r._id)}>Unapprove</button>
                     )}
-                    <button className="rm-delete-btn" onClick={() => handleDelete(r._id)}>
-                      Delete
-                    </button>
+                    <button className="rm-delete-btn" onClick={() => handleDelete(r._id)}>Delete</button>
                   </td>
                 </tr>
               ))}

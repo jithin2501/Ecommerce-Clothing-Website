@@ -9,102 +9,36 @@
   letter-spacing: 0.4px;
 }
 
-/* ── Top layout ── */
-.rm-top {
-  display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
-  margin-bottom: 1.5rem;
-  flex-wrap: wrap;
-}
-
-/* ── QR Card ── */
-.rm-qr-card {
-  background: #fff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  border: 1px solid #e5e7eb;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  min-width: 220px;
-}
-
-.rm-qr-title {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #3b82f6;
-  margin: 0;
-}
-
-.rm-qr-sub {
-  font-size: 0.78rem;
-  color: #6b7280;
-  text-align: center;
-  margin: 0;
-}
-
-.rm-qr-wrap {
-  background: #fff;
-  padding: 8px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-}
-
-.rm-qr-url {
-  font-size: 0.7rem;
-  color: #9ca3af;
-  word-break: break-all;
-  text-align: center;
-  margin: 0;
-}
-
-.rm-qr-download {
-  background: #2D3E50;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 7px 20px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s;
-  outline: none;
-  width: 100%;
-}
-.rm-qr-download:hover { background: #1e2d3d; }
-
-/* ── Stats ── */
-.rm-stats {
-  display: flex;
-  flex-direction: column;
+/* ── 4 stat cards row ── */
+.rm-stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  flex: 1;
-  min-width: 180px;
+  margin-bottom: 1.5rem;
 }
 
 .rm-stat-card {
   background: #fff;
   border-radius: 12px;
-  padding: 1.2rem 1.5rem;
+  padding: 1.4rem 1.5rem;
   border: 1px solid #e5e7eb;
   box-shadow: 0 2px 16px rgba(0,0,0,0.06);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  justify-content: center;
+  gap: 0.4rem;
+  text-align: center;
 }
 
 .rm-stat-num {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 900;
   line-height: 1;
 }
 
 .rm-stat-label {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: #6b7280;
   font-weight: 600;
 }
@@ -112,6 +46,33 @@
 .rm-stat-total .rm-stat-num   { color: #1e2139; }
 .rm-stat-pending .rm-stat-num { color: #d97706; }
 .rm-stat-approved .rm-stat-num{ color: #16a34a; }
+
+/* QR stat card */
+.rm-stat-qr { gap: 0.5rem; }
+
+.rm-qr-preview {
+  padding: 6px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  display: inline-flex;
+}
+
+.rm-qr-open-btn {
+  background: #2D3E50;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 16px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+  outline: none;
+  margin-top: 0.2rem;
+}
+.rm-qr-open-btn:hover { background: #1e2d3d; }
 
 /* ── Flash ── */
 .rm-msg {
