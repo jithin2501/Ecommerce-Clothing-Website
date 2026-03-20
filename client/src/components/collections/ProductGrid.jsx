@@ -41,6 +41,9 @@ export default function ProductGrid({ products }) {
             <img src={product.img} alt={product.name} />
             {product.badge && <span className="pg-badge">{product.badge}</span>}
             {product.oldPrice && <span className="pg-sale-badge">Sale</span>}
+            {product.age && (
+              <span className="pg-age-badge">Ages {product.age}</span>
+            )}
             <button
               className={`pg-wishlist ${isWishlisted(product.id) ? 'pg-wishlist--active' : ''}`}
               aria-label="Wishlist"

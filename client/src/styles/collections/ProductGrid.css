@@ -19,14 +19,14 @@
   cursor: pointer;
   border-radius: 16px;
   overflow: hidden;
-  background: #F5F5F2;        /* same light grey as Current Favorites */
+  background: #F5F5F2;
 }
 
-/* ── Image — SQUARE, same as Current Favorites ── */
+/* ── Image — SQUARE ── */
 .pg-img-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;        /* square — matches Current Favorites */
+  aspect-ratio: 1 / 1;
   background: #F5F5F2;
   overflow: hidden;
 }
@@ -34,7 +34,7 @@
 .pg-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: cover;          /* fills square, no empty space */
+  object-fit: cover;
   display: block;
 }
 
@@ -63,6 +63,24 @@
   padding: 0.25rem 0.6rem;
   border-radius: 50px;
   text-transform: uppercase;
+}
+
+/* ── Age badge — bottom-left of image ── */
+.pg-age-badge {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #1a1a1a;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 5px;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  line-height: 1;
 }
 
 .pg-wishlist {
@@ -131,6 +149,7 @@
   color: var(--slate-gray);
   text-decoration: line-through;
 }
+
 .pg-wishlist--active {
   color: #e11d48 !important;
   opacity: 1 !important;
