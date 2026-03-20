@@ -95,6 +95,7 @@ export default function ReviewManagement() {
 
         {/* QR card */}
         <div className="rm-stat-card rm-stat-qr">
+          <div className="rm-stat-label">Review QR</div>
           <button className="rm-qr-open-btn" onClick={() => navigate('/admin/review-qr')}>
             View QR
           </button>
@@ -154,11 +155,17 @@ export default function ReviewManagement() {
                   </td>
                   <td className="rm-actions">
                     {r.status === 'pending' ? (
-                      <button className="rm-approve-btn" onClick={() => handleApprove(r._id)}>Approve</button>
+                      <button className="rm-img-btn" onClick={() => handleApprove(r._id)} title="Approve">
+                        <img src="/images/Review/approve.png" alt="Approve" />
+                      </button>
                     ) : (
-                      <button className="rm-unapprove-btn" onClick={() => handleUnapprove(r._id)}>Unapprove</button>
+                      <button className="rm-img-btn" onClick={() => handleUnapprove(r._id)} title="Unapprove">
+                        <img src="/images/Review/unapprove.png" alt="Unapprove" />
+                      </button>
                     )}
-                    <button className="rm-delete-btn" onClick={() => handleDelete(r._id)}>Delete</button>
+                    <button className="rm-img-btn" onClick={() => handleDelete(r._id)} title="Delete">
+                      <img src="/images/Review/delete.png" alt="Delete" />
+                    </button>
                   </td>
                 </tr>
               ))}

@@ -49,11 +49,11 @@ export default function ReviewQRPage() {
       </div>
 
       <div className="qrp-actions no-print">
-        <button className="qrp-btn qrp-download" onClick={handleDownload}>
-          ↓ Download PNG
+        <button className="qrp-img-btn" onClick={handleDownload} title="Download PNG">
+          <img src="/images/Review/download.png" alt="Download" />
         </button>
-        <button className="qrp-btn qrp-print" onClick={handlePrint}>
-          ⎙ Print QR
+        <button className="qrp-img-btn" onClick={handlePrint} title="Print QR">
+          <img src="/images/Review/print.png" alt="Print" />
         </button>
       </div>
 

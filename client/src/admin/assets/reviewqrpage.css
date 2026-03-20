@@ -113,3 +113,23 @@
 
 .qrp-download { background: #2D3E50; color: #fff; }
 .qrp-print    { background: #3b82f6; color: #fff; }
+
+.qrp-img-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: opacity 0.2s;
+  outline: none;
+}
+.qrp-img-btn:hover { opacity: 0.7; }
+.qrp-img-btn img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
