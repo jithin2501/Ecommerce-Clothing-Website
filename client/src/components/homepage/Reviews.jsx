@@ -1,22 +1,45 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import '../../styles/homepage/Reviews.css';
 
+const API = 'http://localhost:5000/api/reviews/approved';
+
+// Fallback static review shown when no approved reviews yet
+const FALLBACK = [{
+  _id: 'fallback',
+  name: 'Meera Suresh',
+  rating: 5,
+  message: "Sumathi Trends is truly in a league of its own. The quality, the care, the packaging — everything felt premium. My son wore his outfit to a wedding and received non-stop compliments all evening!",
+}];
+
 export default function Reviews() {
+  const [reviews, setReviews] = useState(FALLBACK);
+  const [current, setCurrent] = useState(0);
+
   useEffect(() => {
     const handleReviewLink = (e) => {
       e.preventDefault();
-      const section = document.getElementById('reviews');
-      if (section) {
-        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     };
-
     const links = document.querySelectorAll('a[href="#reviews"]');
-    links.forEach((link) => link.addEventListener('click', handleReviewLink));
-    return () => {
-      links.forEach((link) => link.removeEventListener('click', handleReviewLink));
-    };
+    links.forEach(l => l.addEventListener('click', handleReviewLink));
+    return () => links.forEach(l => l.removeEventListener('click', handleReviewLink));
   }, []);
+
+  useEffect(() => {
+    fetch(API)
+      .then(r => r.json())
+      .then(data => { if (data.success && data.data.length > 0) setReviews(data.data); })
+      .catch(() => {});
+  }, []);
+
+  // Auto-rotate reviews every 5s if more than one
+  useEffect(() => {
+    if (reviews.length <= 1) return;
+    const timer = setInterval(() => setCurrent(c => (c + 1) % reviews.length), 5000);
+    return () => clearInterval(timer);
+  }, [reviews]);
+
+  const review = reviews[current];
 
   return (
     <section id="reviews" className="rv2-section">
@@ -38,8 +61,7 @@ export default function Reviews() {
               alt="Happy children"
               className="rv2-img"
               onError={(e) => {
-                e.target.src =
-                  'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=800&auto=format&fit=crop';
+                e.target.src = 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=800&auto=format&fit=crop';
               }}
             />
           </div>
@@ -52,24 +74,36 @@ export default function Reviews() {
 
             <div className="rv2-box">
               <div className="rv2-box-quote">"</div>
-              <p className="rv2-box-text">
-                Sumathi Trends is truly in a league of its own. The quality, the
-                care, the packaging — everything felt premium. My son wore his
-                outfit to a wedding and received non-stop compliments all evening!
-              </p>
+              <p className="rv2-box-text">{review.message}</p>
               <div className="rv2-box-footer">
-                <div className="rv2-box-avatar">
-                  <img
-                    src="https://i.pravatar.cc/100?u=review99"
-                    alt="Meera Suresh"
-                  />
+                <div className="rv2-box-avatar rv2-box-avatar-initials">
+                  {review.name
+                    .split(' ')
+                    .slice(0, 2)
+                    .map(w => w[0]?.toUpperCase())
+                    .join('')}
                 </div>
                 <div className="rv2-box-info">
-                  <div className="rv2-box-name">Meera Suresh</div>
-                  <div className="rv2-box-stars">★★★★★</div>
+                  <div className="rv2-box-name">{review.name}</div>
+                  <div className="rv2-box-stars">
+                    {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                  </div>
                 </div>
               </div>
             </div>
+
+            {/* Dots navigation if multiple reviews */}
+            {reviews.length > 1 && (
+              <div className="rv2-dots">
+                {reviews.map((_, i) => (
+                  <button
+                    key={i}
+                    className={`rv2-dot${i === current ? ' active' : ''}`}
+                    onClick={() => setCurrent(i)}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

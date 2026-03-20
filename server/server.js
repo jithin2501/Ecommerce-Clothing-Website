@@ -6,6 +6,7 @@ const connectDB = require('./conf/db');
 const contactRouter  = require('./routers/contactRouter');
 const authRouter     = require('./routers/authRouter');
 const userRouter     = require('./routers/userRouter');
+const reviewRouter   = require('./routers/reviewRoutes');
 const { seedSuperAdmin } = require('./controllers/authController');
 
 const app = express();
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/api/auth',    authRouter);
 app.use('/api/contact', contactRouter);
 app.use('/api/users',   userRouter);
+app.use('/api/reviews', reviewRouter);
 
 app.get('/', (req, res) => res.json({ message: 'Sumathi Trends API running.' }));
 

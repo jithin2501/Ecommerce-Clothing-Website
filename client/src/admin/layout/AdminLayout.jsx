@@ -48,6 +48,12 @@ export default function AdminLayout() {
           >
             Contact Messages
           </NavLink>
+          <NavLink
+            to="/admin/reviews"
+            className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}
+          >
+            Review Management
+          </NavLink>
           {role === 'superadmin' && (
             <NavLink
               to="/admin/users"
