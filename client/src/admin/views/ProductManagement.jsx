@@ -303,16 +303,18 @@ export default function ProductManagement() {
                       {p.isActive ? 'Active' : 'Hidden'}
                     </span>
                   </td>
-                  <td className="pm-actions">
-                    <button className="pm-edit-btn" onClick={() => handleEdit(p)}>
-                      <img src="/images/ProductManagement/edit.png" alt="Edit" />
-                    </button>
-                    <button className="pm-details-btn">
-                      <img src="/images/ProductManagement/details.png" alt="Details" />
-                    </button>
-                    <button className="pm-del-btn" onClick={() => handleDelete(p._id, p.name)}>
-                      <img src="/images/ProductManagement/delete.png" alt="Delete" />
-                    </button>
+                  <td>
+                    <div className="pm-actions">
+                      <button className="pm-edit-btn" onClick={() => handleEdit(p)}>
+                        <img src="/images/ProductManagement/edit.png" alt="Edit" />
+                      </button>
+                      <button className="pm-details-btn">
+                        <img src="/images/ProductManagement/details.png" alt="Details" />
+                      </button>
+                      <button className="pm-del-btn" onClick={() => handleDelete(p._id, p.name)}>
+                        <img src="/images/ProductManagement/delete.png" alt="Delete" />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

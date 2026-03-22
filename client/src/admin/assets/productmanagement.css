@@ -242,6 +242,7 @@
   font-weight: 700;
   color: #9ca3af;
   letter-spacing: 0.9px;
+  white-space: nowrap;
 }
 .pm-table th:nth-child(3),
 .pm-table th:nth-child(4),
@@ -254,11 +255,13 @@
   border-bottom: 1.5px solid #f0f0f0;
   color: #374151;
   vertical-align: middle;
+  white-space: nowrap;
 }
 .pm-table td:nth-child(3),
 .pm-table td:nth-child(4),
 .pm-table td:nth-child(6),
-.pm-table td:nth-child(7) { text-align: center; }
+.pm-table td:nth-child(7),
+.pm-table td:last-child { text-align: center; vertical-align: middle; }
 
 .pm-table tbody tr:last-child td { border-bottom: none; }
 .pm-table tbody tr:hover { background: #fafafa; }
@@ -271,9 +274,9 @@
   display: block;
 }
 
-.pm-name { font-weight: 700; color: #1e2139; }
-.pm-cat  { color: #6b7280; font-size: 0.8rem; }
-.pm-age  { color: #6b7280; font-size: 0.8rem; }
+.pm-name { font-weight: 700; color: #1e2139; white-space: nowrap; }
+.pm-cat  { color: #6b7280; font-size: 0.8rem; white-space: nowrap; }
+.pm-age  { color: #6b7280; font-size: 0.8rem; white-space: nowrap; }
 .pm-price { font-weight: 700; color: #1e2139; white-space: nowrap; }
 .pm-old-price { color: #9ca3af; text-decoration: line-through; font-weight: 400; font-size: 0.78rem; }
 
