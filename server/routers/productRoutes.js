@@ -11,12 +11,25 @@ const {
 
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 20 * 1024 * 1024 },
   fileFilter: (_, file, cb) => {
     if (file.mimetype.startsWith('image/')) cb(null, true);
     else cb(new Error('Only image files allowed'));
   },
 });
+
+// Wraps multer so errors return JSON instead of an HTML crash page
+const uploadSingle = (req, res, next) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      const msg = err.code === 'LIMIT_FILE_SIZE'
+        ? 'Image is too large. Maximum size is 20 MB.'
+        : err.message || 'File upload error.';
+      return res.status(400).json({ success: false, message: msg });
+    }
+    next();
+  });
+};
 
 const verifyAdmin = (req, res, next) => {
   const auth = req.headers.authorization;
@@ -30,20 +43,16 @@ const verifyAdmin = (req, res, next) => {
 };
 
 // ── Public ──
-router.get('/',          getProducts);
-router.get('/featured',  getFeaturedProducts);
+router.get('/',         getProducts);
+router.get('/featured', getFeaturedProducts);
 
 // ── Admin ──
 router.get   ('/admin',     verifyAdmin, getAdminProducts);
-router.post  ('/admin',     verifyAdmin, upload.single('image'), createProduct);
+router.post  ('/admin',     verifyAdmin, uploadSingle, createProduct);
 router.patch ('/admin/:id', verifyAdmin, (req, res, next) => {
   const ct = req.headers['content-type'] || '';
-  if (ct.includes('application/json')) {
-    // JSON body — already parsed by express.json() in server.js
-    return next();
-  }
-  // multipart/form-data — parse with multer
-  upload.single('image')(req, res, next);
+  if (ct.includes('application/json')) return next();
+  uploadSingle(req, res, next);
 }, updateProduct);
 router.delete('/admin/:id', verifyAdmin, deleteProduct);
 
