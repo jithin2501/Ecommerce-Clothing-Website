@@ -118,7 +118,6 @@ export default function ProductManagement() {
     } catch { setError('Server error.'); }
   };
 
-  // ── Fixed: use JSON PATCH for featuredIn only ──
   const handleFeaturedToggle = async (id, section, isCurrentlyOn) => {
     const product = products.find(p => p._id === id);
     if (!product) return;
@@ -127,7 +126,6 @@ export default function ProductManagement() {
       ? current.filter(s => s !== section)
       : [...current, section];
 
-    // Optimistic UI update
     setProducts(prev =>
       prev.map(x => x._id === id ? { ...x, featuredIn: updated } : x)
     );
@@ -142,11 +140,10 @@ export default function ProductManagement() {
       if (data.success) {
         setProducts(prev => prev.map(x => x._id === id ? data.data : x));
       } else {
-        // Revert on failure
         setProducts(prev =>
           prev.map(x => x._id === id ? { ...x, featuredIn: current } : x)
         );
-        setError('Failed to update featured section.');
+        setError(data.message || 'Failed to update.');
       }
     } catch {
       setProducts(prev =>
@@ -184,7 +181,6 @@ export default function ProductManagement() {
     <div className="pm-page">
       <h1 className="pm-title">Product Management</h1>
 
-      {/* ── Add / Edit Form ── */}
       <div className="pm-form-card">
         <h3 className="pm-form-title">{editId ? 'Edit Product' : 'Add New Product'}</h3>
 
@@ -269,7 +265,6 @@ export default function ProductManagement() {
         </form>
       </div>
 
-      {/* ── Existing Products Card ── */}
       <div className="pm-existing-card">
         <div className="pm-section-header">
           <div className="pm-section-title-wrap">
@@ -324,8 +319,8 @@ export default function ProductManagement() {
                   <th>BADGE</th>
                   <th className="pm-th-featured">
                     <div className="pm-th-feat-wrap">
-                      <span>Coll</span>
-                      <span>Detail</span>
+                      <span>Coll |</span>
+                      <span>Detail |</span>
                       <span>Cart</span>
                     </div>
                   </th>
@@ -360,11 +355,15 @@ export default function ProductManagement() {
                         ))}
                       </div>
                     </td>
-                    <td className="pm-td-featured">
-                      <FeatToggle id={p._id} section="bestSelling" featuredIn={p.featuredIn} />
+                    <td className="pm-td-center">
+                      <div className="pm-feat-icons">
+                        <FeatToggle id={p._id} section="bestSelling" featuredIn={p.featuredIn} />
+                      </div>
                     </td>
-                    <td className="pm-td-featured">
-                      <FeatToggle id={p._id} section="newArrivals" featuredIn={p.featuredIn} />
+                    <td className="pm-td-center">
+                      <div className="pm-feat-icons">
+                        <FeatToggle id={p._id} section="newArrivals" featuredIn={p.featuredIn} />
+                      </div>
                     </td>
                     <td>
                       <span className={`pm-status ${p.isActive ? 'active' : 'inactive'}`}>

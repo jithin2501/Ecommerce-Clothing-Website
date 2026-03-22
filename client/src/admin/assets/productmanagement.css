@@ -379,7 +379,10 @@
 .pm-table th:nth-child(7),
 .pm-table th:nth-child(8),
 .pm-table th:nth-child(9),
-.pm-table th:last-child { text-align: center; }
+.pm-table th:last-child {
+  text-align: center;
+  vertical-align: middle;
+}
 
 .pm-table td {
   padding: 0.75rem 0.7rem;
@@ -395,7 +398,10 @@
 .pm-table td:nth-child(7),
 .pm-table td:nth-child(8),
 .pm-table td:nth-child(9),
-.pm-table td:last-child { text-align: center; vertical-align: middle; }
+.pm-table td:last-child {
+  text-align: center;
+  vertical-align: middle;
+}
 
 .pm-table tbody tr:last-child td { border-bottom: none; }
 .pm-table tbody tr:hover { background: #fafafa; }
@@ -516,11 +522,20 @@
   white-space: nowrap;
 }
 
-.pm-td-featured { text-align: center; }
+.pm-td-featured {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.pm-td-center {
+  text-align: center;
+  vertical-align: middle;
+}
 
 .pm-feat-icons {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 2px;
 }
 
