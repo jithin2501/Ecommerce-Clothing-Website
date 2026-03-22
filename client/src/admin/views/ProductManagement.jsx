@@ -15,7 +15,7 @@ const CATEGORIES = [
   'Baby Frocks', 'Birthday Frocks', 'Tops & T-Shirts',
   'Indo-Western Outfits', 'Traditional Outfits', 'Party Wear', 'Boys Collection',
 ];
-const BADGES = ['', 'New', 'Bestselling', 'Sale'];
+const BADGES = ['', 'New', 'Bestselling'];
 
 const EMPTY_FORM = { name: '', category: '', price: '', oldPrice: '', ageGroup: 'newborn', color: '', badge: '' };
 
@@ -28,9 +28,7 @@ export default function ProductManagement() {
   const [imgFile, setImgFile]   = useState(null);
   const [saving, setSaving]     = useState(false);
   const [error, setError]       = useState('');
-  const [filterAge, setFilterAge]     = useState('all');
-  const [filterDate, setFilterDate]   = useState('');
-  const [filterSearch, setFilterSearch] = useState('');
+  const [filterAge, setFilterAge] = useState('all');
   const fileRef = useRef(null);
 
   const fetchProducts = async () => {
@@ -49,6 +47,12 @@ export default function ProductManagement() {
     if (!file) return;
     setImgFile(file);
     setPreview(URL.createObjectURL(file));
+  };
+
+  const handleRemoveImage = () => {
+    setImgFile(null);
+    setPreview(null);
+    if (fileRef.current) fileRef.current.value = '';
   };
 
   const handleEdit = (p) => {
@@ -116,9 +120,7 @@ export default function ProductManagement() {
     const product = products.find(p => p._id === id);
     if (!product) return;
     const current = product.featuredIn || [];
-    const updated = isCurrentlyOn
-      ? current.filter(s => s !== section)
-      : [...current, section];
+    const updated = isCurrentlyOn ? current.filter(s => s !== section) : [...current, section];
     try {
       const res  = await fetch(`${API}/admin/${id}`, {
         method: 'PATCH',
@@ -127,16 +129,10 @@ export default function ProductManagement() {
       });
       const data = await res.json();
       if (data.success) setProducts(p => p.map(x => x._id === id ? data.data : x));
-      else setError(data.message || 'Failed to update.');
     } catch { setError('Failed to update featured sections.'); }
   };
 
-  const displayed = products.filter(p => {
-    const ageMatch    = filterAge === 'all' || p.ageGroup === filterAge;
-    const dateMatch   = !filterDate || new Date(p.createdAt).toLocaleDateString('en-CA') === filterDate;
-    const searchMatch = !filterSearch || p.name.toLowerCase().includes(filterSearch.toLowerCase());
-    return ageMatch && dateMatch && searchMatch;
-  });
+  const displayed = filterAge === 'all' ? products : products.filter(p => p.ageGroup === filterAge);
 
   return (
     <div className="pm-page">
@@ -161,13 +157,7 @@ export default function ProductManagement() {
                 <input ref={fileRef} type="file" accept="image/*" onChange={handleImgChange} style={{ display: 'none' }} />
               </div>
               {preview && (
-                <button
-                  type="button"
-                  className="pm-img-delete-btn"
-                  onClick={() => { setPreview(null); setImgFile(null); if (fileRef.current) fileRef.current.value = ''; }}
-                >
-                  Remove Image
-                </button>
+                <button type="button" className="pm-red-btn" onClick={handleRemoveImage}>Remove Image</button>
               )}
             </div>
 
@@ -235,46 +225,16 @@ export default function ProductManagement() {
       </div>
 
       {/* ── Product Table ── */}
-      <div className="pm-table-header-card">
-        <div className="pm-table-header-left">
-          <div>
-            <h2 className="pm-section-title">Existing Products</h2>
-            <p className="pm-section-subtitle">{displayed.length} product{displayed.length !== 1 ? 's' : ''} found</p>
-          </div>
-        </div>
-        <div className="pm-filters-row">
-          <div className="pm-search-bar">
-            <input
-              type="text"
-              className="pm-search-input"
-              placeholder="Search by product name..."
-              value={filterSearch}
-              onChange={e => setFilterSearch(e.target.value)}
-            />
-            <button className="pm-search-btn" onClick={() => {}}>
-              <img src="/images/ProductManagement/search.png" alt="Search" />
+      <div className="pm-section-header">
+        <h2 className="pm-section-title">Existing Products</h2>
+        <div className="pm-age-filters">
+          {['all', 'newborn', 'toddler', 'junior'].map(f => (
+            <button key={f}
+              className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
+              onClick={() => setFilterAge(f)}>
+              {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
             </button>
-          </div>
-          <div className="pm-age-filters">
-            {['all', 'newborn', 'toddler', 'junior'].map(f => (
-              <button key={f}
-                className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
-                onClick={() => setFilterAge(f)}>
-                {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
-              </button>
-            ))}
-          </div>
-          <div className="pm-date-filter">
-            <input
-              type="date"
-              className="pm-date-input"
-              value={filterDate}
-              onChange={e => setFilterDate(e.target.value)}
-            />
-            {filterDate && (
-              <button className="pm-date-clear" onClick={() => setFilterDate('')}>✕</button>
-            )}
-          </div>
+          ))}
         </div>
       </div>
 
@@ -291,7 +251,13 @@ export default function ProductManagement() {
                 <th>AGE</th>
                 <th>PRICE</th>
                 <th>BADGE</th>
-                <th>FEATURED IN</th>
+                <th className="pm-th-featured">
+                  <div className="pm-th-feat-wrap">
+                    <span>Coll</span>
+                    <span>C.Details</span>
+                    <span>Cart</span>
+                  </div>
+                </th>
                 <th>STATUS</th>
                 <th>ACTION</th>
               </tr>
@@ -312,24 +278,25 @@ export default function ProductManagement() {
                       ? <span className={`pm-badge pm-badge-${p.badge.toLowerCase()}`}>{p.badge}</span>
                       : <span className="pm-badge-none">—</span>}
                   </td>
-                  <td className="pm-featured-cell">
-                    {[
-                      { key: 'currentFavorites', label: 'Collections' },
-                      { key: 'youMightAlsoLike', label: 'Collection Details' },
-                      { key: 'cartAlsoLike',     label: 'Cart' },
-                    ].map(({ key, label }) => {
-                      const active = (p.featuredIn || []).includes(key);
-                      return (
-                        <button
-                          key={key}
-                          className={`pm-featured-tag ${active ? 'pm-featured-tag--on' : ''}`}
-                          onClick={() => handleFeaturedToggle(p._id, key, active)}
-                          title={active ? `Remove from ${label}` : `Add to ${label}`}
-                        >
-                          {active ? '✓ ' : '+ '}{label}
-                        </button>
-                      );
-                    })}
+                  <td className="pm-td-featured">
+                    <div className="pm-feat-icons">
+                      {[
+                        { key: 'currentFavorites' },
+                        { key: 'youMightAlsoLike' },
+                        { key: 'cartAlsoLike' },
+                      ].map(({ key }) => {
+                        const active = (p.featuredIn || []).includes(key);
+                        return (
+                          <button key={key} className="pm-feat-circle"
+                            onClick={() => handleFeaturedToggle(p._id, key, active)}>
+                            <img
+                              src={active ? '/images/ProductManagement/tick.png' : '/images/ProductManagement/cross.png'}
+                              alt={active ? 'on' : 'off'}
+                            />
+                          </button>
+                        );
+                      })}
+                    </div>
                   </td>
                   <td>
                     <span className={`pm-status ${p.isActive ? 'active' : 'inactive'}`}>
