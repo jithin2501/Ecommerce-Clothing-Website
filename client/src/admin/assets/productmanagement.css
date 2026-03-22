@@ -536,7 +536,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 2px;
+  gap: 8px;
 }
 
 .pm-feat-circle {
@@ -558,4 +558,13 @@
   height: 20px;
   object-fit: contain;
   display: block;
+}
+
+.pm-feat-circle.pm-feat-disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.pm-feat-circle.pm-feat-disabled:hover {
+  transform: none;
 }

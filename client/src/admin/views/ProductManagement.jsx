@@ -16,19 +16,26 @@ const CATEGORIES = [
   'Indo-Western Outfits', 'Traditional Outfits', 'Party Wear', 'Boys Collection',
 ];
 const BADGES = ['', 'New', 'Bestselling'];
-
 const EMPTY_FORM = { name: '', category: '', price: '', oldPrice: '', ageGroup: 'newborn', color: '', badge: '' };
 
+const SECTION_LIMITS = {
+  currentFavorites: 4,
+  youMightAlsoLike: 4,
+  cartAlsoLike:     4,
+  bestSelling:      10,
+  newArrivals:      4,
+};
+
 export default function ProductManagement() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading]   = useState(true);
-  const [form, setForm]         = useState(EMPTY_FORM);
-  const [editId, setEditId]     = useState(null);
-  const [preview, setPreview]   = useState(null);
-  const [imgFile, setImgFile]   = useState(null);
-  const [saving, setSaving]     = useState(false);
-  const [error, setError]       = useState('');
-  const [filterAge, setFilterAge] = useState('all');
+  const [products, setProducts]     = useState([]);
+  const [loading, setLoading]       = useState(true);
+  const [form, setForm]             = useState(EMPTY_FORM);
+  const [editId, setEditId]         = useState(null);
+  const [preview, setPreview]       = useState(null);
+  const [imgFile, setImgFile]       = useState(null);
+  const [saving, setSaving]         = useState(false);
+  const [error, setError]           = useState('');
+  const [filterAge, setFilterAge]   = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterDate, setFilterDate]   = useState('');
   const fileRef = useRef(null);
@@ -126,6 +133,18 @@ export default function ProductManagement() {
       ? current.filter(s => s !== section)
       : [...current, section];
 
+    if (!isCurrentlyOn) {
+      const limit = SECTION_LIMITS[section];
+      const currentCount = products.filter(p =>
+        (p.featuredIn || []).includes(section)
+      ).length;
+      if (currentCount >= limit) {
+        setError(`Maximum ${limit} products allowed in this section. Remove one first.`);
+        return;
+      }
+    }
+
+    setError('');
     setProducts(prev =>
       prev.map(x => x._id === id ? { ...x, featuredIn: updated } : x)
     );
@@ -167,8 +186,18 @@ export default function ProductManagement() {
 
   const FeatToggle = ({ id, section, featuredIn }) => {
     const active = (featuredIn || []).includes(section);
+    const limit = SECTION_LIMITS[section];
+    const currentCount = products.filter(p =>
+      (p.featuredIn || []).includes(section)
+    ).length;
+    const isDisabled = !active && currentCount >= limit;
+
     return (
-      <button className="pm-feat-circle" onClick={() => handleFeaturedToggle(id, section, active)}>
+      <button
+        className={`pm-feat-circle${isDisabled ? ' pm-feat-disabled' : ''}`}
+        onClick={() => !isDisabled && handleFeaturedToggle(id, section, active)}
+        title={isDisabled ? `Max ${limit} allowed` : ''}
+      >
         <img
           src={active ? '/images/ProductManagement/tick.png' : '/images/ProductManagement/cross.png'}
           alt={active ? 'on' : 'off'}
@@ -319,13 +348,13 @@ export default function ProductManagement() {
                   <th>BADGE</th>
                   <th className="pm-th-featured">
                     <div className="pm-th-feat-wrap">
-                      <span>Coll |</span>
-                      <span>Detail |</span>
-                      <span>Cart</span>
+                      <span>Coll (4) |</span>
+                      <span>Detail (4) |</span>
+                      <span>Cart (4)</span>
                     </div>
                   </th>
-                  <th>BEST SELLING</th>
-                  <th>NEW ARRIVALS</th>
+                  <th>BEST SELLING (10)</th>
+                  <th>NEW ARRIVALS (4)</th>
                   <th>STATUS</th>
                   <th>ACTION</th>
                 </tr>
