@@ -112,6 +112,25 @@ export default function ProductManagement() {
     } catch { setError('Server error.'); }
   };
 
+  const handleFeaturedToggle = async (id, section, isCurrentlyOn) => {
+    const product = products.find(p => p._id === id);
+    if (!product) return;
+    const current = product.featuredIn || [];
+    const updated = isCurrentlyOn
+      ? current.filter(s => s !== section)
+      : [...current, section];
+    try {
+      const res  = await fetch(`${API}/admin/${id}`, {
+        method: 'PATCH',
+        headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ featuredIn: updated }),
+      });
+      const data = await res.json();
+      if (data.success) setProducts(p => p.map(x => x._id === id ? data.data : x));
+      else setError(data.message || 'Failed to update.');
+    } catch { setError('Failed to update featured sections.'); }
+  };
+
   const displayed = products.filter(p => {
     const ageMatch    = filterAge === 'all' || p.ageGroup === filterAge;
     const dateMatch   = !filterDate || new Date(p.createdAt).toLocaleDateString('en-CA') === filterDate;
@@ -272,6 +291,7 @@ export default function ProductManagement() {
                 <th>AGE</th>
                 <th>PRICE</th>
                 <th>BADGE</th>
+                <th>FEATURED IN</th>
                 <th>STATUS</th>
                 <th>ACTION</th>
               </tr>
@@ -291,6 +311,25 @@ export default function ProductManagement() {
                     {p.badge
                       ? <span className={`pm-badge pm-badge-${p.badge.toLowerCase()}`}>{p.badge}</span>
                       : <span className="pm-badge-none">—</span>}
+                  </td>
+                  <td className="pm-featured-cell">
+                    {[
+                      { key: 'currentFavorites', label: 'Favorites' },
+                      { key: 'youMightAlsoLike', label: 'Also Like' },
+                      { key: 'cartAlsoLike',     label: 'Cart' },
+                    ].map(({ key, label }) => {
+                      const active = (p.featuredIn || []).includes(key);
+                      return (
+                        <button
+                          key={key}
+                          className={`pm-featured-tag ${active ? 'pm-featured-tag--on' : ''}`}
+                          onClick={() => handleFeaturedToggle(p._id, key, active)}
+                          title={active ? `Remove from ${label}` : `Add to ${label}`}
+                        >
+                          {active ? '✓ ' : '+ '}{label}
+                        </button>
+                      );
+                    })}
                   </td>
                   <td>
                     <span className={`pm-status ${p.isActive ? 'active' : 'inactive'}`}>

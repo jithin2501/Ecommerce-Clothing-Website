@@ -455,3 +455,41 @@
 .pm-edit-btn img,
 .pm-details-btn img,
 .pm-del-btn img { width: 26px; height: 26px; object-fit: contain; display: block; }
+
+/* ── Featured In cell ── */
+.pm-featured-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 110px;
+}
+
+.pm-featured-tag {
+  border: 1.5px solid #e5e7eb;
+  background: #f9fafb;
+  color: #6b7280;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  text-align: left;
+  transition: all 0.18s;
+  outline: none;
+  white-space: nowrap;
+}
+.pm-featured-tag:hover {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+.pm-featured-tag--on {
+  background: #eff6ff;
+  border-color: #3b82f6;
+  color: #1d4ed8;
+}
+.pm-featured-tag--on:hover {
+  background: #fef2f2;
+  border-color: #ef4444;
+  color: #ef4444;
+}

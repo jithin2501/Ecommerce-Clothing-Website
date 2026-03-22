@@ -17,7 +17,6 @@
   gap: 1.25rem;
 }
 
-/* Card */
 .prelat-card {
   display: flex;
   flex-direction: column;
@@ -29,11 +28,10 @@
 }
 .prelat-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.09); }
 
-/* Image */
 .prelat-img-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   background: #F5F5F2;
 }
@@ -46,20 +44,23 @@
 
 .prelat-age {
   position: absolute;
-  bottom: 0.5rem; left: 0.5rem;
-  background: rgba(0,0,0,0.55);
-  color: #fff;
+  bottom: 10px; left: 10px;
+  background: rgba(255,255,255,0.88);
+  color: #1a1a1a;
   font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
-  padding: 2px 7px;
-  border-radius: 99px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 4px 9px;
+  border-radius: 5px;
+  backdrop-filter: blur(4px);
+  pointer-events: none;
 }
 
 .prelat-wish {
   position: absolute;
-  top: 0.5rem; right: 0.5rem;
-  background: rgba(255,255,255,0.85);
+  top: 10px; right: 10px;
+  background: rgba(255,255,255,0.88);
   border: none;
   width: 28px; height: 28px;
   border-radius: 50%;
@@ -68,9 +69,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Info */
 .prelat-info {
   padding: 0.8rem 0.9rem 0.5rem;
   display: flex;
@@ -88,16 +89,6 @@
 .prelat-price    { font-size: 0.88rem; font-weight: 700; color: var(--charcoal, #2C2C2C); }
 .prelat-name     { font-size: 0.9rem; font-weight: 700; color: var(--charcoal, #2C2C2C); margin: 1px 0 0.5rem; }
 
-/* Color dots */
-.prelat-colors { display: flex; gap: 5px; margin-bottom: 0.2rem; }
-.prelat-dot {
-  width: 14px; height: 14px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(0,0,0,0.08);
-  display: inline-block;
-}
-
-/* Button */
 .prelat-btn {
   margin: 0.4rem 0.9rem 0.9rem;
   background: #1E2D3D;
@@ -117,7 +108,7 @@
   transition: background 0.25s ease;
 }
 .prelat-btn:hover { background: var(--accent-clay, #C17B5C); }
-.prelat-btn-cart { background: var(--accent-clay, #C17B5C) !important; }
+.prelat-btn-cart  { background: var(--accent-clay, #C17B5C) !important; }
 .prelat-btn-cart:hover { background: #a8624a !important; }
 
 @media (max-width: 900px) { .prelat-grid { grid-template-columns: repeat(2, 1fr); } }

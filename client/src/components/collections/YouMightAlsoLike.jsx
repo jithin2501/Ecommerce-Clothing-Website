@@ -1,5 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useCart } from '../../context/CartContext';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/collections/YouMightAlsoLike.css';
+
+const API = 'http://localhost:5000/api/products';
 
 const CartIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -9,41 +13,33 @@ const CartIcon = () => (
   </svg>
 );
 
-const products = [
-  { name: 'Quilted Heritage Jacket', price: '$64.00', category: 'Outwear',    img: '/images/img1.webp', colors: ['#5C6E4A', '#C8A882', '#3A5068'] },
-  { name: 'Essentials Ribbed Set',   price: '$48.00', category: 'Essentials', img: '/images/img2.webp', colors: ['#C8B89A', '#E8DCC8', '#A8B8C8'] },
-  { name: 'Everyday Denim Overalls', price: '$52.50', category: 'Playwear',   img: '/images/img3.webp', colors: ['#7EB8D4'] },
-  { name: 'Soft Pointelle Cardigan', price: '$42.00', category: 'Knitwear',   img: '/images/img1.webp', colors: ['#E8C8A8', '#7EB8D4'] },
-];
-
 function FavoriteCard({ product }) {
   const [added, setAdded] = useState(false);
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const formatPrice = (price) => typeof price === 'number' ? `₹${price}` : price;
 
   return (
     <div className="ymll-card">
       <div className="ymll-img-wrap">
         <img src={product.img} alt={product.name} />
+        {product.age && <span className="ymll-age-badge">Ages {product.age}</span>}
+        <button className="ymll-wish">♡</button>
       </div>
-
       <div className="ymll-card-info">
         <div className="ymll-top-row">
           <span className="ymll-category">{product.category}</span>
-          <span className="ymll-price">{product.price}</span>
+          <span className="ymll-price">{formatPrice(product.price)}</span>
         </div>
         <div className="ymll-name">{product.name}</div>
-        <div className="ymll-colors">
-          {product.colors.map((color, ci) => (
-            <span key={ci} className="ymll-color-dot" style={{ backgroundColor: color }} />
-          ))}
-        </div>
       </div>
-
       {!added ? (
-        <button className="ymll-quick-add" onClick={() => setAdded(true)}>
+        <button className="ymll-quick-add" onClick={() => { addToCart(product); setAdded(true); }}>
           <CartIcon /> Quick Add
         </button>
       ) : (
-        <button className="ymll-quick-add ymll-go-to-cart" onClick={() => window.location.href = '/cart'}>
+        <button className="ymll-quick-add ymll-go-to-cart" onClick={() => navigate('/cart')}>
           <CartIcon /> Go to Cart
         </button>
       )}
@@ -52,6 +48,17 @@ function FavoriteCard({ product }) {
 }
 
 export default function YouMightAlsoLike() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetch(`${API}/featured?section=currentFavorites`)
+      .then(r => r.json())
+      .then(d => { if (d.success) setProducts(d.data); })
+      .catch(() => {});
+  }, []);
+
+  if (!products.length) return null;
+
   return (
     <section className="ymll-section">
       <div className="section-inner">
@@ -62,11 +69,8 @@ export default function YouMightAlsoLike() {
           </div>
           <a href="#" className="ymll-view-all">View all bestsellers →</a>
         </div>
-
         <div className="ymll-grid">
-          {products.map((product, i) => (
-            <FavoriteCard key={i} product={product} />
-          ))}
+          {products.map(p => <FavoriteCard key={p._id} product={p} />)}
         </div>
       </div>
     </section>
