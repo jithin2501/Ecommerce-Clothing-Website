@@ -118,23 +118,44 @@ export default function ProductManagement() {
     } catch { setError('Server error.'); }
   };
 
+  // ── Fixed: use JSON PATCH for featuredIn only ──
   const handleFeaturedToggle = async (id, section, isCurrentlyOn) => {
     const product = products.find(p => p._id === id);
     if (!product) return;
     const current = product.featuredIn || [];
-    const updated = isCurrentlyOn ? current.filter(s => s !== section) : [...current, section];
+    const updated = isCurrentlyOn
+      ? current.filter(s => s !== section)
+      : [...current, section];
+
+    // Optimistic UI update
+    setProducts(prev =>
+      prev.map(x => x._id === id ? { ...x, featuredIn: updated } : x)
+    );
+
     try {
-      const res  = await fetch(`${API}/admin/${id}`, {
+      const res = await fetch(`${API}/admin/${id}`, {
         method: 'PATCH',
         headers: { ...authHeaders(), 'Content-Type': 'application/json' },
         body: JSON.stringify({ featuredIn: updated }),
       });
       const data = await res.json();
-      if (data.success) setProducts(p => p.map(x => x._id === id ? data.data : x));
-    } catch { setError('Failed to update featured sections.'); }
+      if (data.success) {
+        setProducts(prev => prev.map(x => x._id === id ? data.data : x));
+      } else {
+        // Revert on failure
+        setProducts(prev =>
+          prev.map(x => x._id === id ? { ...x, featuredIn: current } : x)
+        );
+        setError('Failed to update featured section.');
+      }
+    } catch {
+      setProducts(prev =>
+        prev.map(x => x._id === id ? { ...x, featuredIn: current } : x)
+      );
+      setError('Server error.');
+    }
   };
 
-  // ── Filtering logic ──
   const displayed = products.filter(p => {
     const matchAge  = filterAge === 'all' || p.ageGroup === filterAge;
     const matchName = searchQuery.trim() === '' ||
@@ -146,6 +167,18 @@ export default function ProductManagement() {
     })();
     return matchAge && matchName && matchDate;
   });
+
+  const FeatToggle = ({ id, section, featuredIn }) => {
+    const active = (featuredIn || []).includes(section);
+    return (
+      <button className="pm-feat-circle" onClick={() => handleFeaturedToggle(id, section, active)}>
+        <img
+          src={active ? '/images/ProductManagement/tick.png' : '/images/ProductManagement/cross.png'}
+          alt={active ? 'on' : 'off'}
+        />
+      </button>
+    );
+  };
 
   return (
     <div className="pm-page">
@@ -160,7 +193,6 @@ export default function ProductManagement() {
         <form className="pm-form" onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="pm-form-grid">
 
-            {/* Image upload */}
             <div className="pm-img-col">
               <div className="pm-img-upload" onClick={() => fileRef.current.click()}>
                 {preview
@@ -239,133 +271,126 @@ export default function ProductManagement() {
 
       {/* ── Existing Products Card ── */}
       <div className="pm-existing-card">
-      <div className="pm-section-header">
-        <div className="pm-section-title-wrap">
-          <h2 className="pm-section-title">Existing Products</h2>
-          <span className="pm-section-count">{displayed.length} product{displayed.length !== 1 ? 's' : ''} found</span>
-        </div>
-
-        <div className="pm-section-controls">
-          {/* Search bar */}
-          <div className="pm-search-wrap">
-            <input
-              type="text"
-              className="pm-search-input"
-              placeholder="Search by product name..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-            />
-            <button type="button" className="pm-search-btn">
-              <img src="/images/ProductManagement/search.png" alt="Search" />
-            </button>
+        <div className="pm-section-header">
+          <div className="pm-section-title-wrap">
+            <h2 className="pm-section-title">Existing Products</h2>
+            <span className="pm-section-count">{displayed.length} product{displayed.length !== 1 ? 's' : ''} found</span>
           </div>
 
-          {/* Age filters */}
-          <div className="pm-age-filters">
-            {['all', 'newborn', 'toddler', 'junior'].map(f => (
-              <button key={f}
-                className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
-                onClick={() => setFilterAge(f)}>
-                {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
+          <div className="pm-section-controls">
+            <div className="pm-search-wrap">
+              <input
+                type="text"
+                className="pm-search-input"
+                placeholder="Search by product name..."
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+              />
+              <button type="button" className="pm-search-btn">
+                <img src="/images/ProductManagement/search.png" alt="Search" />
               </button>
-            ))}
-          </div>
+            </div>
 
-          {/* Date filter */}
-          <input
-            type="date"
-            className="pm-date-filter"
-            value={filterDate}
-            onChange={e => setFilterDate(e.target.value)}
-          />
+            <div className="pm-age-filters">
+              {['all', 'newborn', 'toddler', 'junior'].map(f => (
+                <button key={f}
+                  className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
+                  onClick={() => setFilterAge(f)}>
+                  {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
+                </button>
+              ))}
+            </div>
+
+            <input
+              type="date"
+              className="pm-date-filter"
+              value={filterDate}
+              onChange={e => setFilterDate(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div className="pm-table-outer">
+          {loading ? <p className="pm-empty">Loading...</p>
+            : displayed.length === 0 ? <p className="pm-empty">No products found.</p>
+            : (
+            <table className="pm-table">
+              <thead>
+                <tr>
+                  <th>IMAGE</th>
+                  <th>NAME & CATEGORY</th>
+                  <th>AGE</th>
+                  <th>PRICE</th>
+                  <th>BADGE</th>
+                  <th className="pm-th-featured">
+                    <div className="pm-th-feat-wrap">
+                      <span>Coll</span>
+                      <span>Detail</span>
+                      <span>Cart</span>
+                    </div>
+                  </th>
+                  <th>BEST SELLING</th>
+                  <th>NEW ARRIVALS</th>
+                  <th>STATUS</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                {displayed.map(p => (
+                  <tr key={p._id}>
+                    <td><img src={p.img} alt={p.name} className="pm-thumb" /></td>
+                    <td>
+                      <div className="pm-name">{p.name}</div>
+                      <div className="pm-cat">{p.category}</div>
+                    </td>
+                    <td className="pm-age">{p.age}</td>
+                    <td className="pm-price">
+                      ₹{p.price}
+                      {p.oldPrice && <><br /><span className="pm-old-price">₹{p.oldPrice}</span></>}
+                    </td>
+                    <td>
+                      {p.badge
+                        ? <span className={`pm-badge pm-badge-${p.badge.toLowerCase()}`}>{p.badge}</span>
+                        : <span className="pm-badge-none">—</span>}
+                    </td>
+                    <td className="pm-td-featured">
+                      <div className="pm-feat-icons">
+                        {['currentFavorites', 'youMightAlsoLike', 'cartAlsoLike'].map(key => (
+                          <FeatToggle key={key} id={p._id} section={key} featuredIn={p.featuredIn} />
+                        ))}
+                      </div>
+                    </td>
+                    <td className="pm-td-featured">
+                      <FeatToggle id={p._id} section="bestSelling" featuredIn={p.featuredIn} />
+                    </td>
+                    <td className="pm-td-featured">
+                      <FeatToggle id={p._id} section="newArrivals" featuredIn={p.featuredIn} />
+                    </td>
+                    <td>
+                      <span className={`pm-status ${p.isActive ? 'active' : 'inactive'}`}>
+                        {p.isActive ? 'Active' : 'Hidden'}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="pm-actions">
+                        <button className="pm-edit-btn" onClick={() => handleEdit(p)}>
+                          <img src="/images/ProductManagement/edit.png" alt="Edit" />
+                        </button>
+                        <button className="pm-details-btn">
+                          <img src="/images/ProductManagement/details.png" alt="Details" />
+                        </button>
+                        <button className="pm-del-btn" onClick={() => handleDelete(p._id, p.name)}>
+                          <img src="/images/ProductManagement/delete.png" alt="Delete" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
-
-      <div className="pm-table-outer">
-        {loading ? <p className="pm-empty">Loading...</p>
-          : displayed.length === 0 ? <p className="pm-empty">No products found.</p>
-          : (
-          <table className="pm-table">
-            <thead>
-              <tr>
-                <th>IMAGE</th>
-                <th>NAME</th>
-                <th>CATEGORY</th>
-                <th>AGE</th>
-                <th>PRICE</th>
-                <th>BADGE</th>
-                <th className="pm-th-featured">
-                  <div className="pm-th-feat-wrap">
-                    <span>Coll</span>
-                    <span>C.Details</span>
-                    <span>Cart</span>
-                  </div>
-                </th>
-                <th>STATUS</th>
-                <th>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              {displayed.map(p => (
-                <tr key={p._id}>
-                  <td><img src={p.img} alt={p.name} className="pm-thumb" /></td>
-                  <td className="pm-name">{p.name}</td>
-                  <td className="pm-cat">{p.category}</td>
-                  <td className="pm-age">{p.age}</td>
-                  <td className="pm-price">
-                    ₹{p.price}
-                    {p.oldPrice && <span className="pm-old-price"> ₹{p.oldPrice}</span>}
-                  </td>
-                  <td>
-                    {p.badge
-                      ? <span className={`pm-badge pm-badge-${p.badge.toLowerCase()}`}>{p.badge}</span>
-                      : <span className="pm-badge-none">—</span>}
-                  </td>
-                  <td className="pm-td-featured">
-                    <div className="pm-feat-icons">
-                      {[
-                        { key: 'currentFavorites' },
-                        { key: 'youMightAlsoLike' },
-                        { key: 'cartAlsoLike' },
-                      ].map(({ key }) => {
-                        const active = (p.featuredIn || []).includes(key);
-                        return (
-                          <button key={key} className="pm-feat-circle"
-                            onClick={() => handleFeaturedToggle(p._id, key, active)}>
-                            <img
-                              src={active ? '/images/ProductManagement/tick.png' : '/images/ProductManagement/cross.png'}
-                              alt={active ? 'on' : 'off'}
-                            />
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </td>
-                  <td>
-                    <span className={`pm-status ${p.isActive ? 'active' : 'inactive'}`}>
-                      {p.isActive ? 'Active' : 'Hidden'}
-                    </span>
-                  </td>
-                  <td>
-                    <div className="pm-actions">
-                      <button className="pm-edit-btn" onClick={() => handleEdit(p)}>
-                        <img src="/images/ProductManagement/edit.png" alt="Edit" />
-                      </button>
-                      <button className="pm-details-btn">
-                        <img src="/images/ProductManagement/details.png" alt="Details" />
-                      </button>
-                      <button className="pm-del-btn" onClick={() => handleDelete(p._id, p.name)}>
-                        <img src="/images/ProductManagement/delete.png" alt="Delete" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
-      </div>{/* end pm-existing-card */}
     </div>
   );
 }

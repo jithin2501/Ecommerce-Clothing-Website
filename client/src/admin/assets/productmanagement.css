@@ -342,7 +342,7 @@
   background: #fff;
   border-radius: 10px;
   border: 1px solid #e5e7eb;
-  overflow: hidden;
+  overflow-x: auto;
   margin-top: 1rem;
 }
 
@@ -355,6 +355,7 @@
 
 .pm-table {
   width: 100%;
+  min-width: 900px;
   border-collapse: collapse;
   font-size: 0.84rem;
 }
@@ -362,41 +363,46 @@
 .pm-table thead tr { border-bottom: 1.5px solid #e5e7eb; }
 
 .pm-table th {
-  padding: 0.9rem 1rem;
+  padding: 0.9rem 0.7rem;
   text-align: left;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   color: #9ca3af;
-  letter-spacing: 0.9px;
+  letter-spacing: 0.7px;
   white-space: nowrap;
 }
 
 .pm-table th:nth-child(3),
 .pm-table th:nth-child(4),
+.pm-table th:nth-child(5),
 .pm-table th:nth-child(6),
 .pm-table th:nth-child(7),
+.pm-table th:nth-child(8),
+.pm-table th:nth-child(9),
 .pm-table th:last-child { text-align: center; }
 
 .pm-table td {
-  padding: 0.8rem 1rem;
+  padding: 0.75rem 0.7rem;
   border-bottom: 1.5px solid #f0f0f0;
   color: #374151;
   vertical-align: middle;
-  white-space: nowrap;
 }
 
 .pm-table td:nth-child(3),
 .pm-table td:nth-child(4),
+.pm-table td:nth-child(5),
 .pm-table td:nth-child(6),
 .pm-table td:nth-child(7),
+.pm-table td:nth-child(8),
+.pm-table td:nth-child(9),
 .pm-table td:last-child { text-align: center; vertical-align: middle; }
 
 .pm-table tbody tr:last-child td { border-bottom: none; }
 .pm-table tbody tr:hover { background: #fafafa; }
 
 .pm-thumb {
-  width: 52px;
-  height: 52px;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
   border-radius: 8px;
   display: block;
@@ -406,11 +412,13 @@
   font-weight: 700;
   color: #1e2139;
   white-space: nowrap;
+  font-size: 0.84rem;
 }
 
 .pm-cat {
-  color: #6b7280;
-  font-size: 0.8rem;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  margin-top: 2px;
   white-space: nowrap;
 }
 
@@ -424,13 +432,14 @@
   font-weight: 700;
   color: #1e2139;
   white-space: nowrap;
+  font-size: 0.84rem;
 }
 
 .pm-old-price {
   color: #9ca3af;
   text-decoration: line-through;
   font-weight: 400;
-  font-size: 0.78rem;
+  font-size: 0.75rem;
 }
 
 .pm-badge {
@@ -439,6 +448,7 @@
   padding: 3px 10px;
   border-radius: 20px;
   display: inline-block;
+  white-space: nowrap;
 }
 
 .pm-badge-new { background: #eff6ff; color: #3b82f6; }
@@ -451,6 +461,7 @@
   padding: 3px 10px;
   border-radius: 20px;
   display: inline-block;
+  white-space: nowrap;
 }
 
 .pm-status.active { background: #f0fdf4; color: #16a34a; }
@@ -458,7 +469,7 @@
 
 .pm-actions {
   display: flex;
-  gap: 0.4rem;
+  gap: 0.3rem;
   justify-content: center;
   align-items: center;
 }
@@ -469,7 +480,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: 4px;
+  padding: 3px;
   border-radius: 6px;
   display: inline-flex;
   align-items: center;
@@ -484,8 +495,8 @@
 .pm-edit-btn img,
 .pm-details-btn img,
 .pm-del-btn img {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
   display: block;
 }
@@ -495,13 +506,13 @@
 .pm-th-feat-wrap {
   display: flex;
   justify-content: center;
-  gap: 0;
+  gap: 4px;
 }
 
 .pm-th-feat-wrap span {
   flex: none;
   text-align: center;
-  font-size: 0.63rem;
+  font-size: 0.6rem;
   white-space: nowrap;
 }
 
@@ -510,7 +521,7 @@
 .pm-feat-icons {
   display: flex;
   justify-content: center;
-  gap: 4px;
+  gap: 2px;
 }
 
 .pm-feat-circle {
@@ -528,8 +539,8 @@
 .pm-feat-circle:hover { transform: scale(1.15); }
 
 .pm-feat-circle img {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
   display: block;
 }

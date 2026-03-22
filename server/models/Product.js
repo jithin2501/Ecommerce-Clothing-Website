@@ -16,10 +16,9 @@ const productSchema = new mongoose.Schema(
     reviews:     { type: Number, default: 0 },
     sustainability: { type: Boolean, default: false },
     isActive:    { type: Boolean, default: true },
-    // Which featured sections this product appears in
     featuredIn:  {
       type: [String],
-      enum: ['currentFavorites', 'youMightAlsoLike', 'cartAlsoLike'],
+      enum: ['currentFavorites', 'youMightAlsoLike', 'cartAlsoLike', 'bestSelling', 'newArrivals'],
       default: [],
     },
   },
