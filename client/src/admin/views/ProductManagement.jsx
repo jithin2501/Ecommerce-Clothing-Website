@@ -29,6 +29,8 @@ export default function ProductManagement() {
   const [saving, setSaving]     = useState(false);
   const [error, setError]       = useState('');
   const [filterAge, setFilterAge] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterDate, setFilterDate]   = useState('');
   const fileRef = useRef(null);
 
   const fetchProducts = async () => {
@@ -132,7 +134,18 @@ export default function ProductManagement() {
     } catch { setError('Failed to update featured sections.'); }
   };
 
-  const displayed = filterAge === 'all' ? products : products.filter(p => p.ageGroup === filterAge);
+  // ── Filtering logic ──
+  const displayed = products.filter(p => {
+    const matchAge  = filterAge === 'all' || p.ageGroup === filterAge;
+    const matchName = searchQuery.trim() === '' ||
+      p.name.toLowerCase().includes(searchQuery.trim().toLowerCase());
+    const matchDate = filterDate === '' || (() => {
+      if (!p.createdAt) return false;
+      const created = new Date(p.createdAt).toISOString().slice(0, 10);
+      return created === filterDate;
+    })();
+    return matchAge && matchName && matchDate;
+  });
 
   return (
     <div className="pm-page">
@@ -224,23 +237,53 @@ export default function ProductManagement() {
         </form>
       </div>
 
-      {/* ── Product Table ── */}
+      {/* ── Existing Products Card ── */}
+      <div className="pm-existing-card">
       <div className="pm-section-header">
-        <h2 className="pm-section-title">Existing Products</h2>
-        <div className="pm-age-filters">
-          {['all', 'newborn', 'toddler', 'junior'].map(f => (
-            <button key={f}
-              className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
-              onClick={() => setFilterAge(f)}>
-              {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
+        <div className="pm-section-title-wrap">
+          <h2 className="pm-section-title">Existing Products</h2>
+          <span className="pm-section-count">{displayed.length} product{displayed.length !== 1 ? 's' : ''} found</span>
+        </div>
+
+        <div className="pm-section-controls">
+          {/* Search bar */}
+          <div className="pm-search-wrap">
+            <input
+              type="text"
+              className="pm-search-input"
+              placeholder="Search by product name..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+            />
+            <button type="button" className="pm-search-btn">
+              <img src="/images/ProductManagement/search.png" alt="Search" />
             </button>
-          ))}
+          </div>
+
+          {/* Age filters */}
+          <div className="pm-age-filters">
+            {['all', 'newborn', 'toddler', 'junior'].map(f => (
+              <button key={f}
+                className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
+                onClick={() => setFilterAge(f)}>
+                {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Date filter */}
+          <input
+            type="date"
+            className="pm-date-filter"
+            value={filterDate}
+            onChange={e => setFilterDate(e.target.value)}
+          />
         </div>
       </div>
 
       <div className="pm-table-outer">
         {loading ? <p className="pm-empty">Loading...</p>
-          : displayed.length === 0 ? <p className="pm-empty">No products yet.</p>
+          : displayed.length === 0 ? <p className="pm-empty">No products found.</p>
           : (
           <table className="pm-table">
             <thead>
@@ -322,6 +365,7 @@ export default function ProductManagement() {
           </table>
         )}
       </div>
+      </div>{/* end pm-existing-card */}
     </div>
   );
 }
