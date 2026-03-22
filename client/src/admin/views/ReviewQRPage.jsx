@@ -1,17 +1,23 @@
 import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
+import html2canvas from 'html2canvas';
 import '../assets/reviewqrpage.css';
 
 const REVIEW_URL = `${window.location.origin}/review`;
 
 export default function ReviewQRPage() {
   const qrRef = useRef(null);
+  const cardRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleDownload = () => {
-    const canvas = qrRef.current?.querySelector('canvas');
-    if (!canvas) return;
+  const handleDownload = async () => {
+    if (!cardRef.current) return;
+    const canvas = await html2canvas(cardRef.current, {
+      backgroundColor: '#ffffff',
+      scale: 2, // high resolution
+      useCORS: true,
+    });
     const link = document.createElement('a');
     link.download = 'sumathi-trends-review-qr.png';
     link.href = canvas.toDataURL('image/png');
@@ -25,12 +31,12 @@ export default function ReviewQRPage() {
   return (
     <div className="qrp-page">
       <div className="qrp-header">
-        <button className="qrp-back" onClick={() => navigate('/admin/reviews')}>← Back</button>
+        <button className="qrp-back" onClick={() => navigate('/admin/reviews')}>Back</button>
         <h1 className="qrp-title">Review QR Code</h1>
         <p className="qrp-sub">Print and place this at your store or include it in packaging so customers can leave a review.</p>
       </div>
 
-      <div className="qrp-card" id="qrp-print-area">
+      <div className="qrp-card" id="qrp-print-area" ref={cardRef}>
         <div className="qrp-brand">Sumathi Trends</div>
         <p className="qrp-scan-text">Scan to share your review</p>
 
@@ -59,14 +65,19 @@ export default function ReviewQRPage() {
 
       {/* Print styles */}
       <style>{`
+        @page { margin: 0; size: auto; }
         @media print {
-          .no-print { display: none !important; }
-          .qrp-header { display: none !important; }
-          body { background: white; }
-          .qrp-card {
+          * { visibility: hidden !important; }
+          #qrp-print-area, #qrp-print-area * { visibility: visible !important; }
+          #qrp-print-area {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
             box-shadow: none !important;
             border: 2px solid #e5e7eb !important;
-            margin: 40px auto !important;
+            margin: 0 !important;
+            z-index: 9999 !important;
           }
         }
       `}</style>

@@ -95,7 +95,6 @@ export default function ReviewManagement() {
 
         {/* QR card */}
         <div className="rm-stat-card rm-stat-qr">
-          <div className="rm-stat-label">Review QR</div>
           <button className="rm-qr-open-btn" onClick={() => navigate('/admin/review-qr')}>
             View QR
           </button>
