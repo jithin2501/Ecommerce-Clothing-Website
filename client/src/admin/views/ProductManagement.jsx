@@ -262,10 +262,13 @@ export default function ProductManagement() {
                   </td>
                   <td className="pm-actions">
                     <button className="pm-edit-btn" onClick={() => handleEdit(p)}>
-                      <img src="/images/usermanagement/Username.png" alt="Edit" />
+                      <img src="/images/ProductManagement/edit.png" alt="Edit" />
+                    </button>
+                    <button className="pm-details-btn">
+                      <img src="/images/ProductManagement/details.png" alt="Details" />
                     </button>
                     <button className="pm-del-btn" onClick={() => handleDelete(p._id, p.name)}>
-                      <img src="/images/Review/delete.png" alt="Delete" />
+                      <img src="/images/ProductManagement/delete.png" alt="Delete" />
                     </button>
                   </td>
                 </tr>

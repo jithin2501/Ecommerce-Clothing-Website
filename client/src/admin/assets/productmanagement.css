@@ -42,11 +42,18 @@
   align-items: flex-start;
 }
 
-/* Image upload box */
+/* ── Image column (upload box + delete btn) ── */
+.pm-img-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
 .pm-img-upload {
   width: 160px;
   height: 160px;
-  flex-shrink: 0;
   border: 2px dashed #e5e7eb;
   border-radius: 12px;
   cursor: pointer;
@@ -72,7 +79,23 @@
   padding: 1rem;
 }
 
-/* Fields grid */
+.pm-img-delete-btn {
+  width: 160px;
+  background: #ef4444;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.4rem 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.2s;
+  outline: none;
+}
+.pm-img-delete-btn:hover { background: #dc2626; }
+
+/* ── Fields ── */
 .pm-fields { flex: 1; display: flex; flex-direction: column; gap: 0.8rem; }
 
 .pm-row {
@@ -113,20 +136,6 @@
 }
 .pm-group input:focus,
 .pm-group select:focus { border-color: #3b82f6; }
-
-.pm-group-check { justify-content: flex-end; padding-bottom: 0.2rem; }
-
-.pm-check-label {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.84rem;
-  color: #374151;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.pm-check-label input { accent-color: #3b82f6; width: 15px; height: 15px; cursor: pointer; }
 
 .pm-form-actions {
   display: flex;
@@ -259,12 +268,13 @@
   display: block;
 }
 
-.pm-name { font-weight: 700; color: #1e2139; }
-.pm-cat  { color: #6b7280; font-size: 0.8rem; }
-.pm-age  { color: #6b7280; font-size: 0.8rem; }
+.pm-name  { font-weight: 700; color: #1e2139; }
+.pm-cat   { color: #6b7280; font-size: 0.8rem; }
+.pm-age   { color: #6b7280; font-size: 0.8rem; }
 .pm-price { font-weight: 700; color: #1e2139; white-space: nowrap; }
 .pm-old-price { color: #9ca3af; text-decoration: line-through; font-weight: 400; font-size: 0.78rem; }
 
+/* ── Badges ── */
 .pm-badge {
   font-size: 0.7rem;
   font-weight: 700;
@@ -274,8 +284,10 @@
 }
 .pm-badge-new         { background: #eff6ff; color: #3b82f6; }
 .pm-badge-bestselling { background: #fef9c3; color: #854d0e; }
+.pm-badge-sale        { background: #fef2f2; color: #ef4444; }
 .pm-badge-none        { color: #d1d5db; }
 
+/* ── Status ── */
 .pm-status {
   font-size: 0.72rem;
   font-weight: 700;
@@ -286,9 +298,11 @@
 .pm-status.active   { background: #f0fdf4; color: #16a34a; }
 .pm-status.inactive { background: #fef2f2; color: #ef4444; }
 
+/* ── Action buttons ── */
 .pm-actions { display: flex; gap: 0.4rem; justify-content: center; }
 
 .pm-edit-btn,
+.pm-details-btn,
 .pm-del-btn {
   background: none;
   border: none;
@@ -301,33 +315,9 @@
   outline: none;
 }
 .pm-edit-btn:hover,
+.pm-details-btn:hover,
 .pm-del-btn:hover { opacity: 0.7; }
+
 .pm-edit-btn img,
+.pm-details-btn img,
 .pm-del-btn img { width: 26px; height: 26px; object-fit: contain; display: block; }
-.pm-img-col {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.6rem;
-  flex-shrink: 0;
-}
- 
-.pm-img-delete-btn {
-  width: 160px;
-  background: #ff0000;
-  color: #ffffff;
-  border: 1.5px solid #fecaca;
-  border-radius: 8px;
-  padding: 0.4rem 0;
-  font-size: 0.78rem;
-  font-weight: 700;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: background 0.2s, border-color 0.2s;
-  outline: none;
-}
-.pm-img-delete-btn:hover {
-  background: #ff0000;
-  border-color: #ef4444;
-}
- 
