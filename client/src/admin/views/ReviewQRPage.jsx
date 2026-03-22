@@ -15,7 +15,7 @@ export default function ReviewQRPage() {
     if (!cardRef.current) return;
     const canvas = await html2canvas(cardRef.current, {
       backgroundColor: '#ffffff',
-      scale: 2, // high resolution
+      scale: 2,
       useCORS: true,
     });
     const link = document.createElement('a');
@@ -62,25 +62,6 @@ export default function ReviewQRPage() {
           <img src="/images/Review/print.png" alt="Print" />
         </button>
       </div>
-
-      {/* Print styles */}
-      <style>{`
-        @page { margin: 0; size: auto; }
-        @media print {
-          * { visibility: hidden !important; }
-          #qrp-print-area, #qrp-print-area * { visibility: visible !important; }
-          #qrp-print-area {
-            position: fixed !important;
-            top: 50% !important;
-            left: 50% !important;
-            transform: translate(-50%, -50%) !important;
-            box-shadow: none !important;
-            border: 2px solid #e5e7eb !important;
-            margin: 0 !important;
-            z-index: 9999 !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

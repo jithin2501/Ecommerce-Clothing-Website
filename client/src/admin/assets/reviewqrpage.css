@@ -133,3 +133,22 @@
   object-fit: contain;
   display: block;
 }
+
+/* ── Print styles ── */
+@page { margin: 0; size: auto; }
+
+@media print {
+  * { visibility: hidden !important; }
+  #qrp-print-area, #qrp-print-area * { visibility: visible !important; }
+  #qrp-print-area {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    box-shadow: none !important;
+    border: 2px solid #e5e7eb !important;
+    margin: 0 !important;
+    z-index: 9999 !important;
+  }
+  .no-print { display: none !important; }
+}
