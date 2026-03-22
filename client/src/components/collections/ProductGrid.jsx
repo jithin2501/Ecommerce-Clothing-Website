@@ -19,20 +19,6 @@ const toAgeGroup = (age) => {
   return 'junior';
 };
 
-// Static fallback products (used when API returns nothing)
-const STATIC_PRODUCTS = {
-  newborn: [
-    { id: 1,  name: 'Garden Breeze Dress',       price: '₹849',   oldPrice: null,    category: 'Baby Frocks',    color: 'green',  age: '0-2Y', sustainability: true,  img: '/images/img1.webp',    badge: null,          stars: 4.2, reviews: 42  },
-    { id: 2,  name: 'Coastline Striped Shirt',   price: '₹649',   oldPrice: '₹849',  category: 'Tops & T-Shirts',color: 'blue',   age: '0-2Y', sustainability: false, img: '/images/img2.webp',    badge: null,          stars: 4.0, reviews: 38  },
-    { id: 3,  name: 'Earth Spirit Romper',        price: '₹799',   oldPrice: null,    category: 'Boys Collection',color: 'beige',  age: '0-2Y', sustainability: true,  img: '/images/img3.webp',    badge: 'New',         stars: 4.6, reviews: 130 },
-    { id: 4,  name: 'Cloud Soft Knit Cardigan',  price: '₹1199',  oldPrice: null,    category: 'Party Wear',     color: 'cream',  age: '0-2Y', sustainability: false, img: '/images/img1.webp',    badge: null,          stars: 4.1, reviews: 29  },
-    { id: 5,  name: 'Adventure Dungarees',        price: '₹749',   oldPrice: '₹949', category: 'Boys Collection',color: 'beige',  age: '0-2Y', sustainability: true,  img: '/images/img2.webp',    badge: 'Bestselling', stars: 4.8, reviews: 304 },
-    { id: 6,  name: 'Heirloom Linen Blazer',     price: '₹1499',  oldPrice: null,    category: 'Party Wear',     color: 'cream',  age: '0-2Y', sustainability: true,  img: '/images/img3.webp',    badge: null,          stars: 4.3, reviews: 82  },
-    { id: 7,  name: 'Waffle Textured Plush Set', price: '₹549',   oldPrice: null,    category: 'Tops & T-Shirts',color: 'grey',   age: '0-2Y', sustainability: false, img: '/images/product1.png', badge: null,          stars: 4.5, reviews: 56  },
-    { id: 8,  name: 'Ribbed Jogging Set',         price: '₹599',   oldPrice: null,    category: 'Boys Collection',color: 'beige',  age: '0-2Y', sustainability: false, img: '/images/product2.png', badge: null,          stars: 4.2, reviews: 31  },
-  ],
-};
-
 export default function ProductGrid({ ageGroup, products: propProducts, selectedCategories = [], selectedColors = [], sustainableOnly = false, sortBy = 'Newest Arrivals' }) {
   const { toggleWishlist, isWishlisted } = useWishlist();
   const [apiProducts, setApiProducts] = useState(null); // null = not yet fetched
@@ -47,10 +33,10 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
         if (data.success && data.data.length > 0) {
           setApiProducts(data.data);
         } else {
-          setApiProducts([]); // use fallback
+          setApiProducts([]);
         }
       } catch {
-        setApiProducts([]); // use fallback on error
+        setApiProducts([]);
       }
     };
     fetchFromAPI();
@@ -61,12 +47,9 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
   if (propProducts) {
     base = propProducts;
   } else if (apiProducts === null) {
-    base = []; // loading
-  } else if (apiProducts.length > 0) {
-    base = apiProducts;
+    base = []; // loading state
   } else {
-    // fallback to static
-    base = ageGroup ? (STATIC_PRODUCTS[ageGroup] || []) : Object.values(STATIC_PRODUCTS).flat();
+    base = apiProducts;
   }
 
   // Apply filters
@@ -85,7 +68,7 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
   }
 
   if (!filtered.length) {
-    return <div className="pg-empty"><p>No products match your filters.</p></div>;
+    return <div className="pg-empty"><p>No products found. Add products from the admin panel to display them here.</p></div>;
   }
 
   const formatPrice = (price) => {
