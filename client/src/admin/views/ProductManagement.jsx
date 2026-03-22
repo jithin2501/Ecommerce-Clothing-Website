@@ -17,7 +17,7 @@ const CATEGORIES = [
 ];
 const BADGES = ['', 'New', 'Bestselling', 'Sale'];
 
-const EMPTY_FORM = { name: '', category: '', price: '', oldPrice: '', ageGroup: 'newborn', color: '', badge: '', sustainability: false };
+const EMPTY_FORM = { name: '', category: '', price: '', oldPrice: '', ageGroup: 'newborn', color: '', badge: '' };
 
 export default function ProductManagement() {
   const [products, setProducts] = useState([]);
@@ -54,7 +54,7 @@ export default function ProductManagement() {
     setForm({
       name: p.name, category: p.category, price: p.price,
       oldPrice: p.oldPrice || '', ageGroup: p.ageGroup,
-      color: p.color || '', badge: p.badge || '', sustainability: p.sustainability,
+      color: p.color || '', badge: p.badge || '',
     });
     setPreview(p.img);
     setImgFile(null);
@@ -126,12 +126,23 @@ export default function ProductManagement() {
           <div className="pm-form-grid">
 
             {/* Image upload */}
-            <div className="pm-img-upload" onClick={() => fileRef.current.click()}>
-              {preview
-                ? <img src={preview} alt="preview" className="pm-img-preview" />
-                : <div className="pm-img-placeholder">+ Upload Image</div>
-              }
-              <input ref={fileRef} type="file" accept="image/*" onChange={handleImgChange} style={{ display: 'none' }} />
+            <div className="pm-img-col">
+              <div className="pm-img-upload" onClick={() => fileRef.current.click()}>
+                {preview
+                  ? <img src={preview} alt="preview" className="pm-img-preview" />
+                  : <div className="pm-img-placeholder">+ Upload Image</div>
+                }
+                <input ref={fileRef} type="file" accept="image/*" onChange={handleImgChange} style={{ display: 'none' }} />
+              </div>
+              {preview && (
+                <button
+                  type="button"
+                  className="pm-img-delete-btn"
+                  onClick={() => { setPreview(null); setImgFile(null); if (fileRef.current) fileRef.current.value = ''; }}
+                >
+                  Remove Image
+                </button>
+              )}
             </div>
 
             <div className="pm-fields">
@@ -183,13 +194,6 @@ export default function ProductManagement() {
                   <label>Color <span className="pm-optional">optional</span></label>
                   <input type="text" placeholder="e.g. pink, blue"
                     value={form.color} onChange={e => setForm(f => ({ ...f, color: e.target.value }))} />
-                </div>
-                <div className="pm-group pm-group-check">
-                  <label className="pm-check-label">
-                    <input type="checkbox" checked={form.sustainability}
-                      onChange={e => setForm(f => ({ ...f, sustainability: e.target.checked }))} />
-                    Sustainable product
-                  </label>
                 </div>
               </div>
             </div>
