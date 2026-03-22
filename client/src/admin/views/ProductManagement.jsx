@@ -314,8 +314,8 @@ export default function ProductManagement() {
                   </td>
                   <td className="pm-featured-cell">
                     {[
-                      { key: 'currentFavorites', label: 'Favorites' },
-                      { key: 'youMightAlsoLike', label: 'Also Like' },
+                      { key: 'currentFavorites', label: 'Collections' },
+                      { key: 'youMightAlsoLike', label: 'Collection Details' },
                       { key: 'cartAlsoLike',     label: 'Cart' },
                     ].map(({ key, label }) => {
                       const active = (p.featuredIn || []).includes(key);
