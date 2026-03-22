@@ -38,11 +38,11 @@
   display: block;
 }
 
+/* ── Single badge — admin-controlled only ── */
 .pg-badge {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: var(--charcoal);
   color: white;
   font-size: 0.62rem;
   font-weight: 700;
@@ -50,20 +50,12 @@
   border-radius: 50px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  background: var(--charcoal);
 }
 
-.pg-sale-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  background: var(--accent-clay);
-  color: white;
-  font-size: 0.62rem;
-  font-weight: 700;
-  padding: 0.25rem 0.6rem;
-  border-radius: 50px;
-  text-transform: uppercase;
-}
+.pg-badge-new  { background: #2563eb; }
+.pg-badge-best { background: #92400e; color: #fef3c7; }
+.pg-badge-sale { background: var(--accent-clay, #c07a55); }
 
 /* ── Age badge — bottom-left of image ── */
 .pg-age-badge {

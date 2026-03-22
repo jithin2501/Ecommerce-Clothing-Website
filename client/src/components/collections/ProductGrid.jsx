@@ -21,10 +21,10 @@ const toAgeGroup = (age) => {
 
 export default function ProductGrid({ ageGroup, products: propProducts, selectedCategories = [], selectedColors = [], sustainableOnly = false, sortBy = 'Newest Arrivals' }) {
   const { toggleWishlist, isWishlisted } = useWishlist();
-  const [apiProducts, setApiProducts] = useState(null); // null = not yet fetched
+  const [apiProducts, setApiProducts] = useState(null);
 
   useEffect(() => {
-    if (propProducts) return; // parent passed products directly — skip fetch
+    if (propProducts) return;
     const fetchFromAPI = async () => {
       try {
         const url  = ageGroup ? `http://localhost:5000/api/products?ageGroup=${ageGroup}` : 'http://localhost:5000/api/products';
@@ -42,23 +42,20 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
     fetchFromAPI();
   }, [ageGroup, propProducts]);
 
-  // Decide which source to use
   let base;
   if (propProducts) {
     base = propProducts;
   } else if (apiProducts === null) {
-    base = []; // loading state
+    base = [];
   } else {
     base = apiProducts;
   }
 
-  // Apply filters
   let filtered = [...base];
   if (selectedCategories.length > 0) filtered = filtered.filter(p => selectedCategories.includes(p.category));
   if (selectedColors.length > 0)     filtered = filtered.filter(p => selectedColors.includes(p.color));
   if (sustainableOnly)               filtered = filtered.filter(p => p.sustainability);
 
-  // Apply sort
   if (sortBy === 'Price: Low to High') filtered.sort((a, b) => parseFloat(String(a.price).replace(/[^\d.]/g,'')) - parseFloat(String(b.price).replace(/[^\d.]/g,'')));
   if (sortBy === 'Price: High to Low') filtered.sort((a, b) => parseFloat(String(b.price).replace(/[^\d.]/g,'')) - parseFloat(String(a.price).replace(/[^\d.]/g,'')));
   if (sortBy === 'Best Rated')         filtered.sort((a, b) => (b.stars || 0) - (a.stars || 0));
@@ -68,12 +65,19 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
   }
 
   if (!filtered.length) {
-    return <div className="pg-empty"><p>No products found. Add products from the admin panel to display them here.</p></div>;
+    return <div className="pg-empty"><p>No products found.</p></div>;
   }
 
   const formatPrice = (price) => {
     if (typeof price === 'number') return `₹${price}`;
     return price;
+  };
+
+  const getBadgeClass = (badge) => {
+    if (badge === 'Bestselling') return 'pg-badge pg-badge-best';
+    if (badge === 'Sale')        return 'pg-badge pg-badge-sale';
+    if (badge === 'New')         return 'pg-badge pg-badge-new';
+    return 'pg-badge';
   };
 
   return (
@@ -86,8 +90,9 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
         >
           <div className="pg-img-wrap">
             <img src={product.img} alt={product.name} />
-            {product.badge && <span className={`pg-badge ${product.badge === 'Bestselling' ? 'pg-badge-best' : ''}`}>{product.badge}</span>}
-            {product.oldPrice && <span className="pg-sale-badge">Sale</span>}
+            {product.badge && (
+              <span className={getBadgeClass(product.badge)}>{product.badge}</span>
+            )}
             {product.age && <span className="pg-age-badge">Ages {product.age}</span>}
             <button
               className={`pg-wishlist ${isWishlisted(product._id || product.id) ? 'pg-wishlist--active' : ''}`}

@@ -15,7 +15,7 @@ const CATEGORIES = [
   'Baby Frocks', 'Birthday Frocks', 'Tops & T-Shirts',
   'Indo-Western Outfits', 'Traditional Outfits', 'Party Wear', 'Boys Collection',
 ];
-const BADGES = ['', 'New', 'Bestselling'];
+const BADGES = ['', 'New', 'Bestselling', 'Sale'];
 
 const EMPTY_FORM = { name: '', category: '', price: '', oldPrice: '', ageGroup: 'newborn', color: '', badge: '', sustainability: false };
 
