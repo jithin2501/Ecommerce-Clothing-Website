@@ -28,7 +28,9 @@ export default function ProductManagement() {
   const [imgFile, setImgFile]   = useState(null);
   const [saving, setSaving]     = useState(false);
   const [error, setError]       = useState('');
-  const [filterAge, setFilterAge] = useState('all');
+  const [filterAge, setFilterAge]     = useState('all');
+  const [filterDate, setFilterDate]   = useState('');
+  const [filterSearch, setFilterSearch] = useState('');
   const fileRef = useRef(null);
 
   const fetchProducts = async () => {
@@ -110,7 +112,12 @@ export default function ProductManagement() {
     } catch { setError('Server error.'); }
   };
 
-  const displayed = filterAge === 'all' ? products : products.filter(p => p.ageGroup === filterAge);
+  const displayed = products.filter(p => {
+    const ageMatch    = filterAge === 'all' || p.ageGroup === filterAge;
+    const dateMatch   = !filterDate || new Date(p.createdAt).toLocaleDateString('en-CA') === filterDate;
+    const searchMatch = !filterSearch || p.name.toLowerCase().includes(filterSearch.toLowerCase());
+    return ageMatch && dateMatch && searchMatch;
+  });
 
   return (
     <div className="pm-page">
@@ -209,16 +216,46 @@ export default function ProductManagement() {
       </div>
 
       {/* ── Product Table ── */}
-      <div className="pm-section-header">
-        <h2 className="pm-section-title">Existing Products</h2>
-        <div className="pm-age-filters">
-          {['all', 'newborn', 'toddler', 'junior'].map(f => (
-            <button key={f}
-              className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
-              onClick={() => setFilterAge(f)}>
-              {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
+      <div className="pm-table-header-card">
+        <div className="pm-table-header-left">
+          <div>
+            <h2 className="pm-section-title">Existing Products</h2>
+            <p className="pm-section-subtitle">{displayed.length} product{displayed.length !== 1 ? 's' : ''} found</p>
+          </div>
+        </div>
+        <div className="pm-filters-row">
+          <div className="pm-search-bar">
+            <input
+              type="text"
+              className="pm-search-input"
+              placeholder="Search by product name..."
+              value={filterSearch}
+              onChange={e => setFilterSearch(e.target.value)}
+            />
+            <button className="pm-search-btn" onClick={() => {}}>
+              <img src="/images/ProductManagement/search.png" alt="Search" />
             </button>
-          ))}
+          </div>
+          <div className="pm-age-filters">
+            {['all', 'newborn', 'toddler', 'junior'].map(f => (
+              <button key={f}
+                className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
+                onClick={() => setFilterAge(f)}>
+                {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
+              </button>
+            ))}
+          </div>
+          <div className="pm-date-filter">
+            <input
+              type="date"
+              className="pm-date-input"
+              value={filterDate}
+              onChange={e => setFilterDate(e.target.value)}
+            />
+            {filterDate && (
+              <button className="pm-date-clear" onClick={() => setFilterDate('')}>✕</button>
+            )}
+          </div>
         </div>
       </div>
 
