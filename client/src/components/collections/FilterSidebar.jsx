@@ -1,7 +1,4 @@
-import { useState } from 'react';
 import '../../styles/collections/FilterSidebar.css';
-
-const SIZES = ['0-2Y', '3-5Y', '6-12Y'];
 
 const COLORS = [
   { name: 'blue',      hex: '#4A90D9' },
@@ -15,12 +12,15 @@ const COLORS = [
   { name: 'charcoal',  hex: '#4A4A4A' },
 ];
 
-const GENDERS = ['Men', 'Women', 'Unisex', 'Kid'];
 const RATINGS = [5, 4, 3, 2, 1];
+
 const CATEGORIES = [
   'Baby Frocks', 'Birthday Frocks', 'Tops & T-Shirts',
   'Indo-Western Outfits', 'Traditional Outfits', 'Party Wear', 'Boys Collection',
 ];
+
+const MIN_PRICE = 500;
+const MAX_PRICE = 3000;
 
 function Stars({ count }) {
   return (
@@ -47,32 +47,20 @@ function Chevron({ open }) {
 }
 
 export default function FilterSidebar({
-  selectedCategories = [], setSelectedCategories = () => {},
   selectedColors = [],     setSelectedColors = () => {},
+  selectedCategories = [], setSelectedCategories = () => {},
+  priceMin = MIN_PRICE,    setPriceMin = () => {},
+  priceMax = MAX_PRICE,    setPriceMax = () => {},
+  selectedRatings = [],    setSelectedRatings = () => {},
+  open = {},               setOpen = () => {},
   onReset = () => {},
 }) {
-  const [selectedSizes,   setSelectedSizes]   = useState([]);
-  const [selectedGenders, setSelectedGenders] = useState([]);
-  const [selectedRatings, setSelectedRatings] = useState([]);
-  const [priceMin, setPriceMin] = useState(500);
-  const [priceMax, setPriceMax] = useState(3000);
-  const [open, setOpen] = useState({
-    size: true, color: true, gender: true, price: true, ratings: true, category: false,
-  });
-
   const toggleSection = (k) => setOpen(p => ({ ...p, [k]: !p[k] }));
   const toggleItem = (val, arr, setArr) =>
     setArr(p => p.includes(val) ? p.filter(v => v !== val) : [...p, val]);
 
-  const handleReset = () => {
-    setSelectedSizes([]); setSelectedColors([]); setSelectedGenders([]);
-    setSelectedRatings([]); setPriceMin(500); setPriceMax(3000);
-    setSelectedCategories([]); onReset();
-  };
-
-  const MIN = 500, MAX = 3000;
-  const minPct = ((priceMin - MIN) / (MAX - MIN)) * 100;
-  const maxPct = ((priceMax - MIN) / (MAX - MIN)) * 100;
+  const minPct = ((priceMin - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100;
+  const maxPct = ((priceMax - MIN_PRICE) / (MAX_PRICE - MIN_PRICE)) * 100;
 
   return (
     <aside className="filter-sidebar">
@@ -83,23 +71,7 @@ export default function FilterSidebar({
           </svg>
           Filter
         </div>
-        <button className="filter-reset" onClick={handleReset}>Reset</button>
-      </div>
-
-      {/* Size */}
-      <div className="filter-group">
-        <div className="filter-group-header" onClick={() => toggleSection('size')}>
-          <span>Size</span><Chevron open={open.size} />
-        </div>
-        {open.size && (
-          <div className="fs-size-grid">
-            {SIZES.map(s => (
-              <button key={s}
-                className={"fs-size-chip" + (selectedSizes.includes(s) ? ' active' : '')}
-                onClick={() => toggleItem(s, selectedSizes, setSelectedSizes)}>{s}</button>
-            ))}
-          </div>
-        )}
+        <button className="filter-reset" onClick={onReset}>Reset</button>
       </div>
 
       {/* Color */}
@@ -120,25 +92,6 @@ export default function FilterSidebar({
         )}
       </div>
 
-      {/* Gender */}
-      <div className="filter-group">
-        <div className="filter-group-header" onClick={() => toggleSection('gender')}>
-          <span>Gender</span><Chevron open={open.gender} />
-        </div>
-        {open.gender && (
-          <div className="fs-gender-grid">
-            {GENDERS.map(g => (
-              <label key={g} className="filter-checkbox-label">
-                <input type="checkbox" checked={selectedGenders.includes(g)}
-                  onChange={() => toggleItem(g, selectedGenders, setSelectedGenders)}
-                  className="filter-checkbox" />
-                <span className={"filter-label-text" + (selectedGenders.includes(g) ? ' active' : '')}>{g}</span>
-              </label>
-            ))}
-          </div>
-        )}
-      </div>
-
       {/* Price */}
       <div className="filter-group">
         <div className="filter-group-header" onClick={() => toggleSection('price')}>
@@ -149,16 +102,16 @@ export default function FilterSidebar({
             <div className="fs-range-wrap">
               <div className="fs-range-track-bg" />
               <div className="fs-range-fill" style={{ left: minPct + '%', width: (maxPct - minPct) + '%' }} />
-              <input type="range" min={MIN} max={MAX} value={priceMin}
+              <input type="range" min={MIN_PRICE} max={MAX_PRICE} value={priceMin}
                 onChange={e => setPriceMin(Math.min(Number(e.target.value), priceMax - 100))}
                 className="fs-range fs-range-min" />
-              <input type="range" min={MIN} max={MAX} value={priceMax}
+              <input type="range" min={MIN_PRICE} max={MAX_PRICE} value={priceMax}
                 onChange={e => setPriceMax(Math.max(Number(e.target.value), priceMin + 100))}
                 className="fs-range fs-range-max" />
             </div>
             <div className="fs-price-labels">
-              <span>₹{priceMin.toLocaleString()}</span>
-              <span>₹{priceMax.toLocaleString()}</span>
+              <span>&#8377;{priceMin.toLocaleString()}</span>
+              <span>&#8377;{priceMax.toLocaleString()}</span>
             </div>
           </div>
         )}

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import AgeGroupBanner from '../../components/collections/AgeGroupBanner';
-import FilterSidebar from '../../components/collections/FilterSidebar';
-import ProductGrid from '../../components/collections/ProductGrid';
+import FilterSidebar  from '../../components/collections/FilterSidebar';
+import ProductGrid    from '../../components/collections/ProductGrid';
 import '../../styles/collections/AgeGroupPage.css';
 
 const AGE_META = {
@@ -13,6 +13,9 @@ const AGE_META = {
 
 const SORT_OPTIONS = ['Newest Arrivals', 'Price: Low to High', 'Price: High to Low', 'Best Rated'];
 
+const MIN_PRICE = 500;
+const MAX_PRICE = 3000;
+
 export default function AgeGroupPage() {
   const { ageGroup } = useParams();
 
@@ -22,10 +25,28 @@ export default function AgeGroupPage() {
 
   const meta = AGE_META[ageGroup] || AGE_META.newborn;
 
+  // ── Filter state (all owned here, passed to both sidebar + grid) ──
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedColors,     setSelectedColors]     = useState([]);
+  const [priceMin,           setPriceMin]           = useState(MIN_PRICE);
+  const [priceMax,           setPriceMax]           = useState(MAX_PRICE);
+  const [selectedRatings,    setSelectedRatings]    = useState([]);
   const [sustainableOnly,    setSustainableOnly]    = useState(false);
   const [sortBy,             setSortBy]             = useState('Newest Arrivals');
+
+  // ── Section open/close state ──
+  const [open, setOpen] = useState({
+    color: true, price: true, ratings: true, category: false,
+  });
+
+  const handleReset = () => {
+    setSelectedCategories([]);
+    setSelectedColors([]);
+    setPriceMin(MIN_PRICE);
+    setPriceMax(MAX_PRICE);
+    setSelectedRatings([]);
+    setSustainableOnly(false);
+  };
 
   return (
     <main className="agp-page">
@@ -43,18 +64,15 @@ export default function AgeGroupPage() {
 
         <div className="agp-layout">
           <FilterSidebar
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
-            selectedColors={selectedColors}
-            setSelectedColors={setSelectedColors}
-            sustainableOnly={sustainableOnly}
-            setSustainableOnly={setSustainableOnly}
-            onReset={() => {
-              setSelectedCategories([]);
-              setSelectedColors([]);
-              setSustainableOnly(false);
-            }}
+            selectedColors={selectedColors}       setSelectedColors={setSelectedColors}
+            selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories}
+            priceMin={priceMin}                   setPriceMin={setPriceMin}
+            priceMax={priceMax}                   setPriceMax={setPriceMax}
+            selectedRatings={selectedRatings}     setSelectedRatings={setSelectedRatings}
+            open={open}                           setOpen={setOpen}
+            onReset={handleReset}
           />
+
           <div className="agp-right">
             <div className="agp-toolbar" style={{ justifyContent: 'flex-end' }}>
               <div className="agp-sort">
@@ -69,6 +87,9 @@ export default function AgeGroupPage() {
               ageGroup={ageGroup}
               selectedCategories={selectedCategories}
               selectedColors={selectedColors}
+              priceMin={priceMin}
+              priceMax={priceMax}
+              selectedRatings={selectedRatings}
               sustainableOnly={sustainableOnly}
               sortBy={sortBy}
             />
