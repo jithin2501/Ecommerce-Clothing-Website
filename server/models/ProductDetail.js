@@ -45,6 +45,16 @@ const productDetailSchema = new mongoose.Schema(
       default: [],
     },
 
+    // Per-color galleries — each entry maps a color name to its own image set
+    // [ { colorName: 'green', images: ['url1', 'url2', ...] }, ... ]
+    colorGalleries: {
+      type: [{
+        colorName: { type: String, required: true },
+        images:    { type: [String], default: [] },
+      }],
+      default: [],
+    },
+
     // Size options e.g. ["2-3Y","4-5Y","6-7Y","8-9Y"]
     sizes: {
       type: [String],

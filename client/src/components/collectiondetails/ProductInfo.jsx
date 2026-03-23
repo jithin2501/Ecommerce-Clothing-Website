@@ -20,6 +20,7 @@ export default function ProductInfo({
   deliveryDate = '5 Mar, Thu',
   productId    = null,
   galleryImg   = '',
+  onColorChange = null,
 }) {
   const [selectedSize,  setSelectedSize]  = useState(sizes[0] || '');
   const [selectedColor, setSelectedColor] = useState(colors[0]?.name || '');
@@ -76,7 +77,10 @@ export default function ProductInfo({
               key={c.name}
               className={`pi-color-dot${selectedColor === c.name ? ' active' : ''}`}
               style={{ backgroundColor: c.hex }}
-              onClick={() => setSelectedColor(c.name)}
+              onClick={() => {
+                setSelectedColor(c.name);
+                if (onColorChange) onColorChange(c.name);
+              }}
               title={c.name}
             />
           ))}

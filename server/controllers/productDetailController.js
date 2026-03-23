@@ -42,56 +42,88 @@ const upsertProductDetail = async (req, res) => {
   try {
     const { productId } = req.params;
 
-    // Verify the parent product exists
     const product = await Product.findById(productId);
     if (!product) return res.status(404).json({ success: false, message: 'Product not found.' });
 
-    // Parse JSON fields sent as strings from FormData
     const parse = (key) => {
       const v = req.body[key];
       if (!v) return undefined;
       try { return JSON.parse(v); } catch { return v; }
     };
 
-    const sizes           = parse('sizes')           || [];
-    const colors          = parse('colors')          || [];
-    const specifications  = parse('specifications')  || [];
+    const sizes            = parse('sizes')            || [];
+    const colors           = parse('colors')           || [];
+    const specifications   = parse('specifications')   || [];
     const manufacturerInfo = parse('manufacturerInfo') || [];
-    const highlights      = parse('highlights')      || [];
-    const description     = req.body.description     || '';
-    const deliveryDate    = req.body.deliveryDate     || '';
+    const highlights       = parse('highlights')       || [];
+    const description      = req.body.description      || '';
+    const deliveryDate     = req.body.deliveryDate      || '';
 
-    // ── Handle gallery images ──
-    // req.files is an object: { image_0: [File], image_1: [File], … }
-    // existingUrls sent as JSON array from client for slots that already have S3 URLs
+    // ── Handle per-color galleries ──
+    // Client sends: colorGalleryExisting_<colorName> = JSON array of existing URLs
+    // Client sends: colorImg_<colorName>_<idx> = new file uploads
+    const existing = await ProductDetail.findOne({ product: productId });
+
+    const colorGalleries = [];
+    for (const color of colors) {
+      const cName        = color.name.toLowerCase().replace(/\s+/g, '_');
+      const existingUrls = parse(`colorGalleryExisting_${cName}`) || [];
+      const images       = [];
+
+      for (let i = 0; i < 7; i++) {
+        const field = `colorImg_${cName}_${i}`;
+        if (req.files && req.files[field] && req.files[field][0]) {
+          const url = await uploadToS3(req.files[field][0], product.ageGroup);
+          images.push(url);
+        } else if (existingUrls[i]) {
+          images.push(existingUrls[i]);
+        }
+      }
+
+      // Delete replaced S3 images for this color
+      if (existing) {
+        const oldEntry = existing.colorGalleries?.find(g => g.colorName === cName);
+        if (oldEntry) {
+          for (let i = 0; i < 7; i++) {
+            if (oldEntry.images[i] && oldEntry.images[i] !== images[i]) {
+              await deleteFromS3(oldEntry.images[i]).catch(() => {});
+            }
+          }
+        }
+      }
+
+      if (images.length > 0) {
+        colorGalleries.push({ colorName: cName, images });
+      }
+    }
+
+    // ── Fallback: also handle legacy flat galleryImages ──
     const existingUrls = parse('existingUrls') || [];
-
-    // We'll rebuild galleryImages array by slot index (0–6)
     const galleryImages = [];
     for (let i = 0; i < 7; i++) {
       const fileField = `image_${i}`;
       if (req.files && req.files[fileField] && req.files[fileField][0]) {
-        // New upload for this slot
         const url = await uploadToS3(req.files[fileField][0], product.ageGroup);
         galleryImages.push(url);
       } else if (existingUrls[i]) {
-        // Keep existing S3 URL
         galleryImages.push(existingUrls[i]);
       }
-      // else: slot is empty — skip
     }
 
-    if (galleryImages.length === 0) {
+    // If no flat gallery provided but color galleries exist, use first color's images as default
+    const finalGallery = galleryImages.length > 0
+      ? galleryImages
+      : (colorGalleries[0]?.images || []);
+
+    if (finalGallery.length === 0) {
       return res.status(400).json({ success: false, message: 'At least 1 gallery image is required.' });
     }
 
-    // If a detail doc already exists, remove replaced images from S3
-    const existing = await ProductDetail.findOne({ product: productId });
+    // Clean up old flat gallery images
     if (existing) {
       for (let i = 0; i < 7; i++) {
         const oldUrl = existing.galleryImages[i];
-        if (oldUrl && oldUrl !== galleryImages[i]) {
-          // This slot was replaced or removed — delete from S3
+        if (oldUrl && oldUrl !== finalGallery[i]) {
           await deleteFromS3(oldUrl).catch(() => {});
         }
       }
@@ -101,7 +133,8 @@ const upsertProductDetail = async (req, res) => {
       { product: productId },
       {
         product: productId,
-        galleryImages,
+        galleryImages: finalGallery,
+        colorGalleries,
         sizes,
         colors,
         deliveryDate,

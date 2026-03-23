@@ -26,8 +26,6 @@
   padding: 0;
   width: 36px;
   height: 36px;
-  font-size: 0.82rem;
-  font-weight: 600;
   color: #555;
   cursor: pointer;
   transition: all 0.2s;
@@ -84,6 +82,48 @@
   margin: 0 0 1rem;
 }
 
+/* ── Color tabs (gallery switcher) ── */
+.pdp-color-tabs {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.pdp-color-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 50px;
+  border: 1.5px solid #E0D8D0;
+  background: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: capitalize;
+}
+
+.pdp-color-tab.active {
+  border-color: #C17B5C;
+  color: #C17B5C;
+  background: #FDF5F0;
+}
+
+.pdp-color-tab:hover:not(.active) {
+  border-color: #aaa;
+}
+
+.pdp-color-tab-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+
 /* ════════════════════════════════════════
    PREVIEW GRID (mirrors product page)
 ════════════════════════════════════════ */
@@ -91,7 +131,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  background: #FAF8F5;
+  background: #ffffff;
   border: 1px solid #EDE8E0;
   border-radius: 16px;
   padding: 2rem;
@@ -364,7 +404,7 @@
    ACCORDION SECTION
 ════════════════════════════════════════ */
 .pdp-accordion-section {
-  background: #FAF8F5;
+  background: #ffffff;
   border: 1px solid #EDE8E0;
   border-radius: 16px;
   padding: 2rem;

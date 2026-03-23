@@ -26,9 +26,20 @@ export default function CollectionDetailPage() {
   const [detail,    setDetail]    = useState(null);
   const [loading,   setLoading]   = useState(true);
   const [notFound,  setNotFound]  = useState(false);
+  const [activeImages, setActiveImages] = useState([]);
 
   const [zoomState,       setZoomState]       = useState({ active: false });
   const handleZoomChange = useCallback((state) => setZoomState(state), []);
+
+  const handleColorChange = useCallback((colorName) => {
+    if (!detail?.colorGalleries?.length) return;
+    const key   = colorName.toLowerCase().replace(/\s+/g, '_');
+    const entry = detail.colorGalleries.find(g => g.colorName === key);
+    if (entry?.images?.length) {
+      setActiveImages(entry.images);
+      setZoomState({ active: false });
+    }
+  }, [detail]);
 
   useEffect(() => {
     let cancelled = false;
@@ -68,6 +79,9 @@ export default function CollectionDetailPage() {
         if (!cancelled) {
           if (dData.success) {
             setDetail(dData.data);
+            // Default to first color's gallery, fallback to flat galleryImages
+            const firstColorGallery = dData.data.colorGalleries?.[0]?.images;
+            setActiveImages(firstColorGallery?.length ? firstColorGallery : (dData.data.galleryImages || []));
           } else {
             setNotFound(true);
           }
@@ -123,7 +137,7 @@ export default function CollectionDetailPage() {
 
         {/* LEFT — Gallery */}
         <ProductGallery
-          images={detail.galleryImages}
+          images={activeImages}
           onZoomChange={handleZoomChange}
         />
 
@@ -153,7 +167,8 @@ export default function CollectionDetailPage() {
               colors={detail.colors}
               deliveryDate={detail.deliveryDate}
               productId={detail.product?._id}
-              galleryImg={detail.galleryImages?.[0]}
+              galleryImg={activeImages?.[0]}
+              onColorChange={handleColorChange}
             />
             <ProductAccordion
               specifications={detail.specifications}

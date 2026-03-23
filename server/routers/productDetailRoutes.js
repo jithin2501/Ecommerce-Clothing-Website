@@ -11,7 +11,7 @@ const {
   deleteProductDetail,
 } = require('../controllers/productDetailController');
 
-// ── Multer: accept up to 7 image files named image_0 … image_6 ──
+// ── Multer: accept any image field (image_0…6 + colorImg_<color>_0…6) ──
 const storage = multer.memoryStorage();
 const upload  = multer({
   storage,
@@ -22,15 +22,22 @@ const upload  = multer({
   },
 });
 
-const imageFields = [0, 1, 2, 3, 4, 5, 6].map(i => ({ name: `image_${i}`, maxCount: 1 }));
-
 const uploadGallery = (req, res, next) => {
-  upload.fields(imageFields)(req, res, (err) => {
+  upload.any()(req, res, (err) => {
     if (err) {
       const msg = err.code === 'LIMIT_FILE_SIZE'
         ? 'An image is too large. Maximum size is 20 MB.'
         : err.message || 'File upload error.';
       return res.status(400).json({ success: false, message: msg });
+    }
+    // Convert upload.any() array → object keyed by fieldname (same shape as upload.fields())
+    if (Array.isArray(req.files)) {
+      const obj = {};
+      req.files.forEach(f => {
+        obj[f.fieldname] = obj[f.fieldname] || [];
+        obj[f.fieldname].push(f);
+      });
+      req.files = obj;
     }
     next();
   });
