@@ -129,7 +129,7 @@
 ════════════════════════════════════════ */
 .pdp-preview-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 380px 1fr;
   gap: 3rem;
   background: #ffffff;
   border: 1px solid #EDE8E0;
@@ -147,10 +147,10 @@
 /* Main image slot */
 .pdp-main-slot {
   width: 100%;
-  height: 480px;
+  height: 340px;
   border-radius: 16px;
   overflow: hidden;
-  background: #F0EAE2;
+  background: #ffffff;
   border: 2px dashed #D4C5B8;
   margin-bottom: 0.75rem;
   position: relative;
@@ -160,12 +160,14 @@
   width: 100%;
   height: 100%;
   position: relative;
+  background: #ffffff;
 }
 .pdp-main-preview img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  object-fit: contain;
+  padding: 16px;
+  box-sizing: border-box;
   display: block;
 }
 
@@ -225,12 +227,12 @@
   width: 100%;
   height: 100%;
   position: relative;
-  background: #F0EAE2;
+  background: #ffffff;
 }
 .pdp-thumb-preview img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   display: block;
 }
 
