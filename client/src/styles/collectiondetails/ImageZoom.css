@@ -7,13 +7,13 @@
   height: 100%;
   border-radius: 20px;
   overflow: hidden;
+  background: #ffffff;
 }
 
 .iz-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  object-position: top center;
+  object-fit: contain;
   display: block;
   border-radius: 20px;
   user-select: none;

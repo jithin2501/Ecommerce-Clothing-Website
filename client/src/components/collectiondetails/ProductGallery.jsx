@@ -39,6 +39,7 @@ export default function ProductGallery({ images = [], onZoomChange }) {
               key={img.id}
               className={`pg-thumb${active === i ? ' active' : ''}`}
               onClick={() => { setActive(i); onZoomChange({ active: false }); }}
+              style={{ backgroundImage: `url(${img.src})` }}
             >
               <img src={img.src} alt={img.alt} />
             </button>
