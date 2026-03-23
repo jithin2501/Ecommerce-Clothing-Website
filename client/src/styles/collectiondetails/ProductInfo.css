@@ -110,19 +110,21 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  border: 2.5px solid transparent;
+  border: 2px solid transparent;
   cursor: pointer;
   outline: none;
   transition: all 0.2s;
 }
 
 .pi-color-dot.active {
-  border-color: var(--charcoal, #2C2C2C);
-  transform: scale(1.15);
+  outline: 2px solid #C17B5C;
+  outline-offset: 2px;
+  border-color: transparent;
 }
 
 .pi-color-dot:hover:not(.active) {
-  transform: scale(1.1);
+  outline: 1.5px solid #aaa;
+  outline-offset: 2px;
 }
 
 /* Actions */
