@@ -229,9 +229,6 @@ export default function ProductManagement() {
                 }
                 <input ref={fileRef} type="file" accept="image/*" onChange={handleImgChange} style={{ display: 'none' }} />
               </div>
-              {preview && (
-                <button type="button" className="pm-red-btn" onClick={handleRemoveImage}>Remove Image</button>
-              )}
             </div>
 
             <div className="pm-fields">
@@ -278,13 +275,6 @@ export default function ProductManagement() {
                 </div>
               </div>
 
-              <div className="pm-row">
-                <div className="pm-group">
-                  <label>Color <span className="pm-optional">optional</span></label>
-                  <input type="text" placeholder="e.g. pink, blue"
-                    value={form.color} onChange={e => setForm(f => ({ ...f, color: e.target.value }))} />
-                </div>
-              </div>
             </div>
           </div>
 
