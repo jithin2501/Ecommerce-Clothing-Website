@@ -22,38 +22,42 @@ import OrderHelp            from './pages/support/OrderHelp';
 import ChatSupport          from './pages/support/ChatSupport';
 import ReviewSubmit         from './pages/review/ReviewSubmit';
 
-import AdminLayout      from './admin/layout/AdminLayout';
-import Contact          from './admin/views/Contactmessage';
-import UserManagement   from './admin/views/UserManagement';
-import ChangeUsername   from './admin/views/ChangeUsername';
-import ChangePassword   from './admin/views/ChangePassword';
-import ReviewManagement  from './admin/views/reviewmanagement';
-import ProductManagement from './admin/views/ProductManagement';
-import ReviewQRPage     from './admin/views/ReviewQRPage';
-import Login            from './admin/login/Login';
-import ProtectedRoute   from './admin/login/Protectedroute';
+import AdminLayout        from './admin/layout/AdminLayout';
+import Contact            from './admin/views/Contactmessage';
+import UserManagement     from './admin/views/UserManagement';
+import ChangeUsername     from './admin/views/ChangeUsername';
+import ChangePassword     from './admin/views/ChangePassword';
+import ReviewManagement   from './admin/views/reviewmanagement';
+import ProductManagement  from './admin/views/ProductManagement';
+import ProductDetailPage  from './admin/views/ProductDetailPage';   // ← NEW
+import ReviewQRPage       from './admin/views/ReviewQRPage';
+import Login              from './admin/login/Login';
+import ProtectedRoute     from './admin/login/Protectedroute';
+
 
 function PublicLayout() {
   return (
     <>
       <Navbar />
       <Routes>
-        <Route path="/"                                   element={<HomePage />} />
-        <Route path="/collections"                        element={<CollectionsPage />} />
-        <Route path="/collections/:ageGroup"              element={<AgeGroupPage />} />
-        <Route path="/collections/:ageGroup/:productSlug" element={<CollectionDetailPage />} />
-        <Route path="/cart"                               element={<CartPage />} />
-        <Route path="/contact"                            element={<ContactPage />} />
-        <Route path="/account"                            element={<PersonInformation />} />
-        <Route path="/account/addresses"                  element={<ManageAddresses />} />
-        <Route path="/account/orders"                     element={<MyOrders />} />
-        <Route path="/account/wishlist"                   element={<Wishlist />} />
-        <Route path="/account/reviews"                    element={<MyReviews />} />
-        <Route path="/account/write-review"               element={<WriteReview />} />
-        <Route path="/support"                            element={<SupportHub />} />
-        <Route path="/support/order-help"                 element={<OrderHelp />} />
-        <Route path="/support/chat"                       element={<ChatSupport />} />
-        <Route path="/review"                             element={<ReviewSubmit />} />
+        <Route path="/"                                              element={<HomePage />} />
+        <Route path="/collections"                                   element={<CollectionsPage />} />
+        <Route path="/collections/:ageGroup"                         element={<AgeGroupPage />} />
+        <Route path="/collections/:ageGroup/:productSlug"            element={<CollectionDetailPage />} />
+        {/* Product detail page accessed by MongoDB _id */}
+        <Route path="/collections/product/:productId"                element={<CollectionDetailPage />} />
+        <Route path="/cart"                                          element={<CartPage />} />
+        <Route path="/contact"                                       element={<ContactPage />} />
+        <Route path="/account"                                       element={<PersonInformation />} />
+        <Route path="/account/addresses"                             element={<ManageAddresses />} />
+        <Route path="/account/orders"                                element={<MyOrders />} />
+        <Route path="/account/wishlist"                              element={<Wishlist />} />
+        <Route path="/account/reviews"                               element={<MyReviews />} />
+        <Route path="/account/write-review"                          element={<WriteReview />} />
+        <Route path="/support"                                       element={<SupportHub />} />
+        <Route path="/support/order-help"                            element={<OrderHelp />} />
+        <Route path="/support/chat"                                  element={<ChatSupport />} />
+        <Route path="/review"                                        element={<ReviewSubmit />} />
       </Routes>
       <Footer />
     </>
@@ -75,14 +79,15 @@ function App() {
                 </ProtectedRoute>
               }
             >
-              <Route index element={<Navigate to="/admin/contact" replace />} />
-              <Route path="contact"         element={<Contact />} />
-              <Route path="users"           element={<UserManagement />} />
-              <Route path="change-username" element={<ChangeUsername />} />
-              <Route path="change-password" element={<ChangePassword />} />
-              <Route path="reviews"         element={<ReviewManagement />} />
-              <Route path="review-qr"       element={<ReviewQRPage />} />
-              <Route path="products"        element={<ProductManagement />} />
+              <Route index                                  element={<Navigate to="/admin/contact" replace />} />
+              <Route path="contact"                         element={<Contact />} />
+              <Route path="users"                           element={<UserManagement />} />
+              <Route path="change-username"                 element={<ChangeUsername />} />
+              <Route path="change-password"                 element={<ChangePassword />} />
+              <Route path="reviews"                         element={<ReviewManagement />} />
+              <Route path="review-qr"                       element={<ReviewQRPage />} />
+              <Route path="products"                        element={<ProductManagement />} />
+              <Route path="products/:productId/details"     element={<ProductDetailPage />} />  {/* ← NEW */}
             </Route>
             <Route path="/*" element={<PublicLayout />} />
           </Routes>

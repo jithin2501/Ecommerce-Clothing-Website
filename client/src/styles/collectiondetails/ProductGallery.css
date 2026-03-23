@@ -7,9 +7,10 @@
   gap: 0.75rem;
 }
 
+/* Main image — fills the full 480px left column */
 .pg-main {
   width: 100%;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 4.6;
   border-radius: 20px;
   background: #F5EFE8;
   display: flex;
@@ -19,14 +20,18 @@
   position: relative;
 }
 
+/* ── Thumbnails ──
+   5 columns × 89px + 4 gaps × 8px = 445 + 32 = 477px
+   pg-wrapper is width:100% of the 480px col so this fills edge-to-edge */
 .pg-thumbs {
-  display: flex;
-  gap: 0.6rem;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);   /* 5 equal cols that fill 100% */
+  gap: 8px;
 }
 
 .pg-thumb {
-  width: 80px;
-  height: 80px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
   border-radius: 10px;
   overflow: hidden;
   border: 2px solid transparent;
@@ -34,7 +39,6 @@
   background: #F5EFE8;
   padding: 0;
   transition: border-color 0.2s;
-  flex-shrink: 0;
 }
 
 .pg-thumb img {

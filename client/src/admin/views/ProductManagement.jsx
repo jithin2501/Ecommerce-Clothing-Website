@@ -1,5 +1,6 @@
 // ── admin/views/ProductManagement.jsx ──
 import { useEffect, useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../assets/productmanagement.css';
 
 const API = 'http://localhost:5000/api/products';
@@ -27,6 +28,8 @@ const SECTION_LIMITS = {
 };
 
 export default function ProductManagement() {
+  const navigate = useNavigate();                          // ← only addition
+
   const [products, setProducts]     = useState([]);
   const [loading, setLoading]       = useState(true);
   const [form, setForm]             = useState(EMPTY_FORM);
@@ -404,7 +407,10 @@ export default function ProductManagement() {
                         <button className="pm-edit-btn" onClick={() => handleEdit(p)}>
                           <img src="/images/ProductManagement/edit.png" alt="Edit" />
                         </button>
-                        <button className="pm-details-btn">
+                        <button                                                       
+                          className="pm-details-btn"
+                          onClick={() => navigate(`/admin/products/${p._id}/details`)}
+                        >
                           <img src="/images/ProductManagement/details.png" alt="Details" />
                         </button>
                         <button className="pm-del-btn" onClick={() => handleDelete(p._id, p.name)}>
