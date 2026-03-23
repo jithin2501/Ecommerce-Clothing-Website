@@ -4,7 +4,7 @@
 .lb-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.92);
+  background: #ffffff;
   z-index: 99999;
   display: flex;
   align-items: center;
@@ -22,9 +22,9 @@
   position: fixed;
   top: 1.25rem;
   left: 1.5rem;
-  background: rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.08);
   border: none;
-  color: white;
+  color: #2C2C2C;
   font-size: 1.2rem;
   width: 40px;
   height: 40px;
@@ -38,7 +38,7 @@
 }
 
 .lb-close:hover {
-  background: rgba(255,255,255,0.3);
+  background: rgba(0,0,0,0.15);
 }
 
 /* Image wrapper — fills the space between the two arrows */
@@ -69,7 +69,7 @@
 
 .lb-counter {
   font-size: 0.78rem;
-  color: rgba(255,255,255,0.5);
+  color: rgba(0,0,0,0.4);
   letter-spacing: 1px;
   margin: 0;
   flex-shrink: 0;
@@ -80,9 +80,9 @@
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.08);
   border: none;
-  color: white;
+  color: #2C2C2C;
   font-size: 2.5rem;
   width: 52px;
   height: 52px;
@@ -98,7 +98,7 @@
 }
 
 .lb-arrow:hover:not(:disabled) {
-  background: rgba(255,255,255,0.28);
+  background: rgba(0,0,0,0.15);
 }
 
 .lb-arrow:disabled {
