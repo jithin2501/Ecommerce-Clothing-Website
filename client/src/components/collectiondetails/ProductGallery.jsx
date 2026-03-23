@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ImageZoom from './ImageZoom';
 import ImageLightbox from './ImageLightbox';
 import '../../styles/collectiondetails/ProductGallery.css';
@@ -15,20 +15,27 @@ export default function ProductGallery({ images = [], onZoomChange }) {
       : { id: img.id ?? i + 1, src: img.src, alt: img.alt ?? `Product image ${i + 1}` }
   );
 
+  // Reset active index whenever the images prop changes (e.g. color switch)
+  useEffect(() => {
+    setActive(0);
+    onZoomChange({ active: false });
+  }, [images]);
+
   const openLightbox = (idx) => { setLightboxIdx(idx); setLightbox(true); };
   const closeLightbox = () => setLightbox(false);
   const goPrev = () => setLightboxIdx(i => Math.max(0, i - 1));
   const goNext = () => setLightboxIdx(i => Math.min(IMAGES.length - 1, i + 1));
 
   if (IMAGES.length === 0) return null;
+  const safeActive = Math.min(active, IMAGES.length - 1);
 
   return (
     <>
       <div className="pg-wrapper">
-        <div className="pg-main" onClick={() => openLightbox(active)}>
+        <div className="pg-main" onClick={() => openLightbox(safeActive)}>
           <ImageZoom
-            src={IMAGES[active].src}
-            alt={IMAGES[active].alt}
+            src={IMAGES[safeActive].src}
+            alt={IMAGES[safeActive].alt}
             onZoomChange={onZoomChange}
           />
         </div>
@@ -37,7 +44,7 @@ export default function ProductGallery({ images = [], onZoomChange }) {
           {IMAGES.map((img, i) => (
             <button
               key={img.id}
-              className={`pg-thumb${active === i ? ' active' : ''}`}
+              className={`pg-thumb${safeActive === i ? ' active' : ''}`}
               onClick={() => { setActive(i); onZoomChange({ active: false }); }}
               style={{ backgroundImage: `url(${img.src})` }}
             >
