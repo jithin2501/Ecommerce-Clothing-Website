@@ -203,7 +203,7 @@
 /* Delete Account */
 .delete-account {
   display: inline-block;
-  margin-top: 20px;
+  margin-top: 150px;
   color: var(--danger-red);
   font-size: 13px;
   cursor: pointer;

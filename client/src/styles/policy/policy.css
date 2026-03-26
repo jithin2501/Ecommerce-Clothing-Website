@@ -1,6 +1,5 @@
 /* =========================================================
-   POLICY PAGE
-   Path: src/styles/policy/Policy.css
+   POLICY PAGE (UPDATED CLEAN STYLE)
 ========================================================= */
 
 .policy-page {
@@ -27,8 +26,8 @@
 .policy-main {
   flex-grow: 1;
   background: #ffffff;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
   padding: 28px 32px 32px;
   min-width: 0;
 }
@@ -39,74 +38,84 @@
 }
 
 .policy-content-header h1 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
   margin-bottom: 4px;
-  color: #212121;
+  color: #111827;
 }
 
 .policy-content-header p {
   font-size: 13px;
-  color: #878787;
+  color: #6b7280;
 }
 
 /* ── Card ── */
 .policy-card {
-  border: 1px solid #f0f0f0;
+  border: 1px solid #f3f4f6;
   border-radius: 8px;
   padding: 24px 28px;
+  background-color: #ffffff;
 }
 
 /* ── Body text ── */
 .policy-page-body {
-  color: #212121;
-  font-size: 14px;
-  line-height: 1.8;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #374151;
 }
 
+/* Intro */
 .policy-page-intro {
-  font-size: 14px;
-  color: #555555;
+  font-size: 15px;
+  color: #4b5563;
   margin-bottom: 24px;
-  padding-bottom: 18px;
-  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
 }
 
+/* Sections */
 .policy-page-body section {
-  margin-bottom: 22px;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
 }
 
+/* Headings (NO ORANGE LINE) */
 .policy-page-body h3 {
-  font-size: 14px;
-  font-weight: 700;
-  color: #2C3E50;
-  margin: 0 0 8px 0;
-  padding-left: 12px;
-  border-left: 3px solid #C17B5C;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0 0 10px 0;
+  padding-left: 0;
+  border-left: none;
 }
 
+/* Paragraphs */
 .policy-page-body p {
-  margin: 0 0 8px 0;
-  color: #444444;
+  margin: 0 0 10px 0;
+  color: #374151;
 }
 
+/* Lists */
 .policy-page-body ul {
-  margin: 6px 0 8px 20px;
+  margin: 8px 0 10px 18px;
   padding: 0;
-  color: #555555;
 }
 
 .policy-page-body ul li {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  color: #4b5563;
 }
 
+/* Strong text */
 .policy-page-body strong {
-  color: #212121;
+  color: #111827;
   font-weight: 600;
 }
 
+/* Links */
 .policy-page-body a {
-  color: #C17B5C;
+  color: #2563eb;
   text-decoration: none;
   font-weight: 500;
 }
@@ -132,6 +141,6 @@
   }
 
   .policy-content-header h1 {
-    font-size: 16px;
+    font-size: 18px;
   }
 }
