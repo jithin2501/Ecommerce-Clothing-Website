@@ -4,44 +4,58 @@
   padding: 1.25rem; 
   display: flex; 
   flex-direction: column; 
+  /* Removed the outer border and hover effect for the entire section */
 }
+
 .ci-row { 
   display: flex; 
   gap: 1rem; 
   padding: 1.1rem 0; 
   border-bottom: 1px solid #f0f0f0; 
 }
+
+.ci-row:last-of-type {
+  border-bottom: none;
+}
+
+/* ── Keeping the border ONLY for the product image ── */
 .ci-img { 
   width: 80px; 
   height: 90px; 
   object-fit: cover; 
   object-position: top center; 
   border-radius: 10px; 
-  background: #F5EFE8; 
+  background: transparent;
+  border: 1px solid #E5E5E1; /* This remains for the individual product */
   flex-shrink: 0; 
 }
+
 .ci-details { 
   flex: 1; 
   display: flex; 
   flex-direction: column; 
   gap: 0.4rem; 
 }
+
 .ci-top { 
   display: flex; 
   justify-content: space-between; 
   align-items: flex-start; 
 }
+
 .ci-name { 
   font-size: 0.88rem; 
   font-weight: 700; 
   color: #2C2C2C; 
   margin: 0; 
 }
+
 .ci-meta { 
   font-size: 0.75rem; 
   color: #999; 
   margin: 0.15rem 0 0;
 }
+
 .ci-remove { 
   background: none; 
   border: none; 
@@ -51,9 +65,11 @@
   transition: color 0.2s; 
   flex-shrink: 0; 
 }
+
 .ci-remove:hover { 
   color: #e55; 
 }
+
 .ci-bottom { 
   display: flex; 
   align-items: center; 
@@ -61,6 +77,7 @@
   margin-top: auto; 
   padding-top: 0.5rem; 
 }
+
 .ci-qty { 
   display: flex; 
   align-items: center; 
@@ -68,6 +85,7 @@
   border-radius: 8px; 
   overflow: hidden; 
 }
+
 .ci-qty button { 
   background: none; 
   border: none; 
@@ -78,9 +96,11 @@
   color: #555; 
   transition: background 0.15s; 
 }
+
 .ci-qty button:hover { 
   background: #f5f5f5; 
 }
+
 .ci-qty span { 
   width: 30px; 
   text-align: center; 
@@ -90,6 +110,7 @@
   border-right: 1px solid #e0e0e0; 
   line-height: 30px; 
 }
+
 .ci-price { 
   font-size: 0.95rem; 
   font-weight: 700; 
@@ -103,6 +124,7 @@
   border-radius: 12px; 
   padding: 1rem; 
 }
+
 .ci-gift-header { 
   display: flex; 
   align-items: flex-start; 
@@ -121,6 +143,7 @@
   transition: border-color 0.2s, background 0.2s;
   margin-top: 2px;
 }
+
 .ci-gift-toggle.selected {
   background: var(--accent-clay, #C17B5C);
   border-color: var(--accent-clay, #C17B5C);
@@ -131,20 +154,24 @@
   flex-direction: column; 
   gap: 0.2rem; 
 }
+
 .ci-gift-title-row { 
   display: flex; 
   align-items: center; 
   gap: 0.4rem; 
 }
+
 .ci-gift-title { 
   font-size: 0.88rem; 
   font-weight: 700; 
   color: #2C2C2C; 
 }
+
 .ci-gift-cost { 
   font-size: 0.78rem; 
   color: #999; 
 }
+
 .ci-gift-desc { 
   font-size: 0.74rem; 
   color: #aaa; 
@@ -154,6 +181,7 @@
 .ci-gift-message { 
   margin-top: 0.85rem; 
 }
+
 .ci-gift-label { 
   font-size: 0.68rem; 
   font-weight: 700; 
@@ -161,6 +189,7 @@
   color: #aaa; 
   margin-bottom: 0.4rem; 
 }
+
 .ci-gift-input { 
   width: 100%; 
   border: 1px solid #e8e8e8; 
@@ -173,6 +202,7 @@
   font-family: inherit; 
   box-sizing: border-box; 
 }
+
 .ci-gift-input:focus { 
   border-color: var(--accent-clay, #C17B5C); 
 }
