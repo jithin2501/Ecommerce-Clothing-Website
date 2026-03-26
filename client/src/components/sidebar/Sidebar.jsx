@@ -81,6 +81,34 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
         </div>
       </div>
 
+      {/* Policy */}
+      <div className="nav-section">
+        <div
+          className={`nav-item ${activeNav === 'policy' ? 'active' : ''}`}
+          onClick={() => { setActiveNav('policy'); setActiveSubNav('privacy'); navigate('/account/policy/privacy'); }}
+        >
+          <img src="/images/sidebar/policy.png" alt="policy" className="nav-icon-img" /> POLICY
+        </div>
+        <div
+          className={`nav-sub-item ${activeNav === 'policy' && activeSubNav === 'privacy' ? 'sub-active' : ''}`}
+          onClick={() => { setActiveNav('policy'); setActiveSubNav('privacy'); navigate('/account/policy/privacy'); }}
+        >
+          Privacy Policy
+        </div>
+        <div
+          className={`nav-sub-item ${activeNav === 'policy' && activeSubNav === 'terms' ? 'sub-active' : ''}`}
+          onClick={() => { setActiveNav('policy'); setActiveSubNav('terms'); navigate('/account/policy/terms'); }}
+        >
+          Terms of Service
+        </div>
+        <div
+          className={`nav-sub-item ${activeNav === 'policy' && activeSubNav === 'refund' ? 'sub-active' : ''}`}
+          onClick={() => { setActiveNav('policy'); setActiveSubNav('refund'); navigate('/account/policy/refund'); }}
+        >
+          Refund &amp; Cancellation Policy
+        </div>
+      </div>
+
       <div className="sidebar-spacer" />
 
       {/* Logout */}

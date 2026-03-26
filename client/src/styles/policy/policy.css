@@ -1,0 +1,137 @@
+/* =========================================================
+   POLICY PAGE
+   Path: src/styles/policy/Policy.css
+========================================================= */
+
+.policy-page {
+  background-color: #ffffff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  color: #212121;
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.policy-container {
+  display: flex;
+  width: 100%;
+  max-width: 1100px;
+  gap: 16px;
+  align-items: stretch;
+}
+
+/* ── Main area ── */
+.policy-main {
+  flex-grow: 1;
+  background: #ffffff;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  padding: 28px 32px 32px;
+  min-width: 0;
+}
+
+/* ── Header ── */
+.policy-content-header {
+  margin-bottom: 24px;
+}
+
+.policy-content-header h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #212121;
+}
+
+.policy-content-header p {
+  font-size: 13px;
+  color: #878787;
+}
+
+/* ── Card ── */
+.policy-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 24px 28px;
+}
+
+/* ── Body text ── */
+.policy-page-body {
+  color: #212121;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.policy-page-intro {
+  font-size: 14px;
+  color: #555555;
+  margin-bottom: 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.policy-page-body section {
+  margin-bottom: 22px;
+}
+
+.policy-page-body h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #2C3E50;
+  margin: 0 0 8px 0;
+  padding-left: 12px;
+  border-left: 3px solid #C17B5C;
+}
+
+.policy-page-body p {
+  margin: 0 0 8px 0;
+  color: #444444;
+}
+
+.policy-page-body ul {
+  margin: 6px 0 8px 20px;
+  padding: 0;
+  color: #555555;
+}
+
+.policy-page-body ul li {
+  margin-bottom: 5px;
+}
+
+.policy-page-body strong {
+  color: #212121;
+  font-weight: 600;
+}
+
+.policy-page-body a {
+  color: #C17B5C;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.policy-page-body a:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .policy-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 600px) {
+  .policy-main {
+    padding: 20px 16px;
+  }
+
+  .policy-card {
+    padding: 16px;
+  }
+
+  .policy-content-header h1 {
+    font-size: 16px;
+  }
+}

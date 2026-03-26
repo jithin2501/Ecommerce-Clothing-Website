@@ -194,8 +194,26 @@
   font-size: 13px;
 }
 
-.legal-links { display: flex; gap: 20px; }
+.legal-links { display: flex; gap: 20px; flex-wrap: wrap; }
 
+/* ── Legal link buttons (replaces <a> tags for modal triggers) ── */
+.legal-link-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--footer-text-muted, rgba(255,255,255,0.6));
+  font-size: 13px;
+  font-family: inherit;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.legal-link-btn:hover {
+  color: var(--footer-text-main, #ffffff);
+}
+
+/* keep old <a> style for any non-modal legal links */
 .legal-links a {
   color: var(--footer-text-muted, rgba(255,255,255,0.6));
   text-decoration: none;
@@ -211,4 +229,5 @@
 @media (max-width: 600px) {
   .footer-content { grid-template-columns: 1fr; }
   .footer-bottom { flex-direction: column; text-align: center; }
+  .legal-links { justify-content: center; }
 }

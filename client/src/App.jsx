@@ -21,6 +21,7 @@ import SupportHub           from './pages/support/SupportHub';
 import OrderHelp            from './pages/support/OrderHelp';
 import ChatSupport          from './pages/support/ChatSupport';
 import ReviewSubmit         from './pages/review/ReviewSubmit';
+import Policy               from './pages/policy/Policy';
 
 import AdminLayout        from './admin/layout/AdminLayout';
 import Contact            from './admin/views/Contactmessage';
@@ -58,6 +59,7 @@ function PublicLayout() {
         <Route path="/support/order-help"                            element={<OrderHelp />} />
         <Route path="/support/chat"                                  element={<ChatSupport />} />
         <Route path="/review"                                        element={<ReviewSubmit />} />
+        <Route path="/account/policy/:type" element={<Policy />} />
       </Routes>
       <Footer />
     </>
