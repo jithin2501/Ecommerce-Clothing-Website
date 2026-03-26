@@ -20,7 +20,7 @@ function Accordion({ items }) {
         <div key={i} className="wr-faq-item">
           <button className="wr-faq-q" onClick={() => setOpen(open === i ? -1 : i)}>
             <span className={open === i ? 'wr-faq-q-text active' : 'wr-faq-q-text'}>{item.q}</span>
-            <span className="wr-faq-chevron">{open === i ? '∧' : '∨'}</span>
+            <span className={`wr-faq-chevron ${open === i ? 'open' : ''}`} />
           </button>
           {open === i && <p className="wr-faq-a">{item.a}</p>}
         </div>
@@ -67,14 +67,29 @@ export default function WriteReview() {
     setPreview(URL.createObjectURL(f));
   };
 
-  const handleSubmit = () => {
-    if (!rating)            { setError('Please select a star rating.'); return; }
-    if (!description.trim()) { setError('Please write a description.'); return; }
-    if (!name.trim())        { setError('Please enter your display name.'); return; }
-    setError('');
-    setSubmitted(true);
-    setTimeout(() => navigate('/account/orders'), 2000);
-  };
+const handleSubmit = () => {
+  if (!rating) {
+    setError('Please select a star rating.');
+    return;
+  }
+  if (!description.trim()) {
+    setError('Please write a description.');
+    return;
+  }
+
+  if (!name.trim()) {
+    setError('Please enter your display name.');
+    return;
+  }
+  if (!/^[A-Za-z\s]+$/.test(name.trim())) {
+    setError('Name should contain only alphabets.');
+    return;
+  }
+
+  setError('');
+  setSubmitted(true);
+  setTimeout(() => navigate('/account/orders'), 2000);
+};
 
   return (
     <div className="wr-page">
@@ -102,7 +117,6 @@ export default function WriteReview() {
       {/* Page title */}
       <div className="wr-page-header">
         <h1 className="wr-page-title">Write a Review</h1>
-        <p className="wr-page-sub">Help other parents by sharing your experience with our premium collection.</p>
       </div>
 
       {/* Product info strip (if coming from order) */}
@@ -122,7 +136,7 @@ export default function WriteReview() {
         <div className="wr-left">
           <div className="wr-tips-card">
             <div className="wr-tips-title">
-              <span className="wr-tips-icon">💡</span> What makes a good review
+               What makes a good review
             </div>
             <Accordion items={FAQ} />
           </div>
@@ -165,13 +179,16 @@ export default function WriteReview() {
 
             <div className="wr-field">
               <label className="wr-label">Name</label>
-              <input
-                className="wr-input"
-                type="text"
-                placeholder="Your display name"
-                value={name}
-                onChange={e => setName(e.target.value)}
-              />
+                <input
+                  className="wr-input"
+                  type="text"
+                  placeholder="Your display name"
+                  value={name}
+                  onChange={(e) => {
+                  const cleaned = e.target.value.replace(/[^A-Za-z\s]/g, '');
+                setName(cleaned);
+                   }}
+                />
             </div>
 
             <div className="wr-field">
@@ -196,8 +213,21 @@ export default function WriteReview() {
               SUBMIT REVIEW
             </button>
             <p className="wr-terms">
-              By submitting, you agree to our <span className="wr-link">Terms of Use</span> and <span className="wr-link">Privacy Policy</span>
-            </p>
+  By submitting, you agree to our{" "}
+  <span
+    className="wr-link"
+    onClick={() => navigate('/account/policy/terms')}
+  >
+    Terms of Service
+  </span>{" "}
+  and{" "}
+  <span
+    className="wr-link"
+    onClick={() => navigate('/account/policy/privacy')}
+  >
+    Privacy Policy
+  </span>
+</p>
           </div>
 
         </div>
