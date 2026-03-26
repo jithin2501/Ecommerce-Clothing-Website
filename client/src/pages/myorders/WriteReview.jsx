@@ -114,21 +114,26 @@ const handleSubmit = () => {
         <span className="wr-bc-current">Write a Review</span>
       </div>
 
-      {/* Page title */}
-      <div className="wr-page-header">
-        <h1 className="wr-page-title">Write a Review</h1>
-      </div>
+<div className="wr-header-center">
+  <h1 className="wr-page-title">Write a Review</h1>
 
-      {/* Product info strip (if coming from order) */}
-      {order && (
-        <div className="wr-product-strip">
-          <img src={order.image} alt={order.name} className="wr-product-img" />
-          <div>
-            <div className="wr-product-name">{order.name}</div>
-            <div className="wr-product-meta">Color: {order.color} | Size: {order.size}</div>
-          </div>
-        </div>
-      )}
+{order && (
+  <div className="wr-product-strip">
+    <img
+      src={order.image}
+      alt={order.name}
+      className="wr-product-img"
+    />
+
+    <div className="wr-product-info">
+      <div className="wr-product-name">{order.name}</div>
+      <div className="wr-product-meta">
+        Color: {order.color} | Size: {order.size}
+      </div>
+    </div>
+  </div>
+)}
+</div>
 
       <div className="wr-body">
 
@@ -143,7 +148,6 @@ const handleSubmit = () => {
 
           <div className="wr-help-card">
             <div className="wr-help-top">
-              <span className="wr-help-icon">ℹ</span>
               <div>
                 <div className="wr-help-title">Need help with an order?</div>
                 <div className="wr-help-sub">Contact our dedicated support team for issues with shipping, sizing, or returns.</div>
