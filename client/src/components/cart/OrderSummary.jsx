@@ -8,29 +8,29 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       <div className="os-rows">
         <div className="os-row">
           <span>Subtotal</span>
-          <span>${subtotal.toFixed(2)}</span>
+          <span>₹{subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
         <div className="os-row">
           <span>Shipping</span>
-          <span>{shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}</span>
+          <span>{shipping === 0 ? 'FREE' : `₹${shipping.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}</span>
         </div>
 
         {giftWrapping && (
           <div className="os-row os-gift-row">
             <span>Gift Wrapping</span>
-            <span>+${giftCost.toFixed(2)}</span>
+            <span>+₹{giftCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         )}
 
         <div className="os-row">
           <span>Estimated Tax</span>
-          <span>$0.00</span>
+          <span>₹0.00</span>
         </div>
       </div>
 
       <div className="os-total">
         <span>Total</span>
-        <span className="os-total-amount">${total.toFixed(2)}</span>
+        <span className="os-total-amount">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
       </div>
 
       <button className="os-checkout-btn">

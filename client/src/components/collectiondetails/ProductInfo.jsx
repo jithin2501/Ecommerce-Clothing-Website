@@ -28,11 +28,13 @@ export default function ProductInfo({
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
+  const selectedColorHex = colors.find(c => c.name === selectedColor)?.hex || '#2D3E50';
+
   const handleAddToBag = () => {
     addToCart({
       id:    productId || 1,
       name,
-      price: typeof price === 'number' ? `₹${price}` : price,
+      price: typeof price === 'number' ? price : parseFloat(String(price).replace(/[₹$,]/g, '')),
       size:  selectedSize,
       color: selectedColor,
       img:   galleryImg,
@@ -91,6 +93,7 @@ export default function ProductInfo({
         <AddToCartBtn
           onAdd={handleAddToBag}
           onGoToBag={() => navigate('/cart')}
+          shirtColor={selectedColorHex}
         />
         <button className={`pi-icon-btn${wishlisted ? ' active' : ''}`} onClick={() => setWishlisted(p => !p)}>
           <Heart size={18} fill={wishlisted ? 'currentColor' : 'none'} />

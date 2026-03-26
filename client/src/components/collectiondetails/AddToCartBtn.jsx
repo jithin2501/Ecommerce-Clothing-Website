@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import '../../styles/collectiondetails/AddToCartBtn.css';
 
-export default function AddToCartBtn({ onAdd, onGoToBag }) {
+export default function AddToCartBtn({ onAdd, onGoToBag, shirtColor = '#2D3E50' }) {
   const [added, setAdded] = useState(false);
   const btnRef = useRef(null);
   const animatingRef = useRef(false);
@@ -103,7 +103,7 @@ export default function AddToCartBtn({ onAdd, onGoToBag }) {
       <span className="atc-shirt" aria-hidden="true">
         <svg viewBox="0 0 24 24" width="24" height="24">
           <path
-            fill="#2D3E50"
+            fill={shirtColor}
             d="M4.99997 3L8.99997 1.5C8.99997 1.5 10.6901 3 12 3C13.3098 3 15 1.5 15 1.5L19 3L22.5 8L19.5 10.5L19 9.5L17.1781 18.6093C17.062 19.1901 16.778 19.7249 16.3351 20.1181C15.4265 20.925 13.7133 22.3147 12 23C10.2868 22.3147 8.57355 20.925 7.66487 20.1181C7.22198 19.7249 6.93798 19.1901 6.82183 18.6093L4.99997 9.5L4.5 10.5L1.5 8L4.99997 3Z"
           />
         </svg>
