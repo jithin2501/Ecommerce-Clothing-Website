@@ -30,8 +30,19 @@ export default function BestSelling() {
 
   if (cards.length === 0) return null;
 
+  const handleCardClick = (card) => {
+    // Save exact scroll position before leaving
+    sessionStorage.setItem('homeScrollY', String(window.scrollY));
+    navigate(`/collections/product/${card._id}`, {
+      state: {
+        fromLabel: 'Best Selling',
+        restoreScroll: true,
+      },
+    });
+  };
+
   return (
-    <section className="arrivals-section">
+    <section id="best-selling" className="arrivals-section">
       <div className="section-inner">
 
         <div className="best-selling-header">
@@ -50,20 +61,16 @@ export default function BestSelling() {
                 key={card._id || i}
                 className="arr-card"
                 style={{ transform: `rotateY(${card.angle}deg) translateZ(420px)` }}
-                onClick={() => navigate(`/collections/product/${card._id}`)}
+                onClick={() => handleCardClick(card)}
               >
                 <img src={card.img} alt={card.name} />
-
                 <div className="arr-card-overlay">
-                  <div className="arr-hover-btn">
-                    <ArrowIcon />
-                  </div>
+                  <div className="arr-hover-btn"><ArrowIcon /></div>
                   <div className="arr-hover-info">
                     <span className="arr-hover-tag">{card.category}</span>
                     <div className="arr-hover-name">{card.name}</div>
                   </div>
                 </div>
-
               </div>
             ))}
           </div>

@@ -19,8 +19,19 @@ export default function NewArrivals() {
 
   if (products.length === 0) return null;
 
+  const handleCardClick = (product) => {
+    // Save exact scroll position before leaving
+    sessionStorage.setItem('homeScrollY', String(window.scrollY));
+    navigate(`/collections/product/${product._id}`, {
+      state: {
+        fromLabel: 'New Arrivals',
+        restoreScroll: true,
+      },
+    });
+  };
+
   return (
-    <section className="new-arrivals-section">
+    <section id="new-arrivals" className="new-arrivals-section">
       <div className="section-inner">
 
         <div className="new-arrivals-header">
@@ -37,7 +48,7 @@ export default function NewArrivals() {
             <div
               key={product._id || i}
               className="na-card"
-              onClick={() => navigate(`/collections/product/${product._id}`)}
+              onClick={() => handleCardClick(product)}
             >
               <div className="na-img-wrap">
                 <img src={product.img} alt={product.name} />
@@ -45,7 +56,6 @@ export default function NewArrivals() {
                   <span className="na-age">Ages {product.age}</span>
                 )}
               </div>
-
               <div className="na-card-info">
                 <div className="na-top-row">
                   <span className="na-category">{product.category}</span>

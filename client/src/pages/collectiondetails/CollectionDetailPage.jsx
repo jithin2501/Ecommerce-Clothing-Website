@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation, useNavigate } from 'react-router-dom';
 import ProductGallery   from '../../components/collectiondetails/ProductGallery';
 import ProductInfo      from '../../components/collectiondetails/ProductInfo';
 import ProductAccordion from '../../components/collectiondetails/ProductAccordion';
@@ -9,27 +9,27 @@ import '../../styles/collectiondetails/CollectionDetailPage.css';
 
 const API = 'http://localhost:5000/api';
 
-// Convert a URL slug like "midnight-grace" → "midnight grace"
-// then match case-insensitively against product names
 const slugToName = (slug) => slug.replace(/-/g, ' ').toLowerCase();
 
 export default function CollectionDetailPage() {
-  // Route can be either:
-  //   /collections/:ageGroup/:productSlug   (existing slug-based links)
-  //   /collections/product/:productId       (new _id-based links)
   const { productSlug, productId: paramProductId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
+  const fromState = location.state || {};
+
+  // Scroll product page to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
 
-  const [detail,    setDetail]    = useState(null);
-  const [loading,   setLoading]   = useState(true);
-  const [notFound,  setNotFound]  = useState(false);
+  const [detail,       setDetail]       = useState(null);
+  const [loading,      setLoading]      = useState(true);
+  const [notFound,     setNotFound]     = useState(false);
   const [activeImages, setActiveImages] = useState([]);
+  const [zoomState,    setZoomState]    = useState({ active: false });
 
-  const [zoomState,       setZoomState]       = useState({ active: false });
-  const handleZoomChange = useCallback((state) => setZoomState(state), []);
+  const handleZoomChange  = useCallback((state) => setZoomState(state), []);
 
   const handleColorChange = useCallback((colorName) => {
     if (!detail?.colorGalleries?.length) return;
@@ -52,18 +52,13 @@ export default function CollectionDetailPage() {
       try {
         let resolvedId = paramProductId || null;
 
-        // ── If we only have a slug, resolve it to a product _id ──
         if (!resolvedId && productSlug) {
           const res  = await fetch(`${API}/products`);
           const data = await res.json();
           if (data.success) {
             const needle  = slugToName(productSlug);
-            const matched = data.data.find(
-              (p) => p.name.toLowerCase() === needle
-            );
-            if (matched) {
-              resolvedId = matched._id;
-            }
+            const matched = data.data.find(p => p.name.toLowerCase() === needle);
+            if (matched) resolvedId = matched._id;
           }
         }
 
@@ -72,14 +67,12 @@ export default function CollectionDetailPage() {
           return;
         }
 
-        // ── Fetch the detail document ──
         const dRes  = await fetch(`${API}/product-details/${resolvedId}`);
         const dData = await dRes.json();
 
         if (!cancelled) {
           if (dData.success) {
             setDetail(dData.data);
-            // Default to first color's gallery, fallback to flat galleryImages
             const firstColorGallery = dData.data.colorGalleries?.[0]?.images;
             setActiveImages(firstColorGallery?.length ? firstColorGallery : (dData.data.galleryImages || []));
           } else {
@@ -97,7 +90,15 @@ export default function CollectionDetailPage() {
     return () => { cancelled = true; };
   }, [productSlug, paramProductId]);
 
-  /* ── Render states ── */
+  const handleBack = (e) => {
+    e.preventDefault();
+    // Flag that we want scroll restored (not reset to top)
+    if (fromState.restoreScroll) {
+      sessionStorage.setItem('restoreHomeScroll', '1');
+    }
+    navigate(-1);
+  };
+
   if (loading) {
     return (
       <div className="cdp-page">
@@ -116,34 +117,52 @@ export default function CollectionDetailPage() {
     );
   }
 
-  const product = detail.product; // populated: { name, price, oldPrice, … }
+  const product = detail.product;
 
-  return (
-    <div className="cdp-page">
+  const renderBreadcrumb = () => {
+    if (fromState.fromLabel) {
+      return (
+        <div className="cdp-breadcrumb">
+          <a href="/" onClick={handleBack}>Home</a>
+          <span className="cdp-sep">›</span>
+          <a href="/" onClick={handleBack}>{fromState.fromLabel}</a>
+          <span className="cdp-sep">›</span>
+          {product?.category && (
+            <>
+              <span>{product.category}</span>
+              <span className="cdp-sep">›</span>
+            </>
+          )}
+          <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
+        </div>
+      );
+    }
 
-      {/* Breadcrumb */}
+    return (
       <div className="cdp-breadcrumb">
         <Link to="/">Home</Link>
         <span className="cdp-sep">›</span>
         <Link to="/collections">Collections</Link>
         <span className="cdp-sep">›</span>
-        <Link to="/collections/dresses-skirts">Dresses &amp; Skirts</Link>
-        <span className="cdp-sep">›</span>
+        {product?.category && (
+          <>
+            <span>{product.category}</span>
+            <span className="cdp-sep">›</span>
+          </>
+        )}
         <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
       </div>
+    );
+  };
 
-      {/* Main product grid */}
+  return (
+    <div className="cdp-page">
+      {renderBreadcrumb()}
+
       <div className="cdp-main">
+        <ProductGallery images={activeImages} onZoomChange={handleZoomChange} />
 
-        {/* LEFT — Gallery */}
-        <ProductGallery
-          images={activeImages}
-          onZoomChange={handleZoomChange}
-        />
-
-        {/* RIGHT — zoom panel + product info */}
         <div className="cdp-right-col">
-
           {zoomState.active && (
             <div className="cdp-zoom-panel-wrap">
               <div
@@ -177,16 +196,13 @@ export default function CollectionDetailPage() {
               highlights={detail.highlights}
             />
           </div>
-
         </div>
       </div>
 
-      {/* Lower sections */}
       <div className="cdp-lower">
         <ProductReviews />
         <ProductRelated />
       </div>
-
     </div>
   );
 }

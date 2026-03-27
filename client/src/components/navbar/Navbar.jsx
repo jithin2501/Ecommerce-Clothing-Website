@@ -9,15 +9,9 @@ export default function Navbar() {
   const navigate  = useNavigate();
   const { cartCount } = useCart();
 
-  const pathParts    = location.pathname.split('/').filter(Boolean);
-  const isBannerPage = pathParts.length <= 2 && location.pathname.startsWith('/collections');
-  const isDetailPage = pathParts.length >= 3 && location.pathname.startsWith('/collections');
+  const pathParts     = location.pathname.split('/').filter(Boolean);
+  const isBannerPage  = pathParts.length <= 2 && location.pathname.startsWith('/collections');
   const isContactPage = location.pathname === '/contact';
-
-  const isCartPage    = location.pathname === '/cart';
-  const isHomePage    = location.pathname === '/';
-  const isAccountPage = location.pathname === '/account' || location.pathname.startsWith('/account/');
-
   const isFixedBanner = isBannerPage || isContactPage;
 
   const [scrolled, setScrolled] = useState(false);
@@ -31,17 +25,31 @@ export default function Navbar() {
   }, [location.pathname]);
 
   useEffect(() => {
-    const hash = sessionStorage.getItem('scrollTarget');
-    if (!hash) return;
-    if (location.pathname === '/') {
-      sessionStorage.removeItem('scrollTarget');
-      const el = document.getElementById(hash);
-      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
-    }
-  }, [location.pathname]);
+    if (location.pathname !== '/') return;
 
-  useEffect(() => {
-    if (sessionStorage.getItem('goHome') === '1' && location.pathname === '/') {
+    // Case 1: returning from a product page — restore exact scroll position
+    if (sessionStorage.getItem('restoreHomeScroll') === '1') {
+      sessionStorage.removeItem('restoreHomeScroll');
+      const savedY = parseFloat(sessionStorage.getItem('homeScrollY') || '0');
+      sessionStorage.removeItem('homeScrollY');
+      // Use instant so there's zero visible scroll animation
+      window.scrollTo({ top: savedY, behavior: 'instant' });
+      return;
+    }
+
+    // Case 2: navigating to a named section from another page
+    const hash = sessionStorage.getItem('scrollTarget');
+    if (hash) {
+      sessionStorage.removeItem('scrollTarget');
+      requestAnimationFrame(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      });
+      return;
+    }
+
+    // Case 3: explicit "go home to top"
+    if (sessionStorage.getItem('goHome') === '1') {
       sessionStorage.removeItem('goHome');
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
@@ -50,6 +58,8 @@ export default function Navbar() {
   const handleHome = (e) => {
     e.preventDefault();
     sessionStorage.removeItem('scrollTarget');
+    sessionStorage.removeItem('restoreHomeScroll');
+    sessionStorage.removeItem('homeScrollY');
     if (location.pathname !== '/') {
       sessionStorage.setItem('goHome', '1');
       navigate('/');
@@ -65,7 +75,7 @@ export default function Navbar() {
       navigate('/');
     } else {
       const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
