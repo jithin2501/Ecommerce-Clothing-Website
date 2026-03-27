@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/homepage/NewArrivals.css';
 
 const API = 'http://localhost:5000/api/products';
 
 export default function NewArrivals() {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${API}/featured?section=newArrivals`)
@@ -32,13 +34,29 @@ export default function NewArrivals() {
 
         <div className="na-grid">
           {products.map((product, i) => (
-            <div key={product._id || i} className="na-card">
+            <div
+              key={product._id || i}
+              className="na-card"
+              onClick={() => navigate(`/product/${product._id}`)}
+            >
               <div className="na-img-wrap">
                 <img src={product.img} alt={product.name} />
+
+                {/* AGE (same style logic as cyl) */}
+                {product.age && (
+                  <span className="na-age">Ages {product.age}</span>
+                )}
               </div>
+
               <div className="na-card-info">
+
+                {/* CATEGORY + PRICE (top row like cyl) */}
+                <div className="na-top-row">
+                  <span className="na-category">{product.category}</span>
+                  <span className="na-card-price">₹{product.price}</span>
+                </div>
+
                 <div className="na-card-name">{product.name}</div>
-                <div className="na-card-price">₹{product.price}</div>
               </div>
             </div>
           ))}
