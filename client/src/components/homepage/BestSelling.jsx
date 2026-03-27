@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../../styles/homepage/BestSelling.css';
 
 const API = 'http://localhost:5000/api/products';
@@ -13,9 +14,9 @@ const ArrowIcon = () => (
 
 export default function BestSelling() {
   const [cards, setCards] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Uses the existing GET /api/products/featured?section=bestSelling route
     fetch(`${API}/featured?section=bestSelling`)
       .then(r => r.json())
       .then(data => {
@@ -49,8 +50,10 @@ export default function BestSelling() {
                 key={card._id || i}
                 className="arr-card"
                 style={{ transform: `rotateY(${card.angle}deg) translateZ(420px)` }}
+                onClick={() => navigate(`/collections/product/${card._id}`)}
               >
                 <img src={card.img} alt={card.name} />
+
                 <div className="arr-card-overlay">
                   <div className="arr-hover-btn">
                     <ArrowIcon />
@@ -60,6 +63,7 @@ export default function BestSelling() {
                     <div className="arr-hover-name">{card.name}</div>
                   </div>
                 </div>
+
               </div>
             ))}
           </div>
