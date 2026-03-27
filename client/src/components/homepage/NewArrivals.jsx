@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/homepage/NewArrivals.css';
 
@@ -7,6 +7,7 @@ const API = 'http://localhost:5000/api/products';
 export default function NewArrivals() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+  const sectionRef = useRef(null);
 
   useEffect(() => {
     fetch(`${API}/featured?section=newArrivals`)
@@ -20,8 +21,9 @@ export default function NewArrivals() {
   if (products.length === 0) return null;
 
   const handleCardClick = (product) => {
-    // Save exact scroll position before leaving
-    sessionStorage.setItem('homeScrollY', String(window.scrollY));
+    // Save the section id so Navbar can scroll to it by element lookup
+    // This is more reliable than saving a pixel offset
+    sessionStorage.setItem('restoreToSection', 'new-arrivals');
     navigate(`/collections/product/${product._id}`, {
       state: {
         fromLabel: 'New Arrivals',
@@ -31,7 +33,7 @@ export default function NewArrivals() {
   };
 
   return (
-    <section id="new-arrivals" className="new-arrivals-section">
+    <section id="new-arrivals" ref={sectionRef} className="new-arrivals-section">
       <div className="section-inner">
 
         <div className="new-arrivals-header">

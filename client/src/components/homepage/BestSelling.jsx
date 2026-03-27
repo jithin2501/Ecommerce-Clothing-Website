@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/homepage/BestSelling.css';
 
@@ -15,6 +15,7 @@ const ArrowIcon = () => (
 export default function BestSelling() {
   const [cards, setCards] = useState([]);
   const navigate = useNavigate();
+  const sectionRef = useRef(null);
 
   useEffect(() => {
     fetch(`${API}/featured?section=bestSelling`)
@@ -31,8 +32,7 @@ export default function BestSelling() {
   if (cards.length === 0) return null;
 
   const handleCardClick = (card) => {
-    // Save exact scroll position before leaving
-    sessionStorage.setItem('homeScrollY', String(window.scrollY));
+    sessionStorage.setItem('restoreToSection', 'best-selling');
     navigate(`/collections/product/${card._id}`, {
       state: {
         fromLabel: 'Best Selling',
@@ -42,7 +42,7 @@ export default function BestSelling() {
   };
 
   return (
-    <section id="best-selling" className="arrivals-section">
+    <section id="best-selling" ref={sectionRef} className="arrivals-section">
       <div className="section-inner">
 
         <div className="best-selling-header">

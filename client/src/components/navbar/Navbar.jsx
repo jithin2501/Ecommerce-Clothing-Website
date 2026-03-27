@@ -1,13 +1,35 @@
 import { ShoppingCart, User } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useCart } from '../../context/CartContext';
 import '../../styles/navbar/Navbar.css';
+
+function scrollToSection(sectionId) {
+  let attempts = 0;
+  const maxAttempts = 60;
+
+  const tryScroll = () => {
+    const el = document.getElementById(sectionId);
+    if (el && el.getBoundingClientRect().height > 0) {
+      const navEl = document.querySelector('nav');
+      const navHeight = navEl ? navEl.getBoundingClientRect().height : 80;
+      const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
+    } else if (attempts < maxAttempts) {
+      attempts++;
+      setTimeout(tryScroll, 50);
+    }
+  };
+
+  requestAnimationFrame(tryScroll);
+}
 
 export default function Navbar() {
   const location  = useLocation();
   const navigate  = useNavigate();
   const { cartCount } = useCart();
+  // Track previous pathname so we know when we've just arrived at '/'
+  const prevPathRef = useRef(location.pathname);
 
   const pathParts     = location.pathname.split('/').filter(Boolean);
   const isBannerPage  = pathParts.length <= 2 && location.pathname.startsWith('/collections');
@@ -25,15 +47,42 @@ export default function Navbar() {
   }, [location.pathname]);
 
   useEffect(() => {
+    const wasElsewhere = prevPathRef.current !== '/';
+    prevPathRef.current = location.pathname;
+
     if (location.pathname !== '/') return;
 
-    // Case 1: returning from a product page — restore exact scroll position
+    // Case 1: returning from product page (breadcrumb OR browser back)
     if (sessionStorage.getItem('restoreHomeScroll') === '1') {
       sessionStorage.removeItem('restoreHomeScroll');
-      const savedY = parseFloat(sessionStorage.getItem('homeScrollY') || '0');
-      sessionStorage.removeItem('homeScrollY');
-      // Use instant so there's zero visible scroll animation
-      window.scrollTo({ top: savedY, behavior: 'instant' });
+      const sectionId = sessionStorage.getItem('restoreToSection');
+      sessionStorage.removeItem('restoreToSection');
+      if (sectionId) {
+        // Hide the page instantly, scroll, then reveal — eliminates the 1s flash
+        document.documentElement.style.visibility = 'hidden';
+        const reveal = () => {
+          document.documentElement.style.visibility = '';
+        };
+
+        let attempts = 0;
+        const maxAttempts = 60;
+        const tryScroll = () => {
+          const el = document.getElementById(sectionId);
+          if (el && el.getBoundingClientRect().height > 0) {
+            const navEl = document.querySelector('nav');
+            const navHeight = navEl ? navEl.getBoundingClientRect().height : 80;
+            const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
+            reveal();
+          } else if (attempts < maxAttempts) {
+            attempts++;
+            setTimeout(tryScroll, 50);
+          } else {
+            reveal(); // safety: always reveal
+          }
+        };
+        requestAnimationFrame(tryScroll);
+      }
       return;
     }
 
@@ -41,10 +90,7 @@ export default function Navbar() {
     const hash = sessionStorage.getItem('scrollTarget');
     if (hash) {
       sessionStorage.removeItem('scrollTarget');
-      requestAnimationFrame(() => {
-        const el = document.getElementById(hash);
-        if (el) el.scrollIntoView({ behavior: 'instant', block: 'start' });
-      });
+      scrollToSection(hash);
       return;
     }
 
@@ -59,7 +105,7 @@ export default function Navbar() {
     e.preventDefault();
     sessionStorage.removeItem('scrollTarget');
     sessionStorage.removeItem('restoreHomeScroll');
-    sessionStorage.removeItem('homeScrollY');
+    sessionStorage.removeItem('restoreToSection');
     if (location.pathname !== '/') {
       sessionStorage.setItem('goHome', '1');
       navigate('/');
@@ -74,8 +120,7 @@ export default function Navbar() {
       sessionStorage.setItem('scrollTarget', sectionId);
       navigate('/');
     } else {
-      const el = document.getElementById(sectionId);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      scrollToSection(sectionId);
     }
   };
 
