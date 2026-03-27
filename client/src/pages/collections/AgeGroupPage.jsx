@@ -51,7 +51,7 @@ export default function AgeGroupPage() {
   return (
     <main className="agp-page">
       <AgeGroupBanner meta={meta} />
-      <div className="nav-spacer" />
+
 
       <div className="section-inner">
         <div className="page-breadcrumb">
