@@ -18,22 +18,10 @@ export default function CollectionDetailPage() {
 
   const fromState = location.state || {};
 
+  // Scroll product page to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, []);
-
-  // ── Intercept browser back button (popstate) ──
-  useEffect(() => {
-    if (!fromState.restoreScroll) return;
-
-    const handlePopState = () => {
-      sessionStorage.setItem('restoreHomeScroll', '1');
-      // restoreToSection already set when card was clicked
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, [fromState.restoreScroll]);
+  }, [productSlug, paramProductId]);
 
   const [detail,       setDetail]       = useState(null);
   const [loading,      setLoading]      = useState(true);
@@ -55,12 +43,15 @@ export default function CollectionDetailPage() {
 
   useEffect(() => {
     let cancelled = false;
+
     const load = async () => {
       setLoading(true);
       setNotFound(false);
       setDetail(null);
+
       try {
         let resolvedId = paramProductId || null;
+
         if (!resolvedId && productSlug) {
           const res  = await fetch(`${API}/products`);
           const data = await res.json();
@@ -70,9 +61,15 @@ export default function CollectionDetailPage() {
             if (matched) resolvedId = matched._id;
           }
         }
-        if (!resolvedId) { if (!cancelled) setNotFound(true); return; }
+
+        if (!resolvedId) {
+          if (!cancelled) setNotFound(true);
+          return;
+        }
+
         const dRes  = await fetch(`${API}/product-details/${resolvedId}`);
         const dData = await dRes.json();
+
         if (!cancelled) {
           if (dData.success) {
             setDetail(dData.data);
@@ -88,31 +85,37 @@ export default function CollectionDetailPage() {
         if (!cancelled) setLoading(false);
       }
     };
+
     load();
     return () => { cancelled = true; };
   }, [productSlug, paramProductId]);
 
   const handleBack = (e) => {
     e.preventDefault();
+    // Flag that we want scroll restored (not reset to top)
     if (fromState.restoreScroll) {
       sessionStorage.setItem('restoreHomeScroll', '1');
     }
     navigate(-1);
   };
 
-  if (loading) return (
-    <div className="cdp-page">
-      <p style={{ padding: '4rem', textAlign: 'center', color: '#aaa' }}>Loading…</p>
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="cdp-page">
+        <p style={{ padding: '4rem', textAlign: 'center', color: '#aaa' }}>Loading…</p>
+      </div>
+    );
+  }
 
-  if (notFound || !detail) return (
-    <div className="cdp-page">
-      <p style={{ padding: '4rem', textAlign: 'center', color: '#aaa' }}>
-        Product details not available yet.
-      </p>
-    </div>
-  );
+  if (notFound || !detail) {
+    return (
+      <div className="cdp-page">
+        <p style={{ padding: '4rem', textAlign: 'center', color: '#aaa' }}>
+          Product details not available yet.
+        </p>
+      </div>
+    );
+  }
 
   const product = detail.product;
 
@@ -124,18 +127,29 @@ export default function CollectionDetailPage() {
           <span className="cdp-sep">›</span>
           <a href="/" onClick={handleBack}>{fromState.fromLabel}</a>
           <span className="cdp-sep">›</span>
-          {product?.category && <><span>{product.category}</span><span className="cdp-sep">›</span></>}
+          {product?.category && (
+            <>
+              <span>{product.category}</span>
+              <span className="cdp-sep">›</span>
+            </>
+          )}
           <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
         </div>
       );
     }
+
     return (
       <div className="cdp-breadcrumb">
         <Link to="/">Home</Link>
         <span className="cdp-sep">›</span>
         <Link to="/collections">Collections</Link>
         <span className="cdp-sep">›</span>
-        {product?.category && <><span>{product.category}</span><span className="cdp-sep">›</span></>}
+        {product?.category && (
+          <>
+            <span>{product.category}</span>
+            <span className="cdp-sep">›</span>
+          </>
+        )}
         <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
       </div>
     );
@@ -144,19 +158,25 @@ export default function CollectionDetailPage() {
   return (
     <div className="cdp-page">
       {renderBreadcrumb()}
+
       <div className="cdp-main">
         <ProductGallery images={activeImages} onZoomChange={handleZoomChange} />
+
         <div className="cdp-right-col">
           {zoomState.active && (
             <div className="cdp-zoom-panel-wrap">
-              <div className="cdp-zoom-panel" style={{
-                backgroundImage: `url(${zoomState.src})`,
-                backgroundSize: zoomState.bgSize,
-                backgroundPosition: zoomState.bgPos,
-                backgroundRepeat: 'no-repeat',
-              }} />
+              <div
+                className="cdp-zoom-panel"
+                style={{
+                  backgroundImage:    `url(${zoomState.src})`,
+                  backgroundSize:     zoomState.bgSize,
+                  backgroundPosition: zoomState.bgPos,
+                  backgroundRepeat:   'no-repeat',
+                }}
+              />
             </div>
           )}
+
           <div className={`cdp-info-wrap${zoomState.active ? ' cdp-info-hidden' : ''}`}>
             <ProductInfo
               name={product?.name}
@@ -178,6 +198,7 @@ export default function CollectionDetailPage() {
           </div>
         </div>
       </div>
+
       <div className="cdp-lower">
         <ProductReviews />
         <ProductRelated />

@@ -1,26 +1,27 @@
 import { useEffect, useState } from 'react';
-import { useCart } from '../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/collections/YouMightAlsoLike.css';
 
 const API = 'http://localhost:5000/api/products';
 
-const CartIcon = () => (
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-    <path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/>
-  </svg>
-);
-
 function FavoriteCard({ product }) {
-  const [added, setAdded] = useState(false);
-  const { addToCart } = useCart();
   const navigate = useNavigate();
 
-  const formatPrice = (price) => typeof price === 'number' ? `₹${price}` : price;
+  const formatPrice = (price) =>
+    typeof price === 'number' ? `₹${price}` : price;
 
   return (
-    <div className="ymll-card">
+    <div
+      className="ymll-card"
+      onClick={() =>
+        navigate(`/collections/product/${product._id}`, {
+          state: {
+            fromLabel: 'More To Love',
+            restoreScroll: false,
+          },
+        })
+      }
+    >
       <div className="ymll-img-wrap">
         <img src={product.img} alt={product.name} />
         {product.age && <span className="ymll-age">Ages {product.age}</span>}
@@ -33,15 +34,6 @@ function FavoriteCard({ product }) {
         </div>
         <div className="ymll-name">{product.name}</div>
       </div>
-      {!added ? (
-        <button className="ymll-add-btn" onClick={() => { addToCart(product); setAdded(true); }}>
-          <CartIcon /> Quick Add
-        </button>
-      ) : (
-        <button className="ymll-add-btn ymll-go-cart" onClick={() => navigate('/cart')}>
-          <CartIcon /> Go to Cart
-        </button>
-      )}
     </div>
   );
 }
@@ -64,11 +56,16 @@ export default function YouMightAlsoLike() {
         <div className="ymll-header">
           <div>
             <h2 className="ymll-title">More To Love</h2>
-            <p className="ymll-sub">Handpicked treasures we think you'll adore</p>
+            <p className="ymll-sub">
+              Handpicked treasures we think you'll adore
+            </p>
           </div>
         </div>
+
         <div className="ymll-grid">
-          {products.map(p => <FavoriteCard key={p._id} product={p} />)}
+          {products.map(p => (
+            <FavoriteCard key={p._id} product={p} />
+          ))}
         </div>
       </div>
     </section>

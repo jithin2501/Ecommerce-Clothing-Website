@@ -19,12 +19,21 @@ function RelatedCard({ item }) {
 
   const formatPrice = (price) => typeof price === 'number' ? `₹${price}` : price;
 
+  const handleCardClick = () => {
+    navigate(`/collections/product/${item._id}`, {
+      state: {
+        fromLabel: 'You Might Also Like',
+        restoreScroll: false,
+      },
+    });
+  };
+
   return (
-    <div className="prelat-card">
+    <div className="prelat-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="prelat-img-wrap">
         <img src={item.img} alt={item.name} className="prelat-img" />
         {item.age && <span className="prelat-age">Ages {item.age}</span>}
-        <button className="prelat-wish">♡</button>
+        <button className="prelat-wish" onClick={(e) => e.stopPropagation()}>♡</button>
       </div>
       <div className="prelat-info">
         <div className="prelat-top-row">
@@ -34,11 +43,11 @@ function RelatedCard({ item }) {
         <p className="prelat-name">{item.name}</p>
       </div>
       {!added ? (
-        <button className="prelat-btn" onClick={() => { addToCart(item); setAdded(true); }}>
+        <button className="prelat-btn" onClick={(e) => { e.stopPropagation(); addToCart(item); setAdded(true); }}>
           <CartIcon /> Quick Add
         </button>
       ) : (
-        <button className="prelat-btn prelat-btn-cart" onClick={() => navigate('/cart')}>
+        <button className="prelat-btn prelat-btn-cart" onClick={(e) => { e.stopPropagation(); navigate('/cart'); }}>
           <CartIcon /> Go to Cart
         </button>
       )}
