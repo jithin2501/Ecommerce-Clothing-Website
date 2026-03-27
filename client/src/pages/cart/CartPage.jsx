@@ -15,7 +15,27 @@ export default function CartPage() {
   const [giftWrapping, setGiftWrapping] = useState(false);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
+    // If returning from a product page via "You Might Also Love",
+    // scroll to that section instead of the top
+    if (sessionStorage.getItem('restoreCartScroll') === '1') {
+      sessionStorage.removeItem('restoreCartScroll');
+      let attempts = 0;
+      const tryScroll = () => {
+        const el = document.querySelector('.cyl-section');
+        if (el && el.getBoundingClientRect().height > 0) {
+          const navEl = document.querySelector('nav');
+          const navHeight = navEl ? navEl.getBoundingClientRect().height : 80;
+          const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+          window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
+        } else if (attempts < 60) {
+          attempts++;
+          setTimeout(tryScroll, 50);
+        }
+      };
+      requestAnimationFrame(tryScroll);
+    } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+    }
   }, []);
 
   if (cartItems.length === 0) return <EmptyCart />;

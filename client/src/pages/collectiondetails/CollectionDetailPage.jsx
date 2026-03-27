@@ -11,6 +11,23 @@ const API = 'http://localhost:5000/api';
 
 const slugToName = (slug) => slug.replace(/-/g, ' ').toLowerCase();
 
+function scrollToSectionOnPage(sectionId) {
+  let attempts = 0;
+  const tryScroll = () => {
+    const el = document.getElementById(sectionId);
+    if (el && el.getBoundingClientRect().height > 0) {
+      const navEl = document.querySelector('nav');
+      const navHeight = navEl ? navEl.getBoundingClientRect().height : 80;
+      const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
+      window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
+    } else if (attempts < 60) {
+      attempts++;
+      setTimeout(tryScroll, 50);
+    }
+  };
+  requestAnimationFrame(tryScroll);
+}
+
 export default function CollectionDetailPage() {
   const { productSlug, productId: paramProductId } = useParams();
   const location = useLocation();
@@ -18,10 +35,36 @@ export default function CollectionDetailPage() {
 
   const fromState = location.state || {};
 
-  // Scroll product page to top on mount
+  // Scroll to top on every product change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [productSlug, paramProductId]);
+
+  // After returning to this page via back (from a deeper product),
+  // scroll to the saved section (e.g. "you-might-also-like")
+  useEffect(() => {
+    const sectionId = sessionStorage.getItem('restorePdpSection');
+    if (!sectionId) return;
+    sessionStorage.removeItem('restorePdpSection');
+    scrollToSectionOnPage(sectionId);
+  }, []);
+
+  // Intercept browser back button
+  useEffect(() => {
+    if (!fromState.restoreScroll) return;
+    const handlePopState = () => {
+      if (fromState.fromCart) {
+        // Going back to cart — scroll to top of cart page is default browser behavior
+        // restoreCartScroll flag not needed since cart scrolls to top naturally
+      } else if (fromState.fromProductPage) {
+        // restorePdpSection already in sessionStorage
+      } else {
+        sessionStorage.setItem('restoreHomeScroll', '1');
+      }
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [fromState]);
 
   const [detail,       setDetail]       = useState(null);
   const [loading,      setLoading]      = useState(true);
@@ -43,15 +86,12 @@ export default function CollectionDetailPage() {
 
   useEffect(() => {
     let cancelled = false;
-
     const load = async () => {
       setLoading(true);
       setNotFound(false);
       setDetail(null);
-
       try {
         let resolvedId = paramProductId || null;
-
         if (!resolvedId && productSlug) {
           const res  = await fetch(`${API}/products`);
           const data = await res.json();
@@ -61,15 +101,9 @@ export default function CollectionDetailPage() {
             if (matched) resolvedId = matched._id;
           }
         }
-
-        if (!resolvedId) {
-          if (!cancelled) setNotFound(true);
-          return;
-        }
-
+        if (!resolvedId) { if (!cancelled) setNotFound(true); return; }
         const dRes  = await fetch(`${API}/product-details/${resolvedId}`);
         const dData = await dRes.json();
-
         if (!cancelled) {
           if (dData.success) {
             setDetail(dData.data);
@@ -85,37 +119,39 @@ export default function CollectionDetailPage() {
         if (!cancelled) setLoading(false);
       }
     };
-
     load();
     return () => { cancelled = true; };
   }, [productSlug, paramProductId]);
 
   const handleBack = (e) => {
     e.preventDefault();
-    // Flag that we want scroll restored (not reset to top)
-    if (fromState.restoreScroll) {
+    if (fromState.fromCart) {
+      // Navigate back to cart — browser back restores cart scroll position naturally
+      navigate(-1);
+    } else if (fromState.fromProductPage) {
+      // restorePdpSection already in sessionStorage
+      navigate(-1);
+    } else if (fromState.restoreScroll) {
       sessionStorage.setItem('restoreHomeScroll', '1');
+      navigate(-1);
+    } else {
+      navigate(-1);
     }
-    navigate(-1);
   };
 
-  if (loading) {
-    return (
-      <div className="cdp-page">
-        <p style={{ padding: '4rem', textAlign: 'center', color: '#aaa' }}>Loading…</p>
-      </div>
-    );
-  }
+  if (loading) return (
+    <div className="cdp-page">
+      <p style={{ padding: '4rem', textAlign: 'center', color: '#aaa' }}>Loading…</p>
+    </div>
+  );
 
-  if (notFound || !detail) {
-    return (
-      <div className="cdp-page">
-        <p style={{ padding: '4rem', textAlign: 'center', color: '#aaa' }}>
-          Product details not available yet.
-        </p>
-      </div>
-    );
-  }
+  if (notFound || !detail) return (
+    <div className="cdp-page">
+      <p style={{ padding: '4rem', textAlign: 'center', color: '#aaa' }}>
+        Product details not available yet.
+      </p>
+    </div>
+  );
 
   const product = detail.product;
 
@@ -125,31 +161,24 @@ export default function CollectionDetailPage() {
         <div className="cdp-breadcrumb">
           <a href="/" onClick={handleBack}>Home</a>
           <span className="cdp-sep">›</span>
-          <a href="/" onClick={handleBack}>{fromState.fromLabel}</a>
-          <span className="cdp-sep">›</span>
-          {product?.category && (
-            <>
-              <span>{product.category}</span>
-              <span className="cdp-sep">›</span>
-            </>
+          {fromState.fromCart ? (
+            <a href="/cart" onClick={handleBack}>{fromState.fromLabel}</a>
+          ) : (
+            <a href="/" onClick={handleBack}>{fromState.fromLabel}</a>
           )}
+          <span className="cdp-sep">›</span>
+          {product?.category && <><span>{product.category}</span><span className="cdp-sep">›</span></>}
           <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
         </div>
       );
     }
-
     return (
       <div className="cdp-breadcrumb">
         <Link to="/">Home</Link>
         <span className="cdp-sep">›</span>
         <Link to="/collections">Collections</Link>
         <span className="cdp-sep">›</span>
-        {product?.category && (
-          <>
-            <span>{product.category}</span>
-            <span className="cdp-sep">›</span>
-          </>
-        )}
+        {product?.category && <><span>{product.category}</span><span className="cdp-sep">›</span></>}
         <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
       </div>
     );
@@ -158,25 +187,19 @@ export default function CollectionDetailPage() {
   return (
     <div className="cdp-page">
       {renderBreadcrumb()}
-
       <div className="cdp-main">
         <ProductGallery images={activeImages} onZoomChange={handleZoomChange} />
-
         <div className="cdp-right-col">
           {zoomState.active && (
             <div className="cdp-zoom-panel-wrap">
-              <div
-                className="cdp-zoom-panel"
-                style={{
-                  backgroundImage:    `url(${zoomState.src})`,
-                  backgroundSize:     zoomState.bgSize,
-                  backgroundPosition: zoomState.bgPos,
-                  backgroundRepeat:   'no-repeat',
-                }}
-              />
+              <div className="cdp-zoom-panel" style={{
+                backgroundImage: `url(${zoomState.src})`,
+                backgroundSize: zoomState.bgSize,
+                backgroundPosition: zoomState.bgPos,
+                backgroundRepeat: 'no-repeat',
+              }} />
             </div>
           )}
-
           <div className={`cdp-info-wrap${zoomState.active ? ' cdp-info-hidden' : ''}`}>
             <ProductInfo
               name={product?.name}
@@ -198,7 +221,6 @@ export default function CollectionDetailPage() {
           </div>
         </div>
       </div>
-
       <div className="cdp-lower">
         <ProductReviews />
         <ProductRelated />

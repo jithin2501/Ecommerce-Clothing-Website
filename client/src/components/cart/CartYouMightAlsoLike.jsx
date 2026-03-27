@@ -19,12 +19,24 @@ function AlsoLikeCard({ product }) {
 
   const formatPrice = (price) => typeof price === 'number' ? `₹${price}` : price;
 
+  const handleCardClick = () => {
+    // Save that we came from the cart page — restore to top of cart on back
+    sessionStorage.setItem('restoreCartScroll', '1');
+    navigate(`/collections/product/${product._id}`, {
+      state: {
+        fromLabel: 'Cart',
+        fromCart: true,
+        restoreScroll: true,
+      },
+    });
+  };
+
   return (
-    <div className="cyl-card">
+    <div className="cyl-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="cyl-img-wrap">
         <img src={product.img} alt={product.name} />
         {product.age && <span className="cyl-age">Ages {product.age}</span>}
-        <button className="cyl-wish">♡</button>
+        <button className="cyl-wish" onClick={(e) => e.stopPropagation()}>♡</button>
       </div>
       <div className="cyl-info">
         <div className="cyl-top-row">
@@ -34,11 +46,11 @@ function AlsoLikeCard({ product }) {
         <div className="cyl-name">{product.name}</div>
       </div>
       {!added ? (
-        <button className="cyl-add-btn" onClick={() => { addToCart(product); setAdded(true); }}>
+        <button className="cyl-add-btn" onClick={(e) => { e.stopPropagation(); addToCart(product); setAdded(true); }}>
           <CartIcon /> Quick Add
         </button>
       ) : (
-        <button className="cyl-add-btn cyl-go-cart" onClick={() => navigate('/cart')}>
+        <button className="cyl-add-btn cyl-go-cart" onClick={(e) => { e.stopPropagation(); navigate('/cart'); }}>
           <CartIcon /> Go to Cart
         </button>
       )}
