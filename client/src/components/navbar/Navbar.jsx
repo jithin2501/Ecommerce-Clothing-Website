@@ -2,6 +2,7 @@ import { ShoppingCart, User, LogIn } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+// Note: Ensure these paths match your actual project structure
 import { auth } from '../../firebase';
 import { useCart } from '../../context/CartContext';
 import '../../styles/navbar/Navbar.css';
@@ -36,7 +37,8 @@ export default function Navbar() {
   const prevPathRef = useRef(location.pathname);
 
   const [scrolled, setScrolled]   = useState(false);
-  const [user, setUser]           = useState(null);      // Firebase user state
+  const [user, setUser]           = useState(null);
+  const [loading, setLoading]     = useState(true); // Fixes the Login -> Account flash
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -49,6 +51,7 @@ export default function Navbar() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
+      setLoading(false); // Auth confirmed, stop showing loading state
     });
     return () => unsubscribe();
   }, []);
@@ -64,7 +67,7 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // ── Scroll handling for Navbar background ──────────────────
+  // ── Scroll handling ────────────────────────────────────────
   useEffect(() => {
     setScrolled(false);
     const handleScroll = () => setScrolled(window.scrollY > 60);
@@ -73,7 +76,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
 
-  // ── Handle cross-page scrolling logic ─────────────────────
+  // ── Home scroll restoration ────────────────────────────────
   useEffect(() => {
     prevPathRef.current = location.pathname;
     if (location.pathname !== '/') return;
@@ -150,7 +153,6 @@ export default function Navbar() {
     navigate('/');
   };
 
-  // Determine Nav Class based on route and scroll state
   let navClass = '';
   if (isFixedBanner) {
     navClass = scrolled ? 'nav-banner-scrolled' : 'nav-collections';
@@ -179,42 +181,44 @@ export default function Navbar() {
 
         <div className="nav-actions">
 
-          {/* ── ACCOUNT / LOGIN ── */}
-          {user ? (
-            <div className="account-dropdown-wrapper" ref={dropdownRef}>
-              <button 
-                className="action-item" 
-                onClick={() => setShowDropdown(!showDropdown)}
-              >
-                <div className="icon-wrapper">
-                  <User size={18} />
-                </div>
-                <span>ACCOUNT</span>
-              </button>
-
-              {showDropdown && (
-                <div className="account-dropdown">
-                  <div className="dropdown-user-info">
-                    <p className="dropdown-name">{user.displayName || 'User'}</p>
-                    <p className="dropdown-email">{user.email}</p>
+          {/* ── AUTH SECTION ── */}
+          {!loading && (
+            user ? (
+              <div className="account-dropdown-wrapper" ref={dropdownRef}>
+                <button 
+                  className="action-item" 
+                  onClick={() => setShowDropdown(!showDropdown)}
+                >
+                  <div className="icon-wrapper">
+                    <User size={18} />
                   </div>
-                  <hr className="dropdown-divider" />
-                  <Link to="/account" className="dropdown-item" onClick={() => setShowDropdown(false)}>
-                    My Account
-                  </Link>
-                  <button className="dropdown-item dropdown-logout" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          ) : (
-            <Link to="/login" className="action-item">
-              <div className="icon-wrapper">
-                <LogIn size={18} />
+                  <span>ACCOUNT</span>
+                </button>
+
+                {showDropdown && (
+                  <div className="account-dropdown">
+                    <div className="dropdown-user-info">
+                      <p className="dropdown-name">{user.displayName || 'User'}</p>
+                      <p className="dropdown-email">{user.email}</p>
+                    </div>
+                    <hr className="dropdown-divider" />
+                    <Link to="/account" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                      My Account
+                    </Link>
+                    <button className="dropdown-item dropdown-logout" onClick={handleLogout}>
+                      Logout
+                    </button>
+                  </div>
+                )}
               </div>
-              <span>LOGIN</span>
-            </Link>
+            ) : (
+              <Link to="/login" className="action-item">
+                <div className="icon-wrapper">
+                  <LogIn size={18} />
+                </div>
+                <span>LOGIN</span>
+              </Link>
+            )
           )}
 
           {/* ── CART ── */}
