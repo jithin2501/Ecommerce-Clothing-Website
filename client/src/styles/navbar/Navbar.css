@@ -133,62 +133,61 @@ nav.nav-collections + * { padding-top: 0; }
   flex: 1; justify-content: flex-end;
 }
 
+/* Global Action Item style for Links and Buttons */
 .action-item {
-  display: flex; align-items: center; gap: 8px;
-  text-decoration: none; color: #2D3E50;
-  font-size: 0.8rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.5px;
-  cursor: pointer; background: none; border: none;
-  font-family: 'Inter', sans-serif; transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #2D3E50;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  transition: color 0.3s ease;
 }
 
 .action-item:hover { color: #E8C5A8; }
 
-.cart-wrapper { position: relative; display: flex; align-items: center; }
+.icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .cart-count {
-  position: absolute; top: -8px; right: -8px;
-  background: var(--cart-orange); color: white;
-  font-size: 0.6rem; width: 16px; height: 16px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 50%; font-weight: bold;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--cart-orange, #f97316);
+  color: white;
+  font-size: 0.6rem;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: bold;
 }
 
 @media (max-width: 1100px) { .nav-links { display: none; } }
 
-/* ── Add these styles to your existing Navbar.css ── */
+/* ── ACCOUNT DROPDOWN ── */
 
-/* Account button (same look as other action-items) */
-.account-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 0;
-}
-
-/* Google profile picture in navbar */
-.nav-avatar {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-/* Dropdown wrapper */
 .account-dropdown-wrapper {
   position: relative;
 }
 
-/* Dropdown box */
 .account-dropdown {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% + 15px);
   right: 0;
   background: white;
   border: 1px solid #e2e8f0;
@@ -198,6 +197,8 @@ nav.nav-collections + * { padding-top: 0; }
   z-index: 999;
   overflow: hidden;
   animation: dropdownFadeIn 0.15s ease;
+  text-transform: none; /* Keeps name/email casing natural */
+  letter-spacing: normal;
 }
 
 @keyframes dropdownFadeIn {
@@ -205,7 +206,6 @@ nav.nav-collections + * { padding-top: 0; }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* User info block inside dropdown */
 .dropdown-user-info {
   padding: 14px 16px 10px;
 }
@@ -234,7 +234,6 @@ nav.nav-collections + * { padding-top: 0; }
   margin: 0;
 }
 
-/* Dropdown links */
 .dropdown-item {
   display: block;
   width: 100%;

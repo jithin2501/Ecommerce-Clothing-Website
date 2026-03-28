@@ -6,6 +6,9 @@ import { auth } from '../../firebase';
 import { useCart } from '../../context/CartContext';
 import '../../styles/navbar/Navbar.css';
 
+/**
+ * Helper to handle smooth scrolling to sections on the homepage
+ */
 function scrollToSection(sectionId) {
   let attempts = 0;
   const maxAttempts = 60;
@@ -33,7 +36,7 @@ export default function Navbar() {
   const prevPathRef = useRef(location.pathname);
 
   const [scrolled, setScrolled]   = useState(false);
-  const [user, setUser]           = useState(null);      // Firebase user
+  const [user, setUser]           = useState(null);      // Firebase user state
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -61,7 +64,7 @@ export default function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // ── Scroll handling ────────────────────────────────────────
+  // ── Scroll handling for Navbar background ──────────────────
   useEffect(() => {
     setScrolled(false);
     const handleScroll = () => setScrolled(window.scrollY > 60);
@@ -70,6 +73,7 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [location.pathname]);
 
+  // ── Handle cross-page scrolling logic ─────────────────────
   useEffect(() => {
     prevPathRef.current = location.pathname;
     if (location.pathname !== '/') return;
@@ -116,7 +120,7 @@ export default function Navbar() {
     }
   }, [location.pathname]);
 
-  // ── Handlers ───────────────────────────────────────────────
+  // ── Navigation Handlers ────────────────────────────────────
   const handleHome = (e) => {
     e.preventDefault();
     sessionStorage.removeItem('scrollTarget');
@@ -146,6 +150,7 @@ export default function Navbar() {
     navigate('/');
   };
 
+  // Determine Nav Class based on route and scroll state
   let navClass = '';
   if (isFixedBanner) {
     navClass = scrolled ? 'nav-banner-scrolled' : 'nav-collections';
@@ -174,26 +179,23 @@ export default function Navbar() {
 
         <div className="nav-actions">
 
-          {/* ── LOGIN / ACCOUNT toggle ── */}
+          {/* ── ACCOUNT / LOGIN ── */}
           {user ? (
-            // User is logged in → show Account with dropdown
             <div className="account-dropdown-wrapper" ref={dropdownRef}>
-              <button
-                className="action-item account-btn"
-                onClick={() => setShowDropdown((prev) => !prev)}
+              <button 
+                className="action-item" 
+                onClick={() => setShowDropdown(!showDropdown)}
               >
-                {user.photoURL ? (
-                  <img src={user.photoURL} alt="avatar" className="nav-avatar" />
-                ) : (
+                <div className="icon-wrapper">
                   <User size={18} />
-                )}
-                Account
+                </div>
+                <span>ACCOUNT</span>
               </button>
 
               {showDropdown && (
                 <div className="account-dropdown">
                   <div className="dropdown-user-info">
-                    <p className="dropdown-name">{user.displayName}</p>
+                    <p className="dropdown-name">{user.displayName || 'User'}</p>
                     <p className="dropdown-email">{user.email}</p>
                   </div>
                   <hr className="dropdown-divider" />
@@ -207,19 +209,21 @@ export default function Navbar() {
               )}
             </div>
           ) : (
-            // User is NOT logged in → show Login
             <Link to="/login" className="action-item">
-              <LogIn size={18} />
-              Login
+              <div className="icon-wrapper">
+                <LogIn size={18} />
+              </div>
+              <span>LOGIN</span>
             </Link>
           )}
 
+          {/* ── CART ── */}
           <Link to="/cart" className="action-item">
-            <div className="cart-wrapper">
+            <div className="icon-wrapper">
               <ShoppingCart size={18} />
               {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
             </div>
-            Cart
+            <span>CART</span>
           </Link>
 
         </div>
