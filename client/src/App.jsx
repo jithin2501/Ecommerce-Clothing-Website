@@ -30,11 +30,11 @@ import ChangeUsername     from './admin/views/ChangeUsername';
 import ChangePassword     from './admin/views/ChangePassword';
 import ReviewManagement   from './admin/views/reviewmanagement';
 import ProductManagement  from './admin/views/ProductManagement';
-import ProductDetailPage  from './admin/views/ProductDetailPage';   // ← NEW
+import ProductDetailPage  from './admin/views/ProductDetailPage';
 import ReviewQRPage       from './admin/views/ReviewQRPage';
 import Login              from './admin/login/Login';
 import ProtectedRoute     from './admin/login/Protectedroute';
-
+import UserLogin          from './components/auth/Login';  // ✅ renamed to avoid conflict
 
 function PublicLayout() {
   return (
@@ -45,7 +45,6 @@ function PublicLayout() {
         <Route path="/collections"                                   element={<CollectionsPage />} />
         <Route path="/collections/:ageGroup"                         element={<AgeGroupPage />} />
         <Route path="/collections/:ageGroup/:productSlug"            element={<CollectionDetailPage />} />
-        {/* Product detail page accessed by MongoDB _id */}
         <Route path="/collections/product/:productId"                element={<CollectionDetailPage />} />
         <Route path="/cart"                                          element={<CartPage />} />
         <Route path="/contact"                                       element={<ContactPage />} />
@@ -59,7 +58,7 @@ function PublicLayout() {
         <Route path="/support/order-help"                            element={<OrderHelp />} />
         <Route path="/support/chat"                                  element={<ChatSupport />} />
         <Route path="/review"                                        element={<ReviewSubmit />} />
-        <Route path="/account/policy/:type" element={<Policy />} />
+        <Route path="/account/policy/:type"                          element={<Policy />} />
       </Routes>
       <Footer />
     </>
@@ -72,6 +71,11 @@ function App() {
       <CartProvider>
         <WishlistProvider>
           <Routes>
+
+            {/* ✅ Login page — NO Navbar or Footer */}
+            <Route path="/login" element={<UserLogin />} />
+
+            {/* Admin routes */}
             <Route path="/admin/login" element={<Login />} />
             <Route
               path="/admin"
@@ -89,9 +93,12 @@ function App() {
               <Route path="reviews"                         element={<ReviewManagement />} />
               <Route path="review-qr"                       element={<ReviewQRPage />} />
               <Route path="products"                        element={<ProductManagement />} />
-              <Route path="products/:productId/details"     element={<ProductDetailPage />} />  {/* ← NEW */}
+              <Route path="products/:productId/details"     element={<ProductDetailPage />} />
             </Route>
+
+            {/* All public pages with Navbar + Footer */}
             <Route path="/*" element={<PublicLayout />} />
+
           </Routes>
         </WishlistProvider>
       </CartProvider>

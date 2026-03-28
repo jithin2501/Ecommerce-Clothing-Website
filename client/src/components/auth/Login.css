@@ -1,0 +1,346 @@
+/* ============================================================
+   Login.css — prefixed "ul-" to avoid global conflicts
+   ============================================================ */
+
+.ul-page {
+  position: fixed;
+  inset: 0;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+/* ── Card ── */
+.ul-container {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  display: flex;
+  position: relative;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.12);
+  border-radius: 20px;
+  min-height: 580px;
+  overflow: hidden;
+}
+
+/* ── Left: Image ── */
+.ul-image-section {
+  flex: 1.4;
+  background-color: #ffffff;
+  position: relative;          /* so back btn is positioned relative to this */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  z-index: 20;
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ul-image-section img {
+  width: 110%;
+  height: 110%;
+  object-fit: contain;
+  object-position: center;
+  transform: scale(1.05);
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.05));
+}
+
+/* ── Back Button — plain text, no box, top-left inside the image section ── */
+.ul-back-btn {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.ul-back-btn:hover {
+  color: #1e293b;
+  transform: translateX(-3px);
+}
+
+/* ── Right: Form ── */
+.ul-form-section {
+  flex: 1;
+  padding: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background: white;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  z-index: 5;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* ── Verified exit animation ── */
+.ul-verified .ul-form-section {
+  opacity: 0;
+  transform: translateX(50px);
+  pointer-events: none;
+}
+
+.ul-verified .ul-image-section {
+  transform: translateX(180%);
+}
+
+/* ── Header ── */
+.ul-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.ul-header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 8px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.ul-header p {
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ── Form fields ── */
+.ul-form-group {
+  margin-bottom: 20px;
+}
+
+.ul-form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.ul-form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  outline: none;
+  background: #fff;
+  color: #1e293b;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+}
+
+.ul-form-group input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ── Divider ── */
+.ul-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: #64748b;
+  font-size: 13px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.ul-divider::before,
+.ul-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.ul-divider::before { margin-right: 12px; }
+.ul-divider::after  { margin-left:  12px; }
+
+/* ── Google button ── */
+.ul-btn-google {
+  width: 100%;
+  padding: 12px;
+  background-color: white;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.ul-btn-google:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.ul-btn-google:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Messages ── */
+.ul-message {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  text-align: center;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.ul-msg-success {
+  background-color: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.ul-msg-error {
+  background-color: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* ── Success Overlay ── */
+.ul-success-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: row; 
+  align-items: center;
+  justify-content: center;
+  background: white;
+  z-index: 100;
+  text-align: center;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.ul-success-icon {
+  background: #dcfce7;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.ul-success-overlay h2 {
+  color: #1e293b;
+  margin-bottom: 10px;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.ul-success-overlay p {
+  color: #64748b;
+  font-size: 16px;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+.ul-success-overlay p span {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+/* ── Responsive ── */
+@media (max-width: 850px) {
+  .ul-container {
+    flex-direction: column;
+    max-width: 450px;
+    min-height: auto;
+  }
+
+  .ul-image-section {
+    height: 220px;
+    flex: none;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .ul-verified .ul-image-section {
+    transform: translateY(-200%);
+  }
+
+  .ul-image-section img {
+    width: 85%;
+    height: 85%;
+    transform: scale(1);
+  }
+
+  .ul-form-section {
+    padding: 32px;
+    flex: none;
+    width: 100%;
+    border-radius: 0 0 20px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ul-image-section { display: none; }
+  .ul-form-section  { padding: 24px; }
+}
+.ul-btn-signin {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.ul-btn-signin:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+}
+
+/* Active (click effect) */
+.ul-btn-signin:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+/* Disabled state */
+.ul-btn-signin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

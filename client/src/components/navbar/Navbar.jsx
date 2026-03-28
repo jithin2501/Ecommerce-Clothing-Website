@@ -1,6 +1,8 @@
-import { ShoppingCart, User } from 'lucide-react';
+import { ShoppingCart, User, LogIn } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { auth } from '../../firebase';
 import { useCart } from '../../context/CartContext';
 import '../../styles/navbar/Navbar.css';
 
@@ -25,19 +27,41 @@ function scrollToSection(sectionId) {
 }
 
 export default function Navbar() {
-  const location  = useLocation();
-  const navigate  = useNavigate();
+  const location    = useLocation();
+  const navigate    = useNavigate();
   const { cartCount } = useCart();
-  // Track previous pathname so we know when we've just arrived at '/'
   const prevPathRef = useRef(location.pathname);
+
+  const [scrolled, setScrolled]   = useState(false);
+  const [user, setUser]           = useState(null);      // Firebase user
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef(null);
 
   const pathParts     = location.pathname.split('/').filter(Boolean);
   const isBannerPage  = pathParts.length <= 2 && location.pathname.startsWith('/collections');
   const isContactPage = location.pathname === '/contact';
   const isFixedBanner = isBannerPage || isContactPage;
 
-  const [scrolled, setScrolled] = useState(false);
+  // ── Listen to Firebase auth state ──────────────────────────
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
+  // ── Close dropdown when clicking outside ───────────────────
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // ── Scroll handling ────────────────────────────────────────
   useEffect(() => {
     setScrolled(false);
     const handleScroll = () => setScrolled(window.scrollY > 60);
@@ -47,23 +71,16 @@ export default function Navbar() {
   }, [location.pathname]);
 
   useEffect(() => {
-    const wasElsewhere = prevPathRef.current !== '/';
     prevPathRef.current = location.pathname;
-
     if (location.pathname !== '/') return;
 
-    // Case 1: returning from product page (breadcrumb OR browser back)
     if (sessionStorage.getItem('restoreHomeScroll') === '1') {
       sessionStorage.removeItem('restoreHomeScroll');
       const sectionId = sessionStorage.getItem('restoreToSection');
       sessionStorage.removeItem('restoreToSection');
       if (sectionId) {
-        // Hide the page instantly, scroll, then reveal — eliminates the 1s flash
         document.documentElement.style.visibility = 'hidden';
-        const reveal = () => {
-          document.documentElement.style.visibility = '';
-        };
-
+        const reveal = () => { document.documentElement.style.visibility = ''; };
         let attempts = 0;
         const maxAttempts = 60;
         const tryScroll = () => {
@@ -78,7 +95,7 @@ export default function Navbar() {
             attempts++;
             setTimeout(tryScroll, 50);
           } else {
-            reveal(); // safety: always reveal
+            reveal();
           }
         };
         requestAnimationFrame(tryScroll);
@@ -86,7 +103,6 @@ export default function Navbar() {
       return;
     }
 
-    // Case 2: navigating to a named section from another page
     const hash = sessionStorage.getItem('scrollTarget');
     if (hash) {
       sessionStorage.removeItem('scrollTarget');
@@ -94,13 +110,13 @@ export default function Navbar() {
       return;
     }
 
-    // Case 3: explicit "go home to top"
     if (sessionStorage.getItem('goHome') === '1') {
       sessionStorage.removeItem('goHome');
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }, [location.pathname]);
 
+  // ── Handlers ───────────────────────────────────────────────
   const handleHome = (e) => {
     e.preventDefault();
     sessionStorage.removeItem('scrollTarget');
@@ -122,6 +138,12 @@ export default function Navbar() {
     } else {
       scrollToSection(sectionId);
     }
+  };
+
+  const handleLogout = async () => {
+    await signOut(auth);
+    setShowDropdown(false);
+    navigate('/');
   };
 
   let navClass = '';
@@ -151,10 +173,47 @@ export default function Navbar() {
         </ul>
 
         <div className="nav-actions">
-          <Link to="/account" className="action-item">
-            <User size={18} />
-            Account
-          </Link>
+
+          {/* ── LOGIN / ACCOUNT toggle ── */}
+          {user ? (
+            // User is logged in → show Account with dropdown
+            <div className="account-dropdown-wrapper" ref={dropdownRef}>
+              <button
+                className="action-item account-btn"
+                onClick={() => setShowDropdown((prev) => !prev)}
+              >
+                {user.photoURL ? (
+                  <img src={user.photoURL} alt="avatar" className="nav-avatar" />
+                ) : (
+                  <User size={18} />
+                )}
+                Account
+              </button>
+
+              {showDropdown && (
+                <div className="account-dropdown">
+                  <div className="dropdown-user-info">
+                    <p className="dropdown-name">{user.displayName}</p>
+                    <p className="dropdown-email">{user.email}</p>
+                  </div>
+                  <hr className="dropdown-divider" />
+                  <Link to="/account" className="dropdown-item" onClick={() => setShowDropdown(false)}>
+                    My Account
+                  </Link>
+                  <button className="dropdown-item dropdown-logout" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            // User is NOT logged in → show Login
+            <Link to="/login" className="action-item">
+              <LogIn size={18} />
+              Login
+            </Link>
+          )}
+
           <Link to="/cart" className="action-item">
             <div className="cart-wrapper">
               <ShoppingCart size={18} />
@@ -162,8 +221,8 @@ export default function Navbar() {
             </div>
             Cart
           </Link>
-        </div>
 
+        </div>
       </div>
     </nav>
   );
