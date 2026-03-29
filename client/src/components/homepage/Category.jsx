@@ -25,10 +25,14 @@ export default function Category() {
       <div className="section-inner">
 
         <div className="category-header">
-          <h2 className="category-title">
-            <span>Shop By</span> Category
-          </h2>
-        </div>
+  <h2 className="category-title">
+    <span>Shop By</span> Category
+  </h2>
+
+  <p className="category-subtitle">
+    Discover beautiful styles for every occasion and every little moment.
+  </p>
+</div>
 
         <div className="category-grid">
           {categories.map((cat) => (

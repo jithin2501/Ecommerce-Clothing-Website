@@ -78,6 +78,14 @@
   line-height: 1.6;
 }
 
+.category-subtitle {
+  font-size: 0.9rem;
+  color: var(--slate-gray);
+  margin-top: 0.5rem;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
 /* ── Responsive ── */
 @media (max-width: 900px) {
   .category-grid {
