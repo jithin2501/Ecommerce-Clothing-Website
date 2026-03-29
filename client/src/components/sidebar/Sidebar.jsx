@@ -111,13 +111,6 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
 
       <div className="sidebar-spacer" />
 
-      {/* Logout */}
-      <div className="nav-section">
-        <div className="nav-item" onClick={() => {}}>
-          <img src="/images/sidebar/switch.png" alt="logout" className="nav-icon-img" /> Logout
-        </div>
-      </div>
-
       {/* Contact Support — no border below */}
       <div className="nav-section nav-section-last">
         <div className="nav-item" onClick={() => navigate('/support')}>
