@@ -4,7 +4,7 @@
 .cdp-page {
   min-height: 100vh;
   background: #ffffff;
-  padding-top: 30px;
+  padding-top: 10px;
 }
 
 .cdp-breadcrumb {
@@ -17,7 +17,7 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -37,17 +37,13 @@
   text-transform: uppercase;
 }
 
-/* ── Main 2-col grid ──
-   Left col = 480px  →  main image right edge aligns with end of "Grace"
-   Thumbnails: 5 × 89px + 4 × 8px gap = 445 + 32 = 477px ≈ 480px (pg-wrapper is 100% so it fills 480px)
-   align-items: start  →  image top aligns with "Midnight Grace" title            */
 .cdp-main {
   display: grid;
-  grid-template-columns: 480px 1fr;
+  grid-template-columns: 560px 1fr;
   gap: 3.5rem;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 1.5rem var(--side-pad, 2rem) 3rem;
+  padding: 0.5rem var(--side-pad, 2rem) 3rem;
   align-items: start;    /* ← image top = title top */
 }
 
@@ -58,8 +54,8 @@
 
 /* Zoom panel — must use left-col width (480px) so aspect-ratio gives same height as .pg-main */
 .cdp-zoom-panel-wrap {
-  width: 480px;
-  aspect-ratio: 4 / 4.7;
+  width: 460px;
+  aspect-ratio: 4 / 5.75;
   border-radius: 20px;
   overflow: hidden;
   position: absolute;
@@ -89,7 +85,7 @@
 
 /* ── Lower sections ── */
 .cdp-lower {
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 0 var(--side-pad, 2rem);
 }
