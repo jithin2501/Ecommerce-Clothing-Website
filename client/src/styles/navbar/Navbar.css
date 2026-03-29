@@ -139,7 +139,8 @@ nav.nav-collections + * { padding-top: 0; }
   align-items: center;
   gap: 2rem;
   flex: 0 0 auto;          
-  margin-left: auto;       
+  margin-left: auto;  
+  margin-right: 20px;     
 }
 
 /* Global Action Item style for Links and Buttons */
