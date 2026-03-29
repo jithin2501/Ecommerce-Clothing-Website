@@ -3,6 +3,8 @@
 ========================================================= */
 .contact-page {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #fff;
 }
 
@@ -14,18 +16,25 @@
 
 /* ── Body ── */
 .contact-body {
-  padding: 3rem 0 6rem;
+  padding: 2rem 0;
   background: #fff;
+  flex: 1;
+
+  display: flex;              /* 👈 CENTER FIX */
+  align-items: center;        /* 👈 VERTICAL CENTER */
 }
 
 .contact-inner {
   max-width: 1600px;
   margin: 0 auto;
   padding: 0 14rem;
+
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 5rem;
-  align-items: start;
+
+  align-items: center; /* 👈 CENTER CONTENT */
+  width: 100%;
 }
 
 /* ── Breadcrumb ── */
@@ -208,10 +217,15 @@
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
+  .contact-body {
+    align-items: flex-start; /* 👈 disable center on mobile */
+  }
+
   .contact-inner {
     grid-template-columns: 1fr;
     gap: 3rem;
     padding: 0 2rem;
+    align-items: start;
   }
 }
 
@@ -219,6 +233,7 @@
   .contact-form-row { grid-template-columns: 1fr; }
   .contact-right { padding: 1.5rem; }
 }
+
 .contact-required {
   color: var(--accent-clay, #C17B5C);
   margin-left: 2px;
