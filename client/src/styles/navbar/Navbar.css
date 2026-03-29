@@ -78,18 +78,22 @@ nav.nav-collections ~ * .col-banner,
 nav.nav-collections + * { padding-top: 0; }
 
 .nav-inner {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto; 
   align-items: center;
   width: 100%;
-  max-width: 1600px;
+  max-width: 1200px;   
   margin: 0 auto;
-  padding: 0 var(--side-pad);
+  padding: 0 20px;
 }
 
 .logo-container {
-  display: flex; align-items: center; gap: 12px;
-  text-decoration: none; color: inherit; flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  flex: 0 0 auto;
 }
 
 .logo-img {
@@ -115,8 +119,10 @@ nav.nav-collections + * { padding-top: 0; }
 }
 
 .nav-links {
-  display: flex; gap: 2.5rem; list-style: none;
-  flex: 0 0 auto; justify-content: center; padding: 0; margin: 0;
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+  justify-self: center; 
 }
 
 .nav-links a {
@@ -129,8 +135,11 @@ nav.nav-collections + * { padding-top: 0; }
 .nav-links a:hover { color: #E8C5A8; }
 
 .nav-actions {
-  display: flex; align-items: center; gap: 2rem;
-  flex: 1; justify-content: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex: 0 0 auto;          
+  margin-left: auto;       
 }
 
 /* Global Action Item style for Links and Buttons */
