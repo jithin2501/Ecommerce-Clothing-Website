@@ -19,25 +19,18 @@
   letter-spacing: 4px;
   color: var(--accent-clay);
   margin-bottom: 0.75rem;
-  text-align: center;
 }
 
 .category-title span {
   color: var(--charcoal);
 }
 
-.category-sub {
-  font-size: 0.95rem;
-  color: var(--slate-gray);
-  font-weight: 400;
-}
-
-/* ── Grid ── */
+/* ── Grid (FIXED 4 ITEMS) ── */
 .category-grid {
-  display: flex;
-  justify-content: center;
-  gap: 7rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 👈 ALWAYS 4 */
+  justify-items: center;
+  gap: 4rem;
   padding: 0 8%;
 }
 
@@ -47,10 +40,9 @@
   flex-direction: column;
   align-items: center;
   gap: 1.2rem;
-  text-decoration: none;
   cursor: pointer;
   transition: transform 0.3s ease;
-  width: 180px; /* fixed width so label wraps consistently */
+  width: 180px;
 }
 
 .category-card:hover {
@@ -62,30 +54,17 @@
   width: 180px;
   height: 180px;
   border-radius: 50%;
+  overflow: hidden;
   background: #F5F2EE;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  transition: box-shadow 0.3s ease, background 0.3s ease;
-  position: relative;
-  flex-shrink: 0;
-}
-
-.category-card:hover .category-circle {
-  background: rgba(192, 127, 94, 0.1);
-  box-shadow: 0 8px 32px rgba(192, 127, 94, 0.25);
 }
 
 .category-circle img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.category-card:hover .category-circle img {
-  transform: scale(1.08);
 }
 
 /* ── Label ── */
@@ -93,26 +72,22 @@
   font-size: 0.75rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   color: var(--charcoal);
-  transition: color 0.3s ease;
   text-align: center;
-  line-height: 1.5;
-}
-
-.category-card:hover .category-label {
-  color: var(--accent-clay);
+  line-height: 1.6;
 }
 
 /* ── Responsive ── */
 @media (max-width: 900px) {
-  .category-grid { gap: 2.5rem; }
-  .category-card { width: 140px; }
-  .category-circle { width: 140px; height: 140px; }
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+  }
 }
 
-@media (max-width: 600px) {
-  .category-grid { gap: 1.5rem; }
-  .category-card { width: 120px; }
-  .category-circle { width: 120px; height: 120px; }
+@media (max-width: 500px) {
+  .category-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }

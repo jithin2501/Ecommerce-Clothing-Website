@@ -2,24 +2,20 @@ import '../../styles/homepage/Category.css';
 
 const categories = [
   {
-    label: 'Baby & Birthday Frocks',
-    img: './images/baby-frocks.png',
-    fallback: 'https://images.unsplash.com/photo-1519689680058-324335c77eba?q=80&w=400&auto=format&fit=crop',
+    label: 'OCCASION & DAILY\nWEAR FROCKS',
+    img: '/images/categories/occasion & daily wear frocks.png',
   },
   {
-    label: 'Tops & T-Shirts',
-    img: './images/tops-tshirts.png',
-    fallback: 'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w=400&auto=format&fit=crop',
+    label: 'PARTY WEAR\nCOLLECTION',
+    img: '/images/categories/occasion & daily wear frocks.png',
   },
   {
-    label: 'Indo-Western & Traditional Outfits',
-    img: './images/indo-western.png',
-    fallback: 'https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?q=80&w=400&auto=format&fit=crop',
+    label: 'DESIGNER & PREMIUM\nFROCKS',
+    img: '/images/categories/occasion & daily wear frocks.png',
   },
   {
-    label: 'Party Wear & Boys Collection',
-    img: './images/party-wear.png',
-    fallback: 'https://images.unsplash.com/photo-1503919545889-aef636e10ad4?q=80&w=400&auto=format&fit=crop',
+    label: 'TRADITIONAL & ETHNIC\nFROCKS',
+    img: '/images/categories/occasion & daily wear frocks.png',
   },
 ];
 
@@ -36,16 +32,19 @@ export default function Category() {
 
         <div className="category-grid">
           {categories.map((cat) => (
-            <a key={cat.label} href="#" className="category-card">
+            <div key={cat.label} className="category-card">
               <div className="category-circle">
-                <img
-                  src={cat.img}
-                  alt={cat.label}
-                  onError={(e) => { e.target.src = cat.fallback; }}
-                />
+                <img src={cat.img} alt={cat.label} />
               </div>
-              <span className="category-label">{cat.label}</span>
-            </a>
+
+              <span className="category-label">
+                {cat.label.split('\n').map((line, i) => (
+                  <span key={i} style={{ display: 'block' }}>
+                    {line}
+                  </span>
+                ))}
+              </span>
+            </div>
           ))}
         </div>
 
