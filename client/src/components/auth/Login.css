@@ -31,14 +31,14 @@
 .ul-image-section {
   flex: 1.4;
   background-color: #ffffff;
-  position: relative;          /* so back btn is positioned relative to this */
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   z-index: 20;
-  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+  /* NO transition/animation */
 }
 
 .ul-image-section img {
@@ -50,7 +50,7 @@
   filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.05));
 }
 
-/* ── Back Button — plain text, no box, top-left inside the image section ── */
+/* ── Back Button ── */
 .ul-back-btn {
   position: absolute;
   top: 18px;
@@ -87,18 +87,7 @@
   border-top-right-radius: 20px;
   border-bottom-right-radius: 20px;
   z-index: 5;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
-/* ── Verified exit animation ── */
-.ul-verified .ul-form-section {
-  opacity: 0;
-  transform: translateX(50px);
-  pointer-events: none;
-}
-
-.ul-verified .ul-image-section {
-  transform: translateX(180%);
+  /* NO transition/animation */
 }
 
 /* ── Header ── */
@@ -142,7 +131,7 @@
   border: 1px solid #e2e8f0;
   border-radius: 12px;
   font-size: 15px;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   outline: none;
   background: #fff;
   color: #1e293b;
@@ -153,6 +142,48 @@
 .ul-form-group input:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ── Phone wrapper: prefix INSIDE the input row ── */
+.ul-phone-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ul-phone-wrap:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.ul-phone-prefix {
+  padding: 14px 12px 14px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+  white-space: nowrap;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  user-select: none;
+}
+
+.ul-phone-wrap input {
+  flex: 1;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 14px 16px;
+  outline: none;
+  font-size: 15px;
+  color: #1e293b;
+  background: transparent;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
 }
 
 /* ── Divider ── */
@@ -190,21 +221,19 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
 
 .ul-btn-google:hover {
   background-color: #f8fafc;
   border-color: #cbd5e1;
-  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .ul-btn-google:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-  transform: none;
 }
 
 /* ── Messages ── */
@@ -234,7 +263,6 @@
   position: absolute;
   inset: 0;
   display: flex;
-  flex-direction: row; 
   align-items: center;
   justify-content: center;
   background: white;
@@ -242,6 +270,12 @@
   text-align: center;
   padding: 20px;
   border-radius: 20px;
+}
+
+.ul-success-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .ul-success-icon {
@@ -274,6 +308,57 @@
   font-weight: 700;
 }
 
+/* ── Primary button ── */
+.ul-btn-signin {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.ul-btn-signin:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+}
+
+.ul-btn-signin:active {
+  transform: scale(0.98);
+  box-shadow: none;
+}
+
+.ul-btn-signin:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Resend button ── */
+.ul-btn-resend {
+  margin-top: 14px;
+  background: none;
+  border: none;
+  color: #3b82f6;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.ul-btn-resend:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
 /* ── Responsive ── */
 @media (max-width: 850px) {
   .ul-container {
@@ -287,10 +372,6 @@
     flex: none;
     width: 100%;
     border-radius: 20px 20px 0 0;
-  }
-
-  .ul-verified .ul-image-section {
-    transform: translateY(-200%);
   }
 
   .ul-image-section img {
@@ -310,37 +391,4 @@
 @media (max-width: 480px) {
   .ul-image-section { display: none; }
   .ul-form-section  { padding: 24px; }
-}
-.ul-btn-signin {
-  width: 100%;
-  padding: 14px;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  transition: all 0.25s ease;
-}
-
-/* Hover */
-.ul-btn-signin:hover {
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  transform: translateY(-1px);
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
-}
-
-/* Active (click effect) */
-.ul-btn-signin:active {
-  transform: scale(0.98);
-  box-shadow: none;
-}
-
-/* Disabled state */
-.ul-btn-signin:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
 }

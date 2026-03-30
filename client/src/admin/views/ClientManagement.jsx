@@ -1,0 +1,385 @@
+// client/src/admin/views/ClientManagement.jsx
+// CSS lives in: client/src/admin/assets/ClientManagement.css  (matches your file structure)
+
+import { useState, useEffect, useCallback } from 'react';
+import '../assets/ClientManagement.css';
+
+const API = '/api/admin/clients';
+
+/* ── helpers ── */
+const ago = (dateStr) => {
+  if (!dateStr) return '—';
+  const diff = Date.now() - new Date(dateStr).getTime();
+  const m = Math.floor(diff / 60000);
+  if (m < 1)  return 'just now';
+  if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60);
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+};
+
+const LoginBadge = ({ type }) =>
+  type === 'google'
+    ? <span className="cm-badge cm-badge-google">Google</span>
+    : <span className="cm-badge cm-badge-phone">Phone</span>;
+
+/* ════════════════════════════════════
+   CLIENT DETAIL DRAWER
+════════════════════════════════════ */
+function ClientDrawer({ client, onClose }) {
+  const [tab, setTab] = useState('info');
+  if (!client) return null;
+
+  const TABS = ['info', 'addresses', 'wishlist', 'cart', 'orders'];
+
+  return (
+    <div className="cm-overlay" onClick={onClose}>
+      <aside className="cm-drawer" onClick={(e) => e.stopPropagation()}>
+
+        <button className="cm-drawer-close" onClick={onClose}>✕</button>
+
+        {/* Head */}
+        <div className="cm-drawer-head">
+          <div className="cm-drawer-avatar">
+            {client.photo
+              ? <img src={client.photo} alt={client.name} />
+              : <span>{(client.name || '?')[0].toUpperCase()}</span>}
+          </div>
+          <div>
+            <h2>{client.name || 'Unknown'}</h2>
+            <div className="cm-drawer-meta">
+              <LoginBadge type={client.loginType} />
+              <span className="cm-drawer-seen">Last seen {ago(client.lastSeen)}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="cm-tabs">
+          {TABS.map(t => (
+            <button
+              key={t}
+              className={`cm-tab${tab === t ? ' cm-tab-active' : ''}`}
+              onClick={() => setTab(t)}
+            >
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+              {t === 'cart' && client.cart?.length > 0 &&
+                <span className="cm-tab-dot" />}
+            </button>
+          ))}
+        </div>
+
+        {/* Body */}
+        <div className="cm-drawer-body">
+
+          {/* INFO */}
+          {tab === 'info' && (
+            <div className="cm-info-list">
+              <InfoRow label="Name"      value={client.name  || '—'} />
+              <InfoRow label="Email"     value={client.email || '—'} />
+              <InfoRow label="Phone"     value={client.phone || '—'} />
+              <InfoRow label="Login via" value={client.loginType} />
+              <InfoRow label="Joined"    value={client.createdAt ? new Date(client.createdAt).toLocaleDateString('en-IN') : '—'} />
+              <InfoRow label="Last seen" value={client.lastSeen   ? new Date(client.lastSeen).toLocaleString('en-IN')   : '—'} />
+            </div>
+          )}
+
+          {/* ADDRESSES */}
+          {tab === 'addresses' && (
+            client.addresses?.length
+              ? client.addresses.map((a, i) => (
+                <div className="cm-addr-card" key={i}>
+                  <span className="cm-addr-type">{a.type || 'Address'}</span>
+                  <p className="cm-addr-name">{a.fullName} · {a.mobile}</p>
+                  <p className="cm-addr-line">{a.address}, {a.locality}, {a.city} – {a.pincode}</p>
+                  <p className="cm-addr-line">{a.state}{a.landmark ? ` · Near ${a.landmark}` : ''}</p>
+                </div>
+              ))
+              : <EmptyState text="No saved addresses" />
+          )}
+
+          {/* WISHLIST */}
+          {tab === 'wishlist' && (
+            client.wishlist?.length
+              ? <div className="cm-product-list">
+                  {client.wishlist.map((w, i) => (
+                    <div className="cm-product-row" key={i}>
+                      {w.img && <img src={w.img} alt={w.name} className="cm-product-img" />}
+                      <div>
+                        <p className="cm-product-name">{w.name}</p>
+                        <p className="cm-product-meta">{w.category} · {w.price}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              : <EmptyState text="Wishlist is empty" />
+          )}
+
+          {/* CART — abandoned items */}
+          {tab === 'cart' && (
+            client.cart?.length
+              ? <div className="cm-product-list">
+                  <div className="cm-cart-alert">
+                    ⚠️ Added to cart but not purchased
+                  </div>
+                  {client.cart.map((c, i) => (
+                    <div className="cm-product-row" key={i}>
+                      {c.img && <img src={c.img} alt={c.name} className="cm-product-img" />}
+                      <div className="cm-product-info">
+                        <p className="cm-product-name">{c.name}</p>
+                        <p className="cm-product-meta">
+                          Size: {c.size} · Color: {c.color} · Qty: {c.qty}
+                        </p>
+                        <p className="cm-product-price">
+                          ₹{(Number(c.price) * c.qty).toLocaleString('en-IN')}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              : <EmptyState text="No abandoned cart items" />
+          )}
+
+          {/* ORDERS */}
+          {tab === 'orders' && (
+            client.orders?.length
+              ? client.orders.map((o, i) => (
+                <div className="cm-order-card" key={i}>
+                  <div className="cm-order-head">
+                    <span className="cm-order-id">#{o.orderId || `ORD-${i + 1}`}</span>
+                    <span className={`cm-order-status cm-status-${o.status}`}>{o.status}</span>
+                    <span className="cm-order-date">
+                      {o.placedAt ? new Date(o.placedAt).toLocaleDateString('en-IN') : ''}
+                    </span>
+                  </div>
+                  {o.items?.map((it, j) => (
+                    <div className="cm-order-item" key={j}>
+                      <span>{it.name}</span>
+                      <span>×{it.qty} · ₹{(Number(it.price) * it.qty).toLocaleString('en-IN')}</span>
+                    </div>
+                  ))}
+                  <div className="cm-order-total">
+                    Total: ₹{Number(o.total).toLocaleString('en-IN')}
+                  </div>
+                </div>
+              ))
+              : <EmptyState text="No orders placed yet" />
+          )}
+
+        </div>
+      </aside>
+    </div>
+  );
+}
+
+const InfoRow   = ({ label, value }) => (
+  <div className="cm-info-row">
+    <span className="cm-info-label">{label}</span>
+    <span className="cm-info-value">{value}</span>
+  </div>
+);
+const EmptyState = ({ text }) => <div className="cm-empty">{text}</div>;
+
+/* ════════════════════════════════════
+   STAT CARD
+════════════════════════════════════ */
+function StatCard({ label, value, color }) {
+  return (
+    <div className={`cm-stat-card cm-stat-${color}`}>
+      <span className="cm-stat-value">{value ?? '—'}</span>
+      <span className="cm-stat-label">{label}</span>
+    </div>
+  );
+}
+
+/* ════════════════════════════════════
+   MAIN PAGE
+════════════════════════════════════ */
+export default function ClientManagement() {
+  const [stats,    setStats]    = useState(null);
+  const [clients,  setClients]  = useState([]);
+  const [total,    setTotal]    = useState(0);
+  const [page,     setPage]     = useState(1);
+  const [filter,   setFilter]   = useState('all');
+  const [search,   setSearch]   = useState('');
+  const [loading,  setLoading]  = useState(false);
+  const [selected, setSelected] = useState(null);
+  const LIMIT = 20;
+
+  /* fetch stats once */
+  useEffect(() => {
+    fetch(`${API}/stats`)
+      .then(r => r.json())
+      .then(d => d.success && setStats(d.stats))
+      .catch(() => {});
+  }, []);
+
+  /* fetch client list */
+  const fetchClients = useCallback(() => {
+    setLoading(true);
+    const params = new URLSearchParams({ loginType: filter, search, page, limit: LIMIT });
+    fetch(`${API}?${params}`)
+      .then(r => r.json())
+      .then(d => {
+        if (d.success) { setClients(d.users); setTotal(d.total); }
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, [filter, search, page]);
+
+  useEffect(() => { fetchClients(); }, [fetchClients]);
+
+  /* open full detail drawer */
+  const openClient = async (c) => {
+    try {
+      const r = await fetch(`${API}/${c._id}`);
+      const d = await r.json();
+      setSelected(d.success ? d.user : c);
+    } catch {
+      setSelected(c);
+    }
+  };
+
+  const pages = Math.ceil(total / LIMIT);
+
+  return (
+    <div className="cm-page">
+
+      {/* Header */}
+      <div className="cm-header">
+        <div>
+          <h1 className="cm-title">Client Management</h1>
+          <p className="cm-subtitle">All website users — Google & Phone logins</p>
+        </div>
+      </div>
+
+      {/* Stats */}
+      {stats && (
+        <div className="cm-stats-row">
+          <StatCard label="Total Clients"   value={stats.total}    color="blue"   />
+          <StatCard label="Google Logins"   value={stats.google}   color="red"    />
+          <StatCard label="Phone Logins"    value={stats.phone}    color="green"  />
+          <StatCard label="Abandoned Carts" value={stats.withCart} color="amber"  />
+          <StatCard label="New Today"       value={stats.newToday} color="purple" />
+        </div>
+      )}
+
+      {/* Toolbar */}
+      <div className="cm-toolbar">
+        <div className="cm-filter-tabs">
+          {['all', 'google', 'phone'].map(f => (
+            <button
+              key={f}
+              className={`cm-filter-btn${filter === f ? ' active' : ''}`}
+              onClick={() => { setFilter(f); setPage(1); }}
+            >
+              {f === 'all' ? 'All' : f.charAt(0).toUpperCase() + f.slice(1)}
+            </button>
+          ))}
+        </div>
+
+        <div className="cm-search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input
+            className="cm-search-input"
+            placeholder="Search name, email or phone…"
+            value={search}
+            onChange={e => { setSearch(e.target.value); setPage(1); }}
+          />
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="cm-table-wrap">
+        {loading ? (
+          <div className="cm-loading">Loading clients…</div>
+        ) : clients.length === 0 ? (
+          <div className="cm-loading">No clients found.</div>
+        ) : (
+          <table className="cm-table">
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>Contact</th>
+                <th>Login</th>
+                <th>Cart</th>
+                <th>Wishlist</th>
+                <th>Orders</th>
+                <th>Last Seen</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {clients.map(c => (
+                <tr key={c._id} className="cm-row" onClick={() => openClient(c)}>
+
+                  <td>
+                    <div className="cm-client-cell">
+                      <div className="cm-avatar">
+                        {c.photo
+                          ? <img src={c.photo} alt={c.name} />
+                          : <span>{(c.name || '?')[0].toUpperCase()}</span>}
+                      </div>
+                      <span className="cm-client-name">{c.name || '—'}</span>
+                    </div>
+                  </td>
+
+                  <td className="cm-td-contact">
+                    <span>{c.email || c.phone || '—'}</span>
+                    {c.email && c.phone && <span className="cm-contact-sub">{c.phone}</span>}
+                  </td>
+
+                  <td><LoginBadge type={c.loginType} /></td>
+
+                  <td>
+                    <span className={`cm-pill${c.cart?.length ? ' cm-pill-warn' : ''}`}>
+                      {c.cart?.length || 0} item{c.cart?.length !== 1 ? 's' : ''}
+                    </span>
+                  </td>
+
+                  <td><span className="cm-pill">{c.wishlist?.length || 0}</span></td>
+                  <td><span className="cm-pill">{c.orders?.length  || 0}</span></td>
+
+                  <td className="cm-td-seen">{ago(c.lastSeen)}</td>
+
+                  <td>
+                    <button
+                      className="cm-view-btn"
+                      onClick={(e) => { e.stopPropagation(); openClient(c); }}
+                    >
+                      View →
+                    </button>
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Pagination */}
+      {pages > 1 && (
+        <div className="cm-pagination">
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >← Prev</button>
+          <span>Page {page} of {pages} ({total} total)</span>
+          <button
+            onClick={() => setPage(p => Math.min(pages, p + 1))}
+            disabled={page === pages}
+          >Next →</button>
+        </div>
+      )}
+
+      {/* Detail Drawer */}
+      {selected && <ClientDrawer client={selected} onClose={() => setSelected(null)} />}
+
+    </div>
+  );
+}

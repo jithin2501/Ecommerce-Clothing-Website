@@ -23,18 +23,19 @@ import ChatSupport          from './pages/support/ChatSupport';
 import ReviewSubmit         from './pages/review/ReviewSubmit';
 import Policy               from './pages/policy/Policy';
 
-import AdminLayout        from './admin/layout/AdminLayout';
-import Contact            from './admin/views/Contactmessage';
-import UserManagement     from './admin/views/UserManagement';
-import ChangeUsername     from './admin/views/ChangeUsername';
-import ChangePassword     from './admin/views/ChangePassword';
-import ReviewManagement   from './admin/views/reviewmanagement';
-import ProductManagement  from './admin/views/ProductManagement';
-import ProductDetailPage  from './admin/views/ProductDetailPage';
-import ReviewQRPage       from './admin/views/ReviewQRPage';
-import Login              from './admin/login/Login';
-import ProtectedRoute     from './admin/login/Protectedroute';
-import UserLogin          from './components/auth/Login';  // ✅ renamed to avoid conflict
+import AdminLayout          from './admin/layout/AdminLayout';
+import Contact              from './admin/views/Contactmessage';
+import UserManagement       from './admin/views/UserManagement';
+import ChangeUsername       from './admin/views/ChangeUsername';
+import ChangePassword       from './admin/views/ChangePassword';
+import ReviewManagement     from './admin/views/reviewmanagement';
+import ProductManagement    from './admin/views/ProductManagement';
+import ProductDetailPage    from './admin/views/ProductDetailPage';
+import ReviewQRPage         from './admin/views/ReviewQRPage';
+import ClientManagement     from './admin/views/ClientManagement';   // ← NEW
+import Login                from './admin/login/Login';
+import ProtectedRoute       from './admin/login/Protectedroute';
+import UserLogin            from './components/auth/Login';
 
 function PublicLayout() {
   return (
@@ -72,11 +73,13 @@ function App() {
         <WishlistProvider>
           <Routes>
 
-            {/* ✅ Login page — NO Navbar or Footer */}
+            {/* Client login — no Navbar/Footer */}
             <Route path="/login" element={<UserLogin />} />
 
-            {/* Admin routes */}
+            {/* Admin login */}
             <Route path="/admin/login" element={<Login />} />
+
+            {/* Admin protected routes */}
             <Route
               path="/admin"
               element={
@@ -94,6 +97,7 @@ function App() {
               <Route path="review-qr"                       element={<ReviewQRPage />} />
               <Route path="products"                        element={<ProductManagement />} />
               <Route path="products/:productId/details"     element={<ProductDetailPage />} />
+              <Route path="clients"                         element={<ClientManagement />} />  {/* ← NEW */}
             </Route>
 
             {/* All public pages with Navbar + Footer */}
