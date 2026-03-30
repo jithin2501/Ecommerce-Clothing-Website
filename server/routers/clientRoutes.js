@@ -12,4 +12,15 @@ router.post('/phone',         clientCtrl.phoneLogin);
 router.post('/sync-cart',     clientCtrl.syncCart);
 router.post('/sync-wishlist', clientCtrl.syncWishlist);
 
+// Profile management endpoints
+router.get('/profile/:uid',   clientCtrl.getProfile);
+router.put('/profile/:uid',   clientCtrl.updateProfile);
+router.delete('/delete/:uid', clientCtrl.deleteAccount);
+
+// Address management endpoints
+router.get('/addresses/:uid',          clientCtrl.getAddresses);
+router.post('/addresses/:uid',         clientCtrl.addAddress);
+router.put('/addresses/:uid/:addrId',  clientCtrl.updateAddress);
+router.delete('/addresses/:uid/:addrId', clientCtrl.deleteAddress);
+
 module.exports = router;

@@ -5,7 +5,10 @@ import ProductInfo      from '../../components/collectiondetails/ProductInfo';
 import ProductAccordion from '../../components/collectiondetails/ProductAccordion';
 import ProductReviews   from '../../components/collectiondetails/ProductReviews';
 import ProductRelated   from '../../components/collectiondetails/ProductRelated';
+import AddressSidebar   from '../../components/collectiondetails/AddressSidebar';
 import '../../styles/collectiondetails/CollectionDetailPage.css';
+import { auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const API = 'http://localhost:5000/api';
 
@@ -70,7 +73,38 @@ export default function CollectionDetailPage() {
   const [loading,      setLoading]      = useState(true);
   const [notFound,     setNotFound]     = useState(false);
   const [activeImages, setActiveImages] = useState([]);
-  const [zoomState,    setZoomState]    = useState({ active: false });
+  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+  const [zoomState, setZoomState] = useState({ isZoomed: false, x: 0, y: 0 });
+
+  const handleSelectAddress = (addr) => {
+    setSelectedAddress(addr);
+  };
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
+          const data = await res.json();
+          if (data.success && data.addresses) {
+            setUserInfo(data.user);
+            const defAddr = data.addresses.find(a => a.isDefault);
+            if (defAddr) setSelectedAddress(defAddr);
+          }
+        } catch (e) {}
+      } else {
+        try {
+          const saved = JSON.parse(localStorage.getItem('sumathi_addresses') || '[]');
+          const defAddr = saved.find(a => a.isDefault);
+          if (defAddr) setSelectedAddress(defAddr);
+        } catch (e) {}
+      }
+    });
+    return () => unsub();
+  }, []);
 
   const handleZoomChange  = useCallback((state) => setZoomState(state), []);
 
@@ -211,6 +245,10 @@ export default function CollectionDetailPage() {
               productId={detail.product?._id}
               galleryImg={activeImages?.[0]}
               onColorChange={handleColorChange}
+              selectedAddress={selectedAddress}
+              onOpenSidebar={() => setIsSidebarOpen(true)}
+              userInfo={userInfo}
+              auth={auth}
             />
             <ProductAccordion
               specifications={detail.specifications}
@@ -225,6 +263,12 @@ export default function CollectionDetailPage() {
         <ProductReviews />
         <ProductRelated />
       </div>
+
+      <AddressSidebar 
+          isOpen={isSidebarOpen} 
+          onClose={() => setIsSidebarOpen(false)} 
+          onSelectAddress={handleSelectAddress} 
+      />
     </div>
   );
 }

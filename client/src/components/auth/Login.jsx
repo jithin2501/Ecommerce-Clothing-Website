@@ -9,7 +9,6 @@ import './Login.css';
 export default function Login() {
   const navigate = useNavigate();
 
-  const [fullName, setFullName] = useState('');
   const [phone, setPhone]       = useState('');
   const [otp, setOtp]           = useState('');
   const [step, setStep]         = useState('form');
@@ -55,12 +54,6 @@ export default function Login() {
   const handleSendOtp = async () => {
     console.group("📱 handleSendOtp()");
 
-    if (!fullName.trim()) {
-      console.warn("❌ Validation failed: fullName is empty");
-      setMessage({ text: 'Please enter your full name.', type: 'error' });
-      console.groupEnd();
-      return;
-    }
     if (!/^\d{10}$/.test(phone)) {
       console.warn("❌ Validation failed: phone is not 10 digits. Value:", phone);
       setMessage({ text: 'Enter a valid 10-digit phone number.', type: 'error' });
@@ -73,7 +66,6 @@ export default function Login() {
 
     const phoneNumber = `+91${phone}`;
     console.log("📞 Phone number to send OTP:", phoneNumber);
-    console.log("👤 Full name:", fullName);
 
     // ── Step 1: Check auth object ──
     console.log("🔑 auth.app.options.projectId:", auth.app.options.projectId || "❌ MISSING");
@@ -154,7 +146,6 @@ export default function Login() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           uid:       user.uid,
-          name:      fullName.trim(),
           phone:     phone,
           loginType: 'phone',
         }),
@@ -171,7 +162,6 @@ export default function Login() {
     }
   };
 
-  const handleNameChange  = (e) => setFullName(e.target.value.replace(/[^a-zA-Z\s]/g, ''));
   const handlePhoneChange = (e) => setPhone(e.target.value.replace(/[^0-9]/g, '').slice(0, 10));
   const handleOtpChange   = (e) => setOtp(e.target.value.replace(/[^0-9]/g, '').slice(0, 6));
 
@@ -215,17 +205,6 @@ export default function Login() {
               <div className="ul-header">
                 <h1>Welcome back</h1>
                 <p>Please log into your account</p>
-              </div>
-
-              <div className="ul-form-group">
-                <label htmlFor="fullName">Full Name</label>
-                <input
-                  type="text"
-                  id="fullName"
-                  placeholder="Enter your name"
-                  value={fullName}
-                  onChange={handleNameChange}
-                />
               </div>
 
               <div className="ul-form-group">

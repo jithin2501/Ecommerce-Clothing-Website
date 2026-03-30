@@ -21,6 +21,10 @@ export default function ProductInfo({
   productId    = null,
   galleryImg   = '',
   onColorChange = null,
+  selectedAddress = null,
+  onOpenSidebar = () => {},
+  userInfo = null,
+  auth = null,
 }) {
   const [selectedSize,  setSelectedSize]  = useState(sizes[0] || '');
   const [selectedColor, setSelectedColor] = useState(colors[0]?.name || '');
@@ -29,6 +33,44 @@ export default function ProductInfo({
   const navigate = useNavigate();
 
   const selectedColorHex = colors.find(c => c.name === selectedColor)?.hex || '#2D3E50';
+
+  const handleBeforeAdd = () => {
+    if (!selectedAddress) {
+      alert("Please set a delivery location before adding to cart.");
+      onOpenSidebar();
+      return false;
+    }
+    
+    // Auth requirements for strict validation
+    if (auth?.currentUser && userInfo) {
+      const isGoogle = userInfo.loginType === 'google' || auth.currentUser.providerData[0]?.providerId === 'google.com';
+      const isPhone  = userInfo.loginType === 'phone' || auth.currentUser.providerData[0]?.providerId === 'phone';
+
+      if (isGoogle && !userInfo.phone) {
+        alert("Please complete your Personal Information (Phone number) in your account before adding to cart.");
+        navigate('/account');
+        return false;
+      } 
+      
+      if (isPhone && !userInfo.fullName) {
+        alert("Please complete your Personal Information (Name) in your account before adding to cart. No email is required.");
+        navigate('/account');
+        return false;
+      }
+      
+      if (!isGoogle && !isPhone && (!userInfo.fullName || !userInfo.phone)) {
+        alert("Please complete your Personal Information in your account before adding to cart.");
+        navigate('/account');
+        return false;
+      }
+    } else if (auth && !auth.currentUser) {
+      alert("Please login to add items to your cart.");
+      navigate('/login');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleAddToBag = () => {
     addToCart({
@@ -91,6 +133,7 @@ export default function ProductInfo({
 
       <div className="pi-actions">
         <AddToCartBtn
+          onBeforeAdd={handleBeforeAdd}
           onAdd={handleAddToBag}
           onGoToBag={() => navigate('/cart')}
           shirtColor={selectedColorHex}
@@ -104,7 +147,21 @@ export default function ProductInfo({
       <div className="pi-delivery">
         <p className="pi-delivery-title">Delivery details</p>
         <ul className="pi-delivery-list">
-          <li><MapPin size={14} /><span>Location not set. <a href="#">Select delivery location</a></span></li>
+          <li>
+            <MapPin size={14} style={{ flexShrink: 0, marginTop: '4px' }} />
+            <span style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+              {selectedAddress ? (
+                <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '240px', display: 'inline-block' }}>
+                    <span style={{fontWeight:'bold'}}>{selectedAddress.name}</span>, {selectedAddress.line1}, {selectedAddress.city} - {selectedAddress.pincode}
+                  </span>
+                  <a href="#" onClick={(e) => { e.preventDefault(); onOpenSidebar(); }} style={{marginLeft: '8px', color: '#167a92', fontWeight: '500', flexShrink: 0}}>Change</a>
+                </div>
+              ) : (
+                <span>Location not set. <a href="#" onClick={(e) => { e.preventDefault(); onOpenSidebar(); }} style={{color: '#167a92', fontWeight: '500', marginLeft: '4px'}}>Select delivery location</a></span>
+              )}
+            </span>
+          </li>
           <li><Truck size={14} /><span>Delivery by {deliveryDate}</span></li>
           <li><Package size={14} /><span>Fulfilled by Sumathi Trends</span></li>
         </ul>

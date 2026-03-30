@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/manageaddresses/ManageAddresses.css';
+import { auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const INDIAN_STATES = [
   'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh',
@@ -14,7 +16,7 @@ const INDIAN_STATES = [
 
 const emptyForm = {
   fullName: '', mobile: '', pincode: '', locality: '',
-  address: '', city: '', state: '', landmark: '', altPhone: '', type: ''
+  address: '', city: '', state: '', landmark: '', altPhone: '', type: '', isDefault: false
 };
 
 export default function ManageAddresses() {
@@ -25,20 +27,32 @@ export default function ManageAddresses() {
   const [form, setForm]                 = useState(emptyForm);
   const [errors, setErrors]             = useState({});
   const [showForm, setShowForm]         = useState(false); // hidden by default
-  const [addresses, setAddresses_] = useState(() => {
-    try {
-      const saved = localStorage.getItem('sumathi_addresses');
-      return saved ? JSON.parse(saved) : [];
-    } catch { return []; }
-  });
+  const [addresses, setAddresses_]      = useState([]);
+  const [userUid, setUserUid]           = useState(null);
 
-  const setAddresses = (updater) => {
-    setAddresses_(prev => {
-      const next = typeof updater === 'function' ? updater(prev) : updater;
-      try { localStorage.setItem('sumathi_addresses', JSON.stringify(next)); } catch {}
-      return next;
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserUid(user.uid);
+        try {
+          const res = await fetch(`/api/client-auth/addresses/${user.uid}`);
+          const data = await res.json();
+          if (data.success) {
+            setAddresses_(data.addresses || []);
+          }
+        } catch (err) {
+          console.error("Failed to fetch addresses", err);
+        }
+      } else {
+        setUserUid(null);
+        try {
+          const saved = localStorage.getItem('sumathi_addresses');
+          setAddresses_(saved ? JSON.parse(saved) : []);
+        } catch { setAddresses_([]); }
+      }
     });
-  };
+    return () => unsub();
+  }, []);
 
   const [saved, setSaved]       = useState(false);
   const [menuOpen, setMenuOpen] = useState(null);
@@ -62,35 +76,57 @@ export default function ManageAddresses() {
     return e;
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
 
-    if (editingId !== null) {
-      setAddresses(a => a.map(x => x.id === editingId ? {
-        ...x,
-        type: form.type.toUpperCase(),
-        name: form.fullName, phone: form.mobile,
-        line1: form.address,
-        line2: `${form.locality}, ${form.city}, ${form.state} -`,
-        pincode: form.pincode,
-        landmark: form.landmark, altPhone: form.altPhone
-      } : x));
-      setEditingId(null);
+    const newAddrPart = {
+      type: form.type.toUpperCase(),
+      name: form.fullName, phone: form.mobile,
+      line1: form.address,
+      line2: `${form.locality}, ${form.city}, ${form.state} -`,
+      pincode: form.pincode,
+      landmark: form.landmark, altPhone: form.altPhone,
+      isDefault: form.isDefault || false,
+      fullName: form.fullName, mobile: form.mobile,
+      locality: form.locality, address: form.address, city: form.city, state: form.state
+    };
+
+    if (userUid) {
+      if (editingId !== null) {
+        const res = await fetch(`/api/client-auth/addresses/${userUid}/${editingId}`, {
+          method: 'PUT', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(newAddrPart)
+        });
+        const data = await res.json();
+        if (data.success) setAddresses_(data.addresses);
+      } else {
+        const payload = { ...newAddrPart, id: Date.now().toString() };
+        const res = await fetch(`/api/client-auth/addresses/${userUid}`, {
+          method: 'POST', headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) setAddresses_(data.addresses);
+      }
     } else {
-      setAddresses(a => [...a, {
-        id: Date.now(),
-        type: form.type.toUpperCase(),
-        name: form.fullName, phone: form.mobile,
-        line1: form.address,
-        line2: `${form.locality}, ${form.city}, ${form.state} -`,
-        pincode: form.pincode,
-        landmark: form.landmark, altPhone: form.altPhone
-      }]);
+      // Guest local storage fallback
+      let curr = addresses;
+      if (newAddrPart.isDefault) {
+        curr = curr.map(a => ({ ...a, isDefault: false }));
+      }
+      if (editingId !== null) {
+        curr = curr.map(x => x.id === editingId ? { ...x, ...newAddrPart } : x);
+      } else {
+        curr = [...curr, { ...newAddrPart, id: Date.now().toString() }];
+      }
+      setAddresses_(curr);
+      try { localStorage.setItem('sumathi_addresses', JSON.stringify(curr)); } catch {}
     }
 
     setForm(emptyForm);
     setErrors({});
+    setEditingId(null);
     setSaved(true);
     setShowForm(false);
     setTimeout(() => setSaved(false), 2000);
@@ -107,7 +143,8 @@ export default function ManageAddresses() {
       state: addr.line2.split(', ')[2]?.replace(' -', '').trim() || '',
       landmark: addr.landmark || '',
       altPhone: addr.altPhone || '',
-      type: addr.type.charAt(0) + addr.type.slice(1).toLowerCase()
+      type: addr.type.charAt(0) + addr.type.slice(1).toLowerCase(),
+      isDefault: addr.isDefault || false
     });
     setEditingId(addr.id);
     setMenuOpen(null);
@@ -115,8 +152,27 @@ export default function ManageAddresses() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleDelete = (id) => {
-    setAddresses(a => a.filter(x => x.id !== id));
+  const handleDelete = async (id) => {
+    // Synchronize delete: if this is the active delivery address, wipe it
+    try {
+      const activeStr = localStorage.getItem('sumathi_active_address');
+      if (activeStr) {
+        const active = JSON.parse(activeStr);
+        if (String(active.id || active._id) === String(id)) {
+          localStorage.removeItem('sumathi_active_address');
+        }
+      }
+    } catch (err) {}
+
+    if (userUid) {
+      const res = await fetch(`/api/client-auth/addresses/${userUid}/${id}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) setAddresses_(data.addresses);
+    } else {
+      const filtered = addresses.filter(x => x.id !== id);
+      setAddresses_(filtered);
+      try { localStorage.setItem('sumathi_addresses', JSON.stringify(filtered)); } catch {}
+    }
     setMenuOpen(null);
     if (editingId === id) { setEditingId(null); setForm(emptyForm); setShowForm(false); }
   };
@@ -256,6 +312,11 @@ export default function ManageAddresses() {
                   </div>
                   {errors.type && <span className="ma-error">{errors.type}</span>}
                 </div>
+                
+                <div className="ma-field ma-field-full" style={{ marginTop: '15px', display: 'flex', alignItems: 'center', gap: '10px', flexDirection: 'row' }}>
+                  <input type="checkbox" checked={form.isDefault || false} onChange={e => handleChange('isDefault', e.target.checked)} style={{ width: '16px', height: '16px', cursor: 'pointer', margin: 0 }} />
+                  <label style={{ margin: 0, cursor: 'pointer', paddingTop: '2px' }} onClick={() => handleChange('isDefault', !form.isDefault)}>MAKE THIS MY DEFAULT ADDRESS</label>
+                </div>
               </div>
 
               <div className="ma-form-actions">
@@ -276,9 +337,10 @@ export default function ManageAddresses() {
               </div>
               {addresses.map(addr => (
                 <div key={addr.id} className="ma-address-card">
-                  <div className="ma-address-top">
+                  <div className="ma-address-top" style={{ display: 'flex', alignItems: 'center' }}>
                     <span className="ma-addr-type">{addr.type}</span>
-                    <div className="ma-menu-wrap" onClick={e => { e.stopPropagation(); setMenuOpen(menuOpen === addr.id ? null : addr.id); }}>
+                    {addr.isDefault && <span style={{ marginLeft: '12px', fontSize: '11px', fontWeight: 'bold', color: '#ff3e6c', backgroundColor: '#ffeeef', padding: '2px 8px', borderRadius: '4px' }}>DEFAULT</span>}
+                    <div className="ma-menu-wrap" onClick={e => { e.stopPropagation(); setMenuOpen(menuOpen === addr.id ? null : addr.id); }} style={{ marginLeft: 'auto' }}>
                       <button className="ma-addr-menu">⋮</button>
                       {menuOpen === addr.id && (
                         <div className="ma-dropdown">

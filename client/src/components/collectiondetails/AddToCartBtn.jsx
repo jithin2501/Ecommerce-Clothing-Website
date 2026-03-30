@@ -1,13 +1,14 @@
 import { useRef, useState } from 'react';
 import '../../styles/collectiondetails/AddToCartBtn.css';
 
-export default function AddToCartBtn({ onAdd, onGoToBag, shirtColor = '#2D3E50' }) {
+export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor = '#2D3E50' }) {
   const [added, setAdded] = useState(false);
   const btnRef = useRef(null);
   const animatingRef = useRef(false);
 
   const handleClick = () => {
     if (added) { onGoToBag?.(); return; }
+    if (onBeforeAdd && !onBeforeAdd()) return;
     if (animatingRef.current) return;
     animatingRef.current = true;
 

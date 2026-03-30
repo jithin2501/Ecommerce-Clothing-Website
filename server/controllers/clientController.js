@@ -1,4 +1,5 @@
 const ClientUser = require('../models/ClientUser');
+const Review = require('../models/Review');
 
 /* ── Google Login / Register ── */
 exports.googleLogin = async (req, res) => {
@@ -79,6 +80,136 @@ exports.syncWishlist = async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     console.error('❌ syncWishlist error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+/* ── Get Profile ── */
+exports.getProfile = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const user = await ClientUser.findOne({ uid });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({ success: true, user });
+  } catch (err) {
+    console.error('❌ getProfile error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+/* ── Update Profile ── */
+exports.updateProfile = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const { name, email, phone, gender } = req.body;
+    
+    // We update fields dynamically to allow partial updates
+    const updates = { lastSeen: new Date() };
+    if (name !== undefined) updates.name = name;
+    if (email !== undefined) updates.email = email;
+    if (phone !== undefined) updates.phone = phone;
+    if (gender !== undefined) updates.gender = gender; // Note: Ensure ClientUser schema supports gender if saving it
+
+    const updatedUser = await ClientUser.findOneAndUpdate(
+      { uid },
+      { $set: updates },
+      { new: true }
+    );
+    
+    if (!updatedUser) return res.status(404).json({ error: 'User not found' });
+    res.json({ success: true, user: updatedUser });
+  } catch (err) {
+    console.error('❌ updateProfile error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+/* ── Delete Account ── */
+exports.deleteAccount = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const result = await ClientUser.findOneAndDelete({ uid });
+    if (!result) return res.status(404).json({ error: 'User not found' });
+    
+    // Also cleanup reviews written by this user
+    await Review.deleteMany({ uid });
+
+    console.log(`🗑️ Deleted ClientUser and their Reviews from DB: ${uid}`);
+    res.json({ success: true, message: 'Account deleted successfully' });
+  } catch (err) {
+    console.error('❌ deleteAccount error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+/* ── Address Management ── */
+exports.getAddresses = async (req, res) => {
+  try {
+    const user = await ClientUser.findOne({ uid: req.params.uid });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    res.json({ success: true, addresses: user.addresses || [] });
+  } catch (err) {
+    console.error('❌ getAddresses error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.addAddress = async (req, res) => {
+  try {
+    const user = await ClientUser.findOne({ uid: req.params.uid });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    
+    const newAddress = req.body;
+    
+    if (newAddress.isDefault) {
+      user.addresses.forEach(a => { a.isDefault = false; });
+    }
+
+    user.addresses.push(newAddress);
+    await user.save();
+    
+    res.json({ success: true, addresses: user.addresses });
+  } catch (err) {
+    console.error('❌ addAddress error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.updateAddress = async (req, res) => {
+  try {
+    const { uid, addrId } = req.params;
+    const user = await ClientUser.findOne({ uid });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    
+    if (req.body.isDefault) {
+      user.addresses.forEach(a => { a.isDefault = false; });
+    }
+
+    const addrIndex = user.addresses.findIndex(a => String(a.id || a._id) === String(addrId));
+    if (addrIndex === -1) return res.status(404).json({ error: 'Address not found' });
+
+    user.addresses[addrIndex] = { ...user.addresses[addrIndex], ...req.body };
+    await user.save();
+    
+    res.json({ success: true, addresses: user.addresses });
+  } catch (err) {
+    console.error('❌ updateAddress error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+exports.deleteAddress = async (req, res) => {
+  try {
+    const { uid, addrId } = req.params;
+    const user = await ClientUser.findOne({ uid });
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    user.addresses = user.addresses.filter(a => String(a.id || a._id) !== String(addrId));
+    await user.save();
+    
+    res.json({ success: true, addresses: user.addresses });
+  } catch (err) {
+    console.error('❌ deleteAddress error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };

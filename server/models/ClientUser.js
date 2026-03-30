@@ -33,6 +33,7 @@ const orderSchema = new mongoose.Schema({
 }, { _id: false });
 
 const addressSchema = new mongoose.Schema({
+  id:       String,
   fullName: String,
   mobile:   String,
   pincode:  String,
@@ -43,16 +44,22 @@ const addressSchema = new mongoose.Schema({
   landmark: String,
   altPhone: String,
   type:     String,
+  name:     String,
+  phone:    String,
+  line1:    String,
+  line2:    String,
+  isDefault:{ type: Boolean, default: false },
 }, { _id: false });
 
 const clientUserSchema = new mongoose.Schema({
   uid:       { type: String, required: true, unique: true },  // Firebase UID
   loginType: { type: String, enum: ['google', 'phone'], required: true },
 
-  name:  { type: String, default: '' },
-  email: { type: String, default: '' },
-  phone: { type: String, default: '' },
-  photo: { type: String, default: '' },
+  name:   { type: String, default: '' },
+  email:  { type: String, default: '' },
+  phone:  { type: String, default: '' },
+  photo:  { type: String, default: '' },
+  gender: { type: String, default: '' },
 
   addresses: { type: [addressSchema],      default: [] },
   wishlist:  { type: [wishlistItemSchema], default: [] },
