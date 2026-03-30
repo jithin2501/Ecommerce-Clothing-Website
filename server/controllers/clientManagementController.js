@@ -3,7 +3,7 @@ const ClientUser = require('../models/ClientUser');
 /* ── GET all clients (paginated + filtered) ── */
 exports.getAllClients = async (req, res) => {
   try {
-    const { loginType, search, page = 1, limit = 20 } = req.query;
+    const { loginType, search, dateFilter, page = 1, limit = 20 } = req.query;
     const query = {};
 
     if (loginType && loginType !== 'all') query.loginType = loginType;
@@ -13,6 +13,13 @@ exports.getAllClients = async (req, res) => {
         { email: { $regex: search, $options: 'i' } },
         { phone: { $regex: search, $options: 'i' } },
       ];
+    }
+
+    if (dateFilter && dateFilter !== 'all') {
+      const now = new Date();
+      if (dateFilter === 'joined-today') query.createdAt = { $gte: new Date(now.setHours(0,0,0,0)) };
+      else if (dateFilter === 'joined-week') query.createdAt = { $gte: new Date(now.setDate(now.getDate() - 7)) };
+      else if (dateFilter === 'joined-month') query.createdAt = { $gte: new Date(now.setMonth(now.getMonth() - 1)) };
     }
 
     const skip  = (Number(page) - 1) * Number(limit);

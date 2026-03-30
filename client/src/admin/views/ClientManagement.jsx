@@ -30,7 +30,7 @@ function ClientDrawer({ client, onClose }) {
   const [tab, setTab] = useState('info');
   if (!client) return null;
 
-  const TABS = ['info', 'addresses', 'wishlist', 'cart', 'orders'];
+  const TABS = ['info', 'addresses', 'orders'];
 
   return (
     <div className="cm-overlay" onClick={onClose}>
@@ -98,47 +98,6 @@ function ClientDrawer({ client, onClose }) {
               : <EmptyState text="No saved addresses" />
           )}
 
-          {/* WISHLIST */}
-          {tab === 'wishlist' && (
-            client.wishlist?.length
-              ? <div className="cm-product-list">
-                  {client.wishlist.map((w, i) => (
-                    <div className="cm-product-row" key={i}>
-                      {w.img && <img src={w.img} alt={w.name} className="cm-product-img" />}
-                      <div>
-                        <p className="cm-product-name">{w.name}</p>
-                        <p className="cm-product-meta">{w.category} · {w.price}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              : <EmptyState text="Wishlist is empty" />
-          )}
-
-          {/* CART — abandoned items */}
-          {tab === 'cart' && (
-            client.cart?.length
-              ? <div className="cm-product-list">
-                  <div className="cm-cart-alert">
-                    ⚠️ Added to cart but not purchased
-                  </div>
-                  {client.cart.map((c, i) => (
-                    <div className="cm-product-row" key={i}>
-                      {c.img && <img src={c.img} alt={c.name} className="cm-product-img" />}
-                      <div className="cm-product-info">
-                        <p className="cm-product-name">{c.name}</p>
-                        <p className="cm-product-meta">
-                          Size: {c.size} · Color: {c.color} · Qty: {c.qty}
-                        </p>
-                        <p className="cm-product-price">
-                          ₹{(Number(c.price) * c.qty).toLocaleString('en-IN')}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              : <EmptyState text="No abandoned cart items" />
-          )}
 
           {/* ORDERS */}
           {tab === 'orders' && (
@@ -186,8 +145,8 @@ const EmptyState = ({ text }) => <div className="cm-empty">{text}</div>;
 function StatCard({ label, value, color }) {
   return (
     <div className={`cm-stat-card cm-stat-${color}`}>
-      <span className="cm-stat-value">{value ?? '—'}</span>
       <span className="cm-stat-label">{label}</span>
+      <span className="cm-stat-value">{value ?? '—'}</span>
     </div>
   );
 }
@@ -201,6 +160,7 @@ export default function ClientManagement() {
   const [total,    setTotal]    = useState(0);
   const [page,     setPage]     = useState(1);
   const [filter,   setFilter]   = useState('all');
+  const [dateFilter, setDateFilter] = useState('all');
   const [search,   setSearch]   = useState('');
   const [loading,  setLoading]  = useState(false);
   const [selected, setSelected] = useState(null);
@@ -217,7 +177,7 @@ export default function ClientManagement() {
   /* fetch client list */
   const fetchClients = useCallback(() => {
     setLoading(true);
-    const params = new URLSearchParams({ loginType: filter, search, page, limit: LIMIT });
+    const params = new URLSearchParams({ loginType: filter, search, dateFilter, page, limit: LIMIT });
     fetch(`${API}?${params}`)
       .then(r => r.json())
       .then(d => {
@@ -225,7 +185,7 @@ export default function ClientManagement() {
       })
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [filter, search, page]);
+  }, [filter, search, dateFilter, page]);
 
   useEffect(() => { fetchClients(); }, [fetchClients]);
 
@@ -246,12 +206,7 @@ export default function ClientManagement() {
     <div className="cm-page">
 
       {/* Header */}
-      <div className="cm-header">
-        <div>
-          <h1 className="cm-title">Client Management</h1>
-          <p className="cm-subtitle">All website users — Google & Phone logins</p>
-        </div>
-      </div>
+      <h1 className="cm-title">CLIENT MANAGEMENT</h1>
 
       {/* Stats */}
       {stats && (
@@ -259,7 +214,6 @@ export default function ClientManagement() {
           <StatCard label="Total Clients"   value={stats.total}    color="blue"   />
           <StatCard label="Google Logins"   value={stats.google}   color="red"    />
           <StatCard label="Phone Logins"    value={stats.phone}    color="green"  />
-          <StatCard label="Abandoned Carts" value={stats.withCart} color="amber"  />
           <StatCard label="New Today"       value={stats.newToday} color="purple" />
         </div>
       )}
@@ -291,6 +245,13 @@ export default function ClientManagement() {
             onChange={e => { setSearch(e.target.value); setPage(1); }}
           />
         </div>
+
+        <select className="cm-date-filter" value={dateFilter} onChange={e => { setDateFilter(e.target.value); setPage(1); }}>
+          <option value="all">Join Date: All Time</option>
+          <option value="joined-today">Joined Today</option>
+          <option value="joined-week">Joined This Week</option>
+          <option value="joined-month">Joined This Month</option>
+        </select>
       </div>
 
       {/* Table */}
@@ -305,10 +266,8 @@ export default function ClientManagement() {
               <tr>
                 <th>Client</th>
                 <th>Contact</th>
-                <th>Login</th>
-                <th>Cart</th>
-                <th>Wishlist</th>
-                <th>Orders</th>
+                <th className="cm-text-center">Login</th>
+                <th className="cm-text-center">Orders</th>
                 <th>Last Seen</th>
                 <th></th>
               </tr>
@@ -333,16 +292,9 @@ export default function ClientManagement() {
                     {c.email && c.phone && <span className="cm-contact-sub">{c.phone}</span>}
                   </td>
 
-                  <td><LoginBadge type={c.loginType} /></td>
+                  <td className="cm-text-center"><LoginBadge type={c.loginType} /></td>
 
-                  <td>
-                    <span className={`cm-pill${c.cart?.length ? ' cm-pill-warn' : ''}`}>
-                      {c.cart?.length || 0} item{c.cart?.length !== 1 ? 's' : ''}
-                    </span>
-                  </td>
-
-                  <td><span className="cm-pill">{c.wishlist?.length || 0}</span></td>
-                  <td><span className="cm-pill">{c.orders?.length  || 0}</span></td>
+                  <td className="cm-text-center"><span className="cm-pill">{c.orders?.length  || 0}</span></td>
 
                   <td className="cm-td-seen">{ago(c.lastSeen)}</td>
 
@@ -351,7 +303,7 @@ export default function ClientManagement() {
                       className="cm-view-btn"
                       onClick={(e) => { e.stopPropagation(); openClient(c); }}
                     >
-                      View →
+                      View
                     </button>
                   </td>
 
