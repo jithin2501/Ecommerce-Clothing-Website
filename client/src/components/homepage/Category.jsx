@@ -1,42 +1,55 @@
+import { useNavigate } from 'react-router-dom';
 import '../../styles/homepage/Category.css';
 
 const categories = [
   {
     label: 'OCCASION & DAILY\nWEAR FROCKS',
-    img: '/images/categories/occasion & daily wear frocks.png',
+    img: '/images/categories/occasion-daily-wear-frocks.png',
+    path: '/collections/occasion-daily-wear-frocks',
   },
   {
     label: 'PARTY WEAR\nCOLLECTION',
-    img: '/images/categories/occasion & daily wear frocks.png',
+    img: '/images/categories/party-wear-collection.png',
+    path: '/collections/party-wear-collection',
   },
   {
     label: 'DESIGNER & PREMIUM\nFROCKS',
-    img: '/images/categories/occasion & daily wear frocks.png',
+    img: '/images/categories/designer-premium-frocks.png',
+    path: '/collections/designer-premium-frocks',
   },
   {
     label: 'TRADITIONAL & ETHNIC\nFROCKS',
-    img: '/images/categories/occasion & daily wear frocks.png',
+    img: '/images/categories/traditional-ethnic-frocks.png',
+    path: '/collections/traditional-ethnic-frocks',
   },
 ];
 
 export default function Category() {
+  const navigate = useNavigate();
+
   return (
     <section id="collections" className="category-section">
       <div className="section-inner">
 
         <div className="category-header">
-  <h2 className="category-title">
-    <span>Shop By</span> Category
-  </h2>
-
-  <p className="category-subtitle">
-    Discover beautiful styles for every occasion and every little moment.
-  </p>
-</div>
+          <h2 className="category-title">
+            <span>Shop By</span> Category
+          </h2>
+          <p className="category-subtitle">
+            Discover beautiful styles for every occasion and every little moment.
+          </p>
+        </div>
 
         <div className="category-grid">
           {categories.map((cat) => (
-            <div key={cat.label} className="category-card">
+            <div
+              key={cat.label}
+              className="category-card"
+              onClick={() => navigate(cat.path)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && navigate(cat.path)}
+            >
               <div className="category-circle">
                 <img src={cat.img} alt={cat.label} />
               </div>
