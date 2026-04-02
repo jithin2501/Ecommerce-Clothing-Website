@@ -93,7 +93,7 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
             {product.badge && (
               <span className={getBadgeClass(product.badge)}>{product.badge}</span>
             )}
-            {product.age && <span className="pg-age-badge">Ages {product.age}</span>}
+            {product.age && <span className="pg-age-badge">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
             <button
               className={`pg-wishlist ${isWishlisted(product._id || product.id) ? 'pg-wishlist--active' : ''}`}
               aria-label="Wishlist"

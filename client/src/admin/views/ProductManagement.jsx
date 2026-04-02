@@ -7,17 +7,49 @@ const API = 'http://localhost:5000/api/products';
 const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('adminToken')}` });
 
 const AGE_GROUPS = [
-  { value: 'newborn', label: 'Newborn (0-2Y)' },
-  { value: 'toddler', label: 'Toddler (3-6Y)' },
-  { value: 'junior',  label: 'Junior (7-12Y)'  },
+  { value: 'newborn',      label: '0–6 Months (Newborn)' },
+  { value: 'infant',       label: '6–12 Months (Infant)' },
+  { value: 'toddler',      label: '1–3 Years (Toddler)' },
+  { value: 'little-girls', label: '3–6 Years (Little Girls)' },
+  { value: 'kids',         label: '6–9 Years (Kids)' },
+  { value: 'pre-teen',     label: '9–12 Years (Pre-Teen)' },
 ];
-const AGE_LABELS = { newborn: '0-2Y', toddler: '3-6Y', junior: '7-12Y' };
+const AGE_LABELS = {
+  'newborn': '0–6 Months', 'infant': '6–12 Months', 'toddler': '1–3 Years', 
+  'little-girls': '3–6 Years', 'kids': '6–9 Years', 'pre-teen': '9–12 Years'
+};
 const CATEGORIES = [
-  'Baby Frocks', 'Birthday Frocks', 'Tops & T-Shirts',
-  'Indo-Western Outfits', 'Traditional Outfits', 'Party Wear', 'Boys Collection',
+  'Occasion & Daily Wear Frocks',
+  'Party Wear Collection',
+  'Designer & Premium Frocks',
+  'Traditional & Ethnic Frocks',
+  'Fabric-Based Categories'
 ];
+const SUBCATEGORIES = {
+  'Occasion & Daily Wear Frocks': [
+    'Birthday Party Frocks', 'Wedding / Festive Frocks', 'Reception / Evening Wear',
+    'Photoshoot Special Frocks', 'Princess / Fancy Dress', 'Casual Cotton Frocks',
+    'Playtime Frocks', 'School Casual Frocks', 'Summer Wear Frocks', 'Comfortable Home Wear'
+  ],
+  'Party Wear Collection': [
+    'Net Frocks', 'Gown Style Frocks', 'Layered / Frill Frocks', 
+    'Sequin / Glitter Frocks', 'Designer Party Wear'
+  ],
+  'Designer & Premium Frocks': [
+    'Boutique Designer Frocks', 'Handwork / Embroidery Frocks', 
+    'Custom Made Frocks', 'Luxury Collection'
+  ],
+  'Traditional & Ethnic Frocks': [
+    'Pattu / Silk Frocks', 'Lehenga Style Frocks', 'Anarkali Frocks', 
+    'Indo-Western Styles', 'Festival Special (Diwali, Navratri, etc.)'
+  ],
+  'Fabric-Based Categories': [
+    'Cotton Frocks', 'Net Frocks', 'Satin Frocks', 'Silk Frocks', 
+    'Organza Frocks', 'Velvet Frocks (Winter Special)'
+  ]
+};
 const BADGES = ['', 'New', 'Bestselling'];
-const EMPTY_FORM = { name: '', category: '', price: '', oldPrice: '', ageGroup: 'newborn', color: '', badge: '' };
+const EMPTY_FORM = { name: '', category: '', subCategory: '', price: '', oldPrice: '', ageGroup: 'newborn', color: '', badge: '' };
 
 const SECTION_LIMITS = {
   currentFavorites: 4,
@@ -70,7 +102,7 @@ export default function ProductManagement() {
   const handleEdit = (p) => {
     setEditId(p._id);
     setForm({
-      name: p.name, category: p.category, price: p.price,
+      name: p.name, category: p.category, subCategory: p.subCategory || '', price: p.price,
       oldPrice: p.oldPrice || '', ageGroup: p.ageGroup,
       color: p.color || '', badge: p.badge || '',
     });
@@ -91,7 +123,7 @@ export default function ProductManagement() {
     e.preventDefault();
     setError('');
     if (!editId && !imgFile) { setError('Please select a product image.'); return; }
-    if (!form.name || !form.category || !form.price) { setError('Name, category and price are required.'); return; }
+    if (!form.name || !form.category || !form.subCategory || !form.price) { setError('Name, category, sub-category, and price are required.'); return; }
 
     setSaving(true);
     try {
@@ -240,7 +272,7 @@ export default function ProductManagement() {
                 </div>
                 <div className="pm-group">
                   <label>Category *</label>
-                  <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value }))}>
+                  <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value, subCategory: '' }))}>
                     <option value="">Select category</option>
                     {CATEGORIES.map(c => <option key={c}>{c}</option>)}
                   </select>
@@ -249,14 +281,22 @@ export default function ProductManagement() {
 
               <div className="pm-row">
                 <div className="pm-group">
+                  <label>Sub Category *</label>
+                  <select 
+                    value={form.subCategory} 
+                    onChange={e => setForm(f => ({ ...f, subCategory: e.target.value }))}
+                    disabled={!form.category || !SUBCATEGORIES[form.category]}
+                  >
+                    <option value="">Select sub-category</option>
+                    {form.category && SUBCATEGORIES[form.category] && 
+                      SUBCATEGORIES[form.category].map(sc => <option key={sc}>{sc}</option>)
+                    }
+                  </select>
+                </div>
+                <div className="pm-group">
                   <label>Price (₹) *</label>
                   <input type="number" placeholder="e.g. 849" min="0"
                     value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} />
-                </div>
-                <div className="pm-group">
-                  <label>Old Price (₹) <span className="pm-optional">optional</span></label>
-                  <input type="number" placeholder="e.g. 1200" min="0"
-                    value={form.oldPrice} onChange={e => setForm(f => ({ ...f, oldPrice: e.target.value }))} />
                 </div>
               </div>
 
@@ -309,11 +349,11 @@ export default function ProductManagement() {
             </div>
 
             <div className="pm-age-filters">
-              {['all', 'newborn', 'toddler', 'junior'].map(f => (
+              {['all', 'newborn', 'infant', 'toddler', 'little-girls', 'kids', 'pre-teen'].map(f => (
                 <button key={f}
                   className={`pm-filter-btn${filterAge === f ? ' active' : ''}`}
                   onClick={() => setFilterAge(f)}>
-                  {f === 'all' ? 'All' : AGE_GROUPS.find(a => a.value === f)?.label}
+                  {f === 'all' ? 'All' : AGE_LABELS[f]}
                 </button>
               ))}
             </div>
@@ -341,7 +381,6 @@ export default function ProductManagement() {
                   <th>BADGE</th>
                   <th className="pm-th-featured">
                     <div className="pm-th-feat-wrap">
-                      <span>Coll (4) |</span>
                       <span>Detail (4) |</span>
                       <span>Cart (4)</span>
                     </div>
@@ -359,6 +398,7 @@ export default function ProductManagement() {
                     <td>
                       <div className="pm-name">{p.name}</div>
                       <div className="pm-cat">{p.category}</div>
+                      {p.subCategory && <div className="pm-subcat" style={{fontSize: '0.8rem', color: '#666', marginTop: '2px'}}>{p.subCategory}</div>}
                     </td>
                     <td className="pm-age">{p.age}</td>
                     <td className="pm-price">
@@ -372,7 +412,7 @@ export default function ProductManagement() {
                     </td>
                     <td className="pm-td-featured">
                       <div className="pm-feat-icons">
-                        {['currentFavorites', 'youMightAlsoLike', 'cartAlsoLike'].map(key => (
+                        {['youMightAlsoLike', 'cartAlsoLike'].map(key => (
                           <FeatToggle key={key} id={p._id} section={key} featuredIn={p.featuredIn} />
                         ))}
                       </div>

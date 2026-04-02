@@ -24,7 +24,7 @@ function FavoriteCard({ product }) {
     >
       <div className="ymll-img-wrap">
         <img src={product.img} alt={product.name} />
-        {product.age && <span className="ymll-age">Ages {product.age}</span>}
+        {product.age && <span className="ymll-age">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
         <button className="ymll-wish">♡</button>
       </div>
       <div className="ymll-info">

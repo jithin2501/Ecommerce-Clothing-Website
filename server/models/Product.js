@@ -5,9 +5,14 @@ const productSchema = new mongoose.Schema(
   {
     name:        { type: String, required: true, trim: true },
     category:    { type: String, required: true, trim: true },
+    subCategory: { type: String, required: true, trim: true },
     price:       { type: Number, required: true },
     oldPrice:    { type: Number, default: null },
-    ageGroup:    { type: String, enum: ['newborn', 'toddler', 'junior'], required: true },
+    ageGroup:    { 
+      type: String, 
+      enum: ['newborn', 'infant', 'toddler', 'little-girls', 'kids', 'pre-teen'], 
+      required: true 
+    },
     age:         { type: String, required: true },
     color:       { type: String, default: '' },
     img:         { type: String, required: true },

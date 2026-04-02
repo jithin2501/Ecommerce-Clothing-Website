@@ -40,10 +40,12 @@ const getAdminProducts = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'Image is required.' });
-    const { name, category, price, oldPrice, ageGroup, age, color, badge, sustainability } = req.body;
+    const { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability } = req.body;
     const imgUrl = await uploadToS3(req.file, ageGroup);
     const product = await Product.create({
-      name, category,
+      name, 
+      category,
+      subCategory: subCategory || null,
       price:    Number(price),
       oldPrice: oldPrice ? Number(oldPrice) : null,
       ageGroup, age,
@@ -64,10 +66,11 @@ const updateProduct = async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ success: false });
 
-    const { name, category, price, oldPrice, ageGroup, age, color, badge, sustainability, isActive, featuredIn } = req.body;
+    const { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability, isActive, featuredIn } = req.body;
 
     if (name)                         product.name           = name;
     if (category)                     product.category       = category;
+    if (subCategory !== undefined)    product.subCategory    = subCategory || null;
     if (price)                        product.price          = Number(price);
     if (oldPrice !== undefined)       product.oldPrice       = oldPrice ? Number(oldPrice) : null;
     if (ageGroup)                     product.ageGroup       = ageGroup;

@@ -55,7 +55,7 @@ export default function NewArrivals() {
               <div className="na-img-wrap">
                 <img src={product.img} alt={product.name} />
                 {product.age && (
-                  <span className="na-age">Ages {product.age}</span>
+                  <span className="na-age">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>
                 )}
               </div>
               <div className="na-card-info">

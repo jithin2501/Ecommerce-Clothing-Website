@@ -32,7 +32,7 @@ function RelatedCard({ item }) {
     <div className="prelat-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="prelat-img-wrap">
         <img src={item.img} alt={item.name} className="prelat-img" />
-        {item.age && <span className="prelat-age">Ages {item.age}</span>}
+        {item.age && <span className="prelat-age">AGE {item.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
         <button className="prelat-wish" onClick={(e) => e.stopPropagation()}>♡</button>
       </div>
       <div className="prelat-info">
