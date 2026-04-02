@@ -1,32 +1,49 @@
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import '../../styles/collections/AgeSection.css';
 
 const ageGroups = [
   {
     slug: 'newborn',
-    range: '0-2 Years',
-    label: 'Infant & Toddler',
+    label: 'Newborn',
+    range: '0–6 Months',
     img: '/images/newborn.png',
-    colorClass: 'age-card--peach',
+  },
+  {
+    slug: 'infant',
+    label: 'Infant',
+    range: '6–12 Months',
+    img: '/images/infant.png',
   },
   {
     slug: 'toddler',
-    range: '3-6 Years',
-    label: 'Preschool Era',
+    label: 'Toddler',
+    range: '1–3 Years',
     img: '/images/toddler.png',
-    colorClass: 'age-card--sage',
   },
   {
-    slug: 'junior',
-    range: '7-12 Years',
-    label: 'Young Explorers',
-    img: '/images/junior.png',
-    colorClass: 'age-card--sand',
+    slug: 'little-girls',
+    label: 'Little Girls',
+    range: '3–6 Years',
+    img: '/images/little-girls.png',
+  },
+  {
+    slug: 'kids',
+    label: 'Kids',
+    range: '6–9 Years',
+    img: '/images/kids.png',
+  },
+  {
+    slug: 'pre-teen',
+    label: 'Pre-Teen',
+    range: '9–12 Years',
+    img: '/images/pre-teen.png',
   },
 ];
 
 export default function AgeSection() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { category, subcategory } = location.state || {};
 
   return (
     <section id="age-sections" className="age-section">
@@ -34,21 +51,35 @@ export default function AgeSection() {
 
         {/* Breadcrumb */}
         <div className="page-breadcrumb">
-          <Link to="/" className="breadcrumb-link">Home</Link>
-          <span className="breadcrumb-sep"> › </span>
-          <span className="breadcrumb-current">Collections</span>
+          <Link to="/" className="breadcrumb-link" onClick={() => sessionStorage.setItem('goHome', '1')}>Home</Link>
+          {subcategory ? (
+            <>
+              <span className="breadcrumb-sep"> › </span>
+              <Link to="/" onClick={() => sessionStorage.setItem('scrollTarget', 'collections')} className="breadcrumb-link">Category</Link>
+              <span className="breadcrumb-sep"> › </span>
+              <span className="breadcrumb-current">{subcategory}</span>
+            </>
+          ) : (
+            <>
+              <span className="breadcrumb-sep"> › </span>
+              <span className="breadcrumb-current">Collections</span>
+            </>
+          )}
         </div>
 
         <div className="age-grid">
           {ageGroups.map((group) => (
             <div
               key={group.slug}
-              className={`age-card ${group.colorClass}`}
+              className="age-card"
               onClick={() => navigate(`/collections/${group.slug}`)}
             >
-              <div className="age-img-wrap">
-                <img src={group.img} alt={group.range} />
-              </div>
+              <img
+                src={group.img}
+                alt={group.range}
+                className="age-card-img"
+              />
+              <div className="age-card-overlay" />
               <div className="age-card-info">
                 <span className="age-card-label">{group.label}</span>
                 <span className="age-card-range">{group.range}</span>

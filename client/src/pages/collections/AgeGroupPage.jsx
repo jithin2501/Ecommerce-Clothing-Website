@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import AgeGroupBanner from '../../components/collections/AgeGroupBanner';
-import FilterSidebar  from '../../components/collections/FilterSidebar';
-import ProductGrid    from '../../components/collections/ProductGrid';
+import FilterSidebar from '../../components/collections/FilterSidebar';
+import ProductGrid from '../../components/collections/ProductGrid';
 import '../../styles/collections/AgeGroupPage.css';
 
 const AGE_META = {
-  newborn: { label: "Newborn's", range: '0-2 Years' },
-  toddler: { label: "Toddler's", range: '3-6 Years' },
-  junior:  { label: "Junior's",  range: '7-12 Years' },
+  newborn: { label: "Newborn", range: '0–6 Months' },
+  infant: { label: "Infant", range: '6–12 Months' },
+  toddler: { label: "Toddler", range: '1–3 Years' },
+  'little-girls': { label: "Little Girls", range: '3–6 Years' },
+  kids: { label: "Kids", range: '6–9 Years' },
+  'pre-teen': { label: "Pre-Teen", range: '9–12 Years' },
 };
 
 const SORT_OPTIONS = ['Newest Arrivals', 'Price: Low to High', 'Price: High to Low', 'Best Rated'];
@@ -27,12 +30,12 @@ export default function AgeGroupPage() {
 
   // ── Filter state (all owned here, passed to both sidebar + grid) ──
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [selectedColors,     setSelectedColors]     = useState([]);
-  const [priceMin,           setPriceMin]           = useState(MIN_PRICE);
-  const [priceMax,           setPriceMax]           = useState(MAX_PRICE);
-  const [selectedRatings,    setSelectedRatings]    = useState([]);
-  const [sustainableOnly,    setSustainableOnly]    = useState(false);
-  const [sortBy,             setSortBy]             = useState('Newest Arrivals');
+  const [selectedColors, setSelectedColors] = useState([]);
+  const [priceMin, setPriceMin] = useState(MIN_PRICE);
+  const [priceMax, setPriceMax] = useState(MAX_PRICE);
+  const [selectedRatings, setSelectedRatings] = useState([]);
+  const [sustainableOnly, setSustainableOnly] = useState(false);
+  const [sortBy, setSortBy] = useState('Newest Arrivals');
 
   // ── Section open/close state ──
   const [open, setOpen] = useState({
@@ -52,7 +55,6 @@ export default function AgeGroupPage() {
     <main className="agp-page">
       <AgeGroupBanner meta={meta} />
 
-
       <div className="section-inner">
         <div className="page-breadcrumb">
           <Link to="/" className="breadcrumb-link">Home</Link>
@@ -64,12 +66,12 @@ export default function AgeGroupPage() {
 
         <div className="agp-layout">
           <FilterSidebar
-            selectedColors={selectedColors}       setSelectedColors={setSelectedColors}
+            selectedColors={selectedColors} setSelectedColors={setSelectedColors}
             selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories}
-            priceMin={priceMin}                   setPriceMin={setPriceMin}
-            priceMax={priceMax}                   setPriceMax={setPriceMax}
-            selectedRatings={selectedRatings}     setSelectedRatings={setSelectedRatings}
-            open={open}                           setOpen={setOpen}
+            priceMin={priceMin} setPriceMin={setPriceMin}
+            priceMax={priceMax} setPriceMax={setPriceMax}
+            selectedRatings={selectedRatings} setSelectedRatings={setSelectedRatings}
+            open={open} setOpen={setOpen}
             onReset={handleReset}
           />
 

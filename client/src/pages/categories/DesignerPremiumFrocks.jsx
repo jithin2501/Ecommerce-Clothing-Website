@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
@@ -11,6 +11,7 @@ const subcategories = [
 
 export default function DesignerPremiumFrocks() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+  const navigate = useNavigate();
 
   return (
     <div className="catpage-wrapper">
@@ -27,7 +28,11 @@ export default function DesignerPremiumFrocks() {
 
       <div className="catpage-grid">
         {subcategories.map((item) => (
-          <div key={item.label} className="catpage-card">
+          <div 
+            key={item.label} 
+            className="catpage-card"
+            onClick={() => navigate('/collections', { state: { subcategory: item.label } })}
+          >
             <div className="catpage-img-wrap">
               <img src={item.img} alt={item.label} />
             </div>
