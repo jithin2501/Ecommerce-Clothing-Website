@@ -49,7 +49,7 @@ export default function WhyUs() {
             <div className="why-dot why-dot-2" />
             <div className="why-dot why-dot-3" />
             <img
-              src="images/WhyChoosing.png"
+              src="images/homepage/WhyChoosing.png"
               alt="Why Choose Sumathi Trends"
               className="why-img"
             />

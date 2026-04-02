@@ -29,7 +29,7 @@ export default function Reviews() {
     fetch(API)
       .then(r => r.json())
       .then(data => { if (data.success && data.data.length > 0) setReviews(data.data); })
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   // Auto-rotate reviews every 5s if more than one
@@ -57,7 +57,7 @@ export default function Reviews() {
               <div className="blob blob-4" />
             </div>
             <img
-              src="images/review.png"
+              src="images/homepage/review.png"
               alt="Happy children"
               className="rv2-img"
               onError={(e) => {

@@ -115,7 +115,7 @@ export default function Hero() {
           {/* Right: Visuals */}
           <div className="hero-visuals">
             <img
-              src="/images/banner7.png"
+              src="/images/homepage/banner7.png"
               alt="Model"
               className="main-model"
               onError={(e) => {
