@@ -6,37 +6,37 @@ const ageGroups = [
     slug: 'newborn',
     label: 'Newborn',
     range: '0–6 Months',
-    img: '/images/newborn.png',
+    img: '/images/collections/newborn.avif',
   },
   {
     slug: 'infant',
     label: 'Infant',
     range: '6–12 Months',
-    img: '/images/infant.png',
+    img: '/images/collections/Infant.webp',
   },
   {
     slug: 'toddler',
     label: 'Toddler',
     range: '1–3 Years',
-    img: '/images/toddler.png',
+    img: '/images/collections/Toddler.webp',
   },
   {
     slug: 'little-girls',
     label: 'Little Girls',
     range: '3–6 Years',
-    img: '/images/little-girls.png',
+    img: '/images/collections/Little Girls.jpg',
   },
   {
     slug: 'kids',
     label: 'Kids',
     range: '6–9 Years',
-    img: '/images/kids.png',
+    img: '/images/collections/Kids.webp',
   },
   {
     slug: 'pre-teen',
     label: 'Pre-Teen',
     range: '9–12 Years',
-    img: '/images/pre-teen.png',
+    img: '/images/collections/Pre-Teen.webp',
   },
 ];
 
