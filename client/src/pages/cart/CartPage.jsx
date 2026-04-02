@@ -5,7 +5,13 @@ import CartItems from '../../components/cart/CartItems';
 import OrderSummary from '../../components/cart/OrderSummary';
 import CartYouMightAlsoLike from '../../components/cart/CartYouMightAlsoLike';
 import EmptyCart from '../../components/cart/EmptyCart';
+import AddressSidebar from '../../components/collectiondetails/AddressSidebar';
+import { auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { MapPin } from 'lucide-react';
 import '../../styles/cart/CartPage.css';
+
+const API = 'http://localhost:5000/api';
 
 const FREE_SHIPPING_THRESHOLD = 136;
 const GIFT_WRAP_COST = 6;
@@ -13,6 +19,51 @@ const GIFT_WRAP_COST = 6;
 export default function CartPage() {
   const { cartItems, updateQty, removeItem, subtotal } = useCart();
   const [giftWrapping, setGiftWrapping] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [userInfo, setUserInfo] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const handleSelectAddress = (addr) => {
+    setSelectedAddress(addr);
+    localStorage.setItem('sumathi_selected_address', JSON.stringify(addr));
+  };
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      // Priority 1: Check localStorage for a manual selection made in this session
+      const savedSelection = localStorage.getItem('sumathi_selected_address');
+      if (savedSelection) {
+        try {
+          setSelectedAddress(JSON.parse(savedSelection));
+          if (user) {
+             const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
+             const data = await res.json();
+             if (data.success) setUserInfo(data.user);
+          }
+          return;
+        } catch (e) {}
+      }
+
+      if (user) {
+        try {
+          const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
+          const data = await res.json();
+          if (data.success && data.addresses) {
+            setUserInfo(data.user);
+            const defAddr = data.addresses.find(a => a.isDefault);
+            if (defAddr) setSelectedAddress(defAddr);
+          }
+        } catch (e) {}
+      } else {
+        try {
+          const saved = JSON.parse(localStorage.getItem('sumathi_addresses') || '[]');
+          const defAddr = saved.find(a => a.isDefault);
+          if (defAddr) setSelectedAddress(defAddr);
+        } catch (e) {}
+      }
+    });
+    return () => unsub();
+  }, []);
 
   useEffect(() => {
     // If returning from a product page via "You Might Also Love",
@@ -71,26 +122,67 @@ export default function CartPage() {
           </div>
           <span className="cp-free-bar-label">
             {remaining > 0
-              ? `Spend $${remaining.toFixed(2)} more for free shipping`
+              ? `Spend ₹${remaining.toFixed(2)} more for free shipping`
               : '🎉 You have free shipping!'}
           </span>
         </div>
 
         <div className="cp-grid">
-          <CartItems
-            items={cartItems}
-            onUpdateQty={updateQty}
-            onRemove={removeItem}
-            onGiftChange={setGiftWrapping}
-          />
+          <div className="cp-left-col">
+            {/* ── Delivery Address Bar ── */}
+            <div className="cp-addr-bar">
+              <div className="cp-addr-bar-left">
+                <MapPin size={18} className="cp-addr-pin" />
+                <div className="cp-addr-bar-content">
+                  {selectedAddress ? (
+                    <>
+                      <p className="cp-addr-line-1">
+                        Deliver to: <strong>{selectedAddress.name}</strong>, {selectedAddress.pincode}
+                      </p>
+                      <p className="cp-addr-line-2">
+                        {selectedAddress.line1}, {selectedAddress.city}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="cp-addr-none">No delivery address selected</p>
+                  )}
+                </div>
+              </div>
+              <button className="cp-addr-change-btn-link" onClick={() => setIsSidebarOpen(true)}>
+                {selectedAddress ? 'CHANGE' : 'ADD NEW'}
+              </button>
+            </div>
+
+            <CartItems
+              items={cartItems}
+              onUpdateQty={updateQty}
+              onRemove={removeItem}
+              onGiftChange={setGiftWrapping}
+            />
+          </div>
+
           <OrderSummary
             subtotal={subtotal}
             shipping={shipping}
             giftWrapping={giftWrapping}
             giftCost={giftCost}
             total={total}
+            user={auth.currentUser ? {
+                uid: auth.currentUser.uid,
+                name: auth.currentUser.displayName || userInfo?.name,
+                email: auth.currentUser.email || userInfo?.email,
+                phone: auth.currentUser.phoneNumber || userInfo?.phone
+            } : null}
+            cartItems={cartItems}
+            selectedAddress={selectedAddress}
           />
         </div>
+
+        <AddressSidebar 
+            isOpen={isSidebarOpen} 
+            onClose={() => setIsSidebarOpen(false)} 
+            onSelectAddress={handleSelectAddress} 
+        />
 
         <CartYouMightAlsoLike />
       </div>

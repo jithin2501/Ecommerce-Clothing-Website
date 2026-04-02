@@ -1,21 +1,16 @@
 .ci-wrapper { 
-  background: #fff; 
-  border-radius: 14px; 
-  padding: 1.25rem; 
   display: flex; 
   flex-direction: column; 
-  /* Removed the outer border and hover effect for the entire section */
+  gap: 1rem;
 }
 
 .ci-row { 
   display: flex; 
-  gap: 1rem; 
-  padding: 1.1rem 0; 
-  border-bottom: 1px solid #f0f0f0; 
-}
-
-.ci-row:last-of-type {
-  border-bottom: none;
+  gap: 1.25rem; 
+  padding: 1rem 1.25rem; 
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
 }
 
 /* ── Keeping the border ONLY for the product image ── */
@@ -119,10 +114,10 @@
 
 /* Gift wrapping */
 .ci-gift { 
-  margin-top: 1.25rem; 
+  background: #fff;
   border: 1px solid #eee; 
   border-radius: 12px; 
-  padding: 1rem; 
+  padding: 1.25rem; 
 }
 
 .ci-gift-header { 

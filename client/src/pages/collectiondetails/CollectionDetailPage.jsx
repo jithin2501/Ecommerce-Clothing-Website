@@ -81,10 +81,25 @@ export default function CollectionDetailPage() {
 
   const handleSelectAddress = (addr) => {
     setSelectedAddress(addr);
+    localStorage.setItem('sumathi_selected_address', JSON.stringify(addr));
   };
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
+      // Priority 1: Check localStorage for a manual selection made in this session
+      const savedSelection = localStorage.getItem('sumathi_selected_address');
+      if (savedSelection) {
+        try {
+          setSelectedAddress(JSON.parse(savedSelection));
+          if (user) {
+             const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
+             const data = await res.json();
+             if (data.success) setUserInfo(data.user);
+          }
+          return;
+        } catch (e) {}
+      }
+
       if (user) {
         try {
           const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
