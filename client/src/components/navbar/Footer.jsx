@@ -17,7 +17,7 @@ export default function Footer() {
             <div className="logo-wrapper">
               <div className="footer-logo-img">
                 <img
-                  src="./images/logo.png"
+                  src="/images/logo/logo.png"
                   alt="Sumathi Trends"
                   onError={(e) => { e.target.style.display = 'none'; }}
                 />

@@ -31,19 +31,19 @@ function scrollToSection(sectionId) {
 }
 
 export default function Navbar() {
-  const location    = useLocation();
-  const navigate    = useNavigate();
+  const location = useLocation();
+  const navigate = useNavigate();
   const { cartCount } = useCart();
   const prevPathRef = useRef(location.pathname);
 
-  const [scrolled, setScrolled]   = useState(false);
-  const [user, setUser]           = useState(null);
-  const [loading, setLoading]     = useState(true); // Fixes the Login -> Account flash
+  const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Fixes the Login -> Account flash
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef(null);
 
-  const pathParts     = location.pathname.split('/').filter(Boolean);
-  const isBannerPage  = pathParts.length <= 2 && location.pathname.startsWith('/collections');
+  const pathParts = location.pathname.split('/').filter(Boolean);
+  const isBannerPage = pathParts.length <= 2 && location.pathname.startsWith('/collections');
   const isContactPage = location.pathname === '/contact';
   const isFixedBanner = isBannerPage || isContactPage;
 
@@ -166,7 +166,7 @@ export default function Navbar() {
 
         <Link to="/" className="logo-container" onClick={handleHome}>
           <div className="logo-img">
-            <img src="images/logo.png" alt="Sumathi Trends" onError={(e) => { e.target.style.opacity = '0'; }} />
+            <img src="/images/logo/logo.png" alt="Sumathi Trends" onError={(e) => { e.target.style.opacity = '0'; }} />
           </div>
           <div className="logo-text">Sumathi<br />Trends</div>
         </Link>
@@ -185,8 +185,8 @@ export default function Navbar() {
           {!loading && (
             user ? (
               <div className="account-dropdown-wrapper" ref={dropdownRef}>
-                <button 
-                  className="action-item" 
+                <button
+                  className="action-item"
                   onClick={() => setShowDropdown(!showDropdown)}
                 >
                   <div className="icon-wrapper">
