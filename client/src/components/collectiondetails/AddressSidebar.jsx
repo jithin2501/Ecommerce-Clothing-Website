@@ -56,7 +56,7 @@ export default function AddressSidebar({ isOpen, onClose, onSelectAddress }) {
         transition: 'opacity 0.3s ease'
     }}>
       <div className="address-sidebar-content" onClick={e => e.stopPropagation()} style={{
-          width: '500px', maxWidth: '100%', height: '100%', backgroundColor: '#fff', 
+          width: '400px', maxWidth: '100%', height: '100%', backgroundColor: '#fff', 
           display: 'flex', flexDirection: 'column',
           boxShadow: '-4px 0 15px rgba(0,0,0,0.1)'
       }}>
@@ -93,7 +93,7 @@ export default function AddressSidebar({ isOpen, onClose, onSelectAddress }) {
           <button 
             onClick={() => { onClose(); navigate('/account/addresses'); }} 
             style={{ 
-              background: 'none', border: 'none', color: '#ff3e6c', fontWeight: 'bold', 
+              background: 'none', border: 'none', color: '#c07a55', fontWeight: 'bold', 
               fontSize: '13px', cursor: 'pointer', outline: 'none'
             }}
           >
@@ -119,7 +119,7 @@ export default function AddressSidebar({ isOpen, onClose, onSelectAddress }) {
                   {addr.isDefault && (
                     <span style={{ 
                       marginLeft: '10px', fontSize: '10px', fontWeight: 'bold', 
-                      color: '#ff3e6c', backgroundColor: '#ffeeef', padding: '2px 6px', borderRadius: '4px' 
+                      color: '#c07a55', backgroundColor: '#f7e9e3', padding: '2px 6px', borderRadius: '4px' 
                     }}>
                       DEFAULT
                     </span>
@@ -139,13 +139,13 @@ export default function AddressSidebar({ isOpen, onClose, onSelectAddress }) {
                 <button 
                   onClick={() => { onSelectAddress(addr); onClose(); }} 
                   style={{
-                    width: '100%', padding: '12px', background: 'none', color: '#ff3e6c', 
-                    border: '1px solid #ff3e6c', borderRadius: '4px', cursor: 'pointer', 
+                    width: '100%', padding: '12px', background: 'none', color: '#c07a55', 
+                    border: '1px solid #c07a55', borderRadius: '4px', cursor: 'pointer', 
                     fontWeight: 'bold', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px',
                     transition: 'all 0.2s ease-in-out'
                   }}
-                  onMouseOver={e => { e.currentTarget.style.background = '#ff3e6c'; e.currentTarget.style.color = '#fff'; }}
-                  onMouseOut={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = '#ff3e6c'; }}
+                  onMouseOver={e => { e.currentTarget.style.background = '#c07a55'; e.currentTarget.style.color = '#fff'; }}
+                  onMouseOut={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = '#c07a55'; }}
                 >
                   Deliver Here
                 </button>
