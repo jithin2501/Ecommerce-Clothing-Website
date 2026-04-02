@@ -3,16 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Net Frocks', img: '/images/subcategories/net-frocks.png' },
-  { label: 'Gown Style Frocks', img: '/images/subcategories/gown-style-frocks.png' },
-  { label: 'Layered / Frill Frocks', img: '/images/subcategories/layered-frill-frocks.png' },
-  { label: 'Sequin / Glitter Frocks', img: '/images/subcategories/sequin-glitter-frocks.png' },
-  { label: 'Princess Frocks', img: '/images/subcategories/princess-frocks.png' },
-  { label: 'Satin / Silk Dress', img: '/images/subcategories/satin-silk-dress.png' },
-  { label: 'Velvet Frocks', img: '/images/subcategories/velvet-frocks.png' },
-  { label: 'Floral Embellished Frocks', img: '/images/subcategories/floral-embellished-frocks.png' },
-  { label: 'Indo-Western Party Gowns', img: '/images/subcategories/indo-western-party-gowns.png' },
-  { label: 'High-Low Frocks', img: '/images/subcategories/high-low-frocks.png' },
+  { label: 'Net Frocks', img: '/images/collections/Kids.webp' },
+  { label: 'Gown Style Frocks', img: '/images/collections/Pre-Teen.webp' },
+  { label: 'Layered / Frill Frocks', img: '/images/collections/Little Girls.jpg' },
+  { label: 'Sequin / Glitter Frocks', img: '/images/collections/Kids.webp' },
+  { label: 'Princess Frocks', img: '/images/collections/newborn.avif' },
+  { label: 'Satin / Silk Dress', img: '/images/collections/Infant.webp' },
+  { label: 'Velvet Frocks', img: '/images/collections/Toddler.webp' },
+  { label: 'Floral Embellished Frocks', img: '/images/collections/Little Girls.jpg' },
+  { label: 'Indo-Western Party Gowns', img: '/images/collections/Pre-Teen.webp' },
+  { label: 'High-Low Frocks', img: '/images/collections/Kids.webp' },
 ];
 
 export default function PartyWearCollection() {
@@ -34,8 +34,8 @@ export default function PartyWearCollection() {
 
       <div className="catpage-grid">
         {subcategories.map((item) => (
-          <div 
-            key={item.label} 
+          <div
+            key={item.label}
             className="catpage-card"
             onClick={() => navigate('/collections', { state: { subcategory: item.label } })}
           >

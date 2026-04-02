@@ -4,22 +4,22 @@ import '../../styles/homepage/Category.css';
 const categories = [
   {
     label: 'OCCASION & DAILY\nWEAR FROCKS',
-    img: '/images/categories/occasion-daily-wear-frocks.png',
+    img: '/images/collections/newborn.avif',
     path: '/collections/occasion-daily-wear-frocks',
   },
   {
     label: 'PARTY WEAR\nCOLLECTION',
-    img: '/images/categories/party-wear-collection.png',
+    img: '/images/collections/Kids.webp',
     path: '/collections/party-wear-collection',
   },
   {
     label: 'DESIGNER & PREMIUM\nFROCKS',
-    img: '/images/categories/designer-premium-frocks.png',
+    img: '/images/collections/Pre-Teen.webp',
     path: '/collections/designer-premium-frocks',
   },
   {
     label: 'TRADITIONAL & ETHNIC\nFROCKS',
-    img: '/images/categories/traditional-ethnic-frocks.png',
+    img: '/images/collections/Kids.webp',
     path: '/collections/traditional-ethnic-frocks',
   },
 ];

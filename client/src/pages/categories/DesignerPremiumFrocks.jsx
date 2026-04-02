@@ -3,10 +3,22 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Boutique Designer Frocks', img: '/images/subcategories/boutique-designer-frocks.png' },
-  { label: 'Handwork / Embroidery Frocks', img: '/images/subcategories/handwork-embroidery-frocks.png' },
-  { label: 'Custom Made Frocks', img: '/images/subcategories/custom-made-frocks.png' },
-  { label: 'Luxury Collection', img: '/images/subcategories/luxury-collection.png' },
+  {
+    label: 'Boutique Designer Frocks',
+    img: '/images/collections/Kids.webp'
+  },
+  {
+    label: 'Handwork / Embroidery Frocks',
+    img: '/images/collections/Little Girls.jpg'
+  },
+  {
+    label: 'Custom Made Frocks',
+    img: '/images/collections/Toddler.webp'
+  },
+  {
+    label: 'Luxury Collection',
+    img: '/images/collections/Pre-Teen.webp'
+  },
 ];
 
 export default function DesignerPremiumFrocks() {
@@ -28,8 +40,8 @@ export default function DesignerPremiumFrocks() {
 
       <div className="catpage-grid">
         {subcategories.map((item) => (
-          <div 
-            key={item.label} 
+          <div
+            key={item.label}
             className="catpage-card"
             onClick={() => navigate('/collections', { state: { subcategory: item.label } })}
           >

@@ -3,16 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Birthday Party Frocks', img: '/images/subcategories/birthday-party-frocks.png' },
-  { label: 'Wedding / Festive Frocks', img: '/images/subcategories/wedding-festive-frocks.png' },
-  { label: 'Reception / Evening Wear', img: '/images/subcategories/reception-evening-wear.png' },
-  { label: 'Photoshoot Special Frocks', img: '/images/subcategories/photoshoot-special-frocks.png' },
-  { label: 'Princess / Fancy Dress', img: '/images/subcategories/princess-fancy-dress.png' },
-  { label: 'Casual Cotton Frocks', img: '/images/subcategories/casual-cotton-frocks.png' },
-  { label: 'Playtime Frocks', img: '/images/subcategories/playtime-frocks.png' },
-  { label: 'School Casual Frocks', img: '/images/subcategories/school-casual-frocks.png' },
-  { label: 'Summer Wear Frocks', img: '/images/subcategories/summer-wear-frocks.png' },
-  { label: 'Comfortable Home Wear', img: '/images/subcategories/comfortable-home-wear.png' },
+  { label: 'Birthday Party Frocks', img: '/images/collections/Kids.webp' },
+  { label: 'Wedding / Festive Frocks', img: '/images/collections/Little Girls.jpg' },
+  { label: 'Reception / Evening Wear', img: '/images/collections/Pre-Teen.webp' },
+  { label: 'Photoshoot Special Frocks', img: '/images/collections/Infant.webp' },
+  { label: 'Princess / Fancy Dress', img: '/images/collections/newborn.avif' },
+  { label: 'Casual Cotton Frocks', img: '/images/collections/Toddler.webp' },
+  { label: 'Playtime Frocks', img: '/images/collections/Kids.webp' },
+  { label: 'School Casual Frocks', img: '/images/collections/Little Girls.jpg' },
+  { label: 'Summer Wear Frocks', img: '/images/collections/Toddler.webp' },
+  { label: 'Comfortable Home Wear', img: '/images/collections/Infant.webp' },
 ];
 
 export default function OccasionDailyWearFrocks() {
@@ -34,8 +34,8 @@ export default function OccasionDailyWearFrocks() {
 
       <div className="catpage-grid">
         {subcategories.map((item) => (
-          <div 
-            key={item.label} 
+          <div
+            key={item.label}
             className="catpage-card"
             onClick={() => navigate('/collections', { state: { subcategory: item.label } })}
           >

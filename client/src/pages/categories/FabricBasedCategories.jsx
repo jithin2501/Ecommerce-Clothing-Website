@@ -3,12 +3,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Cotton Frocks', img: '/images/subcategories/cotton-frocks.png' },
-  { label: 'Net Frocks', img: '/images/subcategories/net-frocks.png' },
-  { label: 'Satin Frocks', img: '/images/subcategories/satin-frocks.png' },
-  { label: 'Silk Frocks', img: '/images/subcategories/silk-frocks.png' },
-  { label: 'Organza Frocks', img: '/images/subcategories/organza-frocks.png' },
-  { label: 'Velvet Frocks (Winter Special)', img: '/images/subcategories/velvet-frocks.png' },
+  { label: 'Cotton Frocks', img: '/images/collections/Toddler.webp' },
+  { label: 'Net Frocks', img: '/images/collections/Kids.webp' },
+  { label: 'Satin Frocks', img: '/images/collections/Little Girls.jpg' },
+  { label: 'Silk Frocks', img: '/images/collections/Pre-Teen.webp' },
+  { label: 'Organza Frocks', img: '/images/collections/infant.webp' },
+  { label: 'Velvet Frocks (Winter Special)', img: '/images/collections/newborn.avif' },
 ];
 
 export default function FabricBasedCategories() {
@@ -30,8 +30,8 @@ export default function FabricBasedCategories() {
 
       <div className="catpage-grid">
         {subcategories.map((item) => (
-          <div 
-            key={item.label} 
+          <div
+            key={item.label}
             className="catpage-card"
             onClick={() => navigate('/collections', { state: { subcategory: item.label } })}
           >

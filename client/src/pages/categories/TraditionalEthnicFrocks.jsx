@@ -3,16 +3,16 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Pattu Pavadai (Silk Frocks)',         img: '/images/subcategories/pattu-pavadai.png' },
-  { label: 'Banarasi Silk Frocks',                img: '/images/subcategories/banarasi-silk-frocks.png' },
-  { label: 'Lehenga Choli Frocks',                img: '/images/subcategories/lehenga-choli-frocks.png' },
-  { label: 'Anarkali Style Frocks',               img: '/images/subcategories/anarkali-style-frocks.png' },
-  { label: 'Cotton Ethnic Frocks',                img: '/images/subcategories/cotton-ethnic-frocks.png' },
-  { label: 'Indo-Western Fusion Frocks',          img: '/images/subcategories/indo-western-fusion-frocks.png' },
-  { label: 'Gota Patti / Zari Work Frocks',       img: '/images/subcategories/gota-patti-frocks.png' },
-  { label: 'Kalamkari / Block Print Frocks',      img: '/images/subcategories/kalamkari-block-print.png' },
-  { label: 'Dhoti Style Frocks',                  img: '/images/subcategories/dhoti-style-frocks.png' },
-  { label: 'Half-Saree Style Frocks',             img: '/images/subcategories/half-saree-style.png' },
+  { label: 'Pattu Pavadai (Silk Frocks)', img: '/images/collections/Little Girls.jpg' },
+  { label: 'Banarasi Silk Frocks', img: '/images/collections/Pre-Teen.webp' },
+  { label: 'Lehenga Choli Frocks', img: '/images/collections/Kids.webp' },
+  { label: 'Anarkali Style Frocks', img: '/images/collections/Toddler.webp' },
+  { label: 'Cotton Ethnic Frocks', img: '/images/collections/Infant.webp' },
+  { label: 'Indo-Western Fusion Frocks', img: '/images/collections/Kids.webp' },
+  { label: 'Gota Patti / Zari Work Frocks', img: '/images/collections/Little Girls.jpg' },
+  { label: 'Kalamkari / Block Print Frocks', img: '/images/collections/Infant.webp' },
+  { label: 'Dhoti Style Frocks', img: '/images/collections/newborn.avif' },
+  { label: 'Half-Saree Style Frocks', img: '/images/collections/Pre-Teen.webp' },
 ];
 
 export default function TraditionalEthnicFrocks() {
@@ -34,8 +34,8 @@ export default function TraditionalEthnicFrocks() {
 
       <div className="catpage-grid">
         {subcategories.map((item) => (
-          <div 
-            key={item.label} 
+          <div
+            key={item.label}
             className="catpage-card"
             onClick={() => navigate('/collections', { state: { subcategory: item.label } })}
           >
