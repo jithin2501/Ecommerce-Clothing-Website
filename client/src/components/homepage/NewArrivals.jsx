@@ -1,11 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useWishlist } from '../../context/WishlistContext';
 import '../../styles/homepage/NewArrivals.css';
 
 const API = 'http://localhost:5000/api/products';
 
 export default function NewArrivals() {
   const [products, setProducts] = useState([]);
+  const { toggleWishlist, isWishlisted } = useWishlist();
   const navigate = useNavigate();
   const sectionRef = useRef(null);
 
@@ -57,6 +59,20 @@ export default function NewArrivals() {
                 {product.age && (
                   <span className="na-age">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>
                 )}
+                <button 
+                  className={`na-wish-btn${isWishlisted(product._id) ? ' active' : ''}`}
+                  onClick={(e) => { e.stopPropagation(); toggleWishlist({ ...product, id: product._id }); }}
+                  style={{
+                    position: 'absolute', top: '10px', right: '10px',
+                    background: 'white', border: 'none', width: '30px', height: '30px',
+                    borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    cursor: 'pointer', boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                    color: isWishlisted(product._id) ? '#e11d48' : 'inherit',
+                    fontSize: '0.9rem', zIndex: 2
+                  }}
+                >
+                  {isWishlisted(product._id) ? '♥' : '♡'}
+                </button>
               </div>
               <div className="na-card-info">
                 <div className="na-top-row">

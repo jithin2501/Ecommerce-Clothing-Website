@@ -78,7 +78,12 @@
 }
 
 .wl-card {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f4;
+  transition: background-color 0.2s ease;
+}
+
+.wl-card:hover {
+  background-color: #fafafb;
 }
 
 .wl-card:last-child {
@@ -102,8 +107,11 @@
   border: 1px solid #eee;
 }
 
-.wl-card-info {
+ .wl-card-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .wl-card-name {
@@ -134,7 +142,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 0px;
   flex-wrap: wrap;
 }
 

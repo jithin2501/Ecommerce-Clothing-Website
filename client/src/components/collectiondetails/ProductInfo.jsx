@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Share2, MapPin, Truck, Package, RotateCcw, Banknote, ShieldCheck } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 import AddToCartBtn from './AddToCartBtn';
 import '../../styles/collectiondetails/ProductInfo.css';
 
@@ -26,17 +27,22 @@ export default function ProductInfo({
   userInfo = null,
   auth = null,
 }) {
-  const [selectedSize,  setSelectedSize]  = useState(sizes[0] || '');
+  const [selectedSize,  setSelectedSize]  = useState('');
   const [selectedColor, setSelectedColor] = useState(colors[0]?.name || '');
-  const [wishlisted,    setWishlisted]    = useState(false);
+  const { wishlist, toggleWishlist, isWishlisted } = useWishlist();
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
   const selectedColorHex = colors.find(c => c.name === selectedColor)?.hex || '#2D3E50';
 
   const handleBeforeAdd = () => {
+    if (!selectedSize) {
+      alert("Please select a size before adding to cart.");
+      return false;
+    }
+
     if (!selectedAddress) {
-      alert("Please set a delivery location before adding to cart.");
+      alert("Please select a delivery address before adding to cart.");
       onOpenSidebar();
       return false;
     }
@@ -138,8 +144,12 @@ export default function ProductInfo({
           onGoToBag={() => navigate('/cart')}
           shirtColor={selectedColorHex}
         />
-        <button className={`pi-icon-btn${wishlisted ? ' active' : ''}`} onClick={() => setWishlisted(p => !p)}>
-          <Heart size={18} fill={wishlisted ? 'currentColor' : 'none'} />
+        <button 
+          className={`pi-icon-btn${isWishlisted(productId) ? ' active' : ''}`} 
+          onClick={() => toggleWishlist({ id: productId, name, price, img: galleryImg, category: 'Product' })}
+          style={{ color: isWishlisted(productId) ? '#e11d48' : 'inherit' }}
+        >
+          <Heart size={18} fill={isWishlisted(productId) ? '#e11d48' : 'none'} stroke={isWishlisted(productId) ? '#e11d48' : 'currentColor'} />
         </button>
         <button className="pi-icon-btn"><Share2 size={18} /></button>
       </div>

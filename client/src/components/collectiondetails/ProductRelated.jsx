@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
+import { useWishlist } from '../../context/WishlistContext';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/collectiondetails/ProductRelated.css';
 
@@ -15,7 +16,11 @@ const CartIcon = () => (
 function RelatedCard({ item }) {
   const [added, setAdded] = useState(false);
   const { addToCart } = useCart();
+  const { toggleWishlist, isWishlisted } = useWishlist();
   const navigate = useNavigate();
+
+  const productId = item._id || item.id;
+  const active = isWishlisted(productId);
 
   const formatPrice = (price) => typeof price === 'number' ? `₹${price}` : price;
 
@@ -33,7 +38,13 @@ function RelatedCard({ item }) {
       <div className="prelat-img-wrap">
         <img src={item.img} alt={item.name} className="prelat-img" />
         {item.age && <span className="prelat-age">AGE {item.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
-        <button className="prelat-wish" onClick={(e) => e.stopPropagation()}>♡</button>
+        <button 
+          className={`prelat-wish${active ? ' active' : ''}`}
+          onClick={(e) => { e.stopPropagation(); toggleWishlist({ ...item, id: productId }); }}
+          style={{ color: active ? '#e11d48' : 'inherit' }}
+        >
+          {active ? '♥' : '♡'}
+        </button>
       </div>
       <div className="prelat-info">
         <div className="prelat-top-row">

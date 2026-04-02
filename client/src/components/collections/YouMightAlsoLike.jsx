@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useWishlist } from '../../context/WishlistContext';
 import '../../styles/collections/YouMightAlsoLike.css';
 
 const API = 'http://localhost:5000/api/products';
 
 function FavoriteCard({ product }) {
   const navigate = useNavigate();
+  const { toggleWishlist, isWishlisted } = useWishlist();
+
+  const productId = product._id || product.id;
+  const active = isWishlisted(productId);
 
   const formatPrice = (price) =>
     typeof price === 'number' ? `₹${price}` : price;
@@ -25,7 +30,13 @@ function FavoriteCard({ product }) {
       <div className="ymll-img-wrap">
         <img src={product.img} alt={product.name} />
         {product.age && <span className="ymll-age">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
-        <button className="ymll-wish">♡</button>
+        <button 
+          className={`ymll-wish${active ? ' active' : ''}`}
+          onClick={(e) => { e.stopPropagation(); toggleWishlist({ ...product, id: productId }); }}
+          style={{ color: active ? '#e11d48' : 'inherit' }}
+        >
+          {active ? '♥' : '♡'}
+        </button>
       </div>
       <div className="ymll-info">
         <div className="ymll-top-row">

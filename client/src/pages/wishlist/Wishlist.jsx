@@ -14,13 +14,6 @@ const toAgeGroup = (age) => {
 const toSlug = (name) =>
   name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-const recentlyViewed = [
-  { id: 1, name: 'Corduroy Overalls',  category: 'BABY BOY',   price: '$48.00', image: 'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=160&h=160&fit=crop' },
-  { id: 2, name: 'Knitted Romper',     category: 'BABY GIRL',  price: '$39.00', image: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=160&h=160&fit=crop' },
-  { id: 3, name: 'Sun Protection Hat', category: 'ACCESSORIES', price: '$22.00', image: 'https://images.unsplash.com/photo-1521369909029-2afed882baee?w=160&h=160&fit=crop' },
-  { id: 4, name: 'Bamboo PJs',         category: 'SLEEPWEAR',  price: '$35.00', image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=160&h=160&fit=crop' },
-];
-
 export default function Wishlist() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
@@ -76,59 +69,36 @@ export default function Wishlist() {
             <div className="wl-list">
               {wishlist.map(item => (
                 <div key={item.id} className="wl-card">
-                  <div className="wl-card-inner">
-
-                    <img
-                      src={item.img}
-                      alt={item.name}
-                      className="wl-card-img"
-                      onClick={() => navigate(`/collections/${toAgeGroup(item.age)}/${toSlug(item.name)}`)}
+                    <div 
+                      className="wl-card-inner" 
+                      onClick={() => navigate(`/collections/product/${item.productId || item.id}`)}
                       style={{ cursor: 'pointer' }}
-                    />
-
-                    <div className="wl-card-info">
-                      <div className="wl-card-name">{item.name}</div>
-                      <div className="wl-card-brand">
-                        <span className="wl-brand-dot" /> {item.category}
+                    >
+                      <img
+                        src={item.img}
+                        alt={item.name}
+                        className="wl-card-img"
+                      />
+                      <div className="wl-card-info">
+                        <div className="wl-card-name">{item.name}</div>
+                        <div className="wl-card-brand">
+                          <span className="wl-brand-dot" /> {item.category}
+                        </div>
+                        <div className="wl-card-pricing">
+                          <span className="wl-price">{item.price}</span>
+                          {item.oldPrice && (
+                            <span className="wl-old-price">{item.oldPrice}</span>
+                          )}
+                        </div>
                       </div>
-                      <div className="wl-card-pricing">
-                        <span className="wl-price">{item.price}</span>
-                        {item.oldPrice && (
-                          <span className="wl-old-price">{item.oldPrice}</span>
-                        )}
-                      </div>
-                      <button
-                        className="wl-add-btn"
-                        onClick={() => navigate(`/collections/${toAgeGroup(item.age)}/${toSlug(item.name)}`)}
-                      >
-                        View Product
+                      <button className="wl-remove-btn" onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}>
+                        <img src="/images/wishlist/delete.png" alt="delete" className="wl-remove-icon" />
                       </button>
                     </div>
-
-                    <button className="wl-remove-btn" onClick={() => removeFromWishlist(item.id)}>
-                      <img src="/images/wishlist/delete.png" alt="delete" className="wl-remove-icon" />
-                    </button>
-
-                  </div>
                 </div>
               ))}
             </div>
           )}
-
-          {/* Recently Viewed — always visible */}
-          <div className="wl-recent">
-            <h2 className="wl-recent-title">Recently Viewed</h2>
-            <div className="wl-recent-grid">
-              {recentlyViewed.map(item => (
-                <div key={item.id} className="wl-recent-card">
-                  <img src={item.image} alt={item.name} className="wl-recent-img" />
-                  <div className="wl-recent-category">{item.category}</div>
-                  <div className="wl-recent-name">{item.name}</div>
-                  <div className="wl-recent-price">{item.price}</div>
-                </div>
-              ))}
-            </div>
-          </div>
 
         </main>
       </div>
