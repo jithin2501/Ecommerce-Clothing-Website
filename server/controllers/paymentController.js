@@ -6,6 +6,9 @@ const razorpay = require('../conf/razorpay');
  * Generates an order ID that the frontend uses to open the payment modal.
  */
 exports.createOrder = async (req, res) => {
+  if (!razorpay) {
+    return res.status(503).json({ success: false, error: 'Razorpay not configured' });
+  }
   try {
     const { amount, currency = 'INR', receipt = `rcpt_${Date.now()}` } = req.body;
 
@@ -39,6 +42,9 @@ exports.createOrder = async (req, res) => {
  * Validates the payment signature sent by the frontend to confirm it's legitimate.
  */
 exports.verifyPayment = async (req, res) => {
+  if (!razorpay) {
+    return res.status(503).json({ success: false, error: 'Razorpay not configured' });
+  }
   try {
     const { 
       razorpay_order_id, 

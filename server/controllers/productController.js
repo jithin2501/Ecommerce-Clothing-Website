@@ -39,6 +39,28 @@ const getAdminProducts = async (req, res) => {
   }
 };
 
+// Helper to handle array fields from FormData
+const parseArrayField = (field) => {
+  if (!field) return [];
+  // Case 1: Already an array (or parsed as one by middleware)
+  if (Array.isArray(field)) {
+    // If it's an array with one element that looks like JSON stringified array, parse it
+    if (field.length === 1 && typeof field[0] === 'string' && field[0].startsWith('[')) {
+      try { return JSON.parse(field[0]); } catch (e) {}
+    }
+    return field;
+  }
+  // Case 2: Stringified JSON array from frontend
+  if (typeof field === 'string' && field.trim().startsWith('[')) {
+    try {
+      const parsed = JSON.parse(field);
+      return Array.isArray(parsed) ? parsed : [parsed];
+    } catch (e) {}
+  }
+  // Case 3: Single string value
+  return typeof field === 'string' && field.trim() ? [field.trim()] : (field ? [field] : []);
+};
+
 // POST /api/products/admin — create product
 const createProduct = async (req, res) => {
   try {
@@ -46,18 +68,18 @@ const createProduct = async (req, res) => {
     let { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability } = req.body;
 
     // Handle array fields sent via FormData
-    try { category = JSON.parse(category); } catch (e) {}
-    try { subCategory = JSON.parse(subCategory); } catch (e) {}
-    try { ageGroup = JSON.parse(ageGroup); } catch (e) {}
+    category = parseArrayField(category);
+    subCategory = parseArrayField(subCategory);
+    ageGroup = parseArrayField(ageGroup);
 
-    const imgUrl = await uploadToS3(req.file, Array.isArray(ageGroup) ? ageGroup[0] : ageGroup);
+    const imgUrl = await uploadToS3(req.file, ageGroup[0] || 'other');
     const product = await Product.create({
       name, 
-      category: Array.isArray(category) ? category : [category],
-      subCategory: Array.isArray(subCategory) ? subCategory : (subCategory ? [subCategory] : []),
+      category,
+      subCategory,
       price:    Number(price),
       oldPrice: oldPrice ? Number(oldPrice) : null,
-      ageGroup: Array.isArray(ageGroup) ? ageGroup : [ageGroup],
+      ageGroup,
       age,
       color:    color || '',
       img:      imgUrl,
@@ -80,20 +102,17 @@ const updateProduct = async (req, res) => {
 
     if (name) product.name = name;
     
-    if (category) {
-        try { category = JSON.parse(category); } catch (e) {}
-        product.category = Array.isArray(category) ? category : [category];
+    if (category !== undefined) {
+        product.category = parseArrayField(category);
     }
     if (subCategory !== undefined) {
-        try { subCategory = JSON.parse(subCategory); } catch (e) {}
-        product.subCategory = Array.isArray(subCategory) ? subCategory : (subCategory ? [subCategory] : []);
+        product.subCategory = parseArrayField(subCategory);
     }
     if (price) product.price = Number(price);
     if (oldPrice !== undefined) product.oldPrice = oldPrice ? Number(oldPrice) : null;
     
-    if (ageGroup) {
-        try { ageGroup = JSON.parse(ageGroup); } catch (e) {}
-        product.ageGroup = Array.isArray(ageGroup) ? ageGroup : [ageGroup];
+    if (ageGroup !== undefined) {
+        product.ageGroup = parseArrayField(ageGroup);
     }
     if (age) product.age = age;
     if (color !== undefined) product.color = color;
