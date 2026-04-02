@@ -11,7 +11,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { MapPin } from 'lucide-react';
 import '../../styles/cart/CartPage.css';
 
-const API = 'http://localhost:5000/api';
+const API = '/api';
 
 const FREE_SHIPPING_THRESHOLD = 136;
 const GIFT_WRAP_COST = 6;

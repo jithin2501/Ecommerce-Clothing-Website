@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useWishlist } from '../../context/WishlistContext';
 import '../../styles/collections/YouMightAlsoLike.css';
 
-const API = 'http://localhost:5000/api/products';
+const API = '/api/products';
 
 function FavoriteCard({ product }) {
   const navigate = useNavigate();

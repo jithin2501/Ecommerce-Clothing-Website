@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../../styles/cart/OrderSummary.css';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = '/api';
 
 export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCost, total, user, cartItems, selectedAddress }) {
   const [loading, setLoading] = useState(false);

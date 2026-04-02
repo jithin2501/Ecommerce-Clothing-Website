@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/productmanagement.css';
 
-const API = 'http://localhost:5000/api/products';
+const API = '/api/products';
 const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('adminToken')}` });
 
 const AGE_GROUPS = [

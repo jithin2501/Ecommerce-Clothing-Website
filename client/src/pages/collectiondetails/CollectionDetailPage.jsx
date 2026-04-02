@@ -10,7 +10,7 @@ import '../../styles/collectiondetails/CollectionDetailPage.css';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
-const API = 'http://localhost:5000/api';
+const API = '/api';
 
 const slugToName = (slug) => slug.replace(/-/g, ' ').toLowerCase();
 

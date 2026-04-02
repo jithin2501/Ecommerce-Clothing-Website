@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/usermanagement.css';
 
-const API = 'http://localhost:5000/api/users';
+const API = '/api/users';
 const authHeaders = () => ({
   'Content-Type': 'application/json',
   Authorization: `Bearer ${localStorage.getItem('adminToken')}`,

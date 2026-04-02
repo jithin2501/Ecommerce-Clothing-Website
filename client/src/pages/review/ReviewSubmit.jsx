@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../../styles/review/ReviewSubmit.css';
 
-const API = 'http://localhost:5000/api/reviews/submit';
+const API = '/api/reviews/submit';
 
 export default function ReviewSubmit() {
   const [form, setForm]       = useState({ name: '', rating: 0, message: '' });

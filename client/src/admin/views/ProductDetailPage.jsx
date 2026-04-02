@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../assets/productdetailpage.css';
 
-const API      = 'http://localhost:5000/api';
+const API      = '/api';
 const authHdrs = () => ({ Authorization: `Bearer ${localStorage.getItem('adminToken')}` });
 
 const MAX_GALLERY = 7;

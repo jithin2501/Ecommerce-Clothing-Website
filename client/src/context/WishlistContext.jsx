@@ -14,7 +14,7 @@ export function WishlistProvider({ children }) {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const res = await fetch(`http://localhost:5000/api/client-auth/profile/${user.uid}`);
+          const res = await fetch(`/api/client-auth/profile/${user.uid}`);
           const data = await res.json();
           if (data.success && data.user) {
             // Map DB 'productId' back to 'id' for frontend consistency if needed, 
@@ -51,7 +51,7 @@ export function WishlistProvider({ children }) {
           category: item.category
         }));
 
-        await fetch('http://localhost:5000/api/client-auth/sync-wishlist', {
+        await fetch('/api/client-auth/sync-wishlist', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ uid: user.uid, wishlist: syncData })

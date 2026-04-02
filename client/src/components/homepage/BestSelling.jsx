@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/homepage/BestSelling.css';
 
-const API = 'http://localhost:5000/api/products';
+const API = '/api/products';
 
 const ArrowIcon = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none"

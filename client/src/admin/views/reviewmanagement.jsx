@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../assets/reviewmanagement.css';
 
-const API = 'http://localhost:5000/api/reviews';
+const API = '/api/reviews';
 const REVIEW_URL = `${window.location.origin}/review`;
 
 const authHeaders = () => ({

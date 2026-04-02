@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useWishlist } from '../../context/WishlistContext';
 import '../../styles/homepage/NewArrivals.css';
 
-const API = 'http://localhost:5000/api/products';
+const API = '/api/products';
 
 export default function NewArrivals() {
   const [products, setProducts] = useState([]);

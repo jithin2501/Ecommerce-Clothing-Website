@@ -4,7 +4,7 @@ import { useWishlist } from '../../context/WishlistContext';
 import { useNavigate } from 'react-router-dom';
 import '../../styles/collectiondetails/ProductRelated.css';
 
-const API = 'http://localhost:5000/api/products';
+const API = '/api/products';
 
 const CartIcon = () => (
   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

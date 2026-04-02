@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../assets/contactmessage.css';
 
-const API = 'http://localhost:5000/api/contact';
+const API = '/api/contact';
 
 export default function Contact() {
   const [contacts, setContacts] = useState([]);

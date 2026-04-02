@@ -27,7 +27,7 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
     if (propProducts) return;
     const fetchFromAPI = async () => {
       try {
-        const url  = ageGroup ? `http://localhost:5000/api/products?ageGroup=${ageGroup}` : 'http://localhost:5000/api/products';
+        const url  = ageGroup ? `/api/products?ageGroup=${ageGroup}` : '/api/products';
         const res  = await fetch(url);
         const data = await res.json();
         if (data.success && data.data.length > 0) {

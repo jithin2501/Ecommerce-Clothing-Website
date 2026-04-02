@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../../styles/homepage/Reviews.css';
 
-const API = 'http://localhost:5000/api/reviews/approved';
+const API = '/api/reviews/approved';
 
 // Fallback static review shown when no approved reviews yet
 const FALLBACK = [{
