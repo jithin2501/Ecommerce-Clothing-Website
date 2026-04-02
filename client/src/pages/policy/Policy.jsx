@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
-import '../../styles/policy/Policy.css';
+import '../../styles/policy/policy.css';
 
 // ─── Privacy Policy ───────────────────────────────────────────────────────────
 
