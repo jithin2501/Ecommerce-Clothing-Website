@@ -4,12 +4,12 @@ const mongoose = require('mongoose');
 const productSchema = new mongoose.Schema(
   {
     name:        { type: String, required: true, trim: true },
-    category:    { type: String, required: true, trim: true },
-    subCategory: { type: String, required: true, trim: true },
+    category:    { type: [String], required: true, default: [] },
+    subCategory: { type: [String], required: true, default: [] },
     price:       { type: Number, required: true },
     oldPrice:    { type: Number, default: null },
     ageGroup:    { 
-      type: String, 
+      type: [String], 
       enum: ['newborn', 'infant', 'toddler', 'little-girls', 'kids', 'pre-teen'], 
       required: true 
     },

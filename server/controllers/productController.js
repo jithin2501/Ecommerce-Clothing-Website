@@ -6,7 +6,10 @@ const { uploadToS3, deleteFromS3 } = require('../conf/s3');
 const getProducts = async (req, res) => {
   try {
     const filter = { isActive: true };
-    if (req.query.ageGroup) filter.ageGroup = req.query.ageGroup;
+    if (req.query.ageGroup) {
+        const groups = req.query.ageGroup.split(',');
+        filter.ageGroup = { $in: groups };
+    }
     const products = await Product.find(filter).sort({ createdAt: -1 });
     res.json({ success: true, data: products });
   } catch {
@@ -40,15 +43,22 @@ const getAdminProducts = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'Image is required.' });
-    const { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability } = req.body;
-    const imgUrl = await uploadToS3(req.file, ageGroup);
+    let { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability } = req.body;
+
+    // Handle array fields sent via FormData
+    try { category = JSON.parse(category); } catch (e) {}
+    try { subCategory = JSON.parse(subCategory); } catch (e) {}
+    try { ageGroup = JSON.parse(ageGroup); } catch (e) {}
+
+    const imgUrl = await uploadToS3(req.file, Array.isArray(ageGroup) ? ageGroup[0] : ageGroup);
     const product = await Product.create({
       name, 
-      category,
-      subCategory: subCategory || null,
+      category: Array.isArray(category) ? category : [category],
+      subCategory: Array.isArray(subCategory) ? subCategory : (subCategory ? [subCategory] : []),
       price:    Number(price),
       oldPrice: oldPrice ? Number(oldPrice) : null,
-      ageGroup, age,
+      ageGroup: Array.isArray(ageGroup) ? ageGroup : [ageGroup],
+      age,
       color:    color || '',
       img:      imgUrl,
       badge:    badge || null,
@@ -66,19 +76,30 @@ const updateProduct = async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ success: false });
 
-    const { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability, isActive, featuredIn } = req.body;
+    let { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability, isActive, featuredIn } = req.body;
 
-    if (name)                         product.name           = name;
-    if (category)                     product.category       = category;
-    if (subCategory !== undefined)    product.subCategory    = subCategory || null;
-    if (price)                        product.price          = Number(price);
-    if (oldPrice !== undefined)       product.oldPrice       = oldPrice ? Number(oldPrice) : null;
-    if (ageGroup)                     product.ageGroup       = ageGroup;
-    if (age)                          product.age            = age;
-    if (color !== undefined)          product.color          = color;
-    if (badge !== undefined)          product.badge          = badge || null;
+    if (name) product.name = name;
+    
+    if (category) {
+        try { category = JSON.parse(category); } catch (e) {}
+        product.category = Array.isArray(category) ? category : [category];
+    }
+    if (subCategory !== undefined) {
+        try { subCategory = JSON.parse(subCategory); } catch (e) {}
+        product.subCategory = Array.isArray(subCategory) ? subCategory : (subCategory ? [subCategory] : []);
+    }
+    if (price) product.price = Number(price);
+    if (oldPrice !== undefined) product.oldPrice = oldPrice ? Number(oldPrice) : null;
+    
+    if (ageGroup) {
+        try { ageGroup = JSON.parse(ageGroup); } catch (e) {}
+        product.ageGroup = Array.isArray(ageGroup) ? ageGroup : [ageGroup];
+    }
+    if (age) product.age = age;
+    if (color !== undefined) product.color = color;
+    if (badge !== undefined) product.badge = badge || null;
     if (sustainability !== undefined) product.sustainability = sustainability === 'true';
-    if (isActive !== undefined)       product.isActive       = isActive === 'true';
+    if (isActive !== undefined) product.isActive = isActive === 'true';
 
     // featuredIn: array from JSON body, or stringified from FormData
     if (featuredIn !== undefined) {

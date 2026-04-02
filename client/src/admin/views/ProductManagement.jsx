@@ -49,7 +49,16 @@ const SUBCATEGORIES = {
   ]
 };
 const BADGES = ['', 'New', 'Bestselling'];
-const EMPTY_FORM = { name: '', category: '', subCategory: '', price: '', oldPrice: '', ageGroup: 'newborn', color: '', badge: '' };
+const EMPTY_FORM = { 
+  name: '', 
+  category: [], 
+  subCategory: [], 
+  price: '', 
+  oldPrice: '', 
+  ageGroup: [], 
+  color: '', 
+  badge: '' 
+};
 
 const SECTION_LIMITS = {
   currentFavorites: 4,
@@ -102,9 +111,14 @@ export default function ProductManagement() {
   const handleEdit = (p) => {
     setEditId(p._id);
     setForm({
-      name: p.name, category: p.category, subCategory: p.subCategory || '', price: p.price,
-      oldPrice: p.oldPrice || '', ageGroup: p.ageGroup,
-      color: p.color || '', badge: p.badge || '',
+      name: p.name, 
+      category: Array.isArray(p.category) ? p.category : [p.category], 
+      subCategory: Array.isArray(p.subCategory) ? p.subCategory : (p.subCategory ? [p.subCategory] : []), 
+      price: p.price,
+      oldPrice: p.oldPrice || '', 
+      ageGroup: Array.isArray(p.ageGroup) ? p.ageGroup : [p.ageGroup],
+      color: p.color || '', 
+      badge: p.badge || '',
     });
     setPreview(p.img);
     setImgFile(null);
@@ -128,8 +142,16 @@ export default function ProductManagement() {
     setSaving(true);
     try {
       const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => fd.append(k, v));
-      fd.append('age', AGE_LABELS[form.ageGroup]);
+      Object.entries(form).forEach(([k, v]) => {
+        if (Array.isArray(v)) {
+          fd.append(k, JSON.stringify(v));
+        } else {
+          fd.append(k, v);
+        }
+      });
+      
+      const ageLabels = form.ageGroup.map(ag => AGE_LABELS[ag]).join(', ');
+      fd.append('age', ageLabels);
       if (imgFile) fd.append('image', imgFile);
 
       const url    = editId ? `${API}/admin/${editId}` : `${API}/admin`;
@@ -208,7 +230,8 @@ export default function ProductManagement() {
   };
 
   const displayed = products.filter(p => {
-    const matchAge  = filterAge === 'all' || p.ageGroup === filterAge;
+    const pAges = Array.isArray(p.ageGroup) ? p.ageGroup : [p.ageGroup];
+    const matchAge  = filterAge === 'all' || pAges.includes(filterAge);
     const matchName = searchQuery.trim() === '' ||
       p.name.toLowerCase().includes(searchQuery.trim().toLowerCase());
     const matchDate = filterDate === '' || (() => {
@@ -270,50 +293,70 @@ export default function ProductManagement() {
                   <input type="text" placeholder="e.g. Garden Breeze Dress"
                     value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                 </div>
+              </div>
+
+              <div className="pm-row pm-compact-row">
                 <div className="pm-group">
-                  <label>Category *</label>
-                  <select value={form.category} onChange={e => setForm(f => ({ ...f, category: e.target.value, subCategory: '' }))}>
-                    <option value="">Select category</option>
-                    {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-                  </select>
+                  <label>Categories *</label>
+                  <div className="pm-chip-grid">
+                    {CATEGORIES.map(c => {
+                      const isActive = form.category.includes(c);
+                      return (
+                        <div key={c} className={`pm-chip pm-sm ${isActive ? 'active' : ''}`}
+                          onClick={() => setForm(f => ({ ...f, category: isActive ? f.category.filter(x => x !== c) : [...f.category, c] }))}>
+                          {c}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div className="pm-group">
+                  <label>Age Groups *</label>
+                  <div className="pm-chip-grid">
+                    {AGE_GROUPS.map(a => {
+                      const isActive = form.ageGroup.includes(a.value);
+                      return (
+                        <div key={a.value} className={`pm-chip pm-sm ${isActive ? 'active' : ''}`}
+                          onClick={() => setForm(f => ({ ...f, ageGroup: isActive ? f.ageGroup.filter(x => x !== a.value) : [...f.ageGroup, a.value] }))}>
+                          {a.label}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
+              {form.category.length > 0 && (
+                <div className="pm-group pm-subcat-simple">
+                  <label>Sub Categories *</label>
+                  <div className="pm-chip-grid pm-compact-chips">
+                    {[...new Set(form.category.flatMap(cat => SUBCATEGORIES[cat] || []))].map(sc => {
+                      const isActive = form.subCategory.includes(sc);
+                      return (
+                        <div key={sc} className={`pm-chip pm-xs ${isActive ? 'active' : ''}`}
+                          onClick={() => setForm(f => ({ ...f, subCategory: isActive ? f.subCategory.filter(x => x !== sc) : [...f.subCategory, sc] }))}>
+                          {sc}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               <div className="pm-row">
                 <div className="pm-group">
-                  <label>Sub Category *</label>
-                  <select 
-                    value={form.subCategory} 
-                    onChange={e => setForm(f => ({ ...f, subCategory: e.target.value }))}
-                    disabled={!form.category || !SUBCATEGORIES[form.category]}
-                  >
-                    <option value="">Select sub-category</option>
-                    {form.category && SUBCATEGORIES[form.category] && 
-                      SUBCATEGORIES[form.category].map(sc => <option key={sc}>{sc}</option>)
-                    }
-                  </select>
-                </div>
-                <div className="pm-group">
-                  <label>Price (₹) *</label>
-                  <input type="number" placeholder="e.g. 849" min="0"
+                  <label>Price (₹) <span className="pm-required">*</span></label>
+                  <input type="number" placeholder="e.g. 849" min="0" className="pm-premium-input"
                     value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} />
-                </div>
-              </div>
-
-              <div className="pm-row">
-                <div className="pm-group">
-                  <label>Age Group *</label>
-                  <select value={form.ageGroup} onChange={e => setForm(f => ({ ...f, ageGroup: e.target.value }))}>
-                    {AGE_GROUPS.map(a => <option key={a.value} value={a.value}>{a.label}</option>)}
-                  </select>
                 </div>
                 <div className="pm-group">
                   <label>Badge <span className="pm-optional">optional</span></label>
-                  <select value={form.badge} onChange={e => setForm(f => ({ ...f, badge: e.target.value }))}>
+                  <select value={form.badge} className="pm-premium-select" onChange={e => setForm(f => ({ ...f, badge: e.target.value }))}>
                     {BADGES.map(b => <option key={b} value={b}>{b || 'None'}</option>)}
                   </select>
                 </div>
               </div>
+
 
             </div>
           </div>
@@ -397,8 +440,10 @@ export default function ProductManagement() {
                     <td><img src={p.img} alt={p.name} className="pm-thumb" /></td>
                     <td>
                       <div className="pm-name">{p.name}</div>
-                      <div className="pm-cat">{p.category}</div>
-                      {p.subCategory && <div className="pm-subcat" style={{fontSize: '0.8rem', color: '#666', marginTop: '2px'}}>{p.subCategory}</div>}
+                      <div className="pm-cat">{(Array.isArray(p.category) ? p.category : [p.category]).join(', ')}</div>
+                      {p.subCategory && <div className="pm-subcat" style={{fontSize: '0.8rem', color: '#666', marginTop: '2px'}}>
+                        {(Array.isArray(p.subCategory) ? p.subCategory : [p.subCategory]).join(', ')}
+                      </div>}
                     </td>
                     <td className="pm-age">{p.age}</td>
                     <td className="pm-price">

@@ -52,7 +52,12 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
   }
 
   let filtered = [...base];
-  if (selectedCategories.length > 0) filtered = filtered.filter(p => selectedCategories.includes(p.category));
+  if (selectedCategories.length > 0) {
+    filtered = filtered.filter(p => {
+      const pCats = Array.isArray(p.category) ? p.category : [p.category];
+      return pCats.some(c => selectedCategories.includes(c));
+    });
+  }
   if (selectedColors.length > 0)     filtered = filtered.filter(p => selectedColors.includes(p.color));
   if (sustainableOnly)               filtered = filtered.filter(p => p.sustainability);
 
@@ -103,7 +108,7 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
             </button>
           </div>
           <div className="pg-info">
-            <span className="pg-category">{product.category}</span>
+            <span className="pg-category">{(Array.isArray(product.category) ? product.category : [product.category])[0]}</span>
             <div className="pg-name">{product.name}</div>
             <Stars rating={product.stars || 0} reviews={product.reviews || 0} />
             <div className="pg-price-row">
