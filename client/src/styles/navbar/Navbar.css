@@ -268,6 +268,11 @@ nav.nav-detail-scrolled .hamburger-btn:hover {
   }
 }
 
+/* ── Nav z-index when sidebar open ── */
+nav.sidebar-open {
+  z-index: 999;
+}
+
 /* ── Sidebar Overlay ── */
 .sidebar-overlay {
   position: fixed;
@@ -557,5 +562,17 @@ nav.nav-detail-scrolled .hamburger-btn:hover {
   .mobile-sidebar {
     width: 100%;
     max-width: none;
+  }
+}
+
+/* ── On mobile, always sticky so navbar scrolls with page ── */
+@media (max-width: 1100px) {
+
+  nav,
+  nav.nav-collections,
+  nav.nav-banner-scrolled,
+  nav.nav-detail-scrolled {
+    position: sticky;
+    top: 0;
   }
 }

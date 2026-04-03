@@ -154,7 +154,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={navClass}>
+    <nav className={`${navClass} ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       <div className="nav-inner">
 
         {/* ── Logo ── */}
