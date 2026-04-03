@@ -228,23 +228,22 @@ nav.nav-detail-scrolled .action-item:hover {
   cursor: pointer;
   padding: 6px;
   border-radius: 8px;
-  transition: color 0.3s ease, background 0.2s;
   flex-shrink: 0;
   line-height: 1;
 }
 
 .hamburger-btn:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: none;
 }
 
 nav.nav-banner-scrolled .hamburger-btn,
 nav.nav-detail-scrolled .hamburger-btn {
-  color: white;
+  color: #2D3E50;
 }
 
 nav.nav-banner-scrolled .hamburger-btn:hover,
 nav.nav-detail-scrolled .hamburger-btn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: none;
 }
 
 /* ── Hide desktop links on mobile ── */
@@ -342,7 +341,7 @@ nav.sidebar-open {
 }
 
 .sidebar-close {
-  background: rgba(255, 255, 255, 0.1);
+  background: none;
   border: none;
   color: white;
   cursor: pointer;
@@ -352,12 +351,11 @@ nav.sidebar-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s;
   flex-shrink: 0;
 }
 
 .sidebar-close:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: none;
 }
 
 /* ── Sidebar Nav Links ── */
