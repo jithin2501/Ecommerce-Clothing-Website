@@ -75,7 +75,6 @@ function PublicLayout() {
         <Route path="/support" element={<SupportHub />} />
         <Route path="/support/order-help" element={<OrderHelp />} />
         <Route path="/support/chat" element={<ChatSupport />} />
-        <Route path="/review" element={<ReviewSubmit />} />
         <Route path="/account/policy/:type" element={<Policy />} />
       </Routes>
       <Footer />
@@ -116,6 +115,9 @@ function App() {
               <Route path="products/:productId/details" element={<ProductDetailPage />} />
               <Route path="clients" element={<ClientManagement />} />
             </Route>
+
+            {/* Review submission page — no Navbar/Footer */}
+            <Route path="/review" element={<ReviewSubmit />} />
 
             {/* All public pages with Navbar + Footer */}
             <Route path="/*" element={<PublicLayout />} />
