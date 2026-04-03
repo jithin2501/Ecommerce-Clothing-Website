@@ -31,8 +31,6 @@ export default function Navbar() {
   const prevPathRef = useRef(location.pathname);
 
   const [scrolled, setScrolled] = useState(false);
-  const [navHidden, setNavHidden] = useState(false);
-  const lastScrollY = useRef(0);
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showDropdown, setShowDropdown] = useState(false);
@@ -64,28 +62,7 @@ export default function Navbar() {
 
   useEffect(() => {
     setScrolled(false);
-    setNavHidden(false);
-    lastScrollY.current = window.scrollY;
-
-    const handleScroll = () => {
-      const currentY = window.scrollY;
-      setScrolled(currentY > 60);
-
-      // Only apply hide/show on mobile
-      if (window.innerWidth <= 1100) {
-        if (currentY > lastScrollY.current && currentY > 80) {
-          // Scrolling down — hide navbar
-          setNavHidden(true);
-        } else {
-          // Scrolling up — show navbar
-          setNavHidden(false);
-        }
-      } else {
-        setNavHidden(false);
-      }
-      lastScrollY.current = currentY;
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
     return () => window.removeEventListener('scroll', handleScroll);
@@ -177,7 +154,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`${navClass} ${isSidebarOpen ? 'sidebar-open' : ''} ${navHidden && !isSidebarOpen ? 'nav-hidden' : ''}`}>
+    <nav className={`${navClass} ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       <div className="nav-inner">
 
         {/* ── Logo ── */}
