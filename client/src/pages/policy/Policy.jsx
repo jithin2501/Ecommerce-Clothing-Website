@@ -82,7 +82,7 @@ function PrivacyPolicyContent() {
       <section>
         <h3>9. Contact Us</h3>
         <ul>
-          <li>For any questions, contact us at:</li>  
+          <li>For any questions, contact us at:</li>
           <li>Email: <a href="mailto:sumathitrends.in@gmail.com">sumathitrends.in@gmail.com</a></li>
           <li>Phone: +91 87928 88508</li>
           <li>
@@ -285,15 +285,16 @@ const POLICY_META = {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Policy() {
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'instant' });
-  }, []);
-
   const { type } = useParams();
   const meta = POLICY_META[type] || POLICY_META.privacy;
 
   const [activeNav, setActiveNav] = useState('policy');
   const [activeSubNav, setActiveSubNav] = useState(type || 'privacy');
+
+  // Scroll to top instantly every time the policy type changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [type]);
 
   useEffect(() => {
     setActiveNav('policy');

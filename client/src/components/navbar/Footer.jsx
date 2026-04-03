@@ -1,14 +1,9 @@
-import { usePolicyModal } from './PolicyPages';
+import { Link } from 'react-router-dom';
 import '../../styles/navbar/Footer.css';
-import '../../styles/navbar/PolicyPages.css';
 
 export default function Footer() {
-  const { openPolicy, modal } = usePolicyModal();
-
   return (
     <>
-      {modal}
-
       <footer className="premium-footer">
         <div className="footer-content">
 
@@ -107,15 +102,15 @@ export default function Footer() {
         <div className="footer-bottom">
           <p>&copy; 2026 Sumathi Trends. All rights reserved.</p>
           <div className="legal-links">
-            <button className="legal-link-btn" onClick={() => openPolicy('privacy')}>
+            <Link to="/account/policy/privacy" className="legal-link-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
               Privacy Policy
-            </button>
-            <button className="legal-link-btn" onClick={() => openPolicy('terms')}>
+            </Link>
+            <Link to="/account/policy/terms" className="legal-link-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
               Terms of Service
-            </button>
-            <button className="legal-link-btn" onClick={() => openPolicy('refund')}>
+            </Link>
+            <Link to="/account/policy/refund" className="legal-link-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
               Refund &amp; Cancellation Policy
-            </button>
+            </Link>
           </div>
         </div>
       </footer>
