@@ -445,7 +445,18 @@ export default function ProductManagement() {
                         {(Array.isArray(p.subCategory) ? p.subCategory : [p.subCategory]).join(', ')}
                       </div>}
                     </td>
-                    <td className="pm-age">{p.age}</td>
+                    <td className="pm-age">
+                      <div className="pm-age-grid">
+                        {p.age ? p.age.split(', ').map((age, i) => {
+                          const shortAge = age
+                            .replace(/years?/gi, 'Y')
+                            .replace(/months?/gi, 'M');
+                          return (
+                            <span key={i} className="pm-age-tag">{shortAge}</span>
+                          );
+                        }) : '—'}
+                      </div>
+                    </td>
                     <td className="pm-price">
                       ₹{p.price}
                       {p.oldPrice && <><br /><span className="pm-old-price">₹{p.oldPrice}</span></>}
