@@ -230,19 +230,26 @@ nav.nav-detail-scrolled .action-item:hover {
   border-radius: 8px;
   flex-shrink: 0;
   line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
-.hamburger-btn:hover {
+.hamburger-btn:hover,
+.hamburger-btn:active,
+.hamburger-btn:focus {
   background: none;
+  outline: none;
 }
 
 nav.nav-banner-scrolled .hamburger-btn,
 nav.nav-detail-scrolled .hamburger-btn {
-  color: #2D3E50;
+  color: white;
 }
 
 nav.nav-banner-scrolled .hamburger-btn:hover,
-nav.nav-detail-scrolled .hamburger-btn:hover {
+nav.nav-banner-scrolled .hamburger-btn:active,
+nav.nav-detail-scrolled .hamburger-btn:hover,
+nav.nav-detail-scrolled .hamburger-btn:active {
   background: none;
 }
 
@@ -352,10 +359,15 @@ nav.sidebar-open {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
-.sidebar-close:hover {
+.sidebar-close:hover,
+.sidebar-close:active,
+.sidebar-close:focus {
   background: none;
+  outline: none;
 }
 
 /* ── Sidebar Nav Links ── */
