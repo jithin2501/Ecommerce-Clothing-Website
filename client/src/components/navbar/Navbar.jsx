@@ -1,4 +1,4 @@
-import { ShoppingCart, User, LogIn } from 'lucide-react';
+import { ShoppingCart, User, LogIn, Menu, X } from 'lucide-react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -40,6 +40,7 @@ export default function Navbar() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true); // Fixes the Login -> Account flash
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const pathParts = location.pathname.split('/').filter(Boolean);
@@ -139,6 +140,7 @@ export default function Navbar() {
 
   const handleSection = (e, sectionId) => {
     e.preventDefault();
+    setIsSidebarOpen(false);
     if (location.pathname !== '/') {
       sessionStorage.setItem('scrollTarget', sectionId);
       navigate('/');
@@ -146,6 +148,8 @@ export default function Navbar() {
       scrollToSection(sectionId);
     }
   };
+
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -230,6 +234,64 @@ export default function Navbar() {
             <span>CART</span>
           </Link>
 
+        </div>
+
+        {/* ── HAMBURGER BUTTON ── */}
+        <button className="hamburger-btn" onClick={toggleSidebar}>
+          <Menu size={28} />
+        </button>
+      </div>
+
+      {/* ── MOBILE SIDEBAR ── */}
+      <div className={`sidebar-overlay ${isSidebarOpen ? 'active' : ''}`} onClick={() => setIsSidebarOpen(false)} />
+      <div className={`mobile-sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <div className="sidebar-header">
+          <button className="sidebar-close" onClick={() => setIsSidebarOpen(false)}>
+            <X size={28} />
+          </button>
+        </div>
+
+        <div className="sidebar-content">
+          <ul className="sidebar-links">
+            <li><a href="/" onClick={(e) => { handleHome(e); setIsSidebarOpen(false); }}>Home</a></li>
+            <li><a href="#about" onClick={(e) => handleSection(e, 'about')}>About Us</a></li>
+            <li><Link to="/collections" onClick={() => setIsSidebarOpen(false)}>Collections</Link></li>
+            <li><a href="#reviews" onClick={(e) => handleSection(e, 'reviews')}>Review</a></li>
+            <li><Link to="/contact" onClick={() => setIsSidebarOpen(false)}>Contact</Link></li>
+          </ul>
+
+          <div className="sidebar-actions">
+            {!loading && (
+              user ? (
+                <>
+                  <div className="sidebar-user-info">
+                    <p className="sidebar-name">{user.displayName || 'User'}</p>
+                    <p className="sidebar-email">{user.email}</p>
+                  </div>
+                  <Link to="/account" className="sidebar-action-item" onClick={() => setIsSidebarOpen(false)}>
+                    <User size={20} />
+                    <span>My Account</span>
+                  </Link>
+                  <button className="sidebar-action-item sidebar-logout" onClick={() => { handleLogout(); setIsSidebarOpen(false); }}>
+                    <span>Logout</span>
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="sidebar-action-item" onClick={() => setIsSidebarOpen(false)}>
+                  <LogIn size={20} />
+                  <span>Login / Register</span>
+                </Link>
+              )
+            )}
+
+            <Link to="/cart" className="sidebar-action-item" onClick={() => setIsSidebarOpen(false)}>
+              <div className="sidebar-icon-wrapper">
+                <ShoppingCart size={20} />
+                {cartCount > 0 && <span className="sidebar-cart-count">{cartCount}</span>}
+              </div>
+              <span>Shopping Cart</span>
+            </Link>
+          </div>
         </div>
       </div>
     </nav>
