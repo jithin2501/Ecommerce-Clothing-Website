@@ -10,7 +10,7 @@
 /* Main image — fills the full 480px left column */
 .pg-main {
   width: 100%;
-  aspect-ratio: 4 / 4.7;
+  aspect-ratio: 4 / 4.2;
   border-radius: 20px;
   border: 1.5px solid #E0D8D0;
   background: #ffffff;
@@ -26,7 +26,8 @@
    pg-wrapper is width:100% of the 480px col so this fills edge-to-edge */
 .pg-thumbs {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);   /* 5 equal cols that fill 100% */
+  grid-template-columns: repeat(5, 1fr);
+  /* 5 equal cols that fill 100% */
   gap: 8px;
 }
 
@@ -45,7 +46,7 @@
 .pg-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .pg-thumb.active {

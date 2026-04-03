@@ -29,8 +29,16 @@
   text-decoration: none;
   transition: color 0.2s;
 }
-.cdp-breadcrumb a:hover { color: #A8624A; }
-.cdp-sep { color: #ccc; font-size: 0.8rem; }
+
+.cdp-breadcrumb a:hover {
+  color: #A8624A;
+}
+
+.cdp-sep {
+  color: #ccc;
+  font-size: 0.8rem;
+}
+
 .cdp-crumb-active {
   color: var(--charcoal, #2C2C2C);
   font-weight: 700;
@@ -44,7 +52,8 @@
   max-width: 1300px;
   margin: 0 auto;
   padding: 0.5rem var(--side-pad, 2rem) 3rem;
-  align-items: start;    /* ← image top = title top */
+  align-items: start;
+  /* ← image top = title top */
 }
 
 /* ── Right column ── */
@@ -55,14 +64,14 @@
 /* Zoom panel — must use left-col width (480px) so aspect-ratio gives same height as .pg-main */
 .cdp-zoom-panel-wrap {
   width: 460px;
-  aspect-ratio: 4 / 5.75;
+  aspect-ratio: 4 / 5.1;
   border-radius: 20px;
   overflow: hidden;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 10;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.13);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.13);
 }
 
 .cdp-zoom-panel {
@@ -78,6 +87,7 @@
   z-index: 1;
   transition: opacity 0.1s;
 }
+
 .cdp-info-hidden {
   opacity: 0;
   pointer-events: none;
@@ -91,11 +101,24 @@
 }
 
 @media (max-width: 1100px) {
-  .cdp-main { grid-template-columns: 400px 1fr; gap: 3rem; }
-  .cdp-zoom-panel-wrap { width: 400px; }
+  .cdp-main {
+    grid-template-columns: 400px 1fr;
+    gap: 3rem;
+  }
+
+  .cdp-zoom-panel-wrap {
+    width: 400px;
+  }
 }
 
 @media (max-width: 900px) {
-  .cdp-main { grid-template-columns: 1fr; gap: 2rem; align-items: start; }
-  .cdp-zoom-panel-wrap { display: none; }
+  .cdp-main {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .cdp-zoom-panel-wrap {
+    display: none;
+  }
 }
