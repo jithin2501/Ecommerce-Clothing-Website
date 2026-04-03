@@ -13,7 +13,7 @@ nav {
   z-index: 1000;
   background: #ffffff;
   backdrop-filter: blur(10px);
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
 nav .logo-text,
@@ -584,5 +584,29 @@ nav.sidebar-open {
   nav.nav-detail-scrolled {
     position: sticky;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    transform: translateY(0);
+    transition: transform 0.3s ease, background 0.3s ease;
+  }
+
+  /* Hide navbar when scrolling down */
+  nav.nav-hidden {
+    transform: translateY(-100%);
+  }
+
+  /* Prevent horizontal overflow on the whole page */
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  .nav-inner {
+    max-width: 100%;
+    overflow: hidden;
   }
 }
