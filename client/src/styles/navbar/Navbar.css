@@ -603,7 +603,7 @@ nav.sidebar-open {
   }
 
   /* Push page content down so it doesn't hide under the fixed navbar */
-  body {
+  body.has-navbar {
     padding-top: 72px;
   }
 

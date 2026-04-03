@@ -43,6 +43,11 @@ export default function Navbar() {
   const isFixedBanner = isBannerPage || isContactPage;
 
   useEffect(() => {
+    document.body.classList.add('has-navbar');
+    return () => document.body.classList.remove('has-navbar');
+  }, []);
+
+  useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser);
       setLoading(false);
