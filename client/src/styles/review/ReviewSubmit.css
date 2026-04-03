@@ -1,3 +1,7 @@
+body.has-review-bg {
+  background: #faf6f2 !important;
+}
+
 .rs-page {
   min-height: 100vh;
   min-height: 100dvh;

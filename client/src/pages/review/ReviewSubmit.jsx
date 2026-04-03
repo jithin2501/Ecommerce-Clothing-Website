@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import '../../styles/review/ReviewSubmit.css';
 
 const API = '/api/reviews/submit';
@@ -9,6 +9,11 @@ export default function ReviewSubmit() {
   const [sent, setSent]       = useState(false);
   const [error, setError]     = useState('');
   const [loading, setLoading] = useState(false);
+  
+  useEffect(() => {
+    document.body.classList.add('has-review-bg');
+    return () => document.body.classList.remove('has-review-bg');
+  }, []);
 
   const wordCount = form.message.trim() === '' ? 0 : form.message.trim().split(/\s+/).length;
 
