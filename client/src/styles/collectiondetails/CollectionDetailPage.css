@@ -9,11 +9,9 @@
 
 .cdp-breadcrumb {
   padding: 0.4rem var(--side-pad, 2rem);
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #aaa;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #9CA3AF;
   display: flex;
   gap: 0.5rem;
   align-items: center;
@@ -25,24 +23,25 @@
 }
 
 .cdp-breadcrumb a {
-  color: var(--accent-clay, #C17B5C);
+  color: #2C2C2C;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.2s;
 }
 
 .cdp-breadcrumb a:hover {
-  color: #A8624A;
+  color: #C17B5C;
+  text-decoration: underline;
 }
 
 .cdp-sep {
-  color: #ccc;
-  font-size: 0.8rem;
+  color: #9CA3AF;
+  font-size: 0.85rem;
+  margin: 0 4px;
 }
 
 .cdp-crumb-active {
-  color: var(--charcoal, #2C2C2C);
-  font-weight: 700;
-  text-transform: uppercase;
+  color: #888;
+  font-weight: 500;
 }
 
 .cdp-main {

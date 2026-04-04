@@ -50,22 +50,24 @@
 }
 
 .breadcrumb-link {
-  color: #9ca3af;
+  color: #2C2C2C;
   text-decoration: none;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  font-weight: 500;
 }
 
 .breadcrumb-link:hover {
-  color: var(--accent-clay, #c07a55);
+  color: #C17B5C;
+  text-decoration: underline;
 }
 
 .breadcrumb-sep {
-  color: #9ca3af;
-  margin: 0 4px;
+  color: #9CA3AF;
+  margin: 0 10px;
 }
 
 .breadcrumb-current {
-  color: #1a1a1a;
+  color: #888;
   font-weight: 500;
 }
 
