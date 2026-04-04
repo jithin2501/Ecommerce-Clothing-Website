@@ -7,7 +7,7 @@ const subcategories = [
   { label: 'Net Frocks', img: '/images/collections/Kids.webp' },
   { label: 'Satin Frocks', img: '/images/collections/Little Girls.jpg' },
   { label: 'Silk Frocks', img: '/images/collections/Pre-Teen.webp' },
-  { label: 'Organza Frocks', img: '/images/collections/infant.webp' },
+  { label: 'Organza Frocks', img: '/images/collections/Infant.webp' },
   { label: 'Velvet Frocks (Winter Special)', img: '/images/collections/newborn.avif' },
 ];
 

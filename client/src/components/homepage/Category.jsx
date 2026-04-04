@@ -13,18 +13,18 @@ const categories = [
     path: '/collections/party-wear-collection',
   },
   {
-    label: 'DESIGNER & PREMIUM\nFROCKS',
-    img: '/images/collections/Pre-Teen.webp',
-    path: '/collections/designer-premium-frocks',
-  },
-  {
     label: 'TRADITIONAL & ETHNIC\nFROCKS',
     img: '/images/collections/Kids.webp',
     path: '/collections/traditional-ethnic-frocks',
   },
   {
+    label: 'DESIGNER & PREMIUM\nFROCKS',
+    img: '/images/collections/Pre-Teen.webp',
+    path: '/collections/designer-premium-frocks',
+  },
+  {
     label: 'FABRIC-BASED\nCATEGORIES',
-    img: '/images/collections/infant.webp',
+    img: '/images/collections/Pre-Teen.webp',
     path: '/collections/fabric-based-categories',
   },
 ];

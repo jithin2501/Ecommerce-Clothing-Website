@@ -44,7 +44,7 @@ export default function About() {
             </h3>
             <p className="about-desc">
               At Sumathi Trends, we believe every child deserves to feel
-              extraordinary. Founded in 2012, we blend timeless design with
+              extraordinary. Founded in 2026, we blend timeless design with
               premium materials to create clothing that grows with your little
               ones — from their first steps to their biggest milestones.
             </p>
