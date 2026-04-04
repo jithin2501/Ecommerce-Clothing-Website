@@ -7,8 +7,6 @@
   flex-direction: column;
   border-radius: 12px;
   flex-shrink: 0;
-  align-self: stretch;
-  min-height: 100%;
   padding-bottom: 20px;
 }
 

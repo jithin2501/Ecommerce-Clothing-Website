@@ -140,7 +140,14 @@ export default function PersonInformation() {
     }
   };
 
-  if (loadingProfile) return <div style={{padding: '50px', textAlign: 'center'}}>Loading...</div>;
+  if (loadingProfile) {
+    return (
+      <div className="account-loading-wrapper">
+        <div className="account-loading-spinner"></div>
+        <p>Loading your Profile...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="pi-page">

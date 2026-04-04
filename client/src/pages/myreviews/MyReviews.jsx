@@ -22,6 +22,22 @@ export default function MyReviews() {
 
   const [activeNav, setActiveNav]       = useState('mystuff');
   const [activeSubNav, setActiveSubNav] = useState('reviews');
+  const [loading, setLoading]           = useState(true);
+
+  useEffect(() => {
+    // Simple delay to ensure smooth transition
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="account-loading-wrapper">
+        <div className="account-loading-spinner"></div>
+        <p>Loading your Reviews...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="mr-page">

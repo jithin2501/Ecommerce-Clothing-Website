@@ -21,6 +21,22 @@ export default function Wishlist() {
   const { wishlist, removeFromWishlist } = useWishlist();
   const [activeNav, setActiveNav]       = useState('mystuff');
   const [activeSubNav, setActiveSubNav] = useState('wishlist');
+  const [loading, setLoading]           = useState(true);
+
+  useEffect(() => {
+    // Simple delay to ensure smooth transition and allow sidebar to load
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="account-loading-wrapper">
+        <div className="account-loading-spinner"></div>
+        <p>Loading your Wishlist...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="wl-page">

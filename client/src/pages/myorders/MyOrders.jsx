@@ -61,10 +61,24 @@ function StatusBadge({ status, label }) {
 export default function MyOrders() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
+  const [loading, setLoading]           = useState(true);
+
+  useEffect(() => {
+    // Simple delay to ensure smooth transition
+    const timer = setTimeout(() => setLoading(false), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="account-loading-wrapper">
+        <div className="account-loading-spinner"></div>
+        <p>Loading your Orders...</p>
+      </div>
+    );
+  }
+
   const navigate = useNavigate();
-  const [search, setSearch]           = useState('');
-  const [query, setQuery]             = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
 
   const totalPages = 3;
 

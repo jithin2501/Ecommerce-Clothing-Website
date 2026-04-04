@@ -28,6 +28,7 @@ export default function ManageAddresses() {
   const [errors, setErrors]             = useState({});
   const [showForm, setShowForm]         = useState(false); // hidden by default
   const [addresses, setAddresses_]      = useState([]);
+  const [loading, setLoading]           = useState(true);
   const [userUid, setUserUid]           = useState(null);
 
   useEffect(() => {
@@ -50,9 +51,19 @@ export default function ManageAddresses() {
           setAddresses_(saved ? JSON.parse(saved) : []);
         } catch { setAddresses_([]); }
       }
+      setLoading(false);
     });
     return () => unsub();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="account-loading-wrapper">
+        <div className="account-loading-spinner"></div>
+        <p>Loading your Addresses...</p>
+      </div>
+    );
+  }
 
   const [saved, setSaved]       = useState(false);
   const [menuOpen, setMenuOpen] = useState(null);
