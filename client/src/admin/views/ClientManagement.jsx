@@ -1,5 +1,4 @@
 // client/src/admin/views/ClientManagement.jsx
-// CSS lives in: client/src/admin/assets/ClientManagement.css  (matches your file structure)
 
 import { useState, useEffect, useCallback } from 'react';
 import '../assets/ClientManagement.css';
@@ -18,10 +17,17 @@ const ago = (dateStr) => {
   return `${Math.floor(h / 24)}d ago`;
 };
 
-const LoginBadge = ({ type }) =>
-  type === 'google'
-    ? <span className="cm-badge cm-badge-google">Google</span>
-    : <span className="cm-badge cm-badge-phone">Phone</span>;
+/* Login badge — shows all methods this customer has used */
+const LoginBadge = ({ types }) => {
+  const all = Array.isArray(types) ? types : (types ? [types] : []);
+  return (
+    <span className="cm-badge-wrap">
+      {all.includes('google') && <span className="cm-badge cm-badge-google">Google</span>}
+      {all.includes('phone')  && <span className="cm-badge cm-badge-phone">Phone</span>}
+      {all.length >= 2        && <span className="cm-badge cm-badge-linked">Linked</span>}
+    </span>
+  );
+};
 
 /* ════════════════════════════════════
    CLIENT DETAIL DRAWER
@@ -47,8 +53,11 @@ function ClientDrawer({ client, onClose }) {
           </div>
           <div>
             <h2>{client.name || 'Unknown'}</h2>
+            {client.customerId && (
+              <div className="cm-customer-id">{client.customerId}</div>
+            )}
             <div className="cm-drawer-meta">
-              <LoginBadge type={client.loginType} />
+              <LoginBadge types={client.loginTypes || client.loginType} />
               <span className="cm-drawer-seen">Last seen {ago(client.lastSeen)}</span>
             </div>
           </div>
@@ -63,8 +72,6 @@ function ClientDrawer({ client, onClose }) {
               onClick={() => setTab(t)}
             >
               {t.charAt(0).toUpperCase() + t.slice(1)}
-              {t === 'cart' && client.cart?.length > 0 &&
-                <span className="cm-tab-dot" />}
             </button>
           ))}
         </div>
@@ -75,12 +82,16 @@ function ClientDrawer({ client, onClose }) {
           {/* INFO */}
           {tab === 'info' && (
             <div className="cm-info-list">
-              <InfoRow label="Name"      value={client.name  || '—'} />
-              <InfoRow label="Email"     value={client.email || '—'} />
-              <InfoRow label="Phone"     value={client.phone || '—'} />
-              <InfoRow label="Login via" value={client.loginType} />
-              <InfoRow label="Joined"    value={client.createdAt ? new Date(client.createdAt).toLocaleDateString('en-IN') : '—'} />
-              <InfoRow label="Last seen" value={client.lastSeen   ? new Date(client.lastSeen).toLocaleString('en-IN')   : '—'} />
+              <InfoRow label="Customer ID" value={client.customerId || '—'} />
+              <InfoRow label="Name"        value={client.name  || '—'} />
+              <InfoRow label="Email"       value={client.email || '—'} />
+              <InfoRow label="Phone"       value={client.phone || '—'} />
+              <InfoRow label="Login via"   value={(client.loginTypes || [client.loginType]).join(' + ')} />
+              <InfoRow label="Joined"      value={client.createdAt ? new Date(client.createdAt).toLocaleDateString('en-IN') : '—'} />
+              <InfoRow label="Last seen"   value={client.lastSeen   ? new Date(client.lastSeen).toLocaleString('en-IN')   : '—'} />
+              {client.uids?.length > 1 && (
+                <InfoRow label="Linked UIDs" value={`${client.uids.length} providers`} />
+              )}
             </div>
           )}
 
@@ -97,7 +108,6 @@ function ClientDrawer({ client, onClose }) {
               ))
               : <EmptyState text="No saved addresses" />
           )}
-
 
           {/* ORDERS */}
           {tab === 'orders' && (
@@ -131,7 +141,7 @@ function ClientDrawer({ client, onClose }) {
   );
 }
 
-const InfoRow   = ({ label, value }) => (
+const InfoRow    = ({ label, value }) => (
   <div className="cm-info-row">
     <span className="cm-info-label">{label}</span>
     <span className="cm-info-value">{value}</span>
@@ -155,24 +165,28 @@ function StatCard({ label, value, color }) {
    MAIN PAGE
 ════════════════════════════════════ */
 export default function ClientManagement() {
-  const [stats,    setStats]    = useState(null);
-  const [clients,  setClients]  = useState([]);
-  const [total,    setTotal]    = useState(0);
-  const [page,     setPage]     = useState(1);
-  const [filter,   setFilter]   = useState('all');
+  const [stats,      setStats]      = useState(null);
+  const [clients,    setClients]    = useState([]);
+  const [total,      setTotal]      = useState(0);
+  const [page,       setPage]       = useState(1);
+  const [filter,     setFilter]     = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
-  const [search,   setSearch]   = useState('');
-  const [loading,  setLoading]  = useState(false);
-  const [selected, setSelected] = useState(null);
+  const [search,     setSearch]     = useState('');
+  const [loading,    setLoading]    = useState(false);
+  const [selected,   setSelected]   = useState(null);
+  const [migrating,  setMigrating]  = useState(false);
+  const [migrateMsg, setMigrateMsg] = useState('');
   const LIMIT = 20;
 
-  /* fetch stats once */
-  useEffect(() => {
+  /* fetch stats */
+  const fetchStats = useCallback(() => {
     fetch(`${API}/stats`)
       .then(r => r.json())
       .then(d => d.success && setStats(d.stats))
       .catch(() => {});
   }, []);
+
+  useEffect(() => { fetchStats(); }, [fetchStats]);
 
   /* fetch client list */
   const fetchClients = useCallback(() => {
@@ -189,7 +203,7 @@ export default function ClientManagement() {
 
   useEffect(() => { fetchClients(); }, [fetchClients]);
 
-  /* open full detail drawer */
+  /* open detail drawer */
   const openClient = async (c) => {
     try {
       const r = await fetch(`${API}/${c._id}`);
@@ -200,13 +214,37 @@ export default function ClientManagement() {
     }
   };
 
+  /* run migration */
+  const runMigration = async () => {
+    if (!window.confirm('This will merge duplicate accounts and assign Customer IDs. Proceed?')) return;
+    setMigrating(true);
+    setMigrateMsg('');
+    try {
+      const r = await fetch(`${API}/migrate`, { method: 'POST' });
+      const d = await r.json();
+      setMigrateMsg(d.message || 'Migration complete.');
+      fetchClients();
+      fetchStats();
+    } catch {
+      setMigrateMsg('Migration failed. Check server logs.');
+    } finally {
+      setMigrating(false);
+    }
+  };
+
   const pages = Math.ceil(total / LIMIT);
 
   return (
     <div className="cm-page">
 
       {/* Header */}
-      <h1 className="cm-title">CLIENT MANAGEMENT</h1>
+      <div className="cm-header-row">
+        <h1 className="cm-title">CLIENT MANAGEMENT</h1>
+        <button className="cm-migrate-btn" onClick={runMigration} disabled={migrating}>
+          {migrating ? 'Running…' : '🔗 Merge Duplicates'}
+        </button>
+      </div>
+      {migrateMsg && <div className="cm-migrate-msg">{migrateMsg}</div>}
 
       {/* Stats */}
       {stats && (
@@ -214,6 +252,7 @@ export default function ClientManagement() {
           <StatCard label="Total Clients"   value={stats.total}    color="blue"   />
           <StatCard label="Google Logins"   value={stats.google}   color="red"    />
           <StatCard label="Phone Logins"    value={stats.phone}    color="green"  />
+          <StatCard label="Linked Accounts" value={stats.linked}   color="gold"   />
           <StatCard label="New Today"       value={stats.newToday} color="purple" />
         </div>
       )}
@@ -240,7 +279,7 @@ export default function ClientManagement() {
           </svg>
           <input
             className="cm-search-input"
-            placeholder="Search name, email or phone…"
+            placeholder="Search name, email, phone or CUST-ID…"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
           />
@@ -264,6 +303,7 @@ export default function ClientManagement() {
           <table className="cm-table">
             <thead>
               <tr>
+                <th>ID</th>
                 <th>Client</th>
                 <th>Contact</th>
                 <th className="cm-text-center">Login</th>
@@ -275,6 +315,10 @@ export default function ClientManagement() {
             <tbody>
               {clients.map(c => (
                 <tr key={c._id} className="cm-row" onClick={() => openClient(c)}>
+
+                  <td className="cm-td-custid">
+                    <span className="cm-custid">{c.customerId || '—'}</span>
+                  </td>
 
                   <td>
                     <div className="cm-client-cell">
@@ -292,9 +336,11 @@ export default function ClientManagement() {
                     {c.email && c.phone && <span className="cm-contact-sub">{c.phone}</span>}
                   </td>
 
-                  <td className="cm-text-center"><LoginBadge type={c.loginType} /></td>
+                  <td className="cm-text-center">
+                    <LoginBadge types={c.loginTypes || c.loginType} />
+                  </td>
 
-                  <td className="cm-text-center"><span className="cm-pill">{c.orders?.length  || 0}</span></td>
+                  <td className="cm-text-center"><span className="cm-pill">{c.orders?.length || 0}</span></td>
 
                   <td className="cm-td-seen">{ago(c.lastSeen)}</td>
 

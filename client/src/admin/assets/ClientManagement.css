@@ -513,3 +513,80 @@
 .cm-text-center {
   text-align: center !important;
 }
+
+/* ── Header row with migrate button ── */
+.cm-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+.cm-header-row .cm-title { margin-bottom: 0; }
+
+.cm-migrate-btn {
+  padding: 8px 16px;
+  background: #1e293b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+  white-space: nowrap;
+}
+.cm-migrate-btn:hover:not(:disabled) { background: #334155; }
+.cm-migrate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.cm-migrate-msg {
+  margin: -12px 0 16px;
+  padding: 10px 16px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #15803d;
+  font-weight: 500;
+}
+
+/* ── Gold stat card ── */
+.cm-stat-gold { background-color: #fefce8; }
+
+/* ── Linked badge ── */
+.cm-badge-wrap {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.cm-badge-linked { background: #ede9fe; color: #6d28d9; }
+
+/* ── Customer ID display ── */
+.cm-custid {
+  font-size: 11px;
+  font-weight: 700;
+  color: #475569;
+  background: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  letter-spacing: 0.3px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}
+.cm-td-custid { white-space: nowrap; }
+
+.cm-customer-id {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6d28d9;
+  background: #ede9fe;
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 6px;
+  margin-bottom: 5px;
+  letter-spacing: 0.4px;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+}

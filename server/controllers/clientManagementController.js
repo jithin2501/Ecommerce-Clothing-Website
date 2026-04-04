@@ -6,31 +6,32 @@ exports.getAllClients = async (req, res) => {
     const { loginType, search, dateFilter, page = 1, limit = 20 } = req.query;
     const query = {};
 
-    if (loginType && loginType !== 'all') query.loginType = loginType;
+    if (loginType && loginType !== 'all') query.loginTypes = loginType;
     if (search) {
       query.$or = [
-        { name:  { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } },
-        { phone: { $regex: search, $options: 'i' } },
+        { name:       { $regex: search, $options: 'i' } },
+        { email:      { $regex: search, $options: 'i' } },
+        { phone:      { $regex: search, $options: 'i' } },
+        { customerId: { $regex: search, $options: 'i' } },
       ];
     }
 
     if (dateFilter && dateFilter !== 'all') {
       const now = new Date();
-      if (dateFilter === 'joined-today') query.createdAt = { $gte: new Date(now.setHours(0,0,0,0)) };
-      else if (dateFilter === 'joined-week') query.createdAt = { $gte: new Date(now.setDate(now.getDate() - 7)) };
+      if (dateFilter === 'joined-today')  query.createdAt = { $gte: new Date(now.setHours(0,0,0,0)) };
+      else if (dateFilter === 'joined-week')  query.createdAt = { $gte: new Date(now.setDate(now.getDate() - 7)) };
       else if (dateFilter === 'joined-month') query.createdAt = { $gte: new Date(now.setMonth(now.getMonth() - 1)) };
     }
 
     const skip  = (Number(page) - 1) * Number(limit);
     const total = await ClientUser.countDocuments(query);
-    console.log('📋 getAllClients called, total found:', total);
     const users = await ClientUser.find(query)
       .sort({ lastSeen: -1 })
       .skip(skip)
       .limit(Number(limit))
       .lean();
 
+    console.log('📋 getAllClients — total:', total);
     res.json({ success: true, total, page: Number(page), users });
   } catch (err) {
     console.error('❌ getAllClients error:', err);
@@ -52,17 +53,136 @@ exports.getClientDetail = async (req, res) => {
 /* ── GET dashboard stats ── */
 exports.getStats = async (req, res) => {
   try {
-    const total    = await ClientUser.countDocuments();
-    const google   = await ClientUser.countDocuments({ loginType: 'google' });
-    const phone    = await ClientUser.countDocuments({ loginType: 'phone' });
-    const withCart = await ClientUser.countDocuments({ 'cart.0': { $exists: true } });
-    const today    = new Date(); today.setHours(0, 0, 0, 0);
-    const newToday = await ClientUser.countDocuments({ createdAt: { $gte: today } });
-    console.log('📊 getStats called, total clients:', total);
+    const total      = await ClientUser.countDocuments();
+    const google     = await ClientUser.countDocuments({ loginTypes: 'google' });
+    const phone      = await ClientUser.countDocuments({ loginTypes: 'phone' });
+    const linked     = await ClientUser.countDocuments({ $expr: { $gte: [{ $size: '$loginTypes' }, 2] } });
+    const withCart   = await ClientUser.countDocuments({ 'cart.0': { $exists: true } });
+    const today      = new Date(); today.setHours(0, 0, 0, 0);
+    const newToday   = await ClientUser.countDocuments({ createdAt: { $gte: today } });
 
-    res.json({ success: true, stats: { total, google, phone, withCart, newToday } });
+    console.log('📊 getStats — total clients:', total);
+    res.json({ success: true, stats: { total, google, phone, linked, withCart, newToday } });
   } catch (err) {
     console.error('❌ getStats error:', err);
     res.status(500).json({ error: 'Server error' });
+  }
+};
+
+/* ─────────────────────────────────────────────────────────────────
+   ONE-TIME MIGRATION — merge duplicates & assign customerIds
+   POST /api/admin/clients/migrate
+   Safe to call multiple times (idempotent).
+───────────────────────────────────────────────────────────────── */
+exports.migrateClients = async (req, res) => {
+  try {
+    const all = await ClientUser.find({});
+    let merged = 0, assigned = 0, counter = await ClientUser.countDocuments();
+
+    // ── 1. Assign customerId to anyone missing one ──
+    for (const u of all) {
+      let changed = false;
+
+      if (!u.customerId) {
+        u.customerId = `CUST-${String(counter).padStart(5, '0')}`;
+        counter++;
+        changed = true;
+        assigned++;
+      }
+
+      // Ensure loginTypes matches uids length (backward compat)
+      // If on old schema (uid: string instead of uids: array):
+      if (u.uid && (!u.uids || u.uids.length === 0)) {
+        u.uids = [u.uid];
+        changed = true;
+      }
+      if (!u.loginTypes || u.loginTypes.length === 0) {
+        // Infer from old loginType field
+        const lt = u.loginType || (u.email ? 'google' : 'phone');
+        u.loginTypes = [lt];
+        changed = true;
+      }
+
+      if (changed) await u.save();
+    }
+
+    // ── 2. Find pairs with the same email or phone and merge ──
+    const freshAll = await ClientUser.find({});
+
+    // Index by email
+    const byEmail = {};
+    for (const u of freshAll) {
+      if (u.email) {
+        if (!byEmail[u.email]) byEmail[u.email] = [];
+        byEmail[u.email].push(u);
+      }
+    }
+
+    // Index by phone
+    const byPhone = {};
+    for (const u of freshAll) {
+      if (u.phone) {
+        if (!byPhone[u.phone]) byPhone[u.phone] = [];
+        byPhone[u.phone].push(u);
+      }
+    }
+
+    const mergedIds = new Set();
+
+    const doMerge = async (group) => {
+      if (group.length < 2) return;
+      // Sort oldest first — keep oldest as primary
+      group.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+      const [primary, ...duplicates] = group;
+
+      for (const dup of duplicates) {
+        if (mergedIds.has(String(dup._id))) continue;
+        mergedIds.add(String(dup._id));
+
+        // Merge UIDs
+        for (const uid of (dup.uids || [])) {
+          if (!primary.uids.includes(uid)) primary.uids.push(uid);
+        }
+        // Merge loginTypes
+        for (const lt of (dup.loginTypes || [])) {
+          if (!primary.loginTypes.includes(lt)) primary.loginTypes.push(lt);
+        }
+        // Merge contact info
+        if (!primary.email  && dup.email)  primary.email  = dup.email;
+        if (!primary.phone  && dup.phone)  primary.phone  = dup.phone;
+        if (!primary.photo  && dup.photo)  primary.photo  = dup.photo;
+        if (!primary.gender && dup.gender) primary.gender = dup.gender;
+        // Merge addresses (avoid exact duplicates)
+        for (const addr of (dup.addresses || [])) {
+          const exists = primary.addresses.some(a => a.pincode === addr.pincode && a.address === addr.address);
+          if (!exists) primary.addresses.push(addr);
+        }
+        // Merge wishlist
+        for (const item of (dup.wishlist || [])) {
+          if (!primary.wishlist.some(w => w.productId === item.productId)) primary.wishlist.push(item);
+        }
+        // Merge orders
+        for (const o of (dup.orders || [])) {
+          if (!primary.orders.some(x => x.orderId === o.orderId)) primary.orders.push(o);
+        }
+
+        await ClientUser.deleteOne({ _id: dup._id });
+        merged++;
+        console.log(`🗑️ Merged duplicate ${dup.customerId} → ${primary.customerId}`);
+      }
+      await primary.save();
+    };
+
+    for (const group of Object.values(byEmail)) await doMerge(group);
+    for (const group of Object.values(byPhone)) {
+      // Re-fetch group to get latest state after email merges
+      const refreshed = await Promise.all(group.map(u => ClientUser.findById(u._id)));
+      await doMerge(refreshed.filter(Boolean));
+    }
+
+    res.json({ success: true, assigned, merged, message: `Migration complete. Assigned ${assigned} customerIds, merged ${merged} duplicate accounts.` });
+  } catch (err) {
+    console.error('❌ migrateClients error:', err);
+    res.status(500).json({ error: err.message });
   }
 };

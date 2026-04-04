@@ -1,6 +1,4 @@
 // server/models/ClientUser.js
-// ⚠️  Renamed from User.js → ClientUser.js
-//     because server/models/User.js already exists (your admin user model).
 
 const mongoose = require('mongoose');
 
@@ -52,8 +50,30 @@ const addressSchema = new mongoose.Schema({
 }, { _id: false });
 
 const clientUserSchema = new mongoose.Schema({
-  uid:       { type: String, required: true, unique: true },  // Firebase UID
-  loginType: { type: String, enum: ['google', 'phone'], required: true },
+  // ── Identity ──
+  // Array of Firebase UIDs — one per login provider (google, phone).
+  // A customer who logs in via both Google and Phone will have 2 UIDs here
+  // but still a single profile / single Admin row.
+  uids: {
+    type:     [String],
+    required: true,
+    index:    true,
+  },
+
+  // Stable human-readable ID shown in Admin (e.g. "CUST-00001").
+  // Auto-generated on first login; never changes.
+  customerId: {
+    type:   String,
+    unique: true,
+    sparse: true,
+  },
+
+  // Which providers this customer has used (google | phone | both)
+  loginTypes: {
+    type:    [String],
+    enum:    ['google', 'phone'],
+    default: [],
+  },
 
   name:   { type: String, default: '' },
   email:  { type: String, default: '' },
@@ -64,12 +84,17 @@ const clientUserSchema = new mongoose.Schema({
   addresses: { type: [addressSchema],      default: [] },
   wishlist:  { type: [wishlistItemSchema], default: [] },
   orders:    { type: [orderSchema],        default: [] },
-
-  // Abandoned cart — items added to cart but never purchased
   cart:      { type: [cartItemSchema],     default: [] },
 
   lastSeen:  { type: Date, default: Date.now },
   createdAt: { type: Date, default: Date.now },
 }, { timestamps: false });
+
+// Sparse unique indexes — only enforced when the field is non-empty,
+// so a phone-only user can have email:'', and a google-only user can have phone:''.
+clientUserSchema.index({ email: 1 }, { unique: true, sparse: true,
+  partialFilterExpression: { email: { $gt: '' } } });
+clientUserSchema.index({ phone: 1 }, { unique: true, sparse: true,
+  partialFilterExpression: { phone: { $gt: '' } } });
 
 module.exports = mongoose.model('ClientUser', clientUserSchema);

@@ -1,27 +1,80 @@
 const ClientUser = require('../models/ClientUser');
-const Review = require('../models/Review');
+const Review     = require('../models/Review');
 
-/* ── Google Login / Register ── */
+/* ─────────────────────────────────────────────────────────────────
+   HELPER — generate next CUST-XXXXX id
+───────────────────────────────────────────────────────────────── */
+async function nextCustomerId() {
+  // Count total documents and pad to 5 digits
+  const count = await ClientUser.countDocuments();
+  return `CUST-${String(count + 1).padStart(5, '0')}`;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   HELPER — find by uid OR by contact field (deduplication)
+   Returns the existing user or null.
+───────────────────────────────────────────────────────────────── */
+async function findExistingUser(uid, contactField, contactValue) {
+  // 1. Exact UID match (returning customer, same provider)
+  let user = await ClientUser.findOne({ uids: uid });
+  if (user) return { user, isNew: false, uidAlreadyLinked: true };
+
+  // 2. Match by contact info (same person, different provider)
+  if (contactValue) {
+    user = await ClientUser.findOne({ [contactField]: contactValue });
+    if (user) return { user, isNew: false, uidAlreadyLinked: false };
+  }
+
+  return { user: null, isNew: true, uidAlreadyLinked: false };
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   Google Login / Register
+───────────────────────────────────────────────────────────────── */
 exports.googleLogin = async (req, res) => {
   try {
     const { uid, name, email, photo } = req.body;
-    console.log('✅ Google login hit:', { uid, name, email });
     if (!uid) return res.status(400).json({ error: 'uid required' });
 
-    let user = await ClientUser.findOne({ uid });
-    if (!user) {
-      console.log('🆕 Creating new client user:', email);
-      user = await ClientUser.create({ uid, loginType: 'google', name, email, photo });
+    const { user: existing, isNew, uidAlreadyLinked } = await findExistingUser(uid, 'email', email || null);
+
+    let user;
+
+    if (isNew) {
+      // Brand-new customer — create fresh profile
+      const customerId = await nextCustomerId();
+      user = await ClientUser.create({
+        uids:       [uid],
+        customerId,
+        loginTypes: ['google'],
+        name, email, photo,
+        lastSeen:   new Date(),
+      });
+      console.log('🆕 Created new Google customer:', customerId);
+
+    } else if (!uidAlreadyLinked) {
+      // Same person, new Google UID (linked from phone account)
+      existing.uids.push(uid);
+      if (!existing.loginTypes.includes('google')) existing.loginTypes.push('google');
+      existing.name     = name  || existing.name;
+      existing.email    = email || existing.email;
+      existing.photo    = photo || existing.photo;
+      existing.lastSeen = new Date();
+      await existing.save();
+      user = existing;
+      console.log('🔗 Linked Google UID to existing customer:', existing.customerId);
+
     } else {
-      console.log('🔄 Updating existing client user:', email);
-      user.name     = name  || user.name;
-      user.email    = email || user.email;
-      user.photo    = photo || user.photo;
-      user.lastSeen = new Date();
-      await user.save();
+      // Returning customer, same Google account
+      existing.name     = name  || existing.name;
+      existing.email    = email || existing.email;
+      existing.photo    = photo || existing.photo;
+      existing.lastSeen = new Date();
+      await existing.save();
+      user = existing;
+      console.log('🔄 Updated returning Google customer:', existing.customerId);
     }
 
-    console.log('💾 Client saved to DB:', user._id);
     res.json({ success: true, user });
   } catch (err) {
     console.error('❌ googleLogin error:', err);
@@ -29,26 +82,51 @@ exports.googleLogin = async (req, res) => {
   }
 };
 
-/* ── Phone (OTP) Login / Register ── */
+/* ─────────────────────────────────────────────────────────────────
+   Phone (OTP) Login / Register
+───────────────────────────────────────────────────────────────── */
 exports.phoneLogin = async (req, res) => {
   try {
     const { uid, name, phone } = req.body;
-    console.log('✅ Phone login hit:', { uid, name, phone });
     if (!uid) return res.status(400).json({ error: 'uid required' });
 
-    let user = await ClientUser.findOne({ uid });
-    if (!user) {
-      console.log('🆕 Creating new phone user:', phone);
-      user = await ClientUser.create({ uid, loginType: 'phone', name, phone });
+    const { user: existing, isNew, uidAlreadyLinked } = await findExistingUser(uid, 'phone', phone || null);
+
+    let user;
+
+    if (isNew) {
+      const customerId = await nextCustomerId();
+      user = await ClientUser.create({
+        uids:       [uid],
+        customerId,
+        loginTypes: ['phone'],
+        name: name || '',
+        phone,
+        lastSeen: new Date(),
+      });
+      console.log('🆕 Created new Phone customer:', customerId);
+
+    } else if (!uidAlreadyLinked) {
+      // Same person, new Phone UID (linked from Google account)
+      existing.uids.push(uid);
+      if (!existing.loginTypes.includes('phone')) existing.loginTypes.push('phone');
+      existing.name     = name  || existing.name;
+      existing.phone    = phone || existing.phone;
+      existing.lastSeen = new Date();
+      await existing.save();
+      user = existing;
+      console.log('🔗 Linked Phone UID to existing customer:', existing.customerId);
+
     } else {
-      console.log('🔄 Updating existing phone user:', phone);
-      user.name     = name  || user.name;
-      user.phone    = phone || user.phone;
-      user.lastSeen = new Date();
-      await user.save();
+      // Returning customer, same phone number
+      existing.name     = name  || existing.name;
+      existing.phone    = phone || existing.phone;
+      existing.lastSeen = new Date();
+      await existing.save();
+      user = existing;
+      console.log('🔄 Updated returning Phone customer:', existing.customerId);
     }
 
-    console.log('💾 Client saved to DB:', user._id);
     res.json({ success: true, user });
   } catch (err) {
     console.error('❌ phoneLogin error:', err);
@@ -56,13 +134,14 @@ exports.phoneLogin = async (req, res) => {
   }
 };
 
-/* ── Sync Cart ── */
+/* ─────────────────────────────────────────────────────────────────
+   Sync Cart
+───────────────────────────────────────────────────────────────── */
 exports.syncCart = async (req, res) => {
   try {
     const { uid, cart } = req.body;
     if (!uid) return res.status(400).json({ error: 'uid required' });
-    console.log('🛒 Syncing cart for uid:', uid);
-    await ClientUser.findOneAndUpdate({ uid }, { cart, lastSeen: new Date() });
+    await ClientUser.findOneAndUpdate({ uids: uid }, { cart, lastSeen: new Date() });
     res.json({ success: true });
   } catch (err) {
     console.error('❌ syncCart error:', err);
@@ -70,13 +149,14 @@ exports.syncCart = async (req, res) => {
   }
 };
 
-/* ── Sync Wishlist ── */
+/* ─────────────────────────────────────────────────────────────────
+   Sync Wishlist
+───────────────────────────────────────────────────────────────── */
 exports.syncWishlist = async (req, res) => {
   try {
     const { uid, wishlist } = req.body;
     if (!uid) return res.status(400).json({ error: 'uid required' });
-    console.log('❤️  Syncing wishlist for uid:', uid);
-    await ClientUser.findOneAndUpdate({ uid }, { wishlist, lastSeen: new Date() });
+    await ClientUser.findOneAndUpdate({ uids: uid }, { wishlist, lastSeen: new Date() });
     res.json({ success: true });
   } catch (err) {
     console.error('❌ syncWishlist error:', err);
@@ -84,11 +164,13 @@ exports.syncWishlist = async (req, res) => {
   }
 };
 
-/* ── Get Profile ── */
+/* ─────────────────────────────────────────────────────────────────
+   Get Profile
+───────────────────────────────────────────────────────────────── */
 exports.getProfile = async (req, res) => {
   try {
     const { uid } = req.params;
-    const user = await ClientUser.findOne({ uid });
+    const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true, user });
   } catch (err) {
@@ -97,25 +179,26 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-/* ── Update Profile ── */
+/* ─────────────────────────────────────────────────────────────────
+   Update Profile
+───────────────────────────────────────────────────────────────── */
 exports.updateProfile = async (req, res) => {
   try {
     const { uid } = req.params;
     const { name, email, phone, gender } = req.body;
-    
-    // We update fields dynamically to allow partial updates
+
     const updates = { lastSeen: new Date() };
-    if (name !== undefined) updates.name = name;
-    if (email !== undefined) updates.email = email;
-    if (phone !== undefined) updates.phone = phone;
-    if (gender !== undefined) updates.gender = gender; // Note: Ensure ClientUser schema supports gender if saving it
+    if (name   !== undefined) updates.name   = name;
+    if (email  !== undefined) updates.email  = email;
+    if (phone  !== undefined) updates.phone  = phone;
+    if (gender !== undefined) updates.gender = gender;
 
     const updatedUser = await ClientUser.findOneAndUpdate(
-      { uid },
+      { uids: uid },
       { $set: updates },
       { new: true }
     );
-    
+
     if (!updatedUser) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true, user: updatedUser });
   } catch (err) {
@@ -124,17 +207,19 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-/* ── Delete Account ── */
+/* ─────────────────────────────────────────────────────────────────
+   Delete Account
+───────────────────────────────────────────────────────────────── */
 exports.deleteAccount = async (req, res) => {
   try {
     const { uid } = req.params;
-    const result = await ClientUser.findOneAndDelete({ uid });
+    const result = await ClientUser.findOneAndDelete({ uids: uid });
     if (!result) return res.status(404).json({ error: 'User not found' });
-    
-    // Also cleanup reviews written by this user
-    await Review.deleteMany({ uid });
 
-    console.log(`🗑️ Deleted ClientUser and their Reviews from DB: ${uid}`);
+    // Clean up reviews
+    await Review.deleteMany({ uid: { $in: result.uids } });
+
+    console.log(`🗑️ Deleted customer ${result.customerId} (UIDs: ${result.uids.join(', ')})`);
     res.json({ success: true, message: 'Account deleted successfully' });
   } catch (err) {
     console.error('❌ deleteAccount error:', err);
@@ -142,10 +227,12 @@ exports.deleteAccount = async (req, res) => {
   }
 };
 
-/* ── Address Management ── */
+/* ─────────────────────────────────────────────────────────────────
+   Address Management
+───────────────────────────────────────────────────────────────── */
 exports.getAddresses = async (req, res) => {
   try {
-    const user = await ClientUser.findOne({ uid: req.params.uid });
+    const user = await ClientUser.findOne({ uids: req.params.uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true, addresses: user.addresses || [] });
   } catch (err) {
@@ -156,18 +243,15 @@ exports.getAddresses = async (req, res) => {
 
 exports.addAddress = async (req, res) => {
   try {
-    const user = await ClientUser.findOne({ uid: req.params.uid });
+    const user = await ClientUser.findOne({ uids: req.params.uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
-    
-    const newAddress = req.body;
-    
-    if (newAddress.isDefault) {
+
+    if (req.body.isDefault) {
       user.addresses.forEach(a => { a.isDefault = false; });
     }
-
-    user.addresses.push(newAddress);
+    user.addresses.push(req.body);
     await user.save();
-    
+
     res.json({ success: true, addresses: user.addresses });
   } catch (err) {
     console.error('❌ addAddress error:', err);
@@ -178,9 +262,9 @@ exports.addAddress = async (req, res) => {
 exports.updateAddress = async (req, res) => {
   try {
     const { uid, addrId } = req.params;
-    const user = await ClientUser.findOne({ uid });
+    const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
-    
+
     if (req.body.isDefault) {
       user.addresses.forEach(a => { a.isDefault = false; });
     }
@@ -188,9 +272,9 @@ exports.updateAddress = async (req, res) => {
     const addrIndex = user.addresses.findIndex(a => String(a.id || a._id) === String(addrId));
     if (addrIndex === -1) return res.status(404).json({ error: 'Address not found' });
 
-    user.addresses[addrIndex] = { ...user.addresses[addrIndex], ...req.body };
+    user.addresses[addrIndex] = { ...user.addresses[addrIndex].toObject(), ...req.body };
     await user.save();
-    
+
     res.json({ success: true, addresses: user.addresses });
   } catch (err) {
     console.error('❌ updateAddress error:', err);
@@ -201,12 +285,12 @@ exports.updateAddress = async (req, res) => {
 exports.deleteAddress = async (req, res) => {
   try {
     const { uid, addrId } = req.params;
-    const user = await ClientUser.findOne({ uid });
+    const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     user.addresses = user.addresses.filter(a => String(a.id || a._id) !== String(addrId));
     await user.save();
-    
+
     res.json({ success: true, addresses: user.addresses });
   } catch (err) {
     console.error('❌ deleteAddress error:', err);
