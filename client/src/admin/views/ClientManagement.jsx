@@ -174,9 +174,8 @@ export default function ClientManagement() {
   const [search,     setSearch]     = useState('');
   const [loading,    setLoading]    = useState(false);
   const [selected,   setSelected]   = useState(null);
-  const [migrating,  setMigrating]  = useState(false);
-  const [migrateMsg, setMigrateMsg] = useState('');
   const LIMIT = 20;
+
 
   /* fetch stats */
   const fetchStats = useCallback(() => {
@@ -214,37 +213,13 @@ export default function ClientManagement() {
     }
   };
 
-  /* run migration */
-  const runMigration = async () => {
-    if (!window.confirm('This will merge duplicate accounts and assign Customer IDs. Proceed?')) return;
-    setMigrating(true);
-    setMigrateMsg('');
-    try {
-      const r = await fetch(`${API}/migrate`, { method: 'POST' });
-      const d = await r.json();
-      setMigrateMsg(d.message || 'Migration complete.');
-      fetchClients();
-      fetchStats();
-    } catch {
-      setMigrateMsg('Migration failed. Check server logs.');
-    } finally {
-      setMigrating(false);
-    }
-  };
-
   const pages = Math.ceil(total / LIMIT);
 
   return (
     <div className="cm-page">
 
       {/* Header */}
-      <div className="cm-header-row">
-        <h1 className="cm-title">CLIENT MANAGEMENT</h1>
-        <button className="cm-migrate-btn" onClick={runMigration} disabled={migrating}>
-          {migrating ? 'Running…' : '🔗 Merge Duplicates'}
-        </button>
-      </div>
-      {migrateMsg && <div className="cm-migrate-msg">{migrateMsg}</div>}
+      <h1 className="cm-title">CLIENT MANAGEMENT</h1>
 
       {/* Stats */}
       {stats && (
@@ -303,22 +278,18 @@ export default function ClientManagement() {
           <table className="cm-table">
             <thead>
               <tr>
-                <th>ID</th>
                 <th>Client</th>
+                <th className="cm-th-id">ID</th>
                 <th>Contact</th>
-                <th className="cm-text-center">Login</th>
-                <th className="cm-text-center">Orders</th>
-                <th>Last Seen</th>
+                <th className="cm-th-login">Login</th>
+                <th className="cm-th-orders">Orders</th>
+                <th className="cm-th-seen">Last Seen</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {clients.map(c => (
                 <tr key={c._id} className="cm-row" onClick={() => openClient(c)}>
-
-                  <td className="cm-td-custid">
-                    <span className="cm-custid">{c.customerId || '—'}</span>
-                  </td>
 
                   <td>
                     <div className="cm-client-cell">
@@ -331,16 +302,20 @@ export default function ClientManagement() {
                     </div>
                   </td>
 
+                  <td className="cm-td-id">
+                    <span className="cm-custid">{c.customerId || '—'}</span>
+                  </td>
+
                   <td className="cm-td-contact">
                     <span>{c.email || c.phone || '—'}</span>
                     {c.email && c.phone && <span className="cm-contact-sub">{c.phone}</span>}
                   </td>
 
-                  <td className="cm-text-center">
+                  <td className="cm-td-login">
                     <LoginBadge types={c.loginTypes || c.loginType} />
                   </td>
 
-                  <td className="cm-text-center"><span className="cm-pill">{c.orders?.length || 0}</span></td>
+                  <td className="cm-td-orders"><span className="cm-pill">{c.orders?.length || 0}</span></td>
 
                   <td className="cm-td-seen">{ago(c.lastSeen)}</td>
 
