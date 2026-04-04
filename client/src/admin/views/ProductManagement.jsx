@@ -392,6 +392,11 @@ export default function ProductManagement() {
                   <input type="text" placeholder="e.g. Garden Breeze Dress"
                     value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
                 </div>
+                <div className="pm-group">
+                  <label>Price (₹) <span className="pm-required">*</span></label>
+                  <input type="number" placeholder="e.g. 849" min="0" className="pm-premium-input"
+                    value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} />
+                </div>
               </div>
 
               <div className="pm-row">
@@ -422,17 +427,6 @@ export default function ProductManagement() {
 
               <div className="pm-row">
                 <div className="pm-group">
-                  <label>Price (₹) <span className="pm-required">*</span></label>
-                  <input type="number" placeholder="e.g. 849" min="0" className="pm-premium-input"
-                    value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} />
-                </div>
-                <div className="pm-group">
-                  <label>Badge <span className="pm-optional">optional</span></label>
-                  <select value={form.badge} className="pm-premium-select" onChange={e => setForm(f => ({ ...f, badge: e.target.value }))}>
-                    {BADGES.map(b => <option key={b} value={b}>{b || 'None'}</option>)}
-                  </select>
-                </div>
-                <div className="pm-group">
                   <label>Total Quantity (Stock) *</label>
                   <input
                     type="number"
@@ -442,6 +436,12 @@ export default function ProductManagement() {
                     value={form.stock}
                     onChange={e => setForm(f => ({ ...f, stock: e.target.value }))}
                   />
+                </div>
+                <div className="pm-group">
+                  <label>Badge <span className="pm-optional">optional</span></label>
+                  <select value={form.badge} className="pm-premium-select" onChange={e => setForm(f => ({ ...f, badge: e.target.value }))}>
+                    {BADGES.map(b => <option key={b} value={b}>{b || 'None'}</option>)}
+                  </select>
                 </div>
               </div>
             </div>
