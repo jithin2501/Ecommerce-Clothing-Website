@@ -22,6 +22,11 @@ const categories = [
     img: '/images/collections/Kids.webp',
     path: '/collections/traditional-ethnic-frocks',
   },
+  {
+    label: 'FABRIC-BASED\nCATEGORIES',
+    img: '/images/collections/infant.webp',
+    path: '/collections/fabric-based-categories',
+  },
 ];
 
 export default function Category() {

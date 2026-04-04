@@ -27,13 +27,14 @@
   color: var(--charcoal, #2d2d2d);
 }
 
-/* ── Grid (FIXED 4 ITEMS) ── */
+/* ── Grid (5 ITEMS IN A ROW) ── */
 .category-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  justify-items: center;
-  gap: 4rem;
-  padding: 0 8%;
+  grid-template-columns: repeat(5, auto);
+  justify-content: center;
+  gap: 3rem;
+  /* Increased slightly from 0.1rem for a clean look */
+  padding: 0 4%;
 }
 
 /* ── Card ── */
@@ -44,7 +45,7 @@
   gap: 1.2rem;
   cursor: pointer;
   transition: transform 0.3s ease;
-  width: 180px;
+  width: 170px;
 }
 
 .category-card:hover {
@@ -53,8 +54,8 @@
 
 /* ── Circle Image ── */
 .category-circle {
-  width: 180px;
-  height: 180px;
+  width: 170px;
+  height: 170px;
   border-radius: 50%;
   overflow: hidden;
   background: #f5f2ee;
@@ -71,14 +72,15 @@
 
 /* ── Label ── */
 .category-label {
-  font-size: 0.75rem;
-  font-weight: 800;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   color: #2d2d2d;
   color: var(--charcoal, #2d2d2d);
   text-align: center;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 .category-subtitle {
