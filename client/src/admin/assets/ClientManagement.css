@@ -52,34 +52,30 @@
 }
 
 .cm-stat-blue {
-  background-color: #eff6ff;
+  background-color: #1d4ed8;
 }
 
 .cm-stat-red {
-  background-color: #fef2f2;
+  background-color: #b91c1c;
 }
 
 .cm-stat-green {
-  background-color: #f0fdf4;
-}
-
-.cm-stat-amber {
-  background-color: #fffbeb;
+  background-color: #15803d;
 }
 
 .cm-stat-purple {
-  background-color: #faf5ff;
+  background-color: #6d28d9;
 }
 
 .cm-stat-value {
   font-size: 26px;
   font-weight: 700;
-  color: #0f172a;
+  color: #ffffff;
 }
 
 .cm-stat-label {
   font-size: 11px;
-  color: #64748b;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;

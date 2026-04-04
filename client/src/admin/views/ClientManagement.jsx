@@ -10,7 +10,7 @@ const ago = (dateStr) => {
   if (!dateStr) return '—';
   const diff = Date.now() - new Date(dateStr).getTime();
   const m = Math.floor(diff / 60000);
-  if (m < 1)  return 'just now';
+  if (m < 1) return 'just now';
   if (m < 60) return `${m}m ago`;
   const h = Math.floor(m / 60);
   if (h < 24) return `${h}h ago`;
@@ -23,8 +23,8 @@ const LoginBadge = ({ types }) => {
   return (
     <span className="cm-badge-wrap">
       {all.includes('google') && <span className="cm-badge cm-badge-google">Google</span>}
-      {all.includes('phone')  && <span className="cm-badge cm-badge-phone">Phone</span>}
-      {all.length >= 2        && <span className="cm-badge cm-badge-linked">Linked</span>}
+      {all.includes('phone') && <span className="cm-badge cm-badge-phone">Phone</span>}
+      {all.length >= 2 && <span className="cm-badge cm-badge-linked">Linked</span>}
     </span>
   );
 };
@@ -83,12 +83,12 @@ function ClientDrawer({ client, onClose }) {
           {tab === 'info' && (
             <div className="cm-info-list">
               <InfoRow label="Customer ID" value={client.customerId || '—'} />
-              <InfoRow label="Name"        value={client.name  || '—'} />
-              <InfoRow label="Email"       value={client.email || '—'} />
-              <InfoRow label="Phone"       value={client.phone || '—'} />
-              <InfoRow label="Login via"   value={(client.loginTypes || [client.loginType]).join(' + ')} />
-              <InfoRow label="Joined"      value={client.createdAt ? new Date(client.createdAt).toLocaleDateString('en-IN') : '—'} />
-              <InfoRow label="Last seen"   value={client.lastSeen   ? new Date(client.lastSeen).toLocaleString('en-IN')   : '—'} />
+              <InfoRow label="Name" value={client.name || '—'} />
+              <InfoRow label="Email" value={client.email || '—'} />
+              <InfoRow label="Phone" value={client.phone || '—'} />
+              <InfoRow label="Login via" value={(client.loginTypes || [client.loginType]).join(' + ')} />
+              <InfoRow label="Joined" value={client.createdAt ? new Date(client.createdAt).toLocaleDateString('en-IN') : '—'} />
+              <InfoRow label="Last seen" value={client.lastSeen ? new Date(client.lastSeen).toLocaleString('en-IN') : '—'} />
               {client.uids?.length > 1 && (
                 <InfoRow label="Linked UIDs" value={`${client.uids.length} providers`} />
               )}
@@ -141,7 +141,7 @@ function ClientDrawer({ client, onClose }) {
   );
 }
 
-const InfoRow    = ({ label, value }) => (
+const InfoRow = ({ label, value }) => (
   <div className="cm-info-row">
     <span className="cm-info-label">{label}</span>
     <span className="cm-info-value">{value}</span>
@@ -165,15 +165,15 @@ function StatCard({ label, value, color }) {
    MAIN PAGE
 ════════════════════════════════════ */
 export default function ClientManagement() {
-  const [stats,      setStats]      = useState(null);
-  const [clients,    setClients]    = useState([]);
-  const [total,      setTotal]      = useState(0);
-  const [page,       setPage]       = useState(1);
-  const [filter,     setFilter]     = useState('all');
+  const [stats, setStats] = useState(null);
+  const [clients, setClients] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [filter, setFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState('all');
-  const [search,     setSearch]     = useState('');
-  const [loading,    setLoading]    = useState(false);
-  const [selected,   setSelected]   = useState(null);
+  const [search, setSearch] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState(null);
   const LIMIT = 20;
 
 
@@ -182,7 +182,7 @@ export default function ClientManagement() {
     fetch(`${API}/stats`)
       .then(r => r.json())
       .then(d => d.success && setStats(d.stats))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   useEffect(() => { fetchStats(); }, [fetchStats]);
@@ -196,7 +196,7 @@ export default function ClientManagement() {
       .then(d => {
         if (d.success) { setClients(d.users); setTotal(d.total); }
       })
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false));
   }, [filter, search, dateFilter, page]);
 
@@ -224,11 +224,10 @@ export default function ClientManagement() {
       {/* Stats */}
       {stats && (
         <div className="cm-stats-row">
-          <StatCard label="Total Clients"   value={stats.total}    color="blue"   />
-          <StatCard label="Google Logins"   value={stats.google}   color="red"    />
-          <StatCard label="Phone Logins"    value={stats.phone}    color="green"  />
-          <StatCard label="Linked Accounts" value={stats.linked}   color="gold"   />
-          <StatCard label="New Today"       value={stats.newToday} color="purple" />
+          <StatCard label="Total Clients" value={stats.total} color="blue" />
+          <StatCard label="Google Logins" value={stats.google} color="red" />
+          <StatCard label="Phone Logins" value={stats.phone} color="green" />
+          <StatCard label="New Today" value={stats.newToday} color="purple" />
         </div>
       )}
 
@@ -249,8 +248,8 @@ export default function ClientManagement() {
         <div className="cm-search-box">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
           </svg>
           <input
             className="cm-search-input"

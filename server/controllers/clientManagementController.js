@@ -6,24 +6,36 @@ exports.getAllClients = async (req, res) => {
     const { loginType, search, dateFilter, page = 1, limit = 20 } = req.query;
     const query = {};
 
-    if (loginType && loginType !== 'all') query.loginTypes = loginType;
+    if (loginType && loginType !== 'all') {
+      // $in matches whether loginTypes is stored as a string OR an array element
+      query.$or = query.$or || [];
+      query.$and = [
+        {
+          $or: [
+            { loginTypes: { $in: [loginType] } },  // array form: ['google']
+            { loginTypes: loginType },               // string form: 'google' (legacy)
+            { loginType: loginType },               // old singular field (legacy)
+          ]
+        }
+      ];
+    }
     if (search) {
       query.$or = [
-        { name:       { $regex: search, $options: 'i' } },
-        { email:      { $regex: search, $options: 'i' } },
-        { phone:      { $regex: search, $options: 'i' } },
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } },
         { customerId: { $regex: search, $options: 'i' } },
       ];
     }
 
     if (dateFilter && dateFilter !== 'all') {
       const now = new Date();
-      if (dateFilter === 'joined-today')  query.createdAt = { $gte: new Date(now.setHours(0,0,0,0)) };
-      else if (dateFilter === 'joined-week')  query.createdAt = { $gte: new Date(now.setDate(now.getDate() - 7)) };
+      if (dateFilter === 'joined-today') query.createdAt = { $gte: new Date(now.setHours(0, 0, 0, 0)) };
+      else if (dateFilter === 'joined-week') query.createdAt = { $gte: new Date(now.setDate(now.getDate() - 7)) };
       else if (dateFilter === 'joined-month') query.createdAt = { $gte: new Date(now.setMonth(now.getMonth() - 1)) };
     }
 
-    const skip  = (Number(page) - 1) * Number(limit);
+    const skip = (Number(page) - 1) * Number(limit);
     const total = await ClientUser.countDocuments(query);
     const users = await ClientUser.find(query)
       .sort({ lastSeen: -1 })
@@ -53,13 +65,21 @@ exports.getClientDetail = async (req, res) => {
 /* ── GET dashboard stats ── */
 exports.getStats = async (req, res) => {
   try {
-    const total      = await ClientUser.countDocuments();
-    const google     = await ClientUser.countDocuments({ loginTypes: 'google' });
-    const phone      = await ClientUser.countDocuments({ loginTypes: 'phone' });
-    const linked     = await ClientUser.countDocuments({ $expr: { $gte: [{ $size: '$loginTypes' }, 2] } });
-    const withCart   = await ClientUser.countDocuments({ 'cart.0': { $exists: true } });
-    const today      = new Date(); today.setHours(0, 0, 0, 0);
-    const newToday   = await ClientUser.countDocuments({ createdAt: { $gte: today } });
+    const total = await ClientUser.countDocuments();
+
+    // Use $or to handle loginTypes stored as array ['google'] OR legacy string 'google'
+    const googleQ = { $or: [{ loginTypes: { $in: ['google'] } }, { loginTypes: 'google' }, { loginType: 'google' }] };
+    const phoneQ = { $or: [{ loginTypes: { $in: ['phone'] } }, { loginTypes: 'phone' }, { loginType: 'phone' }] };
+    const google = await ClientUser.countDocuments(googleQ);
+    const phone = await ClientUser.countDocuments(phoneQ);
+    const linked = await ClientUser.countDocuments({
+      $or: [
+        { $expr: { $gte: [{ $size: { $ifNull: ['$loginTypes', []] } }, 2] } },
+      ]
+    });
+    const withCart = await ClientUser.countDocuments({ 'cart.0': { $exists: true } });
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const newToday = await ClientUser.countDocuments({ createdAt: { $gte: today } });
 
     console.log('📊 getStats — total clients:', total);
     res.json({ success: true, stats: { total, google, phone, linked, withCart, newToday } });
@@ -148,9 +168,9 @@ exports.migrateClients = async (req, res) => {
           if (!primary.loginTypes.includes(lt)) primary.loginTypes.push(lt);
         }
         // Merge contact info
-        if (!primary.email  && dup.email)  primary.email  = dup.email;
-        if (!primary.phone  && dup.phone)  primary.phone  = dup.phone;
-        if (!primary.photo  && dup.photo)  primary.photo  = dup.photo;
+        if (!primary.email && dup.email) primary.email = dup.email;
+        if (!primary.phone && dup.phone) primary.phone = dup.phone;
+        if (!primary.photo && dup.photo) primary.photo = dup.photo;
         if (!primary.gender && dup.gender) primary.gender = dup.gender;
         // Merge addresses (avoid exact duplicates)
         for (const addr of (dup.addresses || [])) {
