@@ -22,11 +22,16 @@ export function CartProvider({ children }) {
   }, [cartItems]);
 
   const addToCart = (product) => {
+    // Expected product: { id, name, price, size, color, img, stock }
     setCartItems(prev => {
       const existing = prev.find(
         i => i.id === product.id && i.size === product.size && i.color === product.color
       );
       if (existing) {
+        if (existing.qty + 1 > product.stock) {
+          alert(`Maximum available stock (${product.stock}) reached for this item.`);
+          return prev;
+        }
         return prev.map(i =>
           i.id === product.id && i.size === product.size && i.color === product.color
             ? { ...i, qty: i.qty + 1 }
@@ -39,11 +44,17 @@ export function CartProvider({ children }) {
 
   const updateQty = (id, size, color, delta) => {
     setCartItems(prev =>
-      prev.map(i =>
-        i.id === id && i.size === size && i.color === color
-          ? { ...i, qty: Math.max(1, i.qty + delta) }
-          : i
-      )
+      prev.map(i => {
+        if (i.id === id && i.size === size && i.color === color) {
+          const newQty = i.qty + delta;
+          if (newQty > i.stock && delta > 0) {
+            alert(`Only ${i.stock} units are currently in stock.`);
+            return i;
+          }
+          return { ...i, qty: Math.max(1, newQty) };
+        }
+        return i;
+      })
     );
   };
 

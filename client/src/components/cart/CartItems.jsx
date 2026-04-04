@@ -34,7 +34,12 @@ export default function CartItems({ items, onUpdateQty, onRemove, onGiftChange }
               <div className="ci-qty">
                 <button onClick={() => onUpdateQty(item.id, item.size, item.color, -1)}>−</button>
                 <span>{item.qty}</span>
-                <button onClick={() => onUpdateQty(item.id, item.size, item.color, +1)}>+</button>
+                <button 
+                  onClick={() => onUpdateQty(item.id, item.size, item.color, +1)}
+                  disabled={item.qty >= item.stock}
+                  style={{ opacity: item.qty >= item.stock ? 0.3 : 1, cursor: item.qty >= item.stock ? 'not-allowed' : 'pointer' }}
+                  title={item.qty >= item.stock ? 'Maximum stock reached' : ''}
+                >+</button>
               </div>
               <p className="ci-price">
                 ₹{(parseFloat(String(item.price).replace(/[₹$,]/g, '')) * item.qty).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
