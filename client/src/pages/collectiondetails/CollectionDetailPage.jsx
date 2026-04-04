@@ -223,11 +223,10 @@ export default function CollectionDetailPage() {
     }
     return (
       <div className="cdp-breadcrumb">
-        <Link to="/">Home</Link>
+        <Link to="/" onClick={handleBack}>Home</Link>
         <span className="cdp-sep">›</span>
-        <Link to="/collections">Collections</Link>
+        <Link to="/collections" state={{}}>{fromState.fromLabel || 'Collections'}</Link>
         <span className="cdp-sep">›</span>
-        {product?.category && <><span>{product.category}</span><span className="cdp-sep">›</span></>}
         <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
       </div>
     );

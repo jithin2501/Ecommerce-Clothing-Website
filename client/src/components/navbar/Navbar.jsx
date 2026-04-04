@@ -174,7 +174,7 @@ export default function Navbar() {
         <ul className="nav-links">
           <li><a href="/" onClick={handleHome}>Home</a></li>
           <li><a href="#about" onClick={(e) => handleSection(e, 'about')}>About Us</a></li>
-          <li><Link to="/collections">Collections</Link></li>
+          <li><Link to="/collections" state={{}}>Collections</Link></li>
           <li><a href="#reviews" onClick={(e) => handleSection(e, 'reviews')}>Review</a></li>
           <li><Link to="/contact">Contact</Link></li>
         </ul>
@@ -244,7 +244,7 @@ export default function Navbar() {
         <ul className="sidebar-links">
           <li><a href="/" onClick={(e) => { handleHome(e); setIsSidebarOpen(false); }}>Home</a></li>
           <li><a href="#about" onClick={(e) => handleSection(e, 'about')}>About Us</a></li>
-          <li><Link to="/collections" onClick={() => setIsSidebarOpen(false)}>Collections</Link></li>
+          <li><Link to="/collections" state={{}} onClick={() => setIsSidebarOpen(false)}>Collections</Link></li>
           <li><a href="#reviews" onClick={(e) => handleSection(e, 'reviews')}>Review</a></li>
           <li><Link to="/contact" onClick={() => setIsSidebarOpen(false)}>Contact</Link></li>
         </ul>

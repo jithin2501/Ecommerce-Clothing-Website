@@ -34,6 +34,22 @@ export default function CollectionsPage() {
   const [sortBy, setSortBy] = useState('Newest Arrivals');
   const [productCount, setProductCount] = useState(0);
 
+  // Sync state from location.state when navigating (e.g. from breadcrumbs/navbar)
+  // This ensures "Clicking Collections" actually resets the view
+  useEffect(() => {
+    const { category: stCat, subcategory: stSub, ageGroup: stAge } = location.state || {};
+    
+    setSelectedCategories(stCat ? [stCat] : []);
+    setSelectedSubcategories(stSub ? [stSub] : []);
+    setSelectedAgeGroups(stAge ? [stAge] : []);
+
+    // Clear secondary filters on major navigation
+    setSelectedColors([]);
+    setPriceMin(MIN_PRICE);
+    setPriceMax(MAX_PRICE);
+    setSelectedRatings([]);
+  }, [location.state]);
+
   // ── Sidebar section toggle state ──
   const [open, setOpen] = useState({
     color: true, price: true, ratings: true, category: true, subcategory: true, age: true
@@ -56,19 +72,29 @@ export default function CollectionsPage() {
         <div className="page-breadcrumb" style={{ marginTop: '20px' }}>
           <Link to="/" className="breadcrumb-link">Home</Link>
           <span className="breadcrumb-sep"> › </span>
-          <span className="breadcrumb-current">Collections</span>
-          {category && (
-            <>
-              <span className="breadcrumb-sep"> › </span>
-              <span className="breadcrumb-current">{category}</span>
-            </>
+          
+          {(!category && !subcategory && !ageGroup) ? (
+            <span className="breadcrumb-current">Collections</span>
+          ) : (
+            <Link to="/collections" state={{}} className="breadcrumb-link">Collections</Link>
           )}
-          {subcategory && (
+          
+          {subcategory ? (
             <>
               <span className="breadcrumb-sep"> › </span>
               <span className="breadcrumb-current">{subcategory}</span>
             </>
-          )}
+          ) : category ? (
+            <>
+              <span className="breadcrumb-sep"> › </span>
+              <span className="breadcrumb-current">{category}</span>
+            </>
+          ) : ageGroup ? (
+            <>
+              <span className="breadcrumb-sep"> › </span>
+              <span className="breadcrumb-current">{ageGroup}</span>
+            </>
+          ) : null}
         </div>
 
         <div className="agp-layout" style={{ marginTop: '10px', marginBottom: '60px' }}>
