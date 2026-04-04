@@ -1,9 +1,11 @@
 .os-wrapper { 
   background: #fff; 
-  border-radius: 14px; 
+  border: 1px solid #eee; 
+  border-radius: 12px; /* Matches address bar */
   padding: 1.5rem; 
   position: sticky; 
-  top: 100px; }
+  top: 100px; 
+}
 .os-title { 
   font-size: 1rem; 
   font-weight: 800; 
