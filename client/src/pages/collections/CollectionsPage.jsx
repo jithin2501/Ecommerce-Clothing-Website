@@ -17,7 +17,12 @@ export default function CollectionsPage() {
   }, []);
 
   // ── Filter states ──
-  const [selectedCategories, setSelectedCategories] = useState(subcategory ? [subcategory] : []);
+  const [selectedCategories, setSelectedCategories] = useState(() => {
+    const cats = [];
+    if (category) cats.push(category);
+    if (subcategory) cats.push(subcategory);
+    return cats;
+  });
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedAgeGroups, setSelectedAgeGroups] = useState(ageGroup ? [ageGroup] : []);
   const [priceMin, setPriceMin] = useState(MIN_PRICE);

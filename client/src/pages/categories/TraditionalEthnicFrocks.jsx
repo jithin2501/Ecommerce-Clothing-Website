@@ -37,7 +37,7 @@ export default function TraditionalEthnicFrocks() {
           <div
             key={item.label}
             className="catpage-card"
-            onClick={() => navigate('/collections/age-selection', { state: { category: 'Traditional & Ethnic Frocks', subcategory: item.label } })}
+            onClick={() => navigate('/collections', { state: { category: 'Traditional & Ethnic Frocks', subcategory: item.label } })}
           >
             <div className="catpage-img-wrap">
               <img src={item.img} alt={item.label} />
