@@ -24,8 +24,12 @@ export default function ProductGrid({
   products: propProducts, 
   onCountUpdate = () => {},
   selectedCategories = [], 
+  selectedSubcategories = [],
   selectedColors = [], 
   selectedAgeGroups = [],
+  priceMin,
+  priceMax,
+  selectedRatings = [],
   sustainableOnly = false, 
   sortBy = 'Newest Arrivals' 
 }) {
@@ -70,15 +74,45 @@ export default function ProductGrid({
   }
 
   let filtered = [...base];
+
+  // 1. Category & Subcategory Filter
   if (selectedCategories.length > 0) {
     filtered = filtered.filter(p => {
       const pCats = Array.isArray(p.category) ? p.category : [p.category];
-      return pCats.some(c => selectedCategories.includes(c));
+      const matchCat = pCats.some(c => selectedCategories.includes(c));
+      
+      if (selectedSubcategories.length > 0) {
+        // Match either in the 'subCategory' (backend field) or 'category' array
+        const pSubCats = Array.isArray(p.subCategory) ? p.subCategory : [p.subCategory];
+        const matchSub = pSubCats.some(s => selectedSubcategories.includes(s)) || pCats.some(c => selectedSubcategories.includes(c));
+        return matchCat && matchSub;
+      }
+      return matchCat;
     });
   }
-  if (selectedColors.length > 0) filtered = filtered.filter(p => selectedColors.includes(p.color));
+
+  // 2. Color Filter
+  if (selectedColors.length > 0) {
+    filtered = filtered.filter(p => selectedColors.includes(p.color));
+  }
+
+  // 3. Price Filter
+  if (priceMin !== undefined && priceMax !== undefined) {
+    filtered = filtered.filter(p => p.price >= priceMin && p.price <= priceMax);
+  }
+
+  // 4. Ratings Filter
+  if (selectedRatings.length > 0) {
+    filtered = filtered.filter(p => {
+      const floorRating = Math.floor(p.stars || 0);
+      return selectedRatings.includes(floorRating);
+    });
+  }
+
+  // 5. Sustainability Filter
   if (sustainableOnly) filtered = filtered.filter(p => p.sustainability);
 
+  // 6. Sorting
   if (sortBy === 'Price: Low to High') filtered.sort((a, b) => parseFloat(String(a.price).replace(/[^\d.]/g, '')) - parseFloat(String(b.price).replace(/[^\d.]/g, '')));
   if (sortBy === 'Price: High to Low') filtered.sort((a, b) => parseFloat(String(b.price).replace(/[^\d.]/g, '')) - parseFloat(String(a.price).replace(/[^\d.]/g, '')));
   if (sortBy === 'Best Rated') filtered.sort((a, b) => (b.stars || 0) - (a.stars || 0));

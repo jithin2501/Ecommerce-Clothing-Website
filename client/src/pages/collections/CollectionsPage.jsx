@@ -20,8 +20,10 @@ export default function CollectionsPage() {
   const [selectedCategories, setSelectedCategories] = useState(() => {
     const cats = [];
     if (category) cats.push(category);
-    if (subcategory) cats.push(subcategory);
     return cats;
+  });
+  const [selectedSubcategories, setSelectedSubcategories] = useState(() => {
+    return subcategory ? [subcategory] : [];
   });
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedAgeGroups, setSelectedAgeGroups] = useState(ageGroup ? [ageGroup] : []);
@@ -33,11 +35,12 @@ export default function CollectionsPage() {
 
   // ── Sidebar section toggle state ──
   const [open, setOpen] = useState({
-    color: true, price: true, ratings: true, category: true, age: true
+    color: true, price: true, ratings: true, category: true, subcategory: true, age: true
   });
 
   const handleReset = () => {
     setSelectedCategories([]);
+    setSelectedSubcategories([]);
     setSelectedColors([]);
     setSelectedAgeGroups([]);
     setPriceMin(MIN_PRICE);
@@ -71,6 +74,7 @@ export default function CollectionsPage() {
           <FilterSidebar
             selectedColors={selectedColors} setSelectedColors={setSelectedColors}
             selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories}
+            selectedSubcategories={selectedSubcategories} setSelectedSubcategories={setSelectedSubcategories}
             selectedAgeGroups={selectedAgeGroups} setSelectedAgeGroups={setSelectedAgeGroups}
             priceMin={priceMin} setPriceMin={setPriceMin}
             priceMax={priceMax} setPriceMax={setPriceMax}
@@ -94,6 +98,7 @@ export default function CollectionsPage() {
 
             <ProductGrid
               selectedCategories={selectedCategories}
+              selectedSubcategories={selectedSubcategories}
               selectedColors={selectedColors}
               selectedAgeGroups={selectedAgeGroups}
               priceMin={priceMin}

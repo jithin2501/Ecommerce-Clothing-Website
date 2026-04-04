@@ -15,9 +15,40 @@ const COLORS = [
 const RATINGS = [5, 4, 3, 2, 1];
 
 const CATEGORIES = [
-  'Baby Frocks', 'Birthday Frocks', 'Tops & T-Shirts',
-  'Indo-Western Outfits', 'Traditional Outfits', 'Party Wear', 'Boys Collection',
+  'Occasion Wear Frocks',
+  'Daily Wear Frocks',
+  'Party Wear Collection',
+  'Designer & Premium Frocks',
+  'Traditional & Ethnic Frocks',
+  'Fabric-Based Categories'
 ];
+
+const SUBCATEGORIES_MAP = {
+  'Occasion Wear Frocks': [
+    'Birthday Party Frocks', 'Wedding / Festive Frocks', 'Reception / Evening Wear',
+    'Photoshoot Special Frocks', 'Princess / Fancy Dress'
+  ],
+  'Daily Wear Frocks': [
+    'Casual Cotton Frocks', 'Playtime Frocks', 'School Casual Frocks',
+    'Summer Wear Frocks', 'Comfortable Home Wear'
+  ],
+  'Party Wear Collection': [
+    'Net Frocks', 'Gown Style Frocks', 'Layered / Frill Frocks',
+    'Sequin / Glitter Frocks', 'Designer Party Wear'
+  ],
+  'Designer & Premium Frocks': [
+    'Boutique Designer Frocks', 'Handwork / Embroidery Frocks',
+    'Custom Made Frocks', 'Luxury Collection'
+  ],
+  'Traditional & Ethnic Frocks': [
+    'Pattu / Silk Frocks', 'Lehenga Style Frocks', 'Anarkali Frocks',
+    'Indo-Western Styles', 'Festival Special (Diwali, Navratri, etc.)'
+  ],
+  'Fabric-Based Categories': [
+    'Cotton Frocks', 'Net Frocks', 'Satin Frocks', 'Silk Frocks',
+    'Organza Frocks', 'Velvet Frocks (Winter Special)'
+  ]
+};
 
 const AGE_GROUPS = [
   { slug: 'newborn',      label: 'Newborn (0-6M)' },
@@ -58,6 +89,7 @@ function Chevron({ open }) {
 export default function FilterSidebar({
   selectedColors = [],      setSelectedColors = () => {},
   selectedCategories = [],  setSelectedCategories = () => {},
+  selectedSubcategories = [], setSelectedSubcategories = () => {},
   selectedAgeGroups = [],    setSelectedAgeGroups = () => {},
   priceMin = MIN_PRICE,     setPriceMin = () => {},
   priceMax = MAX_PRICE,     setPriceMax = () => {},
@@ -181,7 +213,11 @@ export default function FilterSidebar({
               <li key={cat}>
                 <label className="filter-checkbox-label">
                   <input type="checkbox" checked={selectedCategories.includes(cat)}
-                    onChange={() => toggleItem(cat, selectedCategories, setSelectedCategories)}
+                    onChange={() => {
+                      toggleItem(cat, selectedCategories, setSelectedCategories);
+                      // Optimization: If unchecking category, we could clear its subcategories
+                      // but showing specific subcategories based on selection is handled in rendering
+                    }}
                     className="filter-checkbox" />
                   <span className={"filter-label-text" + (selectedCategories.includes(cat) ? ' active' : '')}>{cat}</span>
                 </label>
@@ -190,6 +226,29 @@ export default function FilterSidebar({
           </ul>
         )}
       </div>
+
+      {/* Sub Categories - Dependent on selected categories */}
+      {selectedCategories.length > 0 && (
+        <div className="filter-group">
+          <div className="filter-group-header" onClick={() => toggleSection('subcategory')}>
+            <span>Sub Categories</span><Chevron open={open.subcategory} />
+          </div>
+          {open.subcategory && (
+            <ul className="filter-list">
+              {selectedCategories.flatMap(cat => SUBCATEGORIES_MAP[cat] || []).map(sub => (
+                <li key={sub}>
+                  <label className="filter-checkbox-label">
+                    <input type="checkbox" checked={selectedSubcategories.includes(sub)}
+                      onChange={() => toggleItem(sub, selectedSubcategories, setSelectedSubcategories)}
+                      className="filter-checkbox" />
+                    <span className={"filter-label-text" + (selectedSubcategories.includes(sub) ? ' active' : '')}>{sub}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </aside>
   );
 }
