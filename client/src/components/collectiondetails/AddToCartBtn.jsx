@@ -1,12 +1,13 @@
 import { useRef, useState } from 'react';
 import '../../styles/collectiondetails/AddToCartBtn.css';
 
-export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor = '#2D3E50' }) {
+export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor = '#2D3E50', isAvailable = true }) {
   const [added, setAdded] = useState(false);
   const btnRef = useRef(null);
   const animatingRef = useRef(false);
 
   const handleClick = () => {
+    if (!isAvailable) return;
     if (added) { onGoToBag?.(); return; }
     if (onBeforeAdd && !onBeforeAdd()) return;
     if (animatingRef.current) return;
@@ -95,8 +96,9 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
   return (
     <button
       ref={btnRef}
-      className={`atc-btn${added ? ' atc-added' : ''}`}
+      className={`atc-btn${added ? ' atc-added' : ''}${!isAvailable ? ' atc-disabled' : ''}`}
       onClick={handleClick}
+      disabled={!isAvailable && !added}
     >
       <span className="atc-bg" />
 
@@ -121,7 +123,7 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
 
       {/* Label */}
       <span className="atc-label" aria-live="polite">
-        {added ? 'Go to Bag' : 'Add to Bag'}
+        {!isAvailable ? 'Currently Unavailable' : added ? 'Go to Bag' : 'Add to Bag'}
       </span>
     </button>
   );

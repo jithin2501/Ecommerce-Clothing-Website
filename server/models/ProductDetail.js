@@ -90,6 +90,12 @@ const productDetailSchema = new mongoose.Schema(
       type: [highlightSchema],
       default: [],
     },
+    inventory: {
+      type: Map,
+      of: Number,
+      default: {}
+    },
+    stock: { type: Number, default: 0 }
   },
   { timestamps: true }
 );

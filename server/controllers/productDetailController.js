@@ -10,7 +10,7 @@ const { uploadToS3, deleteFromS3 } = require('../conf/s3');
 const getProductDetail = async (req, res) => {
   try {
     const detail = await ProductDetail.findOne({ product: req.params.productId })
-      .populate('product', 'name price oldPrice stars reviews');
+      .populate('product', 'name price oldPrice stars reviews inventory stock');
 
     if (!detail) return res.status(404).json({ success: false, message: 'Detail not found.' });
     res.json({ success: true, data: detail });

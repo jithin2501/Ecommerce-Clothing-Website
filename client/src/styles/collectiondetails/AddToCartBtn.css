@@ -43,7 +43,27 @@
 }
 
 .atc-btn.atc-added .atc-bg { background: #2D3E50; }
-.atc-btn:hover .atc-bg { filter: brightness(0.92); }
+.atc-btn:hover:not(.atc-disabled) .atc-bg { filter: brightness(0.92); }
+
+.atc-btn.atc-disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.atc-btn.atc-disabled .atc-bg {
+  background: #d1d1d1;
+}
+
+.atc-btn.atc-disabled .atc-shirt,
+.atc-btn.atc-disabled .atc-cart {
+  display: none;
+}
+
+.atc-btn.atc-disabled .atc-label {
+  transform: none;
+  opacity: 0.7;
+  color: #666;
+}
 
 /* Shirt — positioned relative to cart center */
 .atc-shirt {

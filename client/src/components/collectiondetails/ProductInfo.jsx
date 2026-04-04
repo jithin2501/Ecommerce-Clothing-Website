@@ -12,6 +12,11 @@ const BADGES = [
   { icon: ShieldCheck, label: 'Quality', sub: 'Assured'  },
 ];
 
+const AGE_LABELS = {
+  'newborn': '0–6 Months', 'infant': '6–12 Months', 'toddler': '1–3 Years', 
+  'little-girls': '3–6 Years', 'kids': '6–9 Years', 'pre-teen': '9–12 Years'
+};
+
 export default function ProductInfo({
   name         = 'Garden Breeze Dress',
   price        = 0,
@@ -26,6 +31,8 @@ export default function ProductInfo({
   onOpenSidebar = () => {},
   userInfo = null,
   auth = null,
+  inventory = {},
+  stock = 0
 }) {
   const [selectedSize,  setSelectedSize]  = useState('');
   const [selectedColor, setSelectedColor] = useState(colors[0]?.name || '');
@@ -34,6 +41,9 @@ export default function ProductInfo({
   const navigate = useNavigate();
 
   const selectedColorHex = colors.find(c => c.name === selectedColor)?.hex || '#2D3E50';
+
+  const isAvailable = stock > 0;
+  const isOut = !isAvailable;
 
   const handleBeforeAdd = () => {
     if (!selectedSize) {
@@ -107,15 +117,19 @@ export default function ProductInfo({
       <div className="pi-section">
         <p className="pi-label">SELECT SIZE</p>
         <div className="pi-sizes">
-          {sizes.map(s => (
-            <button
-              key={s}
-              className={`pi-size-btn${selectedSize === s ? ' active' : ''}`}
-              onClick={() => setSelectedSize(s)}
-            >
-              {s}
-            </button>
-          ))}
+          {sizes.map(s => {
+            return (
+              <button
+                key={s}
+                className={`pi-size-btn${selectedSize === s ? ' active' : ''}${isOut ? ' out-of-stock' : ''}`}
+                onClick={() => setSelectedSize(s)}
+                disabled={isOut}
+                title={isOut ? 'Currently Unavailable' : ''}
+              >
+                {s}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -143,6 +157,7 @@ export default function ProductInfo({
           onAdd={handleAddToBag}
           onGoToBag={() => navigate('/cart')}
           shirtColor={selectedColorHex}
+          isAvailable={isAvailable}
         />
         <button 
           className={`pi-icon-btn${isWishlisted(productId) ? ' active' : ''}`} 

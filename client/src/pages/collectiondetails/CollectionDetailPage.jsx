@@ -263,6 +263,7 @@ export default function CollectionDetailPage() {
               onOpenSidebar={() => setIsSidebarOpen(true)}
               userInfo={userInfo}
               auth={auth}
+              inventory={product?.inventory || {}}
             />
             <ProductAccordion
               specifications={detail.specifications}

@@ -96,8 +96,17 @@
   color: white;
 }
 
-.pi-size-btn:hover:not(.active) {
+.pi-size-btn:hover:not(.active):not(.out-of-stock) {
   border-color: var(--accent-clay, #C17B5C);
+}
+
+.pi-size-btn.out-of-stock {
+  opacity: 0.5;
+  background: #f8f8f8;
+  color: #aaa;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  border-style: dashed;
 }
 
 /* Colors */

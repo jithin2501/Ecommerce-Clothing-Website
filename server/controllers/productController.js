@@ -7,10 +7,11 @@ const getProducts = async (req, res) => {
   try {
     const filter = { isActive: true };
     if (req.query.ageGroup) {
-        const groups = req.query.ageGroup.split(',');
-        filter.ageGroup = { $in: groups };
+      const groups = req.query.ageGroup.split(',');
+      filter.ageGroup = { $in: groups };
     }
-    const products = await Product.find(filter).sort({ createdAt: -1 });
+    // .lean() ensures Map fields serialize correctly
+    const products = await Product.find(filter).sort({ createdAt: -1 }).lean();
     res.json({ success: true, data: products });
   } catch {
     res.status(500).json({ success: false });
@@ -22,7 +23,8 @@ const getFeaturedProducts = async (req, res) => {
   try {
     const { section } = req.query;
     if (!section) return res.status(400).json({ success: false, message: 'section is required.' });
-    const products = await Product.find({ isActive: true, featuredIn: section }).sort({ createdAt: -1 });
+    // .lean() ensures Map fields serialize correctly
+    const products = await Product.find({ isActive: true, featuredIn: section }).sort({ createdAt: -1 }).lean();
     res.json({ success: true, data: products });
   } catch {
     res.status(500).json({ success: false });
@@ -32,7 +34,8 @@ const getFeaturedProducts = async (req, res) => {
 // GET /api/products/admin — all products for admin panel
 const getAdminProducts = async (req, res) => {
   try {
-    const products = await Product.find({}).sort({ createdAt: -1 });
+    // .lean() returns plain JS objects so Mongoose Maps (inventory) serialize correctly via res.json()
+    const products = await Product.find({}).sort({ createdAt: -1 }).lean();
     res.json({ success: true, data: products });
   } catch {
     res.status(500).json({ success: false });
@@ -46,7 +49,7 @@ const parseArrayField = (field) => {
   if (Array.isArray(field)) {
     // If it's an array with one element that looks like JSON stringified array, parse it
     if (field.length === 1 && typeof field[0] === 'string' && field[0].startsWith('[')) {
-      try { return JSON.parse(field[0]); } catch (e) {}
+      try { return JSON.parse(field[0]); } catch (e) { }
     }
     return field;
   }
@@ -55,7 +58,7 @@ const parseArrayField = (field) => {
     try {
       const parsed = JSON.parse(field);
       return Array.isArray(parsed) ? parsed : [parsed];
-    } catch (e) {}
+    } catch (e) { }
   }
   // Case 3: Single string value
   return typeof field === 'string' && field.trim() ? [field.trim()] : (field ? [field] : []);
@@ -65,27 +68,38 @@ const parseArrayField = (field) => {
 const createProduct = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'Image is required.' });
-    let { name, category, subCategory, price, oldPrice, ageGroup, age, badge, sustainability } = req.body;
+    let { name, category, subCategory, price, oldPrice, ageGroup, age, badge, sustainability, inventory, stock } = req.body;
 
     // Handle array fields sent via FormData
     category = parseArrayField(category);
     subCategory = parseArrayField(subCategory);
     ageGroup = parseArrayField(ageGroup);
 
+    // Parse inventory (Map/Object)
+    let parsedInventory = {};
+    if (inventory) {
+      try { parsedInventory = typeof inventory === 'string' ? JSON.parse(inventory) : inventory; } catch (e) { }
+    }
+
+    const parsedStock = stock !== undefined ? Number(stock) : 0;
     const imgUrl = await uploadToS3(req.file, ageGroup[0] || 'other');
     const product = await Product.create({
-      name, 
+      name,
       category,
       subCategory,
-      price:    Number(price),
+      price: Number(price),
       oldPrice: oldPrice ? Number(oldPrice) : null,
       ageGroup,
       age,
-      img:      imgUrl,
-      badge:    badge || null,
+      img: imgUrl,
+      badge: badge || null,
       sustainability: sustainability === 'true',
+      inventory: parsedInventory,
+      stock: parsedStock
     });
-    res.json({ success: true, data: product });
+
+    // Return as plain object to ensure inventory Map is serialized for React
+    res.json({ success: true, data: product.toObject() });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -97,26 +111,28 @@ const updateProduct = async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ success: false });
 
-    let { name, category, subCategory, price, oldPrice, ageGroup, age, badge, sustainability, isActive, featuredIn } = req.body;
+    let { name, category, subCategory, price, oldPrice, ageGroup, age, badge, sustainability, isActive, featuredIn, inventory, stock } = req.body;
 
     if (name) product.name = name;
-    
+
     if (category !== undefined) {
-        product.category = parseArrayField(category);
+      product.category = parseArrayField(category);
     }
     if (subCategory !== undefined) {
-        product.subCategory = parseArrayField(subCategory);
+      product.subCategory = parseArrayField(subCategory);
     }
     if (price) product.price = Number(price);
     if (oldPrice !== undefined) product.oldPrice = oldPrice ? Number(oldPrice) : null;
-    
+
     if (ageGroup !== undefined) {
-        product.ageGroup = parseArrayField(ageGroup);
+      product.ageGroup = parseArrayField(ageGroup);
     }
     if (age) product.age = age;
     if (badge !== undefined) product.badge = badge || null;
     if (sustainability !== undefined) product.sustainability = sustainability === 'true';
     if (isActive !== undefined) product.isActive = isActive === 'true';
+    // Guard against empty string and only update when a real value is sent
+    if (stock !== undefined && stock !== '') product.stock = Number(stock);
 
     // featuredIn: array from JSON body, or stringified from FormData
     if (featuredIn !== undefined) {
@@ -125,13 +141,27 @@ const updateProduct = async (req, res) => {
         : JSON.parse(featuredIn);
     }
 
+    if (inventory !== undefined) {
+      try {
+        const parsed = typeof inventory === 'string' ? JSON.parse(inventory) : inventory;
+        // Only apply if it's a non-empty object — prevents an empty FormData send from wiping stock
+        if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+          product.inventory = parsed;
+          product.markModified('inventory');
+        }
+      } catch (e) { }
+    }
+
     if (req.file) {
       await deleteFromS3(product.img);
-      product.img = await uploadToS3(req.file, ageGroup || product.ageGroup);
+      // Use the already-parsed ageGroup array (or fall back to the existing one)
+      const parsedAgeGroup = ageGroup !== undefined ? parseArrayField(ageGroup) : product.ageGroup;
+      product.img = await uploadToS3(req.file, parsedAgeGroup[0] || product.ageGroup[0] || 'other');
     }
 
     await product.save();
-    res.json({ success: true, data: product });
+    // Return as plain object for React compatibility with Maps
+    res.json({ success: true, data: product.toObject() });
   } catch (err) {
     console.error('updateProduct error:', err.message);
     res.status(500).json({ success: false, message: err.message });

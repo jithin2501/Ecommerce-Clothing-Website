@@ -44,16 +44,15 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 0;
+  gap: 0.8rem; /* uniform gap */
   flex-shrink: 0;
   width: 300px;
-  align-self: stretch;
 }
 
 .pm-img-upload {
-  flex: none;
+  flex: 1; /* Grow to align with fields column height */
   width: 100%;
-  height: 230px;
+  min-height: 230px;
   border: 2px dashed #e5e7eb;
   border-radius: 12px;
   cursor: pointer;
@@ -84,7 +83,7 @@
 }
 
 .pm-red-btn {
-  margin-top: auto;
+  margin-top: 0;
   margin-bottom: 0;
   width: 100%;
   background: #ef4444;
@@ -114,6 +113,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.8rem;
+  align-items: flex-end; /* ensure inputs are on a straight line */
 }
 
 .pm-group {
@@ -180,6 +180,116 @@
 .pm-chip:hover { border-color: #3b82f6; color: #3b82f6; }
 .pm-chip.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
 
+/* MultiSelect Styles */
+.pm-multiselect {
+  position: relative;
+  width: 100%;
+}
+
+.pm-ms-field {
+  min-height: 42px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+  padding: 4px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  cursor: text;
+  transition: all 0.2s;
+  align-items: center;
+}
+
+.pm-ms-field:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.pm-ms-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  padding: 4px;
+  font-size: 0.85rem;
+  color: #1e2139;
+  flex: 1;
+  min-width: 60px;
+}
+
+.pm-ms-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #bfdbfe;
+}
+
+.pm-ms-remove {
+  background: none;
+  border: none;
+  color: #3b82f6;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.pm-ms-remove:hover { color: #1e40af; }
+
+.pm-ms-dropdown {
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  z-index: 1000;
+  max-height: 250px;
+  overflow-y: auto;
+  padding: 6px;
+  animation: fadeInDown 0.2s ease-out;
+}
+
+.pm-ms-option {
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.pm-ms-option:hover {
+  background: #f3f4f6;
+  color: #1e2139;
+}
+
+.pm-ms-option.selected {
+  background: #eff6ff;
+  color: #3b82f6;
+}
+
+.pm-ms-empty {
+  padding: 12px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  text-align: center;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .pm-sm { padding: 0.35rem 0.7rem; }
 .pm-xs { padding: 0.25rem 0.6rem; font-size: 0.72rem; }
 
@@ -189,6 +299,34 @@
   background: #f9fafb;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
+}
+
+.pm-inventory-section {
+  margin-top: 1rem;
+  padding: 1.2rem;
+  background: #f8fafc;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.pm-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.pm-inventory-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.pm-inventory-label {
+  font-size: 0.7rem;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
 }
 
 .pm-premium-input, .pm-premium-select {
@@ -471,7 +609,43 @@
   color: #6b7280;
   font-size: 0.7rem;
   padding: 0.5rem !important;
-  min-width: 100px;
+  min-width: 80px;
+}
+
+.pm-stock {
+  text-align: left !important;
+  min-width: 120px;
+}
+
+.pm-stock-pill {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.pm-stock-pill.status-healthy {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+.pm-stock-pill.status-low {
+  background: #fffbeb;
+  color: #d97706;
+}
+
+.pm-stock-pill.status-out {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.pm-stock-none {
+  color: #cbd5e1;
+  font-style: italic;
+  font-size: 0.75rem;
 }
 
 .pm-age-grid {

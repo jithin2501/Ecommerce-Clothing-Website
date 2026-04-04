@@ -73,28 +73,21 @@ export default function CollectionsPage() {
           <Link to="/" className="breadcrumb-link">Home</Link>
           <span className="breadcrumb-sep"> › </span>
           
-          {(!category && !subcategory && !ageGroup) ? (
+          {(selectedCategories.length === 0 && selectedSubcategories.length === 0 && selectedAgeGroups.length === 0) ? (
             <span className="breadcrumb-current">Collections</span>
           ) : (
-            <Link to="/collections" state={{}} className="breadcrumb-link">Collections</Link>
+            <>
+              <Link to="/collections" state={{}} className="breadcrumb-link">Collections</Link>
+              <span className="breadcrumb-sep"> › </span>
+              <span className="breadcrumb-current">
+                {selectedSubcategories.length > 0 
+                  ? selectedSubcategories[0] 
+                  : selectedCategories.length > 0 
+                    ? selectedCategories[0] 
+                    : selectedAgeGroups[0]}
+              </span>
+            </>
           )}
-          
-          {subcategory ? (
-            <>
-              <span className="breadcrumb-sep"> › </span>
-              <span className="breadcrumb-current">{subcategory}</span>
-            </>
-          ) : category ? (
-            <>
-              <span className="breadcrumb-sep"> › </span>
-              <span className="breadcrumb-current">{category}</span>
-            </>
-          ) : ageGroup ? (
-            <>
-              <span className="breadcrumb-sep"> › </span>
-              <span className="breadcrumb-current">{ageGroup}</span>
-            </>
-          ) : null}
         </div>
 
         <div className="agp-layout" style={{ marginTop: '10px', marginBottom: '60px' }}>
