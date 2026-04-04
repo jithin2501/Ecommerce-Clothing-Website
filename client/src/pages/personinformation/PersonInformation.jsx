@@ -109,7 +109,8 @@ export default function PersonInformation() {
   const handleSaveMobile = async () => {
     setSavingMobile(true);
     if (mobile.length === 10 && mobile !== tempMobile) {
-      if (dbUser?.loginType === 'google' && !tempMobile) {
+      // If user has an email (Google login etc.), allow adding/changing phone directly
+      if (dbUser?.email || dbUser?.loginType === 'google') {
         await updateProfileData({ phone: `+91${mobile}` });
       } else {
         alert("For security, updating a phone number requires Re-Authentication.");
