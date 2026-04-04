@@ -65,7 +65,7 @@ const parseArrayField = (field) => {
 const createProduct = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'Image is required.' });
-    let { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability } = req.body;
+    let { name, category, subCategory, price, oldPrice, ageGroup, age, badge, sustainability } = req.body;
 
     // Handle array fields sent via FormData
     category = parseArrayField(category);
@@ -81,7 +81,6 @@ const createProduct = async (req, res) => {
       oldPrice: oldPrice ? Number(oldPrice) : null,
       ageGroup,
       age,
-      color:    color || '',
       img:      imgUrl,
       badge:    badge || null,
       sustainability: sustainability === 'true',
@@ -98,7 +97,7 @@ const updateProduct = async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).json({ success: false });
 
-    let { name, category, subCategory, price, oldPrice, ageGroup, age, color, badge, sustainability, isActive, featuredIn } = req.body;
+    let { name, category, subCategory, price, oldPrice, ageGroup, age, badge, sustainability, isActive, featuredIn } = req.body;
 
     if (name) product.name = name;
     
@@ -115,7 +114,6 @@ const updateProduct = async (req, res) => {
         product.ageGroup = parseArrayField(ageGroup);
     }
     if (age) product.age = age;
-    if (color !== undefined) product.color = color;
     if (badge !== undefined) product.badge = badge || null;
     if (sustainability !== undefined) product.sustainability = sustainability === 'true';
     if (isActive !== undefined) product.isActive = isActive === 'true';

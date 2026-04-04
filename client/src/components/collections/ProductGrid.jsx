@@ -21,8 +21,9 @@ const toAgeGroup = (age) => {
 
 export default function ProductGrid({ 
   ageGroup, 
-  products: propProducts, 
+  propProducts, 
   onCountUpdate = () => {},
+  onColorsUpdate = () => {},
   selectedCategories = [], 
   selectedSubcategories = [],
   selectedColors = [], 
@@ -93,7 +94,12 @@ export default function ProductGrid({
 
   // 2. Color Filter
   if (selectedColors.length > 0) {
-    filtered = filtered.filter(p => selectedColors.includes(p.color));
+    const normalizedSelected = selectedColors.map(c => c.toLowerCase().trim());
+    filtered = filtered.filter(p => 
+      p.colors && Array.isArray(p.colors) && p.colors.some(c => 
+        normalizedSelected.includes(c.name.toLowerCase().trim())
+      )
+    );
   }
 
   // 3. Price Filter
@@ -116,6 +122,27 @@ export default function ProductGrid({
   if (sortBy === 'Price: Low to High') filtered.sort((a, b) => parseFloat(String(a.price).replace(/[^\d.]/g, '')) - parseFloat(String(b.price).replace(/[^\d.]/g, '')));
   if (sortBy === 'Price: High to Low') filtered.sort((a, b) => parseFloat(String(b.price).replace(/[^\d.]/g, '')) - parseFloat(String(a.price).replace(/[^\d.]/g, '')));
   if (sortBy === 'Best Rated') filtered.sort((a, b) => (b.stars || 0) - (a.stars || 0));
+
+
+  useEffect(() => {
+    if (!base || base.length === 0) return;
+    const colorsMap = new Map();
+    base.forEach(p => {
+      if (p.colors && Array.isArray(p.colors)) {
+        p.colors.forEach(c => {
+          if (c.name && c.hex) {
+            const normalizedName = c.name.toLowerCase().trim();
+            // We keep the first occurrence's display name and hex
+            if (!colorsMap.has(normalizedName)) {
+              colorsMap.set(normalizedName, { displayName: c.name.trim(), hex: c.hex });
+            }
+          }
+        });
+      }
+    });
+    const uniqueColors = Array.from(colorsMap.values()).map(c => ({ name: c.displayName, hex: c.hex }));
+    onColorsUpdate(uniqueColors);
+  }, [base, onColorsUpdate]);
 
   useEffect(() => {
     onCountUpdate(filtered.length);

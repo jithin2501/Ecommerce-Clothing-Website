@@ -146,6 +146,9 @@ const upsertProductDetail = async (req, res) => {
       { upsert: true, new: true, runValidators: true }
     );
 
+    // Sync colors back to Product model for fast filtering
+    await Product.findByIdAndUpdate(productId, { colors });
+
     res.json({ success: true, data: detail });
   } catch (err) {
     console.error('upsertProductDetail error:', err.message);

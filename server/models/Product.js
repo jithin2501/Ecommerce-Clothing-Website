@@ -14,7 +14,10 @@ const productSchema = new mongoose.Schema(
       required: true 
     },
     age:         { type: String, required: true },
-    color:       { type: String, default: '' },
+    colors:      {
+      type: [{ name: String, hex: String, _id: false }],
+      default: []
+    },
     img:         { type: String, required: true },
     badge:       { type: String, default: null },
     stars:       { type: Number, default: 0 },

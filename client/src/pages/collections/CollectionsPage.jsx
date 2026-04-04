@@ -30,6 +30,7 @@ export default function CollectionsPage() {
   const [priceMin, setPriceMin] = useState(MIN_PRICE);
   const [priceMax, setPriceMax] = useState(MAX_PRICE);
   const [selectedRatings, setSelectedRatings] = useState([]);
+  const [availableColors, setAvailableColors] = useState([]);
   const [sortBy, setSortBy] = useState('Newest Arrivals');
   const [productCount, setProductCount] = useState(0);
 
@@ -73,6 +74,7 @@ export default function CollectionsPage() {
         <div className="agp-layout" style={{ marginTop: '10px', marginBottom: '60px' }}>
           <FilterSidebar
             selectedColors={selectedColors} setSelectedColors={setSelectedColors}
+            availableColors={availableColors}
             selectedCategories={selectedCategories} setSelectedCategories={setSelectedCategories}
             selectedSubcategories={selectedSubcategories} setSelectedSubcategories={setSelectedSubcategories}
             selectedAgeGroups={selectedAgeGroups} setSelectedAgeGroups={setSelectedAgeGroups}
@@ -106,6 +108,7 @@ export default function CollectionsPage() {
               selectedRatings={selectedRatings}
               sortBy={sortBy}
               onCountUpdate={setProductCount}
+              onColorsUpdate={setAvailableColors}
             />
           </div>
         </div>

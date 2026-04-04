@@ -56,7 +56,6 @@ const EMPTY_FORM = {
   price: '', 
   oldPrice: '', 
   ageGroup: [], 
-  color: '', 
   badge: '' 
 };
 
@@ -117,7 +116,6 @@ export default function ProductManagement() {
       price: p.price,
       oldPrice: p.oldPrice || '', 
       ageGroup: Array.isArray(p.ageGroup) ? p.ageGroup : [p.ageGroup],
-      color: p.color || '', 
       badge: p.badge || '',
     });
     setPreview(p.img);

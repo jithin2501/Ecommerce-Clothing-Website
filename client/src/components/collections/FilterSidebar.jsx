@@ -1,17 +1,5 @@
 import '../../styles/collections/FilterSidebar.css';
 
-const COLORS = [
-  { name: 'blue',      hex: '#4A90D9' },
-  { name: 'red',       hex: '#E05A4E' },
-  { name: 'gray',      hex: '#9B9B9B' },
-  { name: 'orange',    hex: '#E8943A' },
-  { name: 'navy',      hex: '#4A5568' },
-  { name: 'brown',     hex: '#C17B5C' },
-  { name: 'black',     hex: '#1A1A1A' },
-  { name: 'darkgreen', hex: '#2D5A3D' },
-  { name: 'charcoal',  hex: '#4A4A4A' },
-];
-
 const RATINGS = [5, 4, 3, 2, 1];
 
 const CATEGORIES = [
@@ -88,6 +76,7 @@ function Chevron({ open }) {
 
 export default function FilterSidebar({
   selectedColors = [],      setSelectedColors = () => {},
+  availableColors = [],
   selectedCategories = [],  setSelectedCategories = () => {},
   selectedSubcategories = [], setSelectedSubcategories = () => {},
   selectedAgeGroups = [],    setSelectedAgeGroups = () => {},
@@ -147,7 +136,7 @@ export default function FilterSidebar({
         </div>
         {open.color && (
           <div className="filter-colors">
-            {COLORS.map(c => (
+            {availableColors.map(c => (
               <button key={c.name}
                 className={"color-dot" + (selectedColors.includes(c.name) ? ' active' : '')}
                 style={{ backgroundColor: c.hex }}
