@@ -5,13 +5,13 @@ import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 const INDIAN_STATES = [
-  'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh',
-  'Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka',
-  'Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram',
-  'Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana',
-  'Tripura','Uttar Pradesh','Uttarakhand','West Bengal',
-  'Andaman and Nicobar Islands','Chandigarh','Dadra and Nagar Haveli and Daman and Diu',
-  'Delhi','Jammu and Kashmir','Ladakh','Lakshadweep','Puducherry'
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
+  'Goa', 'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka',
+  'Kerala', 'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram',
+  'Nagaland', 'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana',
+  'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+  'Andaman and Nicobar Islands', 'Chandigarh', 'Dadra and Nagar Haveli and Daman and Diu',
+  'Delhi', 'Jammu and Kashmir', 'Ladakh', 'Lakshadweep', 'Puducherry'
 ];
 
 const emptyForm = {
@@ -19,18 +19,35 @@ const emptyForm = {
   address: '', city: '', state: '', landmark: '', altPhone: '', type: '', isDefault: false
 };
 
+/* ─────────────────────────────────────────────────────────────────
+   Broadcast helper — called after every address mutation so that
+   ProductInfo, AddressSidebar, and any cart page can react live.
+
+   Any component that cares listens for:
+     window.addEventListener('sumathi_addresses_changed', handler)
+   and should also listen for the native 'storage' event for
+   cross-tab sync.
+───────────────────────────────────────────────────────────────── */
+function broadcastAddressChange(updatedAddresses, deletedId = null) {
+  window.dispatchEvent(
+    new CustomEvent('sumathi_addresses_changed', {
+      detail: { addresses: updatedAddresses, deletedId }
+    })
+  );
+}
+
 export default function ManageAddresses() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
-  const [activeNav, setActiveNav]       = useState('account-settings');
+  const [activeNav, setActiveNav] = useState('account-settings');
   const [activeSubNav, setActiveSubNav] = useState('address');
-  const [form, setForm]                 = useState(emptyForm);
-  const [errors, setErrors]             = useState({});
-  const [showForm, setShowForm]         = useState(false); // hidden by default
-  const [addresses, setAddresses_]      = useState([]);
-  const [loading, setLoading]           = useState(true);
-  const [userUid, setUserUid]           = useState(null);
-  const [saved, setSaved]       = useState(false);
+  const [form, setForm] = useState(emptyForm);
+  const [errors, setErrors] = useState({});
+  const [showForm, setShowForm] = useState(false);
+  const [addresses, setAddresses_] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [userUid, setUserUid] = useState(null);
+  const [saved, setSaved] = useState(false);
   const [menuOpen, setMenuOpen] = useState(null);
   const [editingId, setEditingId] = useState(null);
 
@@ -41,9 +58,7 @@ export default function ManageAddresses() {
         try {
           const res = await fetch(`/api/client-auth/addresses/${user.uid}`);
           const data = await res.json();
-          if (data.success) {
-            setAddresses_(data.addresses || []);
-          }
+          if (data.success) setAddresses_(data.addresses || []);
         } catch (err) {
           console.error("Failed to fetch addresses", err);
         }
@@ -75,14 +90,14 @@ export default function ManageAddresses() {
 
   const validate = () => {
     const e = {};
-    if (!form.fullName.trim())          e.fullName = 'Required';
-    if (!/^\d{10}$/.test(form.mobile))  e.mobile   = '10-digit number required';
-    if (!/^\d{6}$/.test(form.pincode))  e.pincode  = '6-digit pincode required';
-    if (!form.locality.trim())          e.locality  = 'Required';
-    if (!form.address.trim())           e.address   = 'Required';
-    if (!form.city.trim())              e.city      = 'Required';
-    if (!form.state)                    e.state     = 'Select a state';
-    if (!form.type)                     e.type      = 'Select address type';
+    if (!form.fullName.trim()) e.fullName = 'Required';
+    if (!/^\d{10}$/.test(form.mobile)) e.mobile = '10-digit number required';
+    if (!/^\d{6}$/.test(form.pincode)) e.pincode = '6-digit pincode required';
+    if (!form.locality.trim()) e.locality = 'Required';
+    if (!form.address.trim()) e.address = 'Required';
+    if (!form.city.trim()) e.city = 'Required';
+    if (!form.state) e.state = 'Select a state';
+    if (!form.type) e.type = 'Select address type';
     return e;
   };
 
@@ -102,38 +117,58 @@ export default function ManageAddresses() {
       locality: form.locality, address: form.address, city: form.city, state: form.state
     };
 
+    let updatedAddresses = [];
+
     if (userUid) {
       if (editingId !== null) {
         const res = await fetch(`/api/client-auth/addresses/${userUid}/${editingId}`, {
-          method: 'PUT', headers: {'Content-Type': 'application/json'},
+          method: 'PUT', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newAddrPart)
         });
         const data = await res.json();
-        if (data.success) setAddresses_(data.addresses);
+        if (data.success) {
+          updatedAddresses = data.addresses;
+          setAddresses_(updatedAddresses);
+
+          // If this edited address is the active one, update it in localStorage too
+          try {
+            const activeStr = localStorage.getItem('sumathi_active_address');
+            if (activeStr) {
+              const active = JSON.parse(activeStr);
+              if (String(active.id || active._id) === String(editingId)) {
+                const updated = updatedAddresses.find(a => String(a.id || a._id) === String(editingId));
+                if (updated) localStorage.setItem('sumathi_active_address', JSON.stringify(updated));
+              }
+            }
+          } catch { }
+        }
       } else {
         const payload = { ...newAddrPart, id: Date.now().toString() };
         const res = await fetch(`/api/client-auth/addresses/${userUid}`, {
-          method: 'POST', headers: {'Content-Type': 'application/json'},
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
         const data = await res.json();
-        if (data.success) setAddresses_(data.addresses);
+        if (data.success) {
+          updatedAddresses = data.addresses;
+          setAddresses_(updatedAddresses);
+        }
       }
     } else {
       // Guest local storage fallback
       let curr = addresses;
-      if (newAddrPart.isDefault) {
-        curr = curr.map(a => ({ ...a, isDefault: false }));
-      }
+      if (newAddrPart.isDefault) curr = curr.map(a => ({ ...a, isDefault: false }));
       if (editingId !== null) {
         curr = curr.map(x => x.id === editingId ? { ...x, ...newAddrPart } : x);
       } else {
         curr = [...curr, { ...newAddrPart, id: Date.now().toString() }];
       }
       setAddresses_(curr);
-      try { localStorage.setItem('sumathi_addresses', JSON.stringify(curr)); } catch {}
+      updatedAddresses = curr;
+      try { localStorage.setItem('sumathi_addresses', JSON.stringify(curr)); } catch { }
     }
 
+    broadcastAddressChange(updatedAddresses);
     setForm(emptyForm);
     setErrors({});
     setEditingId(null);
@@ -163,26 +198,46 @@ export default function ManageAddresses() {
   };
 
   const handleDelete = async (id) => {
-    // Synchronize delete: if this is the active delivery address, wipe it
-    try {
-      const activeStr = localStorage.getItem('sumathi_active_address');
-      if (activeStr) {
-        const active = JSON.parse(activeStr);
-        if (String(active.id || active._id) === String(id)) {
-          localStorage.removeItem('sumathi_active_address');
-        }
-      }
-    } catch (err) {}
+    let updatedAddresses = [];
 
+    // ── 1. Clear from localStorage if it was the active/selected delivery address ──
+    // Two keys are used across pages: product detail page uses 'sumathi_active_address',
+    // cart page uses 'sumathi_selected_address'. Clear both if they point to this address.
+    const KEYS_TO_CHECK = ['sumathi_active_address', 'sumathi_selected_address'];
+    for (const key of KEYS_TO_CHECK) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (raw) {
+          const stored = JSON.parse(raw);
+          if (String(stored.id || stored._id) === String(id)) {
+            localStorage.removeItem(key);
+          }
+        }
+      } catch { }
+    }
+
+    // ── 2. Delete from server or local guest storage ──
     if (userUid) {
       const res = await fetch(`/api/client-auth/addresses/${userUid}/${id}`, { method: 'DELETE' });
       const data = await res.json();
-      if (data.success) setAddresses_(data.addresses);
+      if (data.success) {
+        updatedAddresses = data.addresses;
+        setAddresses_(updatedAddresses);
+
+        // If the deleted address was the default, also auto-promote the
+        // first remaining address as the new default (optional UX choice).
+        // We do NOT auto-select it as the active address — we intentionally
+        // leave selectedAddress blank so the user must pick a new one.
+      }
     } else {
-      const filtered = addresses.filter(x => x.id !== id);
-      setAddresses_(filtered);
-      try { localStorage.setItem('sumathi_addresses', JSON.stringify(filtered)); } catch {}
+      updatedAddresses = addresses.filter(x => x.id !== id);
+      setAddresses_(updatedAddresses);
+      try { localStorage.setItem('sumathi_addresses', JSON.stringify(updatedAddresses)); } catch { }
     }
+
+    // ── 3. Broadcast so ProductInfo / AddressSidebar / cart pages clear stale state ──
+    broadcastAddressChange(updatedAddresses, id);
+
     setMenuOpen(null);
     if (editingId === id) { setEditingId(null); setForm(emptyForm); setShowForm(false); }
   };
@@ -322,7 +377,7 @@ export default function ManageAddresses() {
                   </div>
                   {errors.type && <span className="ma-error">{errors.type}</span>}
                 </div>
-                
+
                 <div className="ma-field ma-field-full" style={{ marginTop: '15px', display: 'flex', alignItems: 'center', gap: '10px', flexDirection: 'row' }}>
                   <input type="checkbox" checked={form.isDefault || false} onChange={e => handleChange('isDefault', e.target.checked)} style={{ width: '16px', height: '16px', cursor: 'pointer', margin: 0 }} />
                   <label style={{ margin: 0, cursor: 'pointer', paddingTop: '2px' }} onClick={() => handleChange('isDefault', !form.isDefault)}>MAKE THIS MY DEFAULT ADDRESS</label>

@@ -16,6 +16,10 @@ const API = '/api';
 const FREE_SHIPPING_THRESHOLD = 136;
 const GIFT_WRAP_COST = 6;
 
+// Keys used to persist the selected delivery address
+const ACTIVE_KEY = 'sumathi_active_address';   // set by product detail page
+const SELECTED_KEY = 'sumathi_selected_address';  // set by cart page
+
 export default function CartPage() {
   const { cartItems, updateQty, removeItem, subtotal } = useCart();
   const [giftWrapping, setGiftWrapping] = useState(false);
@@ -23,25 +27,31 @@ export default function CartPage() {
   const [userInfo, setUserInfo] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
 
+  /* ── Save selection to localStorage and state ── */
   const handleSelectAddress = (addr) => {
     setSelectedAddress(addr);
-    localStorage.setItem('sumathi_selected_address', JSON.stringify(addr));
+    localStorage.setItem(SELECTED_KEY, JSON.stringify(addr));
+    localStorage.setItem(ACTIVE_KEY, JSON.stringify(addr)); // keep both keys in sync
   };
 
+  /* ── Load address on mount / auth change ── */
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
-      // Priority 1: Check localStorage for a manual selection made in this session
-      const savedSelection = localStorage.getItem('sumathi_selected_address');
+      // Priority 1: a manual selection made in this session
+      const savedSelection =
+        localStorage.getItem(SELECTED_KEY) ||
+        localStorage.getItem(ACTIVE_KEY);
+
       if (savedSelection) {
         try {
           setSelectedAddress(JSON.parse(savedSelection));
           if (user) {
-             const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
-             const data = await res.json();
-             if (data.success) setUserInfo(data.user);
+            const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
+            const data = await res.json();
+            if (data.success) setUserInfo(data.user);
           }
           return;
-        } catch (e) {}
+        } catch { }
       }
 
       if (user) {
@@ -51,23 +61,80 @@ export default function CartPage() {
           if (data.success && data.addresses) {
             setUserInfo(data.user);
             const defAddr = data.addresses.find(a => a.isDefault);
-            if (defAddr) setSelectedAddress(defAddr);
+            if (defAddr) {
+              setSelectedAddress(defAddr);
+              localStorage.setItem(SELECTED_KEY, JSON.stringify(defAddr));
+              localStorage.setItem(ACTIVE_KEY, JSON.stringify(defAddr));
+            }
           }
-        } catch (e) {}
+        } catch { }
       } else {
         try {
           const saved = JSON.parse(localStorage.getItem('sumathi_addresses') || '[]');
           const defAddr = saved.find(a => a.isDefault);
-          if (defAddr) setSelectedAddress(defAddr);
-        } catch (e) {}
+          if (defAddr) {
+            setSelectedAddress(defAddr);
+            localStorage.setItem(SELECTED_KEY, JSON.stringify(defAddr));
+            localStorage.setItem(ACTIVE_KEY, JSON.stringify(defAddr));
+          }
+        } catch { }
       }
     });
     return () => unsub();
   }, []);
 
+  /* ── Live sync: clear selected address if it was deleted ── */
   useEffect(() => {
-    // If returning from a product page via "You Might Also Love",
-    // scroll to that section instead of the top
+    const handleAddressChange = (e) => {
+      const { deletedId, addresses: updatedList } = e.detail || {};
+
+      if (!deletedId) return;
+
+      setSelectedAddress(prev => {
+        if (!prev) return null;
+        const prevId = String(prev.id || prev._id || '');
+        if (prevId && prevId === String(deletedId)) {
+          // The selected address was deleted — clear it everywhere
+          localStorage.removeItem(SELECTED_KEY);
+          localStorage.removeItem(ACTIVE_KEY);
+
+          // Auto-promote the default from the updated list (if any)
+          if (Array.isArray(updatedList) && updatedList.length > 0) {
+            const next = updatedList.find(a => a.isDefault) || null;
+            if (next) {
+              localStorage.setItem(SELECTED_KEY, JSON.stringify(next));
+              localStorage.setItem(ACTIVE_KEY, JSON.stringify(next));
+            }
+            return next;
+          }
+          return null;
+        }
+        return prev; // unaffected — keep as-is
+      });
+    };
+
+    // Same-tab broadcast from ManageAddresses
+    window.addEventListener('sumathi_addresses_changed', handleAddressChange);
+
+    // Cross-tab: native storage event
+    const handleStorageEvent = (e) => {
+      if (
+        (e.key === SELECTED_KEY || e.key === ACTIVE_KEY) &&
+        e.newValue === null
+      ) {
+        setSelectedAddress(null);
+      }
+    };
+    window.addEventListener('storage', handleStorageEvent);
+
+    return () => {
+      window.removeEventListener('sumathi_addresses_changed', handleAddressChange);
+      window.removeEventListener('storage', handleStorageEvent);
+    };
+  }, []);
+
+  /* ── Scroll restoration ── */
+  useEffect(() => {
     if (sessionStorage.getItem('restoreCartScroll') === '1') {
       sessionStorage.removeItem('restoreCartScroll');
       let attempts = 0;
@@ -91,10 +158,9 @@ export default function CartPage() {
 
   if (cartItems.length === 0) return <EmptyCart />;
 
-  const shipping  = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
-  const giftCost  = giftWrapping ? GIFT_WRAP_COST : 0;
-  const total     = subtotal + shipping + giftCost;
-  const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
+  const giftCost = giftWrapping ? GIFT_WRAP_COST : 0;
+  const total = subtotal + shipping + giftCost;
 
   return (
     <div className="cp-page">
@@ -107,9 +173,9 @@ export default function CartPage() {
           <span className="cp-count">({cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'})</span>
         </h1>
 
-
         <div className="cp-grid">
           <div className="cp-left-col">
+
             {/* ── Delivery Address Bar ── */}
             <div className="cp-addr-bar">
               <div className="cp-addr-bar-left">
@@ -129,7 +195,10 @@ export default function CartPage() {
                   )}
                 </div>
               </div>
-              <button className="cp-addr-change-btn-link" onClick={() => setIsSidebarOpen(true)}>
+              <button
+                className="cp-addr-change-btn-link"
+                onClick={() => setIsSidebarOpen(true)}
+              >
                 {selectedAddress ? 'CHANGE' : 'ADD NEW'}
               </button>
             </div>
@@ -149,20 +218,20 @@ export default function CartPage() {
             giftCost={giftCost}
             total={total}
             user={auth.currentUser ? {
-                uid: auth.currentUser.uid,
-                name: auth.currentUser.displayName || userInfo?.name,
-                email: auth.currentUser.email || userInfo?.email,
-                phone: auth.currentUser.phoneNumber || userInfo?.phone
+              uid: auth.currentUser.uid,
+              name: auth.currentUser.displayName || userInfo?.name,
+              email: auth.currentUser.email || userInfo?.email,
+              phone: auth.currentUser.phoneNumber || userInfo?.phone,
             } : null}
             cartItems={cartItems}
             selectedAddress={selectedAddress}
           />
         </div>
 
-        <AddressSidebar 
-            isOpen={isSidebarOpen} 
-            onClose={() => setIsSidebarOpen(false)} 
-            onSelectAddress={handleSelectAddress} 
+        <AddressSidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          onSelectAddress={handleSelectAddress}
         />
 
         <CartYouMightAlsoLike />
