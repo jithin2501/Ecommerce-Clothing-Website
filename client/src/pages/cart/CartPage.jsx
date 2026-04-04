@@ -107,25 +107,6 @@ export default function CartPage() {
           <span className="cp-count">({cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'})</span>
         </h1>
 
-        <div className="cp-free-bar">
-          <div className="cp-free-bar-icon">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="1" y="3" width="15" height="13"/>
-              <path d="M16 8h4l3 5v3h-7V8z"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
-            </svg>
-            Free Shipping Status
-          </div>
-          <div className="cp-free-bar-track">
-            <div className="cp-free-bar-fill" style={{ width: `${Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100)}%` }} />
-          </div>
-          <span className="cp-free-bar-label">
-            {remaining > 0
-              ? `Spend ₹${remaining.toFixed(2)} more for free shipping`
-              : '🎉 You have free shipping!'}
-          </span>
-        </div>
 
         <div className="cp-grid">
           <div className="cp-left-col">

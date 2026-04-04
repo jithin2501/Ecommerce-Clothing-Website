@@ -147,6 +147,59 @@
   opacity: 1 !important;
 }
 
+
+/* ── Pagination ── */
+.pg-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.pg-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
+  padding-top: 30px;
+  border-top: 1px solid #f1f5f9;
+  width: 100%;
+}
+
+.pg-pag-btn {
+  padding: 8px 18px;
+  border: 1.5px solid #111827;
+  background: white;
+  color: #111827;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 110px;
+}
+
+.pg-pag-btn:hover:not(:disabled) {
+  background: #111827;
+  color: white;
+}
+
+.pg-pag-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #94a3b8;
+  color: #94a3b8;
+}
+
+.pg-pag-info {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111827;
+  min-width: 60px;
+  text-align: center;
+}
+
 @media (max-width: 900px) {
   .pg-grid { grid-template-columns: repeat(2, 1fr); }
 }

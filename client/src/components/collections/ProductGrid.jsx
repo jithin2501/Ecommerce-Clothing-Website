@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useWishlist } from '../../context/WishlistContext';
 import '../../styles/collections/ProductGrid.css';
@@ -36,6 +36,23 @@ export default function ProductGrid({
 }) {
   const { toggleWishlist, isWishlisted } = useWishlist();
   const [apiProducts, setApiProducts] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const PAGE_SIZE = 15;
+  const gridTopRef = useRef(null);
+
+  // ── Reset page when filters change ──
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    selectedCategories, 
+    selectedSubcategories, 
+    selectedColors, 
+    selectedAgeGroups, 
+    priceMin, 
+    priceMax, 
+    selectedRatings, 
+    sortBy
+  ]);
 
   useEffect(() => {
     if (propProducts) return;
@@ -156,6 +173,19 @@ export default function ProductGrid({
     return <div className="pg-empty"><p>No products found.</p></div>;
   }
 
+  // ── Pagination Calculation ──
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const paginatedItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    if (gridTopRef.current) {
+        const navHeight = document.querySelector('nav')?.getBoundingClientRect().height || 80;
+        const top = gridTopRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 20;
+        window.scrollTo({ top, behavior: 'smooth' });
+    }
+  };
+
   const formatPrice = (price) => {
     if (typeof price === 'number') return `₹${price}`;
     return price;
@@ -169,38 +199,60 @@ export default function ProductGrid({
   };
 
   return (
-    <div className="pg-grid">
-      {filtered.map((product) => (
-        <Link
-          key={product._id || product.id}
-          to={`/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}`}
-          className="pg-card"
-        >
-          <div className="pg-img-wrap">
-            <img src={product.img} alt={product.name} />
-            {product.badge && (
-              <span className={getBadgeClass(product.badge)}>{product.badge}</span>
-            )}
-            {product.age && <span className="pg-age-badge">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
-            <button
-              className={`pg-wishlist ${isWishlisted(product._id || product.id) ? 'pg-wishlist--active' : ''}`}
-              aria-label="Wishlist"
-              onClick={(e) => { e.preventDefault(); toggleWishlist(product); }}
-            >
-              {isWishlisted(product._id || product.id) ? '♥' : '♡'}
-            </button>
-          </div>
-          <div className="pg-info">
-            <span className="pg-category">{(Array.isArray(product.category) ? product.category : [product.category])[0]}</span>
-            <div className="pg-name">{product.name}</div>
-            <Stars rating={product.stars || 0} reviews={product.reviews || 0} />
-            <div className="pg-price-row">
-              <span className="pg-price">{formatPrice(product.price)}</span>
-              {product.oldPrice && <span className="pg-old-price">{formatPrice(product.oldPrice)}</span>}
+    <div className="pg-container" ref={gridTopRef}>
+      <div className="pg-grid">
+        {paginatedItems.map((product) => (
+          <Link
+            key={product._id || product.id}
+            to={`/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}`}
+            className="pg-card"
+          >
+            <div className="pg-img-wrap">
+              <img src={product.img} alt={product.name} />
+              {product.badge && (
+                <span className={getBadgeClass(product.badge)}>{product.badge}</span>
+              )}
+              {product.age && <span className="pg-age-badge">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
+              <button
+                className={`pg-wishlist ${isWishlisted(product._id || product.id) ? 'pg-wishlist--active' : ''}`}
+                aria-label="Wishlist"
+                onClick={(e) => { e.preventDefault(); toggleWishlist(product); }}
+              >
+                {isWishlisted(product._id || product.id) ? '♥' : '♡'}
+              </button>
             </div>
-          </div>
-        </Link>
-      ))}
+            <div className="pg-info">
+              <span className="pg-category">{(Array.isArray(product.category) ? product.category : [product.category])[0]}</span>
+              <div className="pg-name">{product.name}</div>
+              <Stars rating={product.stars || 0} reviews={product.reviews || 0} />
+              <div className="pg-price-row">
+                <span className="pg-price">{formatPrice(product.price)}</span>
+                {product.oldPrice && <span className="pg-old-price">{formatPrice(product.oldPrice)}</span>}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      {totalPages > 1 && (
+        <div className="pg-pagination">
+          <button 
+            className="pg-pag-btn"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            Previous
+          </button>
+          <span className="pg-pag-info">{currentPage} / {totalPages}</span>
+          <button 
+            className="pg-pag-btn"
+            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }
