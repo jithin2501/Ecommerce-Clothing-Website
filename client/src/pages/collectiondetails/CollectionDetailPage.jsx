@@ -264,6 +264,7 @@ export default function CollectionDetailPage() {
               userInfo={userInfo}
               auth={auth}
               inventory={product?.inventory || {}}
+              stock={product?.stock ?? 0}
             />
             <ProductAccordion
               specifications={detail.specifications}
