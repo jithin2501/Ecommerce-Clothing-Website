@@ -61,7 +61,11 @@ function StatusBadge({ status, label }) {
 export default function MyOrders() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
-  const [loading, setLoading]           = useState(true);
+  const navigate = useNavigate();
+  const [search, setSearch]           = useState('');
+  const [query, setQuery]             = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading]         = useState(true);
 
   useEffect(() => {
     // Simple delay to ensure smooth transition
@@ -77,8 +81,6 @@ export default function MyOrders() {
       </div>
     );
   }
-
-  const navigate = useNavigate();
 
   const totalPages = 3;
 

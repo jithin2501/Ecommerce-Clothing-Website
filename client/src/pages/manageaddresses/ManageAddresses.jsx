@@ -30,6 +30,9 @@ export default function ManageAddresses() {
   const [addresses, setAddresses_]      = useState([]);
   const [loading, setLoading]           = useState(true);
   const [userUid, setUserUid]           = useState(null);
+  const [saved, setSaved]       = useState(false);
+  const [menuOpen, setMenuOpen] = useState(null);
+  const [editingId, setEditingId] = useState(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
@@ -47,8 +50,8 @@ export default function ManageAddresses() {
       } else {
         setUserUid(null);
         try {
-          const saved = localStorage.getItem('sumathi_addresses');
-          setAddresses_(saved ? JSON.parse(saved) : []);
+          const savedLocal = localStorage.getItem('sumathi_addresses');
+          setAddresses_(savedLocal ? JSON.parse(savedLocal) : []);
         } catch { setAddresses_([]); }
       }
       setLoading(false);
@@ -64,10 +67,6 @@ export default function ManageAddresses() {
       </div>
     );
   }
-
-  const [saved, setSaved]       = useState(false);
-  const [menuOpen, setMenuOpen] = useState(null);
-  const [editingId, setEditingId] = useState(null);
 
   const handleChange = (field, value) => {
     setForm(f => ({ ...f, [field]: value }));
