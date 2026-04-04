@@ -1,13 +1,49 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/sidebar/Sidebar.css';
 
-export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActiveSubNav }) {
+export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActiveSubNav, user }) {
   const navigate = useNavigate();
+  const [userData, setUserData] = useState(user || null);
+
+  useEffect(() => {
+    // If user is passed as prop, use it. 
+    // This allows instant updates from Parent (PersonInformation)
+    if (user) {
+      setUserData(user);
+      return;
+    }
+
+    // Otherwise, fetch independently (for pages like Wishlist/Addresses)
+    const unsub = onAuthStateChanged(auth, async (fbUser) => {
+      if (fbUser) {
+        try {
+          const res = await fetch(`/api/client-auth/profile/${fbUser.uid}`);
+          const data = await res.json();
+          if (data.success) {
+            setUserData(data.user);
+          }
+        } catch (err) {
+          console.error("Sidebar: Failed to fetch profile", err);
+        }
+      } else {
+        setUserData(null);
+      }
+    });
+
+    return () => unsub();
+  }, [user]);
 
   const handleSubNav = (key, path) => {
     setActiveSubNav(key);
     if (path) navigate(path);
   };
+
+  // Logic for display name and avatar
+  const displayName = userData?.name || userData?.phone || 'Guest';
+  const avatarUrl = userData?.photo || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=0D8ABC&color=fff`;
 
   return (
     <aside className="sidebar">
@@ -16,14 +52,14 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
       <div className="profile-header">
         <div className="avatar-container">
           <img
-            src="https://ui-avatars.com/api/?name=Alex+Johnston&background=0D8ABC&color=fff"
+            src={avatarUrl}
             alt="Profile"
             className="avatar"
           />
           <div className="status-dot" />
         </div>
         <div className="welcome-text">Welcome back,</div>
-        <div className="user-name">Alex Johnston</div>
+        <div className="user-name">{displayName}</div>
       </div>
 
       {/* My Orders */}

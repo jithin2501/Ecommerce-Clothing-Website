@@ -151,6 +151,7 @@ export default function PersonInformation() {
           setActiveNav={setActiveNav}
           activeSubNav={activeSubNav}
           setActiveSubNav={setActiveSubNav}
+          user={dbUser}
         />
 
         <main className="main-content">
