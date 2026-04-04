@@ -19,7 +19,16 @@ const toAgeGroup = (age) => {
   return 'junior';
 };
 
-export default function ProductGrid({ ageGroup, products: propProducts, selectedCategories = [], selectedColors = [], sustainableOnly = false, sortBy = 'Newest Arrivals' }) {
+export default function ProductGrid({ 
+  ageGroup, 
+  products: propProducts, 
+  onCountUpdate = () => {},
+  selectedCategories = [], 
+  selectedColors = [], 
+  selectedAgeGroups = [],
+  sustainableOnly = false, 
+  sortBy = 'Newest Arrivals' 
+}) {
   const { toggleWishlist, isWishlisted } = useWishlist();
   const [apiProducts, setApiProducts] = useState(null);
 
@@ -27,8 +36,17 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
     if (propProducts) return;
     const fetchFromAPI = async () => {
       try {
-        const url  = ageGroup ? `/api/products?ageGroup=${ageGroup}` : '/api/products';
-        const res  = await fetch(url);
+        let url = '/api/products';
+        const params = new URLSearchParams();
+        
+        if (ageGroup) {
+          params.append('ageGroup', ageGroup);
+        } else if (selectedAgeGroups.length > 0) {
+          params.append('ageGroup', selectedAgeGroups.join(','));
+        }
+        
+        const finalUrl = params.toString() ? `${url}?${params.toString()}` : url;
+        const res = await fetch(finalUrl);
         const data = await res.json();
         if (data.success && data.data.length > 0) {
           setApiProducts(data.data);
@@ -40,7 +58,7 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
       }
     };
     fetchFromAPI();
-  }, [ageGroup, propProducts]);
+  }, [ageGroup, selectedAgeGroups, propProducts]);
 
   let base;
   if (propProducts) {
@@ -58,12 +76,16 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
       return pCats.some(c => selectedCategories.includes(c));
     });
   }
-  if (selectedColors.length > 0)     filtered = filtered.filter(p => selectedColors.includes(p.color));
-  if (sustainableOnly)               filtered = filtered.filter(p => p.sustainability);
+  if (selectedColors.length > 0) filtered = filtered.filter(p => selectedColors.includes(p.color));
+  if (sustainableOnly) filtered = filtered.filter(p => p.sustainability);
 
-  if (sortBy === 'Price: Low to High') filtered.sort((a, b) => parseFloat(String(a.price).replace(/[^\d.]/g,'')) - parseFloat(String(b.price).replace(/[^\d.]/g,'')));
-  if (sortBy === 'Price: High to Low') filtered.sort((a, b) => parseFloat(String(b.price).replace(/[^\d.]/g,'')) - parseFloat(String(a.price).replace(/[^\d.]/g,'')));
-  if (sortBy === 'Best Rated')         filtered.sort((a, b) => (b.stars || 0) - (a.stars || 0));
+  if (sortBy === 'Price: Low to High') filtered.sort((a, b) => parseFloat(String(a.price).replace(/[^\d.]/g, '')) - parseFloat(String(b.price).replace(/[^\d.]/g, '')));
+  if (sortBy === 'Price: High to Low') filtered.sort((a, b) => parseFloat(String(b.price).replace(/[^\d.]/g, '')) - parseFloat(String(a.price).replace(/[^\d.]/g, '')));
+  if (sortBy === 'Best Rated') filtered.sort((a, b) => (b.stars || 0) - (a.stars || 0));
+
+  useEffect(() => {
+    onCountUpdate(filtered.length);
+  }, [filtered.length, onCountUpdate]);
 
   if (apiProducts === null && !propProducts) {
     return <div className="pg-loading"><p>Loading products...</p></div>;
@@ -80,8 +102,8 @@ export default function ProductGrid({ ageGroup, products: propProducts, selected
 
   const getBadgeClass = (badge) => {
     if (badge === 'Bestselling') return 'pg-badge pg-badge-best';
-    if (badge === 'Sale')        return 'pg-badge pg-badge-sale';
-    if (badge === 'New')         return 'pg-badge pg-badge-new';
+    if (badge === 'Sale') return 'pg-badge pg-badge-sale';
+    if (badge === 'New') return 'pg-badge pg-badge-new';
     return 'pg-badge';
   };
 

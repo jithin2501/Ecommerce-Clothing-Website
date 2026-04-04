@@ -80,3 +80,85 @@ img { max-width: 100%; display: block; }
 @keyframes accountSpinner {
   to { transform: rotate(360deg); }
 }
+
+/* ─────────────────────────────────────────────────────────
+   COMMON PRODUCT GALLERY LAYOUT (Collections & Age Groups)
+   ───────────────────────────────────────────────────────── */
+.agp-layout {
+  display: flex;
+  gap: 3rem;
+  padding: 0 0 5rem;
+  align-items: flex-start;
+}
+
+.agp-right {
+  flex: 1;
+  min-width: 0;
+}
+
+.agp-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #E8E8E8;
+  min-height: 40px;
+}
+
+.agp-gallery-title {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.agp-sort {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: var(--slate-gray);
+}
+
+.agp-sort select {
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent-clay);
+  background: none;
+  cursor: pointer;
+  outline: none;
+  font-family: 'Inter', sans-serif;
+}
+
+.page-breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.breadcrumb-link {
+  color: #9ca3af;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.breadcrumb-link:hover {
+  color: var(--accent-clay, #c07a55);
+}
+
+.breadcrumb-sep {
+  color: #9ca3af;
+  margin: 0 4px;
+}
+
+.breadcrumb-current {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .agp-layout {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}

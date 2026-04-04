@@ -33,7 +33,7 @@ export default function FabricBasedCategories() {
           <div
             key={item.label}
             className="catpage-card"
-            onClick={() => navigate('/collections', { state: { subcategory: item.label } })}
+            onClick={() => navigate('/collections/age-selection', { state: { category: 'Fabric-Based Categories', subcategory: item.label } })}
           >
             <div className="catpage-img-wrap">
               <img src={item.img} alt={item.label} />

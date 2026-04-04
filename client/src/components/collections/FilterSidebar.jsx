@@ -19,6 +19,15 @@ const CATEGORIES = [
   'Indo-Western Outfits', 'Traditional Outfits', 'Party Wear', 'Boys Collection',
 ];
 
+const AGE_GROUPS = [
+  { slug: 'newborn',      label: 'Newborn (0-6M)' },
+  { slug: 'infant',       label: 'Infant (6-12M)' },
+  { slug: 'toddler',      label: 'Toddler (1-3Y)' },
+  { slug: 'little-girls', label: 'Little Girls (3-6Y)' },
+  { slug: 'kids',         label: 'Kids (6-9Y)' },
+  { slug: 'pre-teen',     label: 'Pre-Teen (9-12Y)' },
+];
+
 const MIN_PRICE = 500;
 const MAX_PRICE = 3000;
 
@@ -47,12 +56,13 @@ function Chevron({ open }) {
 }
 
 export default function FilterSidebar({
-  selectedColors = [],     setSelectedColors = () => {},
-  selectedCategories = [], setSelectedCategories = () => {},
-  priceMin = MIN_PRICE,    setPriceMin = () => {},
-  priceMax = MAX_PRICE,    setPriceMax = () => {},
-  selectedRatings = [],    setSelectedRatings = () => {},
-  open = {},               setOpen = () => {},
+  selectedColors = [],      setSelectedColors = () => {},
+  selectedCategories = [],  setSelectedCategories = () => {},
+  selectedAgeGroups = [],    setSelectedAgeGroups = () => {},
+  priceMin = MIN_PRICE,     setPriceMin = () => {},
+  priceMax = MAX_PRICE,     setPriceMax = () => {},
+  selectedRatings = [],     setSelectedRatings = () => {},
+  open = {},                setOpen = () => {},
   onReset = () => {},
 }) {
   const toggleSection = (k) => setOpen(p => ({ ...p, [k]: !p[k] }));
@@ -71,7 +81,31 @@ export default function FilterSidebar({
           </svg>
           Filter
         </div>
-        <button className="filter-reset" onClick={onReset}>Reset</button>
+        <button className="filter-reset" onClick={() => { 
+          onReset();
+          setSelectedAgeGroups([]); 
+        }}>Reset</button>
+      </div>
+
+      {/* Age Group */}
+      <div className="filter-group">
+        <div className="filter-group-header" onClick={() => toggleSection('age')}>
+          <span>Age Group</span><Chevron open={open.age} />
+        </div>
+        {open.age && (
+          <ul className="filter-list">
+            {AGE_GROUPS.map(g => (
+              <li key={g.slug}>
+                <label className="filter-checkbox-label">
+                  <input type="checkbox" checked={selectedAgeGroups.includes(g.slug)}
+                    onChange={() => toggleItem(g.slug, selectedAgeGroups, setSelectedAgeGroups)}
+                    className="filter-checkbox" />
+                  <span className={"filter-label-text" + (selectedAgeGroups.includes(g.slug) ? ' active' : '')}>{g.label}</span>
+                </label>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
 
       {/* Color */}

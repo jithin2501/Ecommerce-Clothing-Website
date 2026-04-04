@@ -1,14 +1,17 @@
 .filter-sidebar {
   width: 220px;
   flex-shrink: 0;
-  padding-top: 0.5rem;
+  padding-top: 0;
 }
 
 .filter-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.5rem;
+  align-items: flex-end;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #E8E8E8;
+  min-height: 40px;
 }
 
 .filter-title {
@@ -21,7 +24,7 @@
 }
 
 .filter-reset {
-  font-size: 0.75rem;
+  font-size: 0.95rem;
   color: var(--accent-clay, #C17B5C);
   background: none;
   border: none;
@@ -35,7 +38,6 @@
 
 /* Group */
 .filter-group {
-  border-top: 1px solid #E8E8E8;
   padding: 1rem 0;
 }
 
