@@ -773,31 +773,103 @@
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .cm-page {
-    padding: 16px;
+    padding: 0.5rem 0.2rem;
   }
 
   .cm-stats-row {
-    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 1.5rem;
   }
 
   .cm-stat-card {
-    padding: 14px;
-    min-width: 90px;
+    padding: 12px;
+    min-width: 0;
+    flex: none;
   }
 
   .cm-stat-value {
     font-size: 20px;
   }
 
+  /* Toolbar Responsive */
+  .cm-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .cm-filter-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding: 4px;
+    gap: 6px;
+    justify-content: flex-start;
+  }
+
+  .cm-filter-btn {
+    flex-shrink: 0;
+    padding: 6px 14px;
+  }
+
+  .cm-search-box {
+    max-width: 100%;
+  }
+
+  .cm-date-filter {
+    width: 100%;
+  }
+
+  /* Table Horizontal Scroll */
+  .cm-table-wrap {
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    display: block;
+    border: 1px solid #f1f5f9;
+  }
+
+  .cm-table-wrap::-webkit-scrollbar {
+    height: 8px;
+    display: block;
+  }
+  .cm-table-wrap::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+  .cm-table-wrap::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+
+  .cm-table {
+    table-layout: auto; /* Reset fixed layout for scroll */
+    min-width: 800px; /* Space out columns */
+  }
+
+  .cm-table th, .cm-table td {
+    padding: 10px 14px;
+    white-space: nowrap;
+  }
+
+  /* Specific column hidden state reset for clarity */
   .cm-table th:nth-child(5),
   .cm-table td:nth-child(5),
   .cm-table th:nth-child(6),
   .cm-table td:nth-child(6) {
-    display: none;
+    display: table-cell; /* Show them back since we have horizontal scroll now */
   }
 
   .cm-drawer {
     width: 100vw;
+  }
+}
+
+@media (max-width: 480px) {
+  .cm-title {
+    font-size: 1.15rem;
   }
 }
 
