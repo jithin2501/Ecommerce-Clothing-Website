@@ -891,3 +891,114 @@
 .pm-feat-circle.pm-feat-disabled:hover {
   transform: none;
 }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 900px) {
+  .pm-page {
+    padding: 0.5rem 0.2rem;
+  }
+
+  .pm-form-card {
+    padding: 1.5rem 1.2rem;
+  }
+
+  .pm-form-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pm-img-col {
+    width: 100%;
+    max-width: 280px;
+    margin-bottom: 1rem;
+  }
+
+  .pm-img-upload {
+    min-height: 180px;
+  }
+
+  .pm-row {
+    grid-template-columns: 1fr; /* Stack Name, Category, Age side-by-side fields */
+    gap: 1rem;
+  }
+
+  .pm-fields {
+    width: 100% !important;
+    gap: 1rem;
+  }
+
+  /* Table Filters & Controls */
+  .pm-section-controls {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .pm-age-filters {
+    height: auto;
+    overflow-x: auto;
+    padding: 8px;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pm-filter-btn {
+    flex-shrink: 0;
+    padding: 8px 16px;
+  }
+
+  /* Table Row Spacing & Scrollbar */
+  /* Table Row Spacing & Scrollbar */
+  .pm-existing-card {
+    padding: 1.2rem 0.5rem; /* Reduced side padding so table is wider */
+  }
+
+  .pm-table-outer {
+    overflow-x: scroll !important; /* Force scrollbar */
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    box-shadow: none;
+    margin-top: 1rem;
+    display: block; 
+    border: 1px solid #e5e7eb;
+  }
+
+  .pm-table-outer::-webkit-scrollbar {
+    height: 10px !important; /* Thicker, more visible scrollbar */
+    display: block !important;
+  }
+  .pm-table-outer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  .pm-table-outer::-webkit-scrollbar-thumb {
+    background: #888; /* Darker, more visible thumb */
+    border-radius: 10px;
+  }
+
+  .pm-table {
+    min-width: 1400px; /* Detailed table needs space */
+  }
+
+
+
+  /* Form Buttons */
+  .pm-form-actions {
+    flex-direction: column-reverse;
+    gap: 0.8rem;
+  }
+
+  .pm-cancel-btn, .pm-save-btn {
+    width: 100%;
+    padding: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pm-title {
+    font-size: 1.1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .pm-form-title {
+    font-size: 0.95rem;
+  }
+}
