@@ -20,9 +20,9 @@ export default function MyReviews() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
   const navigate = useNavigate();
 
-  const [activeNav, setActiveNav]       = useState('mystuff');
+  const [activeNav, setActiveNav] = useState('mystuff');
   const [activeSubNav, setActiveSubNav] = useState('reviews');
-  const [loading, setLoading]           = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Simple delay to ensure smooth transition
@@ -54,8 +54,7 @@ export default function MyReviews() {
 
           {/* Mobile-only back button */}
           <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-            <span className="back-chevron">←</span>
-            <span>My Account</span>
+            <span className="back-chevron">&gt;</span>
           </button>
 
           {/* Empty State */}
@@ -84,7 +83,7 @@ export default function MyReviews() {
                   <div className="mr-product-info">
                     <p className="mr-product-name">{p.name}</p>
                     <div className="mr-stars">
-                      {[1,2,3,4,5].map(s => (
+                      {[1, 2, 3, 4, 5].map(s => (
                         <span key={s} className="mr-star">★</span>
                       ))}
                     </div>

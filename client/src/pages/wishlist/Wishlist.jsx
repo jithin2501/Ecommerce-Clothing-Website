@@ -19,9 +19,9 @@ export default function Wishlist() {
 
   const navigate = useNavigate();
   const { wishlist, removeFromWishlist } = useWishlist();
-  const [activeNav, setActiveNav]       = useState('mystuff');
+  const [activeNav, setActiveNav] = useState('mystuff');
   const [activeSubNav, setActiveSubNav] = useState('wishlist');
-  const [loading, setLoading]           = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Simple delay to ensure smooth transition and allow sidebar to load
@@ -53,8 +53,7 @@ export default function Wishlist() {
 
           {/* Mobile-only back button */}
           <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-            <span className="back-chevron">←</span>
-            <span>My Account</span>
+            <span className="back-chevron">&gt;</span>
           </button>
 
           {/* Header */}
@@ -91,32 +90,32 @@ export default function Wishlist() {
             <div className="wl-list">
               {wishlist.map(item => (
                 <div key={item.id} className="wl-card">
-                    <div 
-                      className="wl-card-inner" 
-                      onClick={() => navigate(`/collections/product/${item.productId || item.id}`)}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <img
-                        src={item.img}
-                        alt={item.name}
-                        className="wl-card-img"
-                      />
-                      <div className="wl-card-info">
-                        <div className="wl-card-name">{item.name}</div>
-                        <div className="wl-card-brand">
-                          <span className="wl-brand-dot" /> {item.category}
-                        </div>
-                        <div className="wl-card-pricing">
-                          <span className="wl-price">{item.price}</span>
-                          {item.oldPrice && (
-                            <span className="wl-old-price">{item.oldPrice}</span>
-                          )}
-                        </div>
+                  <div
+                    className="wl-card-inner"
+                    onClick={() => navigate(`/collections/product/${item.productId || item.id}`)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.name}
+                      className="wl-card-img"
+                    />
+                    <div className="wl-card-info">
+                      <div className="wl-card-name">{item.name}</div>
+                      <div className="wl-card-brand">
+                        <span className="wl-brand-dot" /> {item.category}
                       </div>
-                      <button className="wl-remove-btn" onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}>
-                        <img src="/images/wishlist/delete.png" alt="delete" className="wl-remove-icon" />
-                      </button>
+                      <div className="wl-card-pricing">
+                        <span className="wl-price">{item.price}</span>
+                        {item.oldPrice && (
+                          <span className="wl-old-price">{item.oldPrice}</span>
+                        )}
+                      </div>
                     </div>
+                    <button className="wl-remove-btn" onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}>
+                      <img src="/images/wishlist/delete.png" alt="delete" className="wl-remove-icon" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

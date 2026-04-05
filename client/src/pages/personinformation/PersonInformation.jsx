@@ -10,7 +10,7 @@ export default function PersonInformation() {
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
-  const [activeNav, setActiveNav]       = useState('account-settings');
+  const [activeNav, setActiveNav] = useState('account-settings');
   const [activeSubNav, setActiveSubNav] = useState('profile');
 
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -18,21 +18,21 @@ export default function PersonInformation() {
 
   // Personal Info
   const [editingPersonal, setEditingPersonal] = useState(false);
-  const [gender, setGender]       = useState('');
+  const [gender, setGender] = useState('');
   const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName]   = useState('');
+  const [lastName, setLastName] = useState('');
   const [tempPersonal, setTempPersonal] = useState({});
   const [savingPersonal, setSavingPersonal] = useState(false);
 
   // Email
   const [editingEmail, setEditingEmail] = useState(false);
-  const [email, setEmail]         = useState('');
+  const [email, setEmail] = useState('');
   const [tempEmail, setTempEmail] = useState('');
   const [savingEmail, setSavingEmail] = useState(false);
 
   // Mobile
   const [editingMobile, setEditingMobile] = useState(false);
-  const [mobile, setMobile]       = useState('');
+  const [mobile, setMobile] = useState('');
   const [tempMobile, setTempMobile] = useState('');
   const [savingMobile, setSavingMobile] = useState(false);
 
@@ -132,7 +132,7 @@ export default function PersonInformation() {
       if (!auth.currentUser) return;
       try {
         await fetch(`/api/client-auth/delete/${auth.currentUser.uid}`, { method: 'DELETE' });
-        try { await deleteFirebaseUser(auth.currentUser); } catch(e) { console.warn("Firebase user deletion required recent login.", e); }
+        try { await deleteFirebaseUser(auth.currentUser); } catch (e) { console.warn("Firebase user deletion required recent login.", e); }
         await signOut(auth);
         navigate('/');
       } catch (err) {
@@ -166,8 +166,7 @@ export default function PersonInformation() {
 
           {/* Mobile-only back button */}
           <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-            <span className="back-chevron">←</span>
-            <span>My Account</span>
+            <span className="back-chevron">&gt;</span>
           </button>
 
           {/* Header */}

@@ -275,8 +275,7 @@ export default function ManageAddresses() {
 
           {/* Mobile-only back button */}
           <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-            <span className="back-chevron">←</span>
-            <span>My Account</span>
+            <span className="back-chevron">&gt;</span>
           </button>
 
           <div className="ma-header">

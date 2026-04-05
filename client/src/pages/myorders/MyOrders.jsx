@@ -62,10 +62,10 @@ export default function MyOrders() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
   const navigate = useNavigate();
-  const [search, setSearch]           = useState('');
-  const [query, setQuery]             = useState('');
+  const [search, setSearch] = useState('');
+  const [query, setQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading]         = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Simple delay to ensure smooth transition
@@ -95,8 +95,7 @@ export default function MyOrders() {
 
         {/* Mobile-only back button */}
         <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-          <span className="back-chevron">←</span>
-          <span>My Account</span>
+          <span className="back-chevron">&gt;</span>
         </button>
 
         {/* Breadcrumb — using div instead of nav to avoid inheriting global nav { position: sticky } */}
