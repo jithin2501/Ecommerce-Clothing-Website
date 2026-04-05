@@ -240,13 +240,73 @@
 .sh-channel-sub   { font-size: 11px; color: #888; }
 
 /* Responsive */
-@media (max-width: 900px) {
-  .sh-container { flex-direction: column; }
-  .sh-categories { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 500px) {
-  .sh-categories { grid-template-columns: 1fr; }
-  .sh-channels   { grid-template-columns: 1fr; }
+@media (max-width: 768px) {
+  /* Hide the sidebar on sub-section pages */
+  .sh-page .sidebar {
+    display: none !important;
+  }
+
+  .sh-page {
+    padding: 0;
+    min-height: auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .sh-container {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .sh-main {
+    width: 94%;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
+    overflow: hidden;
+    padding: 20px 0 0; /* Add top padding for back button if needed, but hero is already there */
+  }
+
+  /* Show back button */
+  .mobile-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2874f0;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 12px;
+    width: fit-content;
+    padding: 4px 16px; /* give some left/right padding since main is 0 */
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+
+  .mobile-back-btn span.back-chevron {
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .sh-hero {
+    padding: 24px 20px;
+  }
+
+  .sh-hero-title { font-size: 1.25rem; }
+  .sh-body { padding: 20px 16px; }
+  .sh-order-card { padding: 12px; gap: 10px; }
+  .sh-order-img { width: 50px; height: 50px; }
+  .sh-order-id { font-size: 13px; }
+  .sh-need-help-btn { padding: 5px 12px; font-size: 11px; }
+
+  .sh-channels--two {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── ORDERS LIST ── */

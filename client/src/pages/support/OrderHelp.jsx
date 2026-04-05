@@ -26,6 +26,15 @@ export default function OrderHelp() {
 
         <main className="sh-main">
 
+          {/* Mobile-only back button */}
+          <button className="mobile-back-btn" onClick={() => navigate('/support')}>
+            <span className="back-chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </span>
+          </button>
+
           {/* Header */}
           <div className="sh-hero sh-hero--compact">
             <div className="sh-oh-breadcrumb">

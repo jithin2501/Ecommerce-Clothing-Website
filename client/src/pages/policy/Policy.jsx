@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/policy/policy.css';
@@ -286,6 +286,7 @@ const POLICY_META = {
 
 export default function Policy() {
   const { type } = useParams();
+  const navigate = useNavigate();
   const meta = POLICY_META[type] || POLICY_META.privacy;
 
   const [activeNav, setActiveNav] = useState('policy');
@@ -312,6 +313,16 @@ export default function Policy() {
         />
 
         <main className="policy-main">
+
+          {/* Mobile-only back button */}
+          <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+            <span className="back-chevron">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+            </span>
+          </button>
+
           <div className="policy-content-header">
             <h1>{meta.title}</h1>
             <p>{meta.subtitle}</p>
