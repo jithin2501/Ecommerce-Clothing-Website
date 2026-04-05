@@ -296,11 +296,16 @@
   }
 
   .delete-account-wrapper {
-    margin-top: 4px;
+    margin-top: 0;
   }
 
   .form-card {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
+  }
+
+  .form-grid {
+    margin-bottom: 0;
   }
 }
+
 
