@@ -83,10 +83,11 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
         </div>
         <div
           className={`nav-sub-item ${activeSubNav === 'profile' ? 'sub-active' : ''}`}
-          onClick={() => handleSubNav('profile', '/account')}
+          onClick={() => handleSubNav('profile', '/account?section=profile')}
         >
           Profile Information
         </div>
+
         <div
           className={`nav-sub-item ${activeSubNav === 'address' ? 'sub-active' : ''}`}
           onClick={() => handleSubNav('address', '/account/addresses')}

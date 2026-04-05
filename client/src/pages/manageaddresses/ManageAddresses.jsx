@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/manageaddresses/ManageAddresses.css';
 import { auth } from '../../firebase';
@@ -258,8 +259,16 @@ export default function ManageAddresses() {
     });
   };
 
+  const navigate = useNavigate();
+  const location = useLocation();
+  
+  // For this page, we are always in 'section' mode on mobile
+  // But we want to allow it to be 'hub' if the path matches /account exactly
+  // (which it wont here, but this keeps the logic consistent)
+  const isAccountHub = location.pathname === '/account';
+
   return (
-    <div className="ma-page" onClick={() => setMenuOpen(null)}>
+    <div className={`ma-page ${isAccountHub ? 'is-hub' : 'is-section'}`} onClick={() => setMenuOpen(null)}>
       <div className="ma-container">
 
         <Sidebar
@@ -271,7 +280,14 @@ export default function ManageAddresses() {
 
         <main className="ma-main">
 
+          {/* Mobile Back Button */}
+          <div className="mobile-back-row" onClick={() => navigate('/account')}>
+            <span className="back-arrow">←</span>
+            <span>Account</span>
+          </div>
+
           <div className="ma-header">
+
             <h1>Manage Addresses</h1>
             <p>Add or edit your shipping details for a faster checkout experience.</p>
           </div>

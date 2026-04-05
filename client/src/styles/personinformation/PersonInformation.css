@@ -228,8 +228,73 @@
   flex-shrink: 0;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .pi-container { flex-direction: column; }
-  .form-grid { grid-template-columns: 1fr; }
+/* ──────────────────────────────────────────────────────────
+   MOBILE HUB-AND-SPOKE RESPONSIVE (Phone Only)
+   ────────────────────────────────────────────────────────── */
+
+/* Add Back Button style for mobile Section view */
+.mobile-back-row {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  cursor: pointer;
+  color: #2874f0;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 4px 0;
+  width: fit-content;
 }
+
+.back-arrow {
+  font-size: 20px;
+  line-height: normal;
+}
+
+@media (max-width: 768px) {
+  .pi-page {
+    margin-top: 10px;
+    padding: 10px 0;
+  }
+
+  .pi-container {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  /* 1. HUB MODE: Show only centered sidebar */
+  .pi-page.is-hub .sidebar {
+    display: flex !important; 
+    width: 92% !important;
+    margin: 20px auto !important;
+  }
+  .pi-page.is-hub .main-content {
+    display: none !important;
+  }
+
+  /* 2. SECTION MODE: Show content, hide sidebar, show back button */
+  .pi-page.is-section .sidebar {
+    display: none !important;
+  }
+  .pi-page.is-section .main-content {
+    display: block !important;
+    width: 95%;
+    margin: 10px auto;
+    padding: 20px 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    background: #fff;
+    border-radius: 12px;
+  }
+  .pi-page.is-section .mobile-back-row {
+    display: flex; /* Show back button */
+  }
+
+  .content-header h1 {
+    font-size: 1.1rem;
+  }
+  
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}

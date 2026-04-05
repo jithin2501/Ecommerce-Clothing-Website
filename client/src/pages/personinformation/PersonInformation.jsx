@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/personinformation/PersonInformation.css';
 import { auth } from '../../firebase';
@@ -141,6 +141,13 @@ export default function PersonInformation() {
     }
   };
 
+  const [searchParams] = useSearchParams();
+  const isViewingProfile = searchParams.get('section') === 'profile';
+
+  // We are 'in the hub' if we are on mobile AND NOT specifically viewing profile
+  // On Desktop, this class will be ignored/unused by the flex layout
+  const isMobileHub = !isViewingProfile; 
+
   if (loadingProfile) {
     return (
       <div className="account-loading-wrapper">
@@ -151,7 +158,7 @@ export default function PersonInformation() {
   }
 
   return (
-    <div className="pi-page">
+    <div className={`pi-page ${isMobileHub ? 'is-hub' : 'is-section'}`}>
       <div className="pi-container">
 
         <Sidebar
@@ -163,6 +170,12 @@ export default function PersonInformation() {
         />
 
         <main className="main-content">
+
+          {/* Mobile Back Button — points back to the Hub (?section=null) */}
+          <div className="mobile-back-row" onClick={() => navigate('/account')}>
+            <span className="back-arrow">←</span>
+            <span>Account</span>
+          </div>
 
           {/* Header */}
           <div className="content-header">
