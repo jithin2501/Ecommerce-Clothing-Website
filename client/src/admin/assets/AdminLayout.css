@@ -174,9 +174,13 @@
   .admin-main {
     margin-left: 0;
     width: 100%;
-    padding: 1.5rem;
+    padding: 1.5rem 1rem;
     margin-top: 70px;
+    height: calc(100vh - 70px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
   }
+
 
   .admin-sidebar.open .admin-brand {
     display: none;

@@ -187,3 +187,57 @@
 }
 
 .um-protected { color: #d1d5db; font-size: 0.85rem; }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 600px) {
+  .um-page {
+    padding: 0.5rem 0.2rem;
+  }
+
+  .um-card {
+    padding: 1.5rem 1.2rem;
+  }
+
+  .um-create-btn {
+    width: 100%;
+    padding: 0.85rem;
+  }
+
+  /* Table Scroll */
+  .um-table-outer {
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    display: block;
+    border: 1px solid #e5e7eb;
+  }
+
+  .um-table-outer::-webkit-scrollbar {
+    height: 8px;
+    display: block;
+  }
+  .um-table-outer::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+  .um-table-outer::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+  }
+
+  .um-table {
+    min-width: 550px; /* Prevent squashing of names/times */
+  }
+
+  .um-table th, .um-table td {
+    padding: 0.8rem 1rem;
+    white-space: nowrap;
+  }
+
+  .um-lastlogin {
+    font-size: 0.75rem;
+  }
+
+  .um-actions {
+    min-width: 100px;
+  }
+}
