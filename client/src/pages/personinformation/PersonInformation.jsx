@@ -165,18 +165,18 @@ export default function PersonInformation() {
         <main className="main-content">
 
           {/* Combined Header with back button for phone view */}
-          <div className="content-header">
-            <div className="pi-header-title-row">
-              <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-                <span className="back-chevron">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                  </svg>
-                </span>
-              </button>
+          <div className="pi-mobile-header">
+            <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+              <span className="back-chevron">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div className="content-header">
               <h1>Personal Information</h1>
+              <p>Manage your personal information and security settings</p>
             </div>
-            <p>Manage your personal information and security settings</p>
           </div>
 
           {/* Personal Info Card */}
