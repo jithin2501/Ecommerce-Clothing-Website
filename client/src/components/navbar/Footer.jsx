@@ -1,7 +1,32 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../../firebase';
 import '../../styles/navbar/Footer.css';
 
 export default function Footer() {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLegalClick = (e, path) => {
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (user) {
+      navigate(path);
+    } else {
+      // Optional: save intended destination to redirect back after login
+      // sessionStorage.setItem('redirectAfterLogin', path);
+      navigate('/login');
+    }
+  };
+
   return (
     <>
       <footer className="premium-footer">
@@ -40,11 +65,11 @@ export default function Footer() {
           <div className="footer-column">
             <h3>Useful Links</h3>
             <ul className="footer-links">
-              <li><a href="#">Home</a></li>
-              <li><a href="#about">About Us</a></li>
-              <li><a href="#category">Collections</a></li>
-              <li><a href="#reviews">Reviews</a></li>
-              <li><a href="#">Contact Us</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('/'); window.scrollTo(0,0); }}>Home</a></li>
+              <li><a href="#about" onClick={(e) => { e.preventDefault(); navigate('/'); setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>About Us</a></li>
+              <li><Link to="/collections" onClick={() => window.scrollTo(0,0)}>Collections</Link></li>
+              <li><a href="#reviews" onClick={(e) => { e.preventDefault(); navigate('/'); setTimeout(() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Reviews</a></li>
+              <li><Link to="/contact" onClick={() => window.scrollTo(0,0)}>Contact Us</Link></li>
             </ul>
           </div>
 
@@ -52,13 +77,11 @@ export default function Footer() {
           <div className="footer-column">
             <h3>Category</h3>
             <ul className="footer-links">
-              <li><a href="#">Baby Frocks</a></li>
-              <li><a href="#">Birthday Frocks</a></li>
-              <li><a href="#">Tops &amp; T-Shirts</a></li>
-              <li><a href="#">Indo-Western Outfits</a></li>
-              <li><a href="#">Traditional Outfits</a></li>
-              <li><a href="#">Party Wear</a></li>
-              <li><a href="#">Boys Collection</a></li>
+              <li><Link to="/collections" state={{ category: 'Daily Wear Frocks' }} onClick={() => window.scrollTo(0,0)}>Daily Wear Frocks</Link></li>
+              <li><Link to="/collections" state={{ category: 'Party Wear Collection' }} onClick={() => window.scrollTo(0,0)}>Party Wear Collection</Link></li>
+              <li><Link to="/collections" state={{ category: 'Traditional & Ethnic Frocks' }} onClick={() => window.scrollTo(0,0)}>Traditional & Ethnic</Link></li>
+              <li><Link to="/collections" state={{ category: 'Designer & Premium Frocks' }} onClick={() => window.scrollTo(0,0)}>Designer & Premium</Link></li>
+              <li><Link to="/collections" state={{ category: 'Fabric-Based Categories' }} onClick={() => window.scrollTo(0,0)}>Fabric Based</Link></li>
             </ul>
           </div>
 
@@ -102,18 +125,18 @@ export default function Footer() {
         <div className="footer-bottom">
           <p>&copy; 2026 Sumathi Trends. All rights reserved.</p>
           <div className="legal-links">
-            <Link to="/account/policy/privacy" className="legal-link-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
+            <button className="legal-link-btn" onClick={(e) => handleLegalClick(e, '/account/policy/privacy')}>
               Privacy Policy
-            </Link>
-            <Link to="/account/policy/terms" className="legal-link-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
+            </button>
+            <button className="legal-link-btn" onClick={(e) => handleLegalClick(e, '/account/policy/terms')}>
               Terms of Service
-            </Link>
-            <Link to="/account/policy/refund" className="legal-link-btn" onClick={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
+            </button>
+            <button className="legal-link-btn" onClick={(e) => handleLegalClick(e, '/account/policy/refund')}>
               Refund &amp; Cancellation Policy
-            </Link>
+            </button>
           </div>
         </div>
       </footer>
     </>
   );
-}
+}
