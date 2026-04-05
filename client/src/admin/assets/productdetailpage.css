@@ -514,3 +514,96 @@
 }
 .pdp-save-btn:hover    { background: #A8624A; }
 .pdp-save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ════════════════════════════════════════
+   MOBILE RESPONSIVE
+   ════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  .pdp-page {
+    padding: 1rem 1rem 3rem;
+  }
+
+  .pdp-header {
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .pdp-title {
+    font-size: 1.2rem;
+  }
+
+  .pdp-preview-grid {
+    padding: 1.25rem;
+    gap: 2rem;
+  }
+
+  .pdp-main-slot {
+    height: 300px;
+  }
+
+  .pdp-accordion-section {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .pdp-form-actions {
+    flex-direction: column-reverse;
+    gap: 0.8rem;
+    width: 100%;
+  }
+
+  .pdp-cancel-btn, .pdp-save-btn {
+    width: 100%;
+    padding: 0.9rem 1.5rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 580px) {
+  .pdp-kv-grid {
+    grid-template-columns: 1fr 34px; /* Space for the button on the right */
+    gap: 0.4rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px dashed #EDE8E0;
+    margin-bottom: 0.8rem;
+    align-items: center;
+  }
+
+  .pdp-kv-header {
+    display: none;
+  }
+
+  .pdp-kv-grid .pdp-row-remove {
+    position: static; /* Remove absolute overlay */
+    grid-row: span 2; /* Span both inputs in the grid */
+    align-self: center;
+    background: #FEF2F2;
+    color: #C0392B;
+    margin-left: 4px;
+  }
+
+  .pdp-kv-input {
+    width: 100%;
+    grid-column: 1; /* Keep inputs in the left column */
+  }
+
+
+  .pdp-color-row, .pdp-size-row {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .pdp-color-name-input {
+    min-width: 150px;
+  }
+
+  .pdp-main-slot {
+    height: 260px;
+  }
+
+  .pdp-thumb-slot {
+    width: 64px;
+    height: 64px;
+  }
+}
