@@ -1,325 +1,265 @@
-/* ===== PAGE WRAPPER ===== */
+/* =========================================================
+   MY ORDERS PAGE
+========================================================= */
+
 .mo-page {
+  background-color: #ffffff;
   min-height: 100vh;
-  background: #ffffff;
-  padding: 70px 20px 120px;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+  color: #212121;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .mo-content {
-  max-width: 860px;
-  margin: 0 auto;
+  flex-grow: 1;
+  max-width: 1100px;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  padding: 28px 32px 32px;
+  min-width: 0;
 }
 
-/* ===== BREADCRUMB ===== */
-/* Sits left-aligned, directly above the "My Orders History" heading */
+/* ── Breadcrumb ── */
 .mo-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 5px;
-  width: fit-content;
-  margin-bottom: 12px;   /* tight gap to the heading below */
+  gap: 6px;
   font-size: 13px;
+  color: #888;
+  margin-bottom: 12px;
 }
 
 .mo-breadcrumb-link {
-  color: #999;
+  color: #2874f0;
   text-decoration: none;
-  transition: color 0.15s;
-}
-
-.mo-breadcrumb-link:hover {
-  color: #333;
+  font-weight: 500;
 }
 
 .mo-breadcrumb-sep {
-  color: #bbb;
-  font-size: 14px;
-  line-height: 1;
-  user-select: none;
+  color: #ccc;
 }
 
 .mo-breadcrumb-current {
-  color: #555;
+  color: #212121;
+  font-weight: 600;
 }
 
-/* ===== HEADER ===== */
+/* ── Header ── */
 .mo-header {
-  text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .mo-header h1 {
-  font-size: 26px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 6px 0;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
 }
 
 .mo-header p {
-  color: #888;
-  font-size: 14px;
-  margin: 0;
+  font-size: 13px;
+  color: #64748b;
 }
 
-/* ===== SEARCH BAR ===== */
-.mo-search-row {
+/* ── Search Bar ── */
+.mo-search-bar {
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 28px;
+  gap: 12px;
+  margin-bottom: 32px;
+  max-width: 600px;
 }
 
-.mo-search-input-wrapper {
+.mo-search-input-wrap {
+  flex: 1;
   position: relative;
-  width: 320px;
 }
 
-.mo-search-icon-img {
+.mo-input-icon {
   position: absolute;
-  left: 12px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  opacity: 0.4;
-  pointer-events: none;
+  color: #888;
+  font-size: 16px;
 }
 
 .mo-search-input {
   width: 100%;
-  padding: 11px 12px 11px 36px;
-  border: 1px solid #ddd;
+  padding: 10px 16px 10px 42px;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
+  font-family: inherit;
   font-size: 14px;
   outline: none;
-  background: #fff;
-  box-sizing: border-box;
   transition: border-color 0.2s;
 }
 
 .mo-search-input:focus {
-  border-color: #aaa;
+  border-color: #2874f0;
 }
 
 .mo-search-btn {
-  background: #2d2d2d;
+  background: #2C3E50;
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 11px 20px;
+  padding: 0 24px;
   font-weight: 600;
   font-size: 14px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  white-space: nowrap;
   transition: background 0.2s;
 }
 
 .mo-search-btn:hover {
-  background: #444;
+  background: #1a252f;
 }
 
-.mo-search-btn-icon {
-  width: 15px;
-  height: 15px;
-  filter: invert(1);
-}
-
-/* ===== ORDER LIST ===== */
-.mo-list {
+/* ── Orders List ── */
+.mo-orders-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-/* ===== ORDER CARD ===== */
-.mo-card {
-  background: #fff;
+.mo-order-card {
+  border: 1px solid #f1f1f1;
   border-radius: 12px;
-  padding: 18px 20px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+  padding: 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   transition: box-shadow 0.2s;
 }
 
-.mo-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+.mo-order-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-.mo-card-top {
+.mo-order-left {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
+  gap: 18px;
+  align-items: center;
 }
 
-.mo-card-img {
-  width: 72px;
-  height: 72px;
-  border-radius: 8px;
+.mo-item-img {
+  width: 64px;
+  height: 80px;
   object-fit: cover;
-  flex-shrink: 0;
+  border-radius: 6px;
   border: 1px solid #eee;
 }
 
-.mo-card-info {
-  flex: 1;
+.mo-item-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.mo-card-name {
-  font-weight: 700;
+.mo-item-name {
   font-size: 15px;
-  color: #1a1a1a;
+  font-weight: 600;
+  color: #212121;
   margin-bottom: 4px;
 }
 
-.mo-card-meta {
-  font-size: 13px;
-  color: #777;
+.mo-item-meta {
+  font-size: 12px;
+  color: #878787;
   margin-bottom: 6px;
 }
 
-.mo-card-price {
-  font-weight: 700;
+.mo-item-price {
   font-size: 15px;
-  color: #1a1a1a;
+  font-weight: 700;
+  color: #212121;
 }
 
-/* ===== STATUS SECTION ===== */
-.mo-card-status {
-  text-align: right;
-  min-width: 190px;
-  flex-shrink: 0;
+/* Status & Actions */
+.mo-order-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
 }
 
 .mo-status-badge {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
   gap: 6px;
-  font-weight: 600;
   font-size: 13px;
+  font-weight: 600;
 }
 
-.mo-status-dot {
+.mo-dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  display: inline-block;
-  flex-shrink: 0;
 }
 
-.mo-status-dot.delivered { background: #22c55e; }
-.mo-status-dot.exchange  { background: #f97316; }
-.mo-status-dot.cancelled { background: #ef4444; }
+.mo-status-delivered { color: #388e3c; }
+.mo-status-delivered .mo-dot { background: #388e3c; }
 
-.mo-status-text.delivered { color: #22c55e; }
-.mo-status-text.exchange  { color: #f97316; }
-.mo-status-text.cancelled { color: #ef4444; }
+.mo-status-pending { color: #f5a623; }
+.mo-status-pending .mo-dot { background: #f5a623; }
 
-.mo-status-sub {
-  font-size: 12px;
-  color: #999;
-  margin-top: 2px;
-  margin-bottom: 8px;
+.mo-status-note {
+  font-size: 11px;
+  color: #878787;
 }
 
 .mo-review-btn {
   background: none;
   border: none;
-  color: #2C3E50;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: auto;
   padding: 0;
-  transition: opacity 0.2s;
-}
-
-.mo-review-btn:hover {
-  opacity: 0.75;
-  text-decoration: underline;
-}
-
-/* ===== PAGINATION ===== */
-.mo-pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 32px;
-}
-
-.mo-page-btn {
-  width: 34px;
-  height: 34px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  background: #fff;
-  color: #555;
-  font-size: 15px;
+  color: #212121;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  transition: all 0.15s;
+  gap: 6px;
+  transition: color 0.15s;
 }
 
-.mo-page-btn:hover {
-  background: #f0f0f0;
+.mo-review-btn:hover {
+  color: #2874f0;
 }
 
-.mo-page-btn.active {
-  background: #2d2d2d;
-  color: #fff;
-  border-color: #2d2d2d;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 600px) {
-  .mo-search-row {
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .mo-order-card {
     flex-direction: column;
-    align-items: stretch;
+    align-items: flex-start;
+    gap: 16px;
   }
-
-  .mo-search-input-wrapper {
-    width: 100%;
-  }
-
-  .mo-search-btn {
-    justify-content: center;
-  }
-
-  .mo-card-top {
-    flex-wrap: wrap;
-  }
-
-  .mo-card-status {
-    width: 100%;
-    text-align: left;
-    min-width: unset;
-  }
-
-  .mo-status-badge {
-    justify-content: flex-start;
-  }
-
-  .mo-review-btn {
-    margin-left: 0;
-  }
-}
-
-/* ── Mobile only: hide sidebar from orders page, show back btn ── */
-.mobile-back-btn {
-  display: none;
 }
 
 @media (max-width: 768px) {
-  /* Hide breadcrumbs on mobile */
+  .mo-header-title-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .mo-header {
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .mo-header p {
+    margin-top: 4px;
+    padding-left: 36px;
+  }
+
+  .mo-header h1 { 
+    font-size: 1.15rem; 
+    margin: 0 !important; 
+    line-height: 1.2;
+  }
+
   .mo-breadcrumb {
     display: none !important;
   }
@@ -328,7 +268,6 @@
     padding: 0;
   }
 
-  /* MyOrders doesn't have a sidebar currently, but being consistent */
   .mo-page .sidebar {
     display: none !important;
   }
@@ -342,15 +281,8 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
   }
 
-  .mo-mobile-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
-  }
-
   .mobile-back-btn {
-    display: flex !important; /* Force display on mobile */
+    display: flex !important;
     align-items: center;
     justify-content: center;
     color: #2874f0;
@@ -362,10 +294,6 @@
     flex-shrink: 0;
   }
 
-  .mo-header {
-    margin-bottom: 0 !important;
-  }
-
   .mobile-back-btn span.back-chevron {
     font-size: 20px;
     line-height: 1;
@@ -373,4 +301,8 @@
     align-items: center;
     justify-content: center;
   }
-}
+
+  .mo-search-bar {
+    flex-direction: column;
+  }
+}

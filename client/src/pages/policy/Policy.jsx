@@ -314,18 +314,18 @@ export default function Policy() {
 
         <main className="policy-main">
 
-          <div className="policy-mobile-header">
-            <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-              <span className="back-chevron">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-              </span>
-            </button>
-            <div className="policy-content-header">
+          <div className="policy-content-header">
+            <div className="policy-header-title-row">
+              <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+                <span className="back-chevron">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </span>
+              </button>
               <h1>{meta.title}</h1>
-              <p>{meta.subtitle}</p>
             </div>
+            <p>{meta.subtitle}</p>
           </div>
           <div className="policy-card">{meta.content}</div>
         </main>

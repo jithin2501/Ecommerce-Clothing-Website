@@ -240,11 +240,15 @@
     padding: 30px 16px;
   }
 
-  .wl-mobile-header {
+  .wl-header-title-row {
     display: flex;
     align-items: center;
     gap: 12px;
+  }
+
+  .wl-header {
     margin-bottom: 24px;
+    text-align: left;
   }
 
   /* Back button */
@@ -261,10 +265,6 @@
     flex-shrink: 0;
   }
 
-  .wl-header {
-    margin-bottom: 0 !important;
-  }
-
   .wl-breadcrumb {
     display: none !important;
   }
@@ -277,7 +277,7 @@
     justify-content: center;
   }
 
-  .wl-header h1 { font-size: 1.15rem; }
+  .wl-header h1 { font-size: 1.15rem; margin: 0 !important; line-height: 1.2; }
 
   .wl-recent-grid {
     grid-template-columns: repeat(2, 1fr);

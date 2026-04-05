@@ -56,7 +56,7 @@ export default function SupportHub() {
 
           {/* Hero Banner */}
           <div className="sh-hero">
-            <div className="sh-mobile-header">
+            <div className="sh-header-title-row">
               <button className="mobile-back-btn" onClick={() => navigate('/account')}>
                 <span className="back-chevron">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

@@ -349,17 +349,13 @@
     padding: 20px 0 0;
   }
 
-  .sh-mobile-header {
+  .sh-header-title-row {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 12px;
-    justify-content: center; /* keep title centered if desired, but user said left side.
-    actually, I'll align items left for a cleaner look if button is involved.
-    Wait, the screenshot title was left aligned.
-    */
-    text-align: left;
     justify-content: flex-start;
+    text-align: left;
   }
 
   .mobile-back-btn {
@@ -384,6 +380,7 @@
     font-size: 1.25rem;
     margin: 0 !important;
     text-align: left;
+    line-height: 1.2;
   }
 
   .mobile-back-btn span.back-chevron {
@@ -396,11 +393,12 @@
 
   .sh-hero {
     padding: 24px 20px;
-    text-align: left; /* Align hero content left for mobile navigation */
+    text-align: left; 
   }
 
   .sh-hero-sub {
-    margin-left: 0;
+    margin-top: 4px;
+    padding-left: 36px; /* align with title text next to icon button */
     text-align: left;
   }
 

@@ -265,11 +265,21 @@
   }
 
   /* Show back button */
-  .pi-mobile-header {
+  .content-header {
+    margin-bottom: 24px;
+    text-align: left;
+  }
+
+  .pi-header-title-row {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 24px;
+  }
+
+  .content-header p {
+    margin-top: 4px;
+    padding-left: 36px; /* Align with text next to button icon */
+    font-size: 13px;
   }
 
   .mobile-back-btn {
@@ -281,12 +291,14 @@
     background: none;
     border: none;
     padding: 0;
-    margin-bottom: 0; /* Changed from 20px */
+    margin-bottom: 0;
     flex-shrink: 0;
   }
 
-  .content-header {
-    margin-bottom: 0 !important;
+  .content-header h1 {
+    font-size: 1.15rem;
+    margin: 0 !important;
+    line-height: 1.2;
   }
 
   .mobile-back-btn span.back-chevron {

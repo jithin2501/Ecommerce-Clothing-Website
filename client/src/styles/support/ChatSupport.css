@@ -426,16 +426,22 @@
   .cs-chat-header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+  }
+
+  .cs-header-title-row {
+    display: flex;
+    align-items: center;
     gap: 12px;
-    padding: 12px 16px;
   }
 
   /* Back button in Chat Header */
-  .cs-chat-header .mobile-back-btn {
+  .cs-header-title-row .mobile-back-btn {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    color: #fff; /* White on dark blue */
+    color: #fff;
     cursor: pointer;
     background: none;
     border: none;
