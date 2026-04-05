@@ -405,10 +405,29 @@
   }
 
   .sh-body { padding: 20px 16px; }
-  .sh-order-card { padding: 12px; gap: 10px; flex-direction: column; align-items: flex-start; }
-  .sh-order-img { width: 50px; height: 50px; }
-  .sh-order-id { font-size: 13px; }
-  .sh-need-help-btn { width: 100%; text-align: center; }
+  .sh-order-card { 
+    padding: 16px; 
+    gap: 16px; 
+    flex-direction: row; 
+    flex-wrap: wrap;      /* Allow button to wrap below */
+    align-items: center; 
+    text-align: left;
+  }
+  .sh-order-img { 
+    width: 60px; 
+    height: 60px; 
+    flex-shrink: 0;
+  }
+  .sh-order-info { 
+    flex: 1;              /* Take up remaining space next to img */
+    min-width: 150px;
+  }
+  .sh-order-id { font-size: 11px; margin-bottom: 2px; }
+  .sh-need-help-btn { 
+    width: 100%;          /* Forces it to next line due to wrap */
+    text-align: center; 
+    margin-top: 4px;
+  }
 
   /* ❗ STACK CHANNELS VERTICALLY ON MOBILE ❗ */
   .sh-channels--two {

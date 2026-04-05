@@ -76,8 +76,10 @@
 
 .wl-empty-img {
   width: 120px;
+  height: auto;
   opacity: 0.5;
-  margin-bottom: 20px;
+  margin: 0 auto 20px; /* Centered */
+  display: block;      /* Centered */
 }
 
 .wl-empty h2 {
