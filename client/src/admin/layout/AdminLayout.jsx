@@ -1,5 +1,6 @@
-import { useEffect } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import '../assets/AdminLayout.css';
 
 const getRole = () => {
@@ -12,7 +13,9 @@ const getRole = () => {
 
 export default function AdminLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
   const role = getRole();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -29,28 +32,51 @@ export default function AdminLayout() {
     };
   }, []);
 
+  // Close sidebar on route change (mobile)
+  useEffect(() => {
+    setIsSidebarOpen(false);
+  }, [location.pathname]);
+
   const handleSignOut = () => {
     localStorage.removeItem('adminToken');
     navigate('/admin/login');
   };
 
   return (
-    <div className="admin-wrapper">
-      <aside className="admin-sidebar">
+    <div className={`admin-wrapper ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+      {/* ── Mobile Top Bar ── */}
+      <header className="admin-mobile-header">
+        <button 
+          className="admin-hamburger" 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          aria-label="Toggle Menu"
+        >
+          {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </header>
+
+      {/* ── Mobile Overlay ── */}
+      {isSidebarOpen && (
+        <div className="admin-overlay" onClick={() => setIsSidebarOpen(false)} />
+      )}
+
+      <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="admin-brand">Admin Dashboard</div>
         <nav className="admin-nav">
           <NavLink to="/admin/contact"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Contact Messages</NavLink>
           <NavLink to="/admin/reviews"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Review Management</NavLink>
           <NavLink to="/admin/products" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Product Management</NavLink>
-          <NavLink to="/admin/clients" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>
-  Client Management
-</NavLink>
+          <NavLink to="/admin/clients" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Client Management</NavLink>
           {role === 'superadmin' && (
             <NavLink to="/admin/users"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>User Management</NavLink>
           )}
+          <button className="admin-signout-inline" onClick={handleSignOut}>
+            Sign Out
+          </button>
         </nav>
         <button className="admin-signout" onClick={handleSignOut}>Sign Out</button>
       </aside>
+
       <main className="admin-main">
         <Outlet />
       </main>
