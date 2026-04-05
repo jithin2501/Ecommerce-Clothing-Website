@@ -7,11 +7,10 @@
 .admin-wrapper {
   display: flex;
   width: 100%;
-  height: 100vh;
-  height: 100dvh; /* Dynamic viewport height for mobile browsers */
+  height: 100dvh;
   font-family: 'Inter', sans-serif;
   overflow: hidden;
-  background: #f8fafc; /* Match admin-main background to prevent white gaps */
+  background: #f8fafc;
 }
 
 .admin-sidebar {
@@ -87,7 +86,8 @@
 }
 
 .admin-main {
-  margin-left: 240px; /* Offset for sidebar */
+  margin-left: 240px;
+  /* Offset for sidebar */
   flex: 1;
   height: 100vh;
   overflow-y: auto;
@@ -95,13 +95,26 @@
   padding: 2.5rem;
 }
 
-.admin-main::-webkit-scrollbar { width: 8px; }
-.admin-main::-webkit-scrollbar-track { background: #f3f4f6; }
-.admin-main::-webkit-scrollbar-thumb { background: #c1c9d4; border-radius: 4px; }
-.admin-main::-webkit-scrollbar-thumb:hover { background: #a0aab4; }
+.admin-main::-webkit-scrollbar {
+  width: 8px;
+}
+
+.admin-main::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}
+
+.admin-main::-webkit-scrollbar-thumb {
+  background: #c1c9d4;
+  border-radius: 4px;
+}
+
+.admin-main::-webkit-scrollbar-thumb:hover {
+  background: #a0aab4;
+}
 
 .admin-signout-inline {
-  display: none; /* Hide on desktop */
+  display: none;
+  /* Hide on desktop */
 }
 
 /* ── Mobile Top Bar ── */
@@ -117,7 +130,7 @@
   z-index: 500;
   align-items: center;
   padding: 0 1.2rem;
-  box-shadow: none; /* Remove shadow to merge with sidebar */
+  box-shadow: none;
   border: none;
 }
 
@@ -159,13 +172,14 @@
   .admin-sidebar {
     top: 70px;
     height: calc(100vh - 70px);
-    height: calc(100dvh - 70px); /* Mobile-friendly height */
+    height: calc(100dvh - 70px);
+    /* Mobile-friendly height */
     background: #1e293b;
     transform: translateX(-100%);
     transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 450;
     width: 280px;
-    box-shadow: 15px 0 40px rgba(0,0,0,0.3);
+    box-shadow: 15px 0 40px rgba(0, 0, 0, 0.3);
   }
 
   .admin-nav {
@@ -180,11 +194,11 @@
     margin-left: 0;
     width: 100%;
     padding: 1.5rem 1rem;
+    padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
     margin-top: 70px;
-    height: calc(100vh - 70px);
-    height: calc(100dvh - 70px); /* Mobile-friendly height */
+    height: calc(100dvh - 70px);
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scroll on iOS */
+    -webkit-overflow-scrolling: touch;
   }
 
 
@@ -198,11 +212,13 @@
   }
 
   .admin-signout {
-    display: none; /* Hide original signout on mobile */
+    display: none;
+    /* Hide original signout on mobile */
   }
 
   .admin-signout-inline {
-    display: flex; /* Show inline log out only on mobile */
+    display: flex;
+    /* Show inline log out only on mobile */
     width: calc(100% - 2.4rem);
     margin: 1.5rem 1.2rem;
     background: #243142;
