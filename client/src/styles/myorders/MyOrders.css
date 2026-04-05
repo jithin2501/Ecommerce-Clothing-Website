@@ -1,5 +1,5 @@
 /* =========================================================
-   MY ORDERS PAGE
+   MY ORDERS PAGE (REFURBISHED & STABLE)
 ========================================================= */
 
 .mo-page {
@@ -85,6 +85,10 @@
   transform: translateY(-50%);
   color: #888;
   font-size: 16px;
+  width: 16px; /* FIXED: explicitly set width */
+  height: 16px; /* FIXED: explicitly set height */
+  display: flex;
+  align-items: center;
 }
 
 .mo-search-input {
@@ -235,6 +239,9 @@
     align-items: flex-start;
     gap: 16px;
   }
+  .mo-order-right {
+    align-items: flex-start;
+  }
 }
 
 @media (max-width: 768px) {
@@ -266,6 +273,7 @@
   
   .mo-page {
     padding: 0;
+    margin-top: 20px;
   }
 
   .mo-page .sidebar {
@@ -304,5 +312,11 @@
 
   .mo-search-bar {
     flex-direction: column;
+    max-width: 100%;
+  }
+  
+  .mo-search-btn {
+    width: 100%;
+    padding: 12px 0;
   }
 }
