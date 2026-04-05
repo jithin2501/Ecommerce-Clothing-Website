@@ -372,73 +372,19 @@
   opacity: 1 !important;
 }
 
-/* ──────────────────────────────────────────────────────────
-   MOBILE HUB-AND-SPOKE RESPONSIVE
-   ────────────────────────────────────────────────────────── */
-
-/* Add Back Button style for mobile Section view */
-.mobile-back-row {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  color: #2874f0;
-  font-weight: 700;
-  font-size: 15px;
-  padding: 4px 0;
-  width: fit-content;
-}
-
-.back-arrow {
-  font-size: 20px;
-  line-height: normal;
-}
-
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  .wl-page {
-    margin-top: 10px;
-    padding: 10px 0;
-  }
-
   .wl-container {
     flex-direction: column;
-    gap: 0;
-    padding: 0;
+    padding: 16px;
   }
 
-  /* 1. HUB MODE: Show only centered sidebar */
-  .wl-page.is-hub .sidebar {
-    display: flex !important; 
-    width: 92% !important;
-    margin: 20px auto !important;
-  }
-  .wl-page.is-hub .wl-main {
-    display: none !important;
+  .wl-main {
+    padding-left: 0;
+    padding-top: 20px;
   }
 
-  /* 2. SECTION MODE: Show content, hide sidebar, show back button */
-  .wl-page.is-section .sidebar {
-    display: none !important;
-  }
-  .wl-page.is-section .wl-main {
-    display: block !important;
-    width: 95%;
-    margin: 10px auto;
-    padding: 20px 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    background: #fff;
-    border-radius: 12px;
-  }
-  .wl-page.is-section .mobile-back-row {
-    display: flex; /* Show back button */
-  }
-
-  .wl-header h1 {
-    font-size: 1.1rem;
-  }
-  
   .wl-recent-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+}
