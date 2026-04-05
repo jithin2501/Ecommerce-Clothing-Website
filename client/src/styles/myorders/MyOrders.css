@@ -319,6 +319,11 @@
 }
 
 @media (max-width: 768px) {
+  /* Hide breadcrumbs on mobile */
+  .mo-breadcrumb {
+    display: none !important;
+  }
+  
   .mo-page {
     padding: 0;
   }

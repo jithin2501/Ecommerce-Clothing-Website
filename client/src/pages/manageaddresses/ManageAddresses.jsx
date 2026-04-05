@@ -38,6 +38,7 @@ function broadcastAddressChange(updatedAddresses, deletedId = null) {
 }
 
 export default function ManageAddresses() {
+  const navigate = useNavigate();
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
   const [activeNav, setActiveNav] = useState('account-settings');

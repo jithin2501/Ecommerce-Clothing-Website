@@ -294,4 +294,13 @@
   .content-header h1 {
     font-size: 1.15rem;
   }
-}
+
+  .delete-account-wrapper {
+    margin-top: 4px;
+  }
+
+  .form-card {
+    margin-bottom: 12px;
+  }
+}
+

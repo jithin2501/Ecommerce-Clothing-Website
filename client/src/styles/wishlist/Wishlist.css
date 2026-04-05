@@ -374,6 +374,11 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
+  /* Hide breadcrumbs on mobile */
+  .wl-breadcrumb {
+    display: none !important;
+  }
+
   /* Hide sidebar on sub-section pages */
   .wl-page .sidebar {
     display: none !important;
