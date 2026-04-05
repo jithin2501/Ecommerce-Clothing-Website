@@ -87,8 +87,9 @@
 .nav-item:hover { background-color: #eef2f7; }
 
 .nav-item.active {
-  background-color: #eef2f7;
-  color: #2C3E50;
+  background-color: transparent; /* Removed blue background highlight */
+  color: #212121;
+  font-weight: 600; /* Added weight to indicate active state clearly instead of bg color */
 }
 
 .nav-arrow {
