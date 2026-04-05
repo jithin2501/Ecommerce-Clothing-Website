@@ -118,3 +118,15 @@
   object-fit: contain;
   flex-shrink: 0;
 }
+
+/* ── Mobile Responsive Sidebar Hub ── */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 92% !important;
+    min-width: 0 !important;
+    margin: 1.5rem auto !important;
+    align-self: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); /* Softer shadow for mobile card look */
+    border: 1px solid #eee;
+  }
+}
