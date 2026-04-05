@@ -312,3 +312,49 @@
     margin-left: 0;
   }
 }
+
+/* ── Mobile only: hide sidebar from orders page, show back btn ── */
+.mobile-back-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mo-page {
+    padding: 0;
+  }
+
+  /* MyOrders doesn't have a sidebar currently, but being consistent */
+  .mo-page .sidebar {
+    display: none !important;
+  }
+
+  .mo-content {
+    width: 94%;
+    margin: 16px auto;
+    padding: 20px 16px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  }
+
+  .mobile-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2874f0;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: fit-content;
+    padding: 4px 0;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+
+  .mobile-back-btn span.back-chevron {
+    font-size: 20px;
+    line-height: 1;
+  }
+}

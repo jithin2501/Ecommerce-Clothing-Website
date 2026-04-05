@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/manageaddresses/ManageAddresses.css';
 import { auth } from '../../firebase';
@@ -270,6 +271,12 @@ export default function ManageAddresses() {
         />
 
         <main className="ma-main">
+
+          {/* Mobile-only back button */}
+          <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+            <span className="back-chevron">←</span>
+            <span>My Account</span>
+          </button>
 
           <div className="ma-header">
             <h1>Manage Addresses</h1>

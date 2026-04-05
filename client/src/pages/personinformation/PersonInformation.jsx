@@ -164,6 +164,12 @@ export default function PersonInformation() {
 
         <main className="main-content">
 
+          {/* Mobile-only back button */}
+          <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+            <span className="back-chevron">←</span>
+            <span>My Account</span>
+          </button>
+
           {/* Header */}
           <div className="content-header">
             <h1>Personal Information</h1>

@@ -93,6 +93,12 @@ export default function MyOrders() {
     <div className="mo-page">
       <div className="mo-content">
 
+        {/* Mobile-only back button */}
+        <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+          <span className="back-chevron">←</span>
+          <span>My Account</span>
+        </button>
+
         {/* Breadcrumb — using div instead of nav to avoid inheriting global nav { position: sticky } */}
         <div className="mo-breadcrumb">
           <a href="/account" className="mo-breadcrumb-link">Account</a>

@@ -374,17 +374,54 @@
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
+  /* Hide sidebar on sub-section pages */
+  .wl-page .sidebar {
+    display: none !important;
+  }
+
+  .wl-page {
+    padding: 0;
+  }
+
   .wl-container {
     flex-direction: column;
-    padding: 16px;
+    gap: 0;
   }
 
   .wl-main {
-    padding-left: 0;
+    width: 94%;
+    margin: 16px auto;
+    padding: 20px 16px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    padding-left: 16px;
     padding-top: 20px;
+  }
+
+  /* Back button */
+  .mobile-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2874f0;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: fit-content;
+    padding: 4px 0;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+
+  .mobile-back-btn span.back-chevron {
+    font-size: 20px;
+    line-height: 1;
   }
 
   .wl-recent-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+}

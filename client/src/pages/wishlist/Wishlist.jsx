@@ -51,6 +51,12 @@ export default function Wishlist() {
 
         <main className="wl-main">
 
+          {/* Mobile-only back button */}
+          <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+            <span className="back-chevron">←</span>
+            <span>My Account</span>
+          </button>
+
           {/* Header */}
           <div className="wl-header">
             <h1>My Wishlist <span className="wl-count">({wishlist.length})</span></h1>

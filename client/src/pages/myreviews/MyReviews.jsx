@@ -52,6 +52,12 @@ export default function MyReviews() {
 
         <main className="mr-main">
 
+          {/* Mobile-only back button */}
+          <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+            <span className="back-chevron">←</span>
+            <span>My Account</span>
+          </button>
+
           {/* Empty State */}
           <div className="mr-empty-section">
             <div className="mr-icon-wrap">

@@ -12,6 +12,7 @@ import CollectionDetailPage from './pages/collectiondetails/CollectionDetailPage
 import CartPage from './pages/cart/CartPage';
 import ContactPage from './pages/contact/ContactPage';
 import PersonInformation from './pages/personinformation/PersonInformation';
+import AccountHub from './pages/personinformation/AccountHub';
 import ManageAddresses from './pages/manageaddresses/ManageAddresses';
 import MyOrders from './pages/myorders/MyOrders';
 import Wishlist from './pages/wishlist/Wishlist';
@@ -66,7 +67,8 @@ function PublicLayout() {
         <Route path="/collections/product/:productId" element={<CollectionDetailPage />} />
         <Route path="/cart" element={<CartPage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/account" element={<PersonInformation />} />
+        <Route path="/account" element={<AccountHub />} />
+        <Route path="/account/profile" element={<PersonInformation />} />
         <Route path="/account/addresses" element={<ManageAddresses />} />
         <Route path="/account/orders" element={<MyOrders />} />
         <Route path="/account/wishlist" element={<Wishlist />} />

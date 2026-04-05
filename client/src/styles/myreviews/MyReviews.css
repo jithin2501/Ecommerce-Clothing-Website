@@ -150,8 +150,60 @@
 
 .mr-rate-btn:hover { opacity: 0.75; text-decoration: underline; }
 
-/* Responsive */
+/* Responsive - tablet */
 @media (max-width: 900px) {
   .mr-container { flex-direction: column; }
   .mr-product-grid { grid-template-columns: 1fr; }
 }
+
+/* ── Mobile only: hide sidebar, show back button ── */
+.mobile-back-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mr-page .sidebar {
+    display: none !important;
+  }
+
+  .mr-page {
+    padding: 0;
+  }
+
+  .mr-container {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .mr-main {
+    width: 94%;
+    margin: 16px auto;
+    padding: 20px 16px;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+  }
+
+  .mobile-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2874f0;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    margin-bottom: 20px;
+    width: fit-content;
+    padding: 4px 0;
+    background: none;
+    border: none;
+    font-family: inherit;
+  }
+
+  .mobile-back-btn span.back-chevron {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .mr-product-grid { grid-template-columns: 1fr; }
+}
