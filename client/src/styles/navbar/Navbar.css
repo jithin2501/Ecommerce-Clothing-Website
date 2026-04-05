@@ -1,7 +1,7 @@
 /* =========================================================
    NAVIGATION
 ========================================================= */
-nav {
+.app-navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,19 +19,19 @@ nav {
 }
 
 
-nav .logo-text,
-nav .nav-links a,
-nav .action-item {
+.app-navbar .logo-text,
+.app-navbar .nav-links a,
+.app-navbar .action-item {
   color: #2D3E50;
   transition: color 0.3s ease;
 }
 
-nav .nav-links a:hover,
-nav .action-item:hover {
+.app-navbar .nav-links a:hover,
+.app-navbar .action-item:hover {
   color: #E8C5A8;
 }
 
-nav.nav-collections {
+.app-navbar.nav-collections {
   position: fixed;
   top: 0;
   left: 0;
@@ -42,13 +42,13 @@ nav.nav-collections {
   transition: background 0.3s ease;
 }
 
-nav.nav-collections .logo-text,
-nav.nav-collections .nav-links a,
-nav.nav-collections .action-item {
+.app-navbar.nav-collections .logo-text,
+.app-navbar.nav-collections .nav-links a,
+.app-navbar.nav-collections .action-item {
   color: #2D3E50;
 }
 
-nav.nav-banner-scrolled {
+.app-navbar.nav-banner-scrolled {
   position: fixed;
   top: 0;
   left: 0;
@@ -59,18 +59,18 @@ nav.nav-banner-scrolled {
   transition: background 0.3s ease;
 }
 
-nav.nav-banner-scrolled .logo-text,
-nav.nav-banner-scrolled .nav-links a,
-nav.nav-banner-scrolled .action-item {
+.app-navbar.nav-banner-scrolled .logo-text,
+.app-navbar.nav-banner-scrolled .nav-links a,
+.app-navbar.nav-banner-scrolled .action-item {
   color: white;
 }
 
-nav.nav-banner-scrolled .nav-links a:hover,
-nav.nav-banner-scrolled .action-item:hover {
+.app-navbar.nav-banner-scrolled .nav-links a:hover,
+.app-navbar.nav-banner-scrolled .action-item:hover {
   color: #E8C5A8;
 }
 
-nav.nav-detail-scrolled {
+.app-navbar.nav-detail-scrolled {
   position: fixed;
   top: 0;
   left: 0;
@@ -81,14 +81,14 @@ nav.nav-detail-scrolled {
   transition: background 0.3s ease;
 }
 
-nav.nav-detail-scrolled .logo-text,
-nav.nav-detail-scrolled .nav-links a,
-nav.nav-detail-scrolled .action-item {
+.app-navbar.nav-detail-scrolled .logo-text,
+.app-navbar.nav-detail-scrolled .nav-links a,
+.app-navbar.nav-detail-scrolled .action-item {
   color: white;
 }
 
-nav.nav-detail-scrolled .nav-links a:hover,
-nav.nav-detail-scrolled .action-item:hover {
+.app-navbar.nav-detail-scrolled .nav-links a:hover,
+.app-navbar.nav-detail-scrolled .action-item:hover {
   color: #E8C5A8;
 }
 
@@ -246,8 +246,8 @@ nav.nav-detail-scrolled .action-item:hover {
   outline: none;
 }
 
-nav.nav-banner-scrolled .hamburger-btn,
-nav.nav-detail-scrolled .hamburger-btn {
+.app-navbar.nav-banner-scrolled .hamburger-btn,
+.app-navbar.nav-detail-scrolled .hamburger-btn {
   color: white;
 }
 

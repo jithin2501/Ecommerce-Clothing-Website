@@ -6,89 +6,91 @@
 
 .admin-wrapper {
   display: flex;
+  width: 100%;
   height: 100vh;
   font-family: 'Inter', sans-serif;
+  overflow: hidden;
 }
 
 .admin-sidebar {
-  width: 240px;
+  width: 240px !important;
+  min-width: 240px !important;
   height: 100vh;
   background: #2D3E50;
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 100;
   overflow-y: auto;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .admin-brand {
   color: #ffffff;
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 800;
-  padding: 1.8rem 1.2rem;
+  padding: 2rem 1.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
+  text-align: left;
+  width: 100%;
 }
 
 .admin-nav {
-  display: flex;
-  flex-direction: column;
-  padding: 0;
-  background: #2D3E50;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  padding: 1rem 0;
+  flex-grow: 1;
+  width: 100%;
 }
 
 .admin-nav-link {
-  color: #ffffff;
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  padding: 0.9rem 1.2rem;
-  transition: opacity 0.2s;
-  background: transparent;
-  text-align: left;
-  outline: none;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
+  padding: 0.8rem 1.5rem;
+  transition: all 0.2s;
   display: block;
+  text-align: left !important;
+  width: 100%;
 }
 
-.admin-nav-link:hover { opacity: 0.75; background: transparent; }
+.admin-nav-link:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+}
 
-.admin-nav-link:focus,
-.admin-nav-link:focus-visible,
-.admin-nav-link:active { background: transparent; outline: none; box-shadow: none; }
-
-.admin-nav-link.active { background: transparent; font-weight: 500; }
-.admin-nav-link.active:hover { background: transparent; opacity: 0.75; }
+.admin-nav-link.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-left: 4px solid #3b82f6;
+}
 
 .admin-signout {
-  align-self: center;
-  margin: auto 1.2rem 1.5rem;
+  margin: auto 1.5rem 2rem;
   background: #ef4444;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   color: #ffffff;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
-  text-align: center;
-  padding: 0.7rem 2rem;
-  font-family: 'Inter', sans-serif;
+  padding: 0.75rem;
+  width: calc(100% - 3rem);
   transition: background 0.2s;
-  width: calc(100% - 2.4rem);
 }
 
-.admin-signout:hover { background: #dc2626; }
-
 .admin-main {
-  margin-left: 240px;
-  width: calc(100% - 240px);
+  margin-left: 240px; /* Offset for sidebar */
+  flex: 1;
   height: 100vh;
-  overflow-y: scroll;
-  background: #f3f4f6;
-  padding: 1.8rem 2.5rem;
+  overflow-y: auto;
+  background: #f8fafc;
+  padding: 2.5rem;
 }
 
 .admin-main::-webkit-scrollbar { width: 8px; }

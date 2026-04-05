@@ -12,7 +12,7 @@ function scrollToSection(sectionId) {
   const tryScroll = () => {
     const el = document.getElementById(sectionId);
     if (el && el.getBoundingClientRect().height > 0) {
-      const navEl = document.querySelector('nav');
+      const navEl = document.querySelector('.app-navbar');
       const navHeight = navEl ? navEl.getBoundingClientRect().height : 80;
       const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
       window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
@@ -89,7 +89,7 @@ export default function Navbar() {
         const tryScroll = () => {
           const el = document.getElementById(sectionId);
           if (el && el.getBoundingClientRect().height > 0) {
-            const navEl = document.querySelector('nav');
+            const navEl = document.querySelector('.app-navbar');
             const navHeight = navEl ? navEl.getBoundingClientRect().height : 80;
             const top = el.getBoundingClientRect().top + window.scrollY - navHeight;
             window.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
@@ -159,7 +159,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav className={`${navClass} ${isSidebarOpen ? 'sidebar-open' : ''}`}>
+    <nav className={`app-navbar ${navClass} ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       <div className="nav-inner">
 
         {/* ── Logo ── */}
