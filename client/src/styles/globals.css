@@ -11,7 +11,7 @@
   --light-bg: #FFFFFF;
   --cart-orange: #FF5C00;
   --soft-glow: rgba(192, 127, 94, 0.15);
-  --side-pad: 8%;
+  --side-pad: 16px;
   --footer-bg: #2D3E50;
   --footer-text-main: #ffffff;
   --footer-text-muted: #cbd5e1;
@@ -49,7 +49,7 @@ img { max-width: 100%; display: block; }
 }
 
 .section-inner {
-  max-width: 1600px;
+  max-width: 1200px;
   width: 100%;
   margin: 0 auto;
   padding-left: var(--side-pad);
