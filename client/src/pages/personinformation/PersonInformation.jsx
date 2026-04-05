@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/personinformation/PersonInformation.css';
 import { auth } from '../../firebase';
@@ -141,9 +141,6 @@ export default function PersonInformation() {
     }
   };
 
-  const location = useLocation();
-  const isAccountRoot = location.pathname === '/account';
-
   if (loadingProfile) {
     return (
       <div className="account-loading-wrapper">
@@ -154,7 +151,7 @@ export default function PersonInformation() {
   }
 
   return (
-    <div className={`pi-page ${isAccountRoot ? 'is-hub' : 'is-section'}`}>
+    <div className="pi-page">
       <div className="pi-container">
 
         <Sidebar
@@ -166,12 +163,6 @@ export default function PersonInformation() {
         />
 
         <main className="main-content">
-
-          {/* Mobile Back Button */}
-          <div className="mobile-back-row" onClick={() => navigate('/account')}>
-            <span className="back-arrow">←</span>
-            <span>Account</span>
-          </div>
 
           {/* Header */}
           <div className="content-header">

@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { useWishlist } from '../../context/WishlistContext';
 import { useState } from 'react';
@@ -38,13 +38,9 @@ export default function Wishlist() {
     );
   }
 
-  const location = useLocation();
-  const isAccountRoot = location.pathname === '/account';
-
   return (
-    <div className={`wl-page ${isAccountRoot ? 'is-hub' : 'is-section'}`}>
+    <div className="wl-page">
       <div className="wl-container">
-
 
         <Sidebar
           activeNav={activeNav}
@@ -54,12 +50,6 @@ export default function Wishlist() {
         />
 
         <main className="wl-main">
-
-          {/* Mobile Back Button */}
-          <div className="mobile-back-row" onClick={() => navigate('/account')}>
-            <span className="back-arrow">←</span>
-            <span>Account</span>
-          </div>
 
           {/* Header */}
           <div className="wl-header">
