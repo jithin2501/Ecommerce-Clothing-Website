@@ -152,21 +152,29 @@
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
   }
 
+  .policy-mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
   /* Show back button */
   .mobile-back-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
     color: #2874f0;
-    font-weight: 700;
-    font-size: 15px;
     cursor: pointer;
-    margin-bottom: 20px;
-    width: fit-content;
-    padding: 4px 0;
     background: none;
     border: none;
-    font-family: inherit;
+    padding: 0;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .policy-content-header {
+    margin-bottom: 0 !important;
   }
 
   .mobile-back-btn span.back-chevron {

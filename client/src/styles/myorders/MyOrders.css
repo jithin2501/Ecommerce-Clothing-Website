@@ -342,24 +342,35 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
   }
 
-  .mobile-back-btn {
+  .mo-mobile-header {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .mobile-back-btn {
+    display: flex !important; /* Force display on mobile */
+    align-items: center;
+    justify-content: center;
     color: #2874f0;
-    font-weight: 700;
-    font-size: 15px;
     cursor: pointer;
-    margin-bottom: 20px;
-    width: fit-content;
-    padding: 4px 0;
     background: none;
     border: none;
-    font-family: inherit;
+    padding: 0;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .mo-header {
+    margin-bottom: 0 !important;
   }
 
   .mobile-back-btn span.back-chevron {
     font-size: 20px;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }

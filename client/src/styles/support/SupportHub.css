@@ -349,20 +349,41 @@
     padding: 20px 0 0;
   }
 
+  .sh-mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    justify-content: center; /* keep title centered if desired, but user said left side.
+    actually, I'll align items left for a cleaner look if button is involved.
+    Wait, the screenshot title was left aligned.
+    */
+    text-align: left;
+    justify-content: flex-start;
+  }
+
   .mobile-back-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
     color: #2874f0;
-    font-weight: 700;
-    font-size: 15px;
     cursor: pointer;
-    margin-bottom: 12px;
-    width: fit-content;
-    padding: 4px 16px;
     background: none;
     border: none;
-    font-family: inherit;
+    padding: 0;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .sh-hero .mobile-back-btn {
+    color: #fff; /* White on blue background */
+    padding-left: 0;
+  }
+
+  .sh-hero-title {
+    font-size: 1.25rem;
+    margin: 0 !important;
+    text-align: left;
   }
 
   .mobile-back-btn span.back-chevron {
@@ -375,9 +396,14 @@
 
   .sh-hero {
     padding: 24px 20px;
+    text-align: left; /* Align hero content left for mobile navigation */
   }
 
-  .sh-hero-title { font-size: 1.25rem; }
+  .sh-hero-sub {
+    margin-left: 0;
+    text-align: left;
+  }
+
   .sh-body { padding: 20px 16px; }
   .sh-order-card { padding: 12px; gap: 10px; flex-direction: column; align-items: flex-start; }
   .sh-order-img { width: 50px; height: 50px; }

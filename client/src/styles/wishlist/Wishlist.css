@@ -1,4 +1,7 @@
-/* ===== PAGE WRAPPER ===== */
+/* =========================================================
+   WISHLIST PAGE (UPDATED)
+========================================================= */
+
 .wl-page {
   background-color: #ffffff;
   min-height: 100vh;
@@ -19,366 +22,194 @@
   align-items: flex-start;
 }
 
-/* ===== MAIN ===== */
+/* ── Main content area ── */
 .wl-main {
   flex-grow: 1;
   background: #ffffff;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
-  border-radius: 12px;
-  padding: 28px 32px 24px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  border-radius: 10px;
+  padding: 28px 32px 32px;
   min-width: 0;
 }
 
-/* ===== HEADER ===== */
+/* ── Header ── */
 .wl-header {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
 }
 
 .wl-header h1 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 600;
-  color: #212121;
-  margin: 0 0 4px 0;
+  margin-bottom: 6px;
 }
 
 .wl-count {
+  font-size: 14px;
+  color: #878787;
   font-weight: 400;
-  color: #555;
+  margin-left: 4px;
 }
 
+/* Breadcrumb */
 .wl-breadcrumb {
-  font-size: 13px;
-  color: #888;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 13px;
+  color: #878787;
 }
 
 .wl-breadcrumb-link {
+  color: #2874f0;
   cursor: pointer;
-  color: #555;
-}
-
-.wl-breadcrumb-link:hover {
-  text-decoration: underline;
 }
 
 .wl-breadcrumb-sep {
-  color: #bbb;
+  color: #ccc;
 }
 
-/* ===== WISHLIST CARD LIST ===== */
-.wl-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  border-radius: 0;
-  overflow: hidden;
-  margin-bottom: 36px;
-}
-
-.wl-card {
-  border-bottom: 1px solid #f0f0f4;
-  transition: background-color 0.2s ease;
-}
-
-.wl-card:hover {
-  background-color: #fafafb;
-}
-
-.wl-card:last-child {
-  border-bottom: none;
-}
-
-.wl-card-inner {
-  display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  padding: 20px;
-  position: relative;
-}
-
-.wl-card-img {
-  width: 80px;
-  height: 80px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex-shrink: 0;
-  border: 1px solid #eee;
-}
-
- .wl-card-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.wl-card-name {
-  font-weight: 600;
-  font-size: 15px;
-  color: #1a1a1a;
-  margin-bottom: 4px;
-}
-
-.wl-card-brand {
-  font-size: 12px;
-  color: #888;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 8px;
-}
-
-.wl-brand-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #f59e0b;
-  display: inline-block;
-}
-
-.wl-card-pricing {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 0px;
-  flex-wrap: wrap;
-}
-
-.wl-price {
-  font-weight: 700;
-  font-size: 16px;
-  color: #1a1a1a;
-}
-
-.wl-original-price {
-  font-size: 13px;
-  color: #aaa;
-  text-decoration: line-through;
-}
-
-.wl-old-price {
-  font-size: 13px;
-  color: #aaa;
-  text-decoration: line-through;
-  margin-left: 6px;
-}
-
-.wl-discount {
-  font-size: 12px;
-  color: #22c55e;
-  font-weight: 600;
-}
-
-.wl-limited {
-  font-size: 12px;
-  color: #ef4444;
-  font-weight: 600;
-}
-
-.wl-unavailable-badge {
-  position: absolute;
-  top: 50%;
-  left: 20px;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.55);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 4px 6px;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
-  pointer-events: none;
-  width: 68px;
-  text-align: center;
-  line-height: 1.3;
-}
-
-/* ===== CARD META ===== */
-.wl-card-meta {
-  font-size: 12px;
-  color: #aaa;
-  margin-bottom: 8px;
-}
-
-/* ===== BUTTONS ===== */
-.wl-add-btn {
-  background: #2C3E50;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  padding: 8px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.wl-add-btn:hover {
-  background: #3d5166;
-}
-
-.wl-notify-btn {
-  background: #fff;
-  color: #2C3E50;
-  border: 1.5px solid #2C3E50;
-  border-radius: 6px;
-  padding: 8px 20px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.wl-notify-btn:hover {
-  background: #2C3E50;
-  color: #fff;
-}
-
-.wl-remove-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-  flex-shrink: 0;
-  transition: opacity 0.2s;
-}
-
-.wl-remove-btn:hover {
-  opacity: 0.6;
-}
-
-.wl-remove-icon {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  display: block;
-}
-
-/* ===== EMPTY STATE ===== */
+/* ── Empty State ── */
 .wl-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
   text-align: center;
-}
-
-.wl-empty-icon {
-  margin-bottom: 16px;
+  padding: 60px 20px;
 }
 
 .wl-empty-img {
-  width: 60px;
-  height: 60px;
-  object-fit: contain;
-  opacity: 0.55;
+  width: 120px;
+  opacity: 0.5;
+  margin-bottom: 20px;
 }
 
-.wl-empty-title {
+.wl-empty h2 {
   font-size: 18px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 8px;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
-.wl-empty-sub {
-  font-size: 14px;
-  color: #888;
-  margin: 0 0 24px;
+.wl-empty p {
+  color: #878787;
+  margin-bottom: 24px;
 }
 
 .wl-shop-btn {
-  background: #2C3E50;
+  display: inline-block;
+  background-color: #2874f0;
   color: #fff;
-  border: none;
-  border-radius: 8px;
-  padding: 12px 28px;
-  font-size: 14px;
+  padding: 12px 32px;
+  border-radius: 4px;
   font-weight: 600;
-  cursor: pointer;
+  text-decoration: none;
   transition: background 0.2s;
 }
 
 .wl-shop-btn:hover {
-  background: #3d5166;
+  background-color: #1a5fc0;
 }
 
-/* ===== RECENTLY VIEWED ===== */
-.wl-recent {
-  margin-top: 8px;
-}
-
-.wl-recent-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 16px 0;
-}
-
+/* ── Recent Items Grid (Horizontal boxes) ── */
 .wl-recent-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
-.wl-recent-card {
-  background: #fff;
-  border-radius: 10px;
+.wl-item-card {
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
-  cursor: pointer;
-  transition: box-shadow 0.2s;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  background: #fff;
 }
 
-.wl-recent-card:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+.wl-item-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
 }
 
-.wl-recent-img {
+.wl-img-wrap {
+  position: relative;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: #f9f9f9;
+}
+
+.wl-img {
   width: 100%;
-  aspect-ratio: 1;
+  height: 100%;
   object-fit: cover;
-  display: block;
 }
 
-.wl-recent-category {
-  font-size: 10px;
+.wl-remove-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #ff3f6c;
+  font-size: 16px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.wl-remove-btn:hover {
+  background: #ff3f6c;
+  color: #fff;
+}
+
+.wl-item-info {
+  padding: 12px;
+}
+
+.wl-item-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wl-item-price {
+  font-size: 15px;
   font-weight: 700;
-  color: #aaa;
-  letter-spacing: 0.8px;
-  padding: 10px 10px 2px;
+  color: #212121;
 }
 
-.wl-recent-name {
+.wl-price-old {
   font-size: 13px;
+  color: #878787;
+  text-decoration: line-through;
+  margin-left: 6px;
+  font-weight: 400;
+}
+
+.wl-price-off {
+  font-size: 13px;
+  color: #388e3c;
+  margin-left: 6px;
   font-weight: 600;
-  color: #1a1a1a;
-  padding: 0 10px 4px;
 }
 
-.wl-recent-price {
-  font-size: 13px;
-  font-weight: 700;
-  color: #1a1a1a;
-  padding: 0 10px 12px;
-}
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 
-/* ===== PRODUCT GRID HEART ===== */
-.pg-wishlist--active {
-  color: #e53935 !important;
-  opacity: 1 !important;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  /* Hide breadcrumbs on mobile */
-  .wl-breadcrumb {
-    display: none !important;
+@media (max-width: 1100px) {
+  .wl-recent-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
+@media (max-width: 768px) {
   /* Hide sidebar on sub-section pages */
   .wl-page .sidebar {
     display: none !important;
@@ -399,41 +230,56 @@
   .wl-main {
     width: 94%;
     margin: 16px auto;
-    padding: 20px 16px 16px;
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-    padding-left: 16px;
-    padding-top: 20px;
+    padding: 20px 16px 16px;
   }
 
   .wl-empty {
     padding: 30px 16px;
   }
 
+  .wl-mobile-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
   /* Back button */
   .mobile-back-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
     color: #2874f0;
-    font-weight: 700;
-    font-size: 15px;
     cursor: pointer;
-    margin-bottom: 20px;
-    width: fit-content;
-    padding: 4px 0;
     background: none;
     border: none;
-    font-family: inherit;
+    padding: 0;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+
+  .wl-header {
+    margin-bottom: 0 !important;
+  }
+
+  .wl-breadcrumb {
+    display: none !important;
   }
 
   .mobile-back-btn span.back-chevron {
     font-size: 20px;
     line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+
+  .wl-header h1 { font-size: 1.15rem; }
 
   .wl-recent-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-}
+}

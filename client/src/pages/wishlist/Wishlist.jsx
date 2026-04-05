@@ -51,22 +51,21 @@ export default function Wishlist() {
 
         <main className="wl-main">
 
-          {/* Mobile-only back button */}
-          <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-            <span className="back-chevron">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </span>
-          </button>
-
-          {/* Header */}
-          <div className="wl-header">
-            <h1>My Wishlist <span className="wl-count">({wishlist.length})</span></h1>
-            <div className="wl-breadcrumb">
-              <span onClick={() => navigate('/account')} className="wl-breadcrumb-link">Account</span>
-              <span className="wl-breadcrumb-sep">/</span>
-              <span>Wishlist</span>
+          <div className="wl-mobile-header">
+            <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+              <span className="back-chevron">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div className="wl-header">
+              <h1>My Wishlist <span className="wl-count">({wishlist.length})</span></h1>
+              <div className="wl-breadcrumb">
+                <span onClick={() => navigate('/account')} className="wl-breadcrumb-link">Account</span>
+                <span className="wl-breadcrumb-sep">/</span>
+                <span>Wishlist</span>
+              </div>
             </div>
           </div>
 
