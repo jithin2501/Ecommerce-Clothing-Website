@@ -180,7 +180,6 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <img src="images/personalinfor/profile.png" alt="personal" className="card-icon-img" />
                 Personal Information
               </div>
               {!editingPersonal
@@ -247,7 +246,6 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <img src="images/personalinfor/emails.png" alt="email" className="card-icon-img" />
                 Email Address
               </div>
               {!editingEmail
@@ -280,7 +278,6 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                <img src="images/personalinfor/number.png" alt="mobile" className="card-icon-img" />
                 Mobile Number
               </div>
               {!editingMobile
