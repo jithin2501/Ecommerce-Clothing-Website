@@ -54,7 +54,7 @@ export default function MyReviews() {
 
           {/* Mobile-only back button */}
           <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-            <span className="back-chevron">&gt;</span>
+            <span className="back-chevron">&lt;</span>
           </button>
 
           {/* Empty State */}
