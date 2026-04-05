@@ -279,79 +279,8 @@
   border-color: #2d2d2d;
 }
 
-.mo-container {
-  display: flex;
-  width: 100%;
-  max-width: 1200px;
-  gap: 20px;
-  align-items: flex-start;
-  margin: 0 auto;
-}
-
-/* ──────────────────────────────────────────────────────────
-   MOBILE HUB-AND-SPOKE RESPONSIVE (Phone Only)
-   ────────────────────────────────────────────────────────── */
-
-.mobile-back-row {
-  display: none;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 20px;
-  cursor: pointer;
-  color: #2874f0;
-  font-weight: 700;
-  font-size: 15px;
-  padding: 4px 0;
-  width: fit-content;
-}
-
-.back-arrow {
-  font-size: 20px;
-  line-height: normal;
-}
-
-@media (max-width: 768px) {
-  .mo-page {
-    margin-top: 10px;
-    padding: 10px 0;
-  }
-
-  .mo-container {
-    flex-direction: column;
-    gap: 0;
-  }
-
-  /* 1. HUB MODE: Show only centered sidebar */
-  .mo-page.is-hub .sidebar {
-    display: flex !important; 
-    width: 92% !important;
-    margin: 20px auto !important;
-  }
-  .mo-page.is-hub .mo-content {
-    display: none !important;
-  }
-
-  /* 2. SECTION MODE: Show content, hide sidebar, show back button */
-  .mo-page.is-section .sidebar {
-    display: none !important;
-  }
-  .mo-page.is-section .mo-content {
-    display: block !important;
-    width: 95%;
-    margin: 10px auto;
-    padding: 20px 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-    background: #fff;
-    border-radius: 12px;
-  }
-  .mo-page.is-section .mobile-back-row {
-    display: flex; /* Show back button */
-  }
-
-  .mo-header h1 {
-    font-size: 1.1rem;
-  }
-  
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
   .mo-search-row {
     flex-direction: column;
     align-items: stretch;
@@ -366,25 +295,20 @@
   }
 
   .mo-card-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
+    flex-wrap: wrap;
   }
-  .mo-card-img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
+
   .mo-card-status {
     width: 100%;
     text-align: left;
     min-width: unset;
   }
+
   .mo-status-badge {
     justify-content: flex-start;
   }
+
   .mo-review-btn {
     margin-left: 0;
-    width: 100%;
   }
-}
+}
