@@ -240,3 +240,48 @@
 .btn-close-modal:hover {
   background: #e5e7eb;
 }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+  .contact-outer {
+    padding: 1rem;
+    margin: 0 -0.5rem; /* Slight negative margin to maximize space if needed */
+  }
+
+  .contact-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth inertia scroll for iOS */
+  }
+
+  .contact-table {
+    min-width: 700px; /* Force table to maintain width so columns don't squash */
+  }
+
+  .contact-title {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+
+  .modal-box {
+    width: 90%;
+    margin: 1.2rem;
+    padding: 1.8rem 1.4rem;
+  }
+
+  .modal-fields p {
+    font-size: 0.85rem;
+  }
+
+  .td-name, .td-msg {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 150px !important; /* Force a single concise line on mobile */
+  }
+
+  .td-contact {
+    white-space: nowrap;
+  }
+}
+
+

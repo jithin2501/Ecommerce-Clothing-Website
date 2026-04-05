@@ -196,3 +196,77 @@
   object-fit: contain;
   display: block;
 }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 768px) {
+  .rm-page {
+    padding: 0.5rem 0.2rem;
+  }
+
+  .rm-stats-row {
+    grid-template-columns: repeat(2, 1fr); /* 2x2 grid for stats */
+    gap: 0.7rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .rm-stat-card {
+    min-height: 80px;
+    padding: 0.7rem;
+  }
+
+  .rm-stat-num {
+    font-size: 1.3rem;
+  }
+
+  /* Filters horizontal scroll */
+  .rm-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.6rem;
+    padding: 0.2rem 0.2rem 1rem 0; /* Space for scrollbar */
+  }
+
+  .rm-filter-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 5px 14px;
+    font-size: 0.75rem;
+  }
+
+  /* Table horizontal scroll */
+  .rm-table-outer {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+  }
+
+  .rm-table {
+    min-width: 650px; /* Maintain width to prevent squashing */
+  }
+
+  .rm-table th, .rm-table td {
+    padding: 0.6rem 0.8rem; /* Further reduced padding */
+  }
+
+  .rm-name, .rm-message {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    max-width: 140px !important;
+  }
+
+  /* Make scrollbar always visible for the table on mobile */
+  .rm-table-outer::-webkit-scrollbar {
+    height: 6px;
+    display: block;
+  }
+  .rm-table-outer::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  .rm-table-outer::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 10px;
+  }
+}
+
