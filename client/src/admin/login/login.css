@@ -191,3 +191,45 @@
 .login-eye:hover .login-eye-img {
   opacity: 1;
 }
+
+/* ── Mobile Responsive ── */
+@media (max-width: 600px) {
+  .login-circle-container {
+    display: none !important;
+  }
+
+  .login-container {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .login-box {
+    width: 100%;
+    max-width: 350px;
+    height: auto;
+    padding: 40px 30px;
+    border-radius: 20px; /* Non-circular on mobile */
+    background: rgba(30, 42, 58, 0.98);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
+
+  .login-heading {
+    color: #4facfe !important; /* Force a clear, matching cyan */
+    margin-bottom: 30px;
+    transition: none; /* Disable any transition from the dynamic loop */
+  }
+
+  .login-btn {
+    background: #4facfe !important; /* Force match the heading exactly */
+    color: #1e2a3a !important; /* Use dark text on cyan for better contrast */
+    font-weight: 800;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+    transition: none;
+  }
+
+  .login-input-group input:focus {
+    border-color: #4facfe !important;
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.2) !important;
+  }
+}

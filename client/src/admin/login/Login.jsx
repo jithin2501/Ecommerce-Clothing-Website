@@ -39,6 +39,9 @@ export default function Login() {
     const bars = container.querySelectorAll('.login-bar');
 
     const interval = setInterval(() => {
+      // Don't cycle colors or animate bars on mobile screens
+      if (window.innerWidth <= 600) return;
+
       if (activeBars > 0 && activeBars % numBars === 0) {
         paletteIndex = (paletteIndex + 1) % colorPalette.length;
         const t = colorPalette[paletteIndex];
