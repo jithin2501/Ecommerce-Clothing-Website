@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/myorders/MyOrders.css';
 
 const orders = [
@@ -89,9 +90,28 @@ export default function MyOrders() {
     o.color.toLowerCase().includes(query.toLowerCase())
   );
 
+  const location = useLocation();
+  const isAccountRoot = location.pathname === '/account';
+
   return (
-    <div className="mo-page">
-      <div className="mo-content">
+    <div className={`mo-page ${isAccountRoot ? 'is-hub' : 'is-section'}`}>
+      <div className="mo-container">
+
+        <Sidebar
+          activeNav="orders"
+          setActiveNav={() => {}}
+          activeSubNav=""
+          setActiveSubNav={() => {}}
+        />
+
+        <div className="mo-content">
+
+          {/* Mobile Back Button */}
+          <div className="mobile-back-row" onClick={() => navigate('/account')}>
+            <span className="back-arrow">←</span>
+            <span>Account</span>
+          </div>
+
 
         {/* Breadcrumb — using div instead of nav to avoid inheriting global nav { position: sticky } */}
         <div className="mo-breadcrumb">
@@ -165,6 +185,7 @@ export default function MyOrders() {
           <button className="mo-page-btn" onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}>›</button>
         </div>
 
+        </div>
       </div>
     </div>
   );

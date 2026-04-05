@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/myreviews/MyReviews.css';
 
@@ -39,9 +39,13 @@ export default function MyReviews() {
     );
   }
 
+  const location = useLocation();
+  const isAccountRoot = location.pathname === '/account';
+
   return (
-    <div className="mr-page">
+    <div className={`mr-page ${isAccountRoot ? 'is-hub' : 'is-section'}`}>
       <div className="mr-container">
+
 
         <Sidebar
           activeNav={activeNav}
@@ -51,6 +55,13 @@ export default function MyReviews() {
         />
 
         <main className="mr-main">
+
+          {/* Mobile Back Button */}
+          <div className="mobile-back-row" onClick={() => navigate('/account')}>
+            <span className="back-arrow">←</span>
+            <span>Account</span>
+          </div>
+
 
           {/* Empty State */}
           <div className="mr-empty-section">
