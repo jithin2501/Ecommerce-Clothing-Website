@@ -1,0 +1,108 @@
+/* =========================================================
+   SHARE MODAL
+========================================================= */
+.sm-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.sm-content {
+  background: #fff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  padding: 24px;
+  animation: sm-pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes sm-pop {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.sm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.sm-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #212529;
+  margin: 0;
+}
+
+.sm-close {
+  background: none;
+  border: none;
+  color: #8c929c;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.15s;
+}
+.sm-close:hover { color: #212529; }
+
+.sm-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.sm-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  transition: transform 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.sm-option:hover {
+  transform: translateY(-4px);
+}
+
+.sm-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.sm-option span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+@media (max-width: 480px) {
+  .sm-content {
+    border-radius: 20px 20px 0 0;
+    position: fixed;
+    bottom: 0;
+    max-width: 100%;
+    animation: sm-slide-up 0.3s ease-out;
+  }
+}
+
+@keyframes sm-slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}

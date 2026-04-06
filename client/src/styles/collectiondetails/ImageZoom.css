@@ -51,3 +51,18 @@
   color: white;
   border-color: var(--accent-clay, #C17B5C);
 }
+
+@media (max-width: 768px) {
+  .iz-zoom-btn {
+    display: none !important;
+  }
+  
+  .iz-container {
+    cursor: default !important;
+    pointer-events: none; /* Disables hover zoom logic */
+  }
+
+  .pg-main {
+    pointer-events: auto !important; /* Re-enable for the lightbox click which is on pg-main */
+  }
+}
