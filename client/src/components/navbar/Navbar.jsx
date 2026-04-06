@@ -46,11 +46,13 @@ export default function Navbar() {
     document.body.classList.add('has-navbar');
     
     // Add page-specific classes for tighter top spacing
+    const pathParts = location.pathname.split('/');
     const isCollectionsList = location.pathname === '/collections';
-    const isProductDetail = location.pathname.includes('/collections/') && location.pathname.split('/').length > 2;
+    const isCategoryPage = pathParts.length === 3 && pathParts[1] === 'collections';
+    const isProductDetail = pathParts.length > 3 && pathParts[1] === 'collections';
     const isContact = location.pathname === '/contact';
     
-    if (isCollectionsList) document.body.classList.add('collections-path');
+    if (isCollectionsList || isCategoryPage) document.body.classList.add('collections-path');
     else document.body.classList.remove('collections-path');
 
     if (isProductDetail) document.body.classList.add('cdp-path');
