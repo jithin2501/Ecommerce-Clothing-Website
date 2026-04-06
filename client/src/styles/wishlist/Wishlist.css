@@ -78,10 +78,12 @@
 }
 
 .wl-empty-img {
-  width: 100px;
+  width: 120px;
+  max-width: 100%;
   height: auto;
-  margin-bottom: 24px;
+  margin: 0 auto 24px; /* CENTER IN THE PAGE */
   opacity: 0.6;
+  display: block;      /* Centering works with display block + margin auto */
 }
 
 .wl-empty-title {
@@ -141,8 +143,8 @@
 }
 
 .wl-card-img {
-  width: 100px; /* FIXED WIDTH */
-  height: 120px; /* FIXED HEIGHT */
+  width: 85px;  /* REDUCED WIDTH */
+  height: 90px; /* REDUCED HEIGHT to match text block height */
   object-fit: cover;
   border-radius: 6px;
   background-color: #f9f9f9;
@@ -286,8 +288,8 @@
   }
 
   .wl-card-img {
-    width: 80px;
-    height: 100px;
+    width: 75px;  /* Even smaller on mobile */
+    height: 80px;
   }
 
   .wl-card-name {

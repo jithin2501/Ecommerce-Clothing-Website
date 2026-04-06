@@ -109,9 +109,9 @@ export default function Wishlist() {
                         <span className="wl-brand-dot" /> {item.category}
                       </div>
                       <div className="wl-card-pricing">
-                        <span className="wl-price">{item.price}</span>
+                        <span className="wl-price">₹{item.price}</span>
                         {item.oldPrice && (
-                          <span className="wl-old-price">{item.oldPrice}</span>
+                          <span className="wl-old-price">₹{item.oldPrice}</span>
                         )}
                       </div>
                     </div>
