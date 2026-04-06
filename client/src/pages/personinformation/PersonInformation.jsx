@@ -183,7 +183,7 @@ export default function PersonInformation() {
           <div className="form-card">
             <div className="form-card-header">
               <div className="card-title">
-                Personal Information
+                Name
               </div>
               {!editingPersonal
                 ? <span className="edit-btn" onClick={handleEditPersonal}>Edit</span>

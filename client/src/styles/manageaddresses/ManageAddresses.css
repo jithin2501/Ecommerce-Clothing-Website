@@ -157,7 +157,7 @@
   font-weight: 500;
 }
 
-/* Radio */
+/* Radio & Checkbox */
 .ma-radio-group { display: flex; gap: 24px; }
 .ma-radio {
   display: flex; align-items: center; gap: 8px;
@@ -165,7 +165,72 @@
 }
 .ma-radio input[type="radio"] {
   accent-color: #2C3E50;
-  width: 16px; height: 16px; cursor: pointer;
+  width: 17px; height: 17px; cursor: pointer;
+}
+
+/* Custom Circular Checkbox */
+.ma-checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.ma-checkbox-wrapper {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.ma-checkbox-wrapper input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.ma-checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 50%; /* Makes it circular */
+  transition: all 0.2s ease;
+}
+
+.ma-checkbox-wrapper:hover input ~ .ma-checkmark {
+  border-color: #2C3E50;
+}
+
+.ma-checkbox-wrapper input:checked ~ .ma-checkmark {
+  background-color: #2C3E50;
+  border-color: #2C3E50;
+}
+
+.ma-checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.ma-checkbox-wrapper input:checked ~ .ma-checkmark:after {
+  display: block;
+}
+
+.ma-checkbox-wrapper .ma-checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 /* Form Actions */

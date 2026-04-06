@@ -171,6 +171,48 @@ export default function ManageAddresses() {
     }
 
     broadcastAddressChange(updatedAddresses);
+
+    // ─────────────────────────────────────────────────────────────────
+    // AUTO-SYNC PERSONAL INFORMATION
+    // ─────────────────────────────────────────────────────────────────
+    if (userUid && updatedAddresses.length > 0) {
+      try {
+        const profileRes = await fetch(`/api/client-auth/profile/${userUid}`);
+        const profileData = await profileRes.json();
+
+        if (profileData.success) {
+          const u = profileData.user;
+          const updates = {};
+          const loginType = (u.loginTypes && u.loginTypes.length > 0) ? u.loginTypes[0] : '';
+
+          // 1. Phone Login -> Sync Name if missing
+          if (loginType === 'phone') {
+            if (!u.name || u.name.trim() === '') {
+              updates.name = newAddrPart.fullName;
+            }
+          }
+
+          // 2. Google Login -> Sync Phone if missing
+          if (loginType === 'google') {
+            const currentPhone = (u.phone || '').trim();
+            if (!currentPhone || currentPhone === '' || currentPhone === '+91') {
+              updates.phone = `+91${newAddrPart.phone}`;
+            }
+          }
+
+          if (Object.keys(updates).length > 0) {
+            await fetch(`/api/client-auth/profile/${userUid}`, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(updates)
+            });
+          }
+        }
+      } catch (err) {
+        console.warn("Failed to auto-sync profile info:", err);
+      }
+    }
+
     setForm(emptyForm);
     setErrors({});
     setEditingId(null);
@@ -389,9 +431,18 @@ export default function ManageAddresses() {
                   {errors.type && <span className="ma-error">{errors.type}</span>}
                 </div>
 
-                <div className="ma-field ma-field-full" style={{ marginTop: '15px', display: 'flex', alignItems: 'center', gap: '10px', flexDirection: 'row' }}>
-                  <input type="checkbox" checked={form.isDefault || false} onChange={e => handleChange('isDefault', e.target.checked)} style={{ width: '16px', height: '16px', cursor: 'pointer', margin: 0 }} />
-                  <label style={{ margin: 0, cursor: 'pointer', paddingTop: '2px' }} onClick={() => handleChange('isDefault', !form.isDefault)}>MAKE THIS MY DEFAULT ADDRESS</label>
+                <div className="ma-field ma-field-full" style={{ marginTop: '15px' }}>
+                  <label className="ma-checkbox-container">
+                    <div className="ma-checkbox-wrapper">
+                      <input 
+                        type="checkbox" 
+                        checked={form.isDefault || false} 
+                        onChange={e => handleChange('isDefault', e.target.checked)} 
+                      />
+                      <span className="ma-checkmark"></span>
+                    </div>
+                    <span style={{ fontSize: '13px', fontWeight: '600', color: '#212121', paddingTop: '1px' }}>MAKE THIS MY DEFAULT ADDRESS</span>
+                  </label>
                 </div>
               </div>
 
