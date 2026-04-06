@@ -15,6 +15,7 @@ import PersonInformation from './pages/personinformation/PersonInformation';
 import AccountHub from './pages/personinformation/AccountHub';
 import ManageAddresses from './pages/manageaddresses/ManageAddresses';
 import MyOrders from './pages/myorders/MyOrders';
+import OrderDetail from './pages/myorders/OrderDetail';
 import Wishlist from './pages/wishlist/Wishlist';
 import MyReviews from './pages/myreviews/MyReviews';
 import WriteReview from './pages/myorders/WriteReview';
@@ -72,6 +73,7 @@ function PublicLayout() {
         <Route path="/account/profile" element={<PersonInformation />} />
         <Route path="/account/addresses" element={<ManageAddresses />} />
         <Route path="/account/orders" element={<MyOrders />} />
+        <Route path="/account/orders/:orderId" element={<OrderDetail />} />
         <Route path="/account/wishlist" element={<Wishlist />} />
         <Route path="/account/reviews" element={<MyReviews />} />
         <Route path="/account/write-review" element={<WriteReview />} />

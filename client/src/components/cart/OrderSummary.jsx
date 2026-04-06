@@ -44,7 +44,15 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         body: JSON.stringify({ 
           amount: total,
           userId: user.uid,
-          items: cartItems,
+          items: cartItems.map(item => ({
+            productId: item.id,
+            name: item.name,
+            qty: item.qty,
+            price: item.price,
+            size: item.size,
+            color: item.color,
+            photo: item.img
+          })),
           shippingAddress: {
             name: selectedAddress.name || user.name,
             phone: selectedAddress.phone || user.phone,

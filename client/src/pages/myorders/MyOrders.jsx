@@ -111,16 +111,26 @@ export default function MyOrders() {
             filtered.map(order => (
               <div key={order._id} className="mo-card">
                 {order.items?.map((item, idx) => (
-                  <div key={`${order._id}-${idx}`} className="mo-card-top" style={{ borderBottom: idx < order.items.length - 1 ? '1px solid #f1f5f9' : 'none', marginBottom: '10px', paddingBottom: '10px' }}>
-                    <img src={item.image} alt={item.name} className="mo-card-img" />
+                  <div 
+                    key={`${order._id}-${idx}`} 
+                    className="mo-card-top" 
+                    onClick={() => navigate(`/account/orders/${order.orderId}`, { state: { order, item } })}
+                    style={{ 
+                      borderBottom: idx < order.items.length - 1 ? '1px solid #f1f5f9' : 'none', 
+                      marginBottom: '10px', 
+                      paddingBottom: '10px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <img src={item.photo} alt={item.name} className="mo-card-img" />
                     
                     <div className="mo-card-info">
                       <div className="mo-card-name">{item.name}</div>
                       <div className="mo-card-meta">
                         {item.color && `Color: ${item.color}`} {item.size && ` | Size: ${item.size}`}
-                        {item.quantity > 1 && ` | Qty: ${item.quantity}`}
+                        {item.qty > 1 && ` | Qty: ${item.qty}`}
                       </div>
-                      <div className="mo-card-price">₹{item.price?.toLocaleString()}</div>
+                      <div className="mo-card-price">{String(item.price).includes('₹') ? item.price : `₹${item.price?.toLocaleString()}`}</div>
                     </div>
 
                     <div className="mo-card-status">
@@ -131,7 +141,7 @@ export default function MyOrders() {
                       <div className="mo-status-sub">Order ID: {order.orderId?.slice(-12)}</div>
                       <button
                         className="mo-review-btn"
-                        onClick={() => navigate('/account/write-review', { state: { order, item } })}
+                        onClick={(e) => { e.stopPropagation(); navigate('/account/write-review', { state: { order, item } }); }}
                       >☆ Rate &amp; Review Product</button>
                     </div>
                   </div>

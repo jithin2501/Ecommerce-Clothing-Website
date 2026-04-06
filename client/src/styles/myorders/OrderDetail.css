@@ -1,0 +1,176 @@
+/* ── Order Detail Styling ── */
+.od-page {
+  background: #F1F3F6;
+  min-height: 100vh;
+  padding: 2rem 0;
+  font-family: 'Inter', sans-serif;
+  color: #212121;
+}
+
+.od-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.od-breadcrumb {
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  color: #757575;
+}
+.od-breadcrumb span:nth-child(1) { cursor: pointer; color: #3B82F6; font-weight: 500; }
+.od-breadcrumb .sep { margin: 0 0.5rem; }
+
+.od-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.od-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* ── LEFT COLUMN ── */
+.main-prod-card { padding: 2rem; position: relative; }
+
+.od-prod-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #F0F0F0;
+}
+
+.od-prod-main h1 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.od-prod-meta { color: #878787; font-size: 0.95rem; margin-bottom: 0.25rem; }
+.od-prod-seller { color: #878787; font-size: 0.85rem; margin-bottom: 0.75rem; }
+.od-prod-price { font-size: 1.4rem; font-weight: 700; color: #212121; }
+
+.od-prod-img { width: 100px; height: 100px; object-fit: cover; border-radius: 4px; border: 1px solid #F0F0F0; }
+
+/* Timeline */
+.od-timeline-wrap { padding: 2rem 0; border-bottom: 1px solid #F0F0F0; }
+
+.od-timeline { display: flex; flex-direction: column; gap: 0.5rem; position: relative; margin-left: 0.5rem; }
+
+.od-timeline-step { display: flex; align-items: start; gap: 1.5rem; position: relative; }
+
+.od-step-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #FFF;
+  border: 2px solid #E0E0E0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2px;
+}
+
+.od-timeline-step.active .od-step-circle {
+  background: #2874F0;
+  border-color: #2874F0;
+}
+
+.od-check { color: #FFF; font-size: 0.7rem; font-weight: bold; }
+
+.od-step-line {
+  position: absolute;
+  top: 22px;
+  left: 9px;
+  width: 2px;
+  height: calc(100% - 15px);
+  background: #E0E0E0;
+  z-index: 1;
+}
+.od-step-line.active { background: #2874F0; }
+
+.od-step-label { font-size: 0.95rem; color: #212121; font-weight: 500; }
+
+.od-updates-link {
+  background: none; border: none; color: #2874F0; font-size: 0.95rem; font-weight: 600;
+  margin-top: 1.5rem; cursor: pointer; display: block;
+}
+
+/* Chat Section */
+.od-chat-section { padding-top: 1.5rem; display: flex; justify-content: center; }
+.od-chat-btn {
+  background: none; border: none; font-size: 1rem; color: #212121; font-weight: 500;
+  display: flex; align-items: center; gap: 0.75rem; cursor: pointer; transition: color 0.2s;
+}
+.od-chat-btn:hover { color: #2874F0; }
+
+/* Rate Card */
+.rate-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
+.od-rate-box { background: #F8F9FA; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; }
+.od-rate-flex { display: flex; align-items: center; gap: 0.75rem; color: #878787; font-size: 0.95rem; margin-bottom: 1rem; }
+.od-check-icon { width: 18px; height: 18px; border: 2px solid #878787; border-radius: 2px; color: #FFF; font-size: 0.7rem; display: flex; align-items: center; justify-content: center; }
+
+.od-stars { display: flex; gap: 0.5rem; justify-content: center; font-size: 2rem; margin-bottom: 0.5rem; }
+.od-star { cursor: pointer; color: #E0E0E0; transition: color 0.2s; }
+.od-star.active { color: #CBD5E1; } /* Flipkart uses greyish stars in this section? No, probably yellow or grey. Screenshot shows grey ish stars */
+.od-star:hover { color: #CBD5E1; }
+
+.od-rate-thanks { text-align: center; color: #4CAF50; font-size: 0.9rem; font-weight: 500; }
+.od-helpful-link {
+  width: 100%; text-align: left; background: none; border: none; border-top: 1px solid #F0F0F0;
+  padding-top: 1rem; display: flex; justify-content: space-between; align-items: center;
+  font-size: 0.95rem; color: #212121; cursor: pointer;
+}
+
+/* Others Card */
+.others-card h3 { font-size: 1rem; color: #878787; margin-bottom: 1.25rem; font-weight: 500; }
+.od-other-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-top: 1px solid #F0F0F0; }
+.od-other-info h4 { font-size: 1rem; font-weight: 500; margin-bottom: 0.25rem; }
+.status-dot { font-size: 0.85rem; color: #878787; }
+.status-dot.delivered { color: #388E3C; }
+.od-other-img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; border: 1px solid #F0F0F0; }
+
+
+/* ── RIGHT COLUMN ── */
+.info-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; border-bottom: 1px solid #F0F0F0; padding-bottom: 0.75rem; }
+
+.od-info-row { display: flex; gap: 1rem; align-items: start; margin-bottom: 1rem; }
+.od-info-icon { font-size: 1.1rem; color: #757575; }
+.od-info-text { font-size: 0.95rem; line-height: 1.5; color: #212121; }
+.od-info-text strong { display: block; margin-bottom: 0.25rem; }
+
+.price-details h2 { border: none; margin-bottom: 1rem; }
+.od-price-row { display: flex; justify-content: space-between; font-size: 1rem; margin-bottom: 0.75rem; color: #212121; }
+.od-price-expand { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+
+.od-price-total {
+  display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700;
+  border-top: 1px dashed #E0E0E0; margin: 1rem 0; padding-top: 1rem;
+}
+
+.od-payment-method {
+  background: #F8F9FA; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;
+  display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;
+}
+.od-pay-pill { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
+.pill-icon { background: #FFF; border: 1px solid #E0E0E0; padding: 2px 6px; border-radius: 2px; font-size: 0.65rem; }
+
+.od-download-btn {
+  width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.75rem;
+  background: #FFF; border: 1px solid #E0E0E0; padding: 1rem; border-radius: 8px;
+  font-size: 1rem; font-weight: 500; cursor: pointer; transition: background 0.2s;
+}
+.od-download-btn:hover { background: #F8FAFC; border-color: #CBD5E1; }
+
+@media (max-width: 900px) {
+  .od-grid { grid-template-columns: 1fr; }
+  .od-left, .od-right { width: 100%; }
+}
