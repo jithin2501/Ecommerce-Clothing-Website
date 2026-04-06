@@ -44,8 +44,28 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.classList.add('has-navbar');
-    return () => document.body.classList.remove('has-navbar');
-  }, []);
+    
+    // Add page-specific classes for tighter top spacing
+    const isCollectionsList = location.pathname === '/collections';
+    const isProductDetail = location.pathname.includes('/collections/') && location.pathname.split('/').length > 2;
+    const isContact = location.pathname === '/contact';
+    
+    if (isCollectionsList) document.body.classList.add('collections-path');
+    else document.body.classList.remove('collections-path');
+
+    if (isProductDetail) document.body.classList.add('cdp-path');
+    else document.body.classList.remove('cdp-path');
+    
+    if (isContact) document.body.classList.add('contact-path');
+    else document.body.classList.remove('contact-path');
+
+    return () => {
+      document.body.classList.remove('has-navbar');
+      document.body.classList.remove('collections-path');
+      document.body.classList.remove('cdp-path');
+      document.body.classList.remove('contact-path');
+    };
+  }, [location.pathname]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {

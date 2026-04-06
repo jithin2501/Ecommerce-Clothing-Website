@@ -69,7 +69,7 @@ export default function CollectionsPage() {
     <main className="collections-page">
       <div className="section-inner">
         {/* Breadcrumb - reduced gap */}
-        <div className="page-breadcrumb" style={{ marginTop: '20px' }}>
+        <div className="page-breadcrumb" style={{ marginTop: '0px' }}>
           <Link to="/" className="breadcrumb-link">Home</Link>
           <span className="breadcrumb-sep"> › </span>
           
@@ -90,7 +90,7 @@ export default function CollectionsPage() {
           )}
         </div>
 
-        <div className="agp-layout" style={{ marginTop: '10px', marginBottom: '60px' }}>
+        <div className="agp-layout" style={{ marginTop: '0px', marginBottom: '60px' }}>
           <FilterSidebar
             selectedColors={selectedColors} setSelectedColors={setSelectedColors}
             availableColors={availableColors}
