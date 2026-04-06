@@ -30,12 +30,14 @@ exports.createOrder = async (req, res) => {
       receipt,
     };
 
+    console.log('📦 Creating Order for body:', req.body);
     const order = await razorpay.orders.create(options);
+    console.log('✅ Razorpay order created:', order.id);
 
     // Save initial order record as pending
     await Order.create({
       orderId: order.id,
-      userId,
+      userId: userId || 'guest',
       amount,
       currency,
       items,
@@ -51,8 +53,16 @@ exports.createOrder = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Razorpay Create Order Error:', error);
-    res.status(500).json({ success: false, error: 'Failed to create Razorpay order' });
+    console.error('❌ Razorpay Create Order Error Detail:', {
+      message: error.message,
+      stack: error.stack,
+      body: req.body
+    });
+    res.status(500).json({ 
+      success: false, 
+      error: 'Failed to create Razorpay order',
+      detail: error.message 
+    });
   }
 };
 

@@ -64,9 +64,10 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         })
       });
       const data = await res.json();
+      console.log('📦 Create order response:', data);
 
       if (!data.success) {
-        throw new Error(data.error || 'Failed to create order');
+        throw new Error(data.detail || data.error || 'Failed to create order');
       }
 
       // 2. Load Razorpay script
