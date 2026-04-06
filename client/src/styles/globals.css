@@ -188,7 +188,10 @@ img { max-width: 100%; display: block; }
   /* Hide all breadcrumbs on mobile */
   .page-breadcrumb, 
   .cp-breadcrumb, 
-  .cdp-breadcrumb { 
+  .cdp-breadcrumb,
+  .contact-breadcrumb,
+  .catpage-breadcrumb,
+  .mo-breadcrumb { 
     display: none !important; 
   }
 }

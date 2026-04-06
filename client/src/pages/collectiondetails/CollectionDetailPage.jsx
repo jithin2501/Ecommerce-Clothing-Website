@@ -236,6 +236,7 @@ export default function CollectionDetailPage() {
 
   return (
     <div className="cdp-page">
+      {renderBreadcrumb()}
       <div className="cdp-main">
         <ProductGallery images={activeImages} onZoomChange={handleZoomChange} />
         <div className="cdp-right-col">
