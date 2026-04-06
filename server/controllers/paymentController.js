@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const razorpay = require('../conf/razorpay');
+const Order = require('../models/Order');
 
 /**
  * ── Create Razorpay Order ──
@@ -10,7 +11,14 @@ exports.createOrder = async (req, res) => {
     return res.status(503).json({ success: false, error: 'Razorpay not configured' });
   }
   try {
-    const { amount, currency = 'INR', receipt = `rcpt_${Date.now()}` } = req.body;
+    const { 
+      amount, 
+      userId, 
+      items, 
+      shippingAddress, 
+      currency = 'INR', 
+      receipt = `rcpt_${Date.now()}` 
+    } = req.body;
 
     if (!amount) {
       return res.status(400).json({ success: false, error: 'Amount is required' });
@@ -23,6 +31,17 @@ exports.createOrder = async (req, res) => {
     };
 
     const order = await razorpay.orders.create(options);
+
+    // Save initial order record as pending
+    await Order.create({
+      orderId: order.id,
+      userId,
+      amount,
+      currency,
+      items,
+      shippingAddress,
+      status: 'pending'
+    });
 
     res.json({
       success: true,
@@ -60,11 +79,13 @@ exports.verifyPayment = async (req, res) => {
       .digest('hex');
 
     if (razorpay_signature === expectedSignature) {
-      // Payment is verified
       console.log('✅ Razorpay Payment Verified:', razorpay_payment_id);
       
-      // Here you would typically update your database (create an order record, etc.)
-      // For now, we just return success.
+      // Mark as success
+      await Order.findOneAndUpdate(
+        { orderId: razorpay_order_id },
+        { status: 'success', paymentId: razorpay_payment_id }
+      );
 
       return res.json({ success: true, message: 'Payment verified successfully' });
     } else {
@@ -75,5 +96,17 @@ exports.verifyPayment = async (req, res) => {
   } catch (error) {
     console.error('❌ Razorpay Verify Payment Error:', error);
     res.status(500).json({ success: false, error: 'Failed to verify payment' });
+  }
+};
+
+/**
+ * ── Get All Orders (Admin) ──
+ */
+exports.getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find().sort({ createdAt: -1 });
+    res.json({ success: true, count: orders.length, data: orders });
+  } catch (error) {
+    res.status(500).json({ success: false, error: 'Failed to fetch orders' });
   }
 };

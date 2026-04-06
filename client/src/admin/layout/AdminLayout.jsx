@@ -67,6 +67,7 @@ export default function AdminLayout() {
           <NavLink to="/admin/reviews"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Review Management</NavLink>
           <NavLink to="/admin/products" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Product Management</NavLink>
           <NavLink to="/admin/clients" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Client Management</NavLink>
+          <NavLink to="/admin/payments" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Payment Management</NavLink>
           {role === 'superadmin' && (
             <NavLink to="/admin/users"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>User Management</NavLink>
           )}

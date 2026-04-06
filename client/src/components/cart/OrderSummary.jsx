@@ -41,7 +41,18 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       const res = await fetch(`${API_BASE}/payment/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: total })
+        body: JSON.stringify({ 
+          amount: total,
+          userId: user.uid,
+          items: cartItems,
+          shippingAddress: {
+            name: selectedAddress.name || user.name,
+            phone: selectedAddress.phone || user.phone,
+            address: `${selectedAddress.line1}, ${selectedAddress.city}`,
+            pincode: selectedAddress.pincode,
+            city: selectedAddress.city
+          }
+        })
       });
       const data = await res.json();
 

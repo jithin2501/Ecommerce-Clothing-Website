@@ -1,0 +1,479 @@
+.dash-container {
+  padding: 0;
+  background-color: #F8FAFB;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: #1E293B;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.dash-main-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0F172A;
+  margin-top: -0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+/* ── Section Header ── */
+.dash-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.dash-breadcrumb {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.dash-breadcrumb .dash-sub {
+  font-size: 0.85rem;
+  color: #64748B;
+  font-weight: 400;
+  margin-left: 0.5rem;
+}
+
+.dash-tools {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.dash-tool-btn, .dash-year-select {
+  background: white;
+  border: 1px solid #F1F5F9;
+  padding: 0.5rem 1rem;
+  border-radius: 100px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748B;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dash-year-select select {
+  border: none;
+  background: transparent;
+  outline: none;
+  color: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+}
+
+/* ── stats grid ── */
+.dash-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.dash-stat-card {
+  background: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  border: 1px solid #F1F5F9;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+}
+
+.dash-sc-top {
+  color: #64748B;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.dash-sc-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 0.4rem;
+}
+
+.dash-sc-foot {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sc-trend {
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+.sc-trend.green { color: #10B981; }
+.sc-trend.red { color: #EF4444; }
+
+.sc-vs {
+  font-size: 0.75rem;
+  color: #94A3B8;
+}
+
+/* ── Sales Analytic Card (Mockup Style) ── */
+.dash-analytic-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #F1F5F9;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+}
+
+.dash-ac-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.ac-title-wrap h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin: 0;
+}
+
+.ac-sort {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: #64748B;
+}
+
+.ac-sort-select {
+  background: white;
+  border: 1px solid #E2E8F0;
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  color: #334155;
+}
+
+.dash-ac-metrics {
+  display: flex;
+  gap: 3rem;
+  margin-bottom: 2.5rem;
+}
+
+.ac-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.ac-metric-item.divider::before {
+  content: '';
+  position: absolute;
+  left: -1.5rem;
+  top: 10%;
+  height: 80%;
+  width: 1px;
+  background: #F1F5F9;
+}
+
+.ac-m-label {
+  font-size: 0.75rem;
+  color: #94A3B8;
+  font-weight: 600;
+}
+
+.ac-m-val-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+
+.ac-m-val {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.ac-m-badge {
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.ac-m-badge.blue { background: #EFF6FF; color: #3B82F6; }
+.ac-m-badge.green { background: #F0FDF4; color: #16A34A; }
+.ac-m-badge.orange { background: #FFF7ED; color: #EA580C; }
+
+/* ── Chart Area ── */
+.dash-ac-chart-area {
+  display: flex;
+  gap: 1.5rem;
+  height: 250px;
+}
+
+.ac-y-axis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 0 35px;
+  color: #94A3B8;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ac-chart-canvas {
+  flex: 1;
+  position: relative;
+}
+
+.curved-analytic-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.ac-x-axis {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 1rem 0;
+  font-size: 0.75rem;
+  color: #94A3B8;
+  font-weight: 600;
+}
+
+/* ── Middle Row ── */
+.dash-mid-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 1.5rem;
+}
+
+.dash-analytic-card, .dash-gauge-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #F1F5F9;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+}
+
+.dash-gauge-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.dash-gauge-svg {
+  position: relative;
+  width: 180px;
+}
+
+.dash-gauge-val {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.gauge-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0F172A;
+}
+
+.gauge-label {
+  font-size: 0.75rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+/* ── Radial Gauge (Custom Design) ── */
+.premium-style {
+  display: flex;
+  flex-direction: column;
+}
+
+.dash-radial-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.dash-radial-svg {
+  width: 100%;
+  max-width: 180px;
+  position: relative;
+}
+
+.dash-radial-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.radial-num {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1;
+}
+
+.radial-label {
+  font-size: 0.7rem;
+  color: #64748B;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0.25rem 0;
+}
+
+.radial-target {
+  font-size: 0.65rem;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.dash-radial-footer {
+  margin-top: 1rem;
+}
+
+.radial-footer-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #F8FAFB;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.pill-dot.blue { background: #3B82F6; box-shadow: 0 0 8px #3B82F6; }
+
+.pill-val.green {
+  margin-left: auto;
+  color: #10B981;
+}
+
+/* ── Bottom Rows Full ── */
+.dash-bottom-row-full {
+  margin-bottom: 2rem;
+}
+
+.dash-table-card {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 16px;
+  border: 1px solid #F1F5F9;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+}
+
+.dash-table-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 1.5rem;
+}
+
+.dash-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dash-table.fixed-layout {
+  table-layout: fixed;
+}
+
+.dash-table th {
+  text-align: left;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1E293B;
+  padding: 1rem 0.75rem;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-bottom: 2px solid #CBD5E1;
+}
+
+.dash-table td {
+  padding: 1.15rem 0.5rem;
+  border-bottom: 1px solid #F8FAFC;
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.dash-table-prod {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #1E293B;
+  font-weight: 600;
+}
+
+.prod-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+.status-badge.success { background: #ECFDF5; color: #059669; }
+.status-badge.pending { background: #FFF1F2; color: #E11D48; }
+
+.mono-text {
+  font-family: 'Space Mono', 'Courier New', Courier, monospace;
+  font-size: 0.8rem;
+  color: #64748B;
+}
+
+.box-cell {
+  padding: 1.25rem 0.75rem !important;
+  border: 1px solid #F1F5F9;
+}
+
+.center-text {
+  text-align: center;
+}
+
+@media (max-width: 1100px) {
+  .dash-stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dash-ac-metrics { gap: 1.5rem; }
+}
+
+@media (max-width: 900px) {
+  .dash-ac-chart-area { flex-direction: column; height: auto; }
+}
