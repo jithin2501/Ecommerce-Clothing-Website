@@ -25,7 +25,7 @@
   background: none;
   cursor: pointer;
   font-family: inherit;
-  overflow: visible;
+  overflow: hidden;
   -webkit-tap-highlight-color: transparent;
   outline: none;
 }
