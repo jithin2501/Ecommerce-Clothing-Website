@@ -8,7 +8,7 @@ const orderSchema = new mongoose.Schema({
   userEmail: { type: String },
   amount: { type: Number, required: true },
   currency: { type: String, default: 'INR' },
-  status: { type: String, default: 'pending' },
+  status: { type: String, default: 'pending' }, // pending, success, failed
   items: [
     {
       productId: { type: String },
@@ -16,8 +16,7 @@ const orderSchema = new mongoose.Schema({
       qty: { type: Number },
       price: { type: String },
       size: { type: String },
-      color: { type: String },   // ← added
-      img: { type: String },
+      img: { type: String }
     }
   ],
   shippingAddress: {
@@ -25,7 +24,7 @@ const orderSchema = new mongoose.Schema({
     phone: String,
     address: String,
     pincode: String,
-    city: String,
+    city: String
   },
   createdAt: { type: Date, default: Date.now }
 });
