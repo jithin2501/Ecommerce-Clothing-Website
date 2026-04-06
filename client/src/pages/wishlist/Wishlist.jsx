@@ -116,7 +116,7 @@ export default function Wishlist() {
                       </div>
                     </div>
                     <button className="wl-remove-btn" onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}>
-                      <img src="/images/wishlist/delete.png" alt="delete" className="wl-remove-icon" />
+                      <img src="/images/EmptyCart/delete.png" alt="delete" className="wl-remove-icon" />
                     </button>
                   </div>
                 </div>

@@ -1,24 +1,22 @@
 /* =========================================================
-   WISHLIST PAGE (UPDATED)
+   WISHLIST PAGE (MODERN HORIZONTAL LAYOUT)
 ========================================================= */
 
 .wl-page {
-  background-color: #ffffff;
+  background-color: #f7f9fb;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   padding: 40px 20px;
   font-family: 'Inter', sans-serif;
   color: #212121;
-  margin-top: 30px;
-  margin-bottom: 30px;
 }
 
 .wl-container {
   display: flex;
   width: 100%;
   max-width: 1100px;
-  gap: 16px;
+  gap: 20px;
   align-items: flex-start;
 }
 
@@ -26,9 +24,9 @@
 .wl-main {
   flex-grow: 1;
   background: #ffffff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  border-radius: 10px;
-  padding: 28px 32px 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  padding: 24px 28px;
   min-width: 0;
 }
 
@@ -38,69 +36,75 @@
 }
 
 .wl-header h1 {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 6px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px;
 }
 
 .wl-count {
-  font-size: 14px;
+  font-size: 0.9rem;
   color: #878787;
   font-weight: 400;
-  margin-left: 4px;
+  margin-left: 6px;
 }
 
 /* Breadcrumb */
 .wl-breadcrumb {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-size: 13px;
-  color: #878787;
 }
 
 .wl-breadcrumb-link {
   color: #2874f0;
   cursor: pointer;
+  font-weight: 500;
+}
+
+.wl-breadcrumb-link:hover {
+  text-decoration: underline;
 }
 
 .wl-breadcrumb-sep {
-  color: #ccc;
+  color: #bdc3c7;
 }
 
 /* ── Empty State ── */
 .wl-empty {
   text-align: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
 }
 
 .wl-empty-img {
-  width: 120px;
+  width: 100px;
   height: auto;
-  opacity: 0.5;
-  margin: 0 auto 20px; /* Centered */
-  display: block;      /* Centered */
+  margin-bottom: 24px;
+  opacity: 0.6;
 }
 
-.wl-empty h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 10px;
+.wl-empty-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
 }
 
-.wl-empty p {
+.wl-empty-sub {
   color: #878787;
+  font-size: 0.95rem;
   margin-bottom: 24px;
 }
 
 .wl-shop-btn {
-  display: inline-block;
   background-color: #2874f0;
   color: #fff;
-  padding: 12px 32px;
-  border-radius: 4px;
+  border: none;
+  padding: 12px 36px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
-  text-decoration: none;
+  cursor: pointer;
   transition: background 0.2s;
 }
 
@@ -108,120 +112,128 @@
   background-color: #1a5fc0;
 }
 
-/* ── Recent Items Grid (Horizontal boxes) ── */
-.wl-recent-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+/* ── Wishlist Horizontal Card ── */
+.wl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.wl-item-card {
+.wl-card {
   border: 1px solid #f0f0f0;
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 10px;
   position: relative;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: box-shadow 0.2s ease;
+  overflow: hidden;
   background: #fff;
 }
 
-.wl-item-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+.wl-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
-.wl-img-wrap {
+.wl-card-inner {
+  display: flex;
+  padding: 16px;
+  align-items: center; /* Center content vertically */
+  gap: 20px;
   position: relative;
-  aspect-ratio: 3/4;
-  overflow: hidden;
-  background: #f9f9f9;
 }
 
-.wl-img {
-  width: 100%;
-  height: 100%;
+.wl-card-img {
+  width: 100px; /* FIXED WIDTH */
+  height: 120px; /* FIXED HEIGHT */
   object-fit: cover;
+  border-radius: 6px;
+  background-color: #f9f9f9;
+  flex-shrink: 0;
 }
 
-.wl-remove-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 28px;
-  height: 28px;
-  background: rgba(255,255,255,0.9);
-  border: none;
-  border-radius: 50%;
+.wl-card-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-right: 40px; /* Space for delete button */
+}
+
+.wl-card-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #212121;
+  line-height: 1.4;
+}
+
+.wl-card-brand {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #878787;
+  font-weight: 500;
+}
+
+.wl-brand-dot {
+  width: 6px;
+  height: 6px;
+  background: #4caf50;
+  border-radius: 50%;
+}
+
+.wl-card-pricing {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.wl-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.wl-old-price {
+  font-size: 14px;
+  color: #878787;
+  text-decoration: line-through;
+}
+
+/* ── Remove Button ── */
+.wl-remove-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
   cursor: pointer;
-  color: #ff3f6c;
-  font-size: 16px;
-  transition: all 0.2s;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 5px;
+  transition: transform 0.2s ease;
 }
 
 .wl-remove-btn:hover {
-  background: #ff3f6c;
-  color: #fff;
+  transform: scale(1.15);
 }
 
-.wl-item-info {
-  padding: 12px;
+.wl-remove-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
-.wl-item-name {
-  font-size: 14px;
-  font-weight: 500;
-  color: #212121;
-  margin-bottom: 6px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.wl-item-price {
-  font-size: 15px;
-  font-weight: 700;
-  color: #212121;
-}
-
-.wl-price-old {
-  font-size: 13px;
-  color: #878787;
-  text-decoration: line-through;
-  margin-left: 6px;
-  font-weight: 400;
-}
-
-.wl-price-off {
-  font-size: 13px;
-  color: #388e3c;
-  margin-left: 6px;
-  font-weight: 600;
-}
-
-/* =========================================================
-   RESPONSIVE
-========================================================= */
-
-@media (max-width: 1100px) {
-  .wl-recent-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+/* ── Mobile Layout Fixes ── */
+.wl-mobile-header {
+  display: none;
 }
 
 @media (max-width: 768px) {
-  /* Hide sidebar on sub-section pages */
   .wl-page .sidebar {
     display: none !important;
   }
 
   .wl-page {
     padding: 0;
-    min-height: auto;
-    padding-bottom: 30px;
-    margin-bottom: 0;
+    background-color: #fff;
   }
 
   .wl-container {
@@ -230,58 +242,69 @@
   }
 
   .wl-main {
-    width: 94%;
-    margin: 16px auto;
-    background: #fff;
-    border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
-    padding: 20px 16px 16px;
-  }
-
-  .wl-empty {
-    padding: 30px 16px;
+    width: 100%;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 16px;
+    margin: 0;
   }
 
   .wl-mobile-header {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 10;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
   }
 
-  /* Back button */
   .mobile-back-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     color: #2874f0;
-    cursor: pointer;
     background: none;
     border: none;
-    padding: 0;
-    margin-bottom: 0;
-    flex-shrink: 0;
+    cursor: pointer;
   }
 
-  .wl-header {
-    margin-bottom: 0 !important;
+  .wl-header h1 {
+    font-size: 1.15rem;
   }
 
   .wl-breadcrumb {
-    display: none !important;
+    display: none;
   }
 
-  .mobile-back-btn span.back-chevron {
-    font-size: 20px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .wl-card-inner {
+    padding: 12px;
+    gap: 12px;
   }
 
-  .wl-header h1 { font-size: 1.15rem; }
+  .wl-card-img {
+    width: 80px;
+    height: 100px;
+  }
 
-  .wl-recent-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .wl-card-name {
+    font-size: 14px;
+  }
+
+  .wl-price {
+    font-size: 16px;
+  }
+
+  .wl-remove-btn {
+    top: 10px;
+    right: 10px;
+  }
+
+  .wl-remove-icon {
+    width: 18px;
+    height: 18px;
   }
 }
