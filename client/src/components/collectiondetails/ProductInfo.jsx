@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Share2, MapPin, Truck, Package, RotateCcw, Banknote, ShieldCheck } from 'lucide-react';
+import { Heart, Share2, MapPin, Truck, Package, XCircle, Lock, ShieldCheck } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import AddToCartBtn from './AddToCartBtn';
 import '../../styles/collectiondetails/ProductInfo.css';
 
 const BADGES = [
-  { icon: RotateCcw,   label: '10-Day',  sub: 'Return'   },
-  { icon: Banknote,    label: 'Cash on', sub: 'Delivery' },
-  { icon: ShieldCheck, label: 'Quality', sub: 'Assured'  },
+  { icon: XCircle,     label: 'Non-',    sub: 'Returnable' },
+  { icon: Lock,        label: 'Prepaid', sub: 'Only'       },
+  { icon: ShieldCheck, label: 'Quality', sub: 'Assured'    },
 ];
 
 const AGE_LABELS = {
