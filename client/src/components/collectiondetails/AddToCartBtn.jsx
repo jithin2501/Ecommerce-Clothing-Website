@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import '../../styles/collectiondetails/AddToCartBtn.css';
 
 export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor = '#2D3E50', isAvailable = true }) {
-  const [label, setLabel] = useState('ADD TO CART');
+  const [label, setLabel] = useState('ADD TO BAG');
   const btnRef = useRef(null);
   const animatingRef = useRef(false);
 
@@ -85,7 +85,7 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
       
       setTimeout(() => {
         trans('transform 0.4s cubic-bezier(.25,.46,.45,.94)');
-        setLabel('ADD TO CART');
+        setLabel('ADD TO BAG');
         set('--text-o', '1');
         set('--text-x', '12px');
         set('--cart-x', '-48px');
