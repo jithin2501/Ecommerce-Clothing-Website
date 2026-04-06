@@ -114,7 +114,7 @@
   width: 100%;
   max-width: 1300px;
   margin: 0 auto;
-  padding: 120px 4% 6rem !important;
+  padding: 40px 4% 6rem;
   min-height: 100vh;
 }
 
@@ -248,6 +248,14 @@
 
   .catpage-title {
     font-size: 1.4rem;
+  }
+
+  .catpage-breadcrumb {
+    margin-bottom: 0;
+  }
+
+  .catpage-wrapper {
+    padding-top: 20px;
   }
 }
 
