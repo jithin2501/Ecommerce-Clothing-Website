@@ -1,5 +1,5 @@
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
 const paymentCtrl = require('../controllers/paymentController');
 
 // Route to create a Razorpay order

@@ -41,27 +41,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       const res = await fetch(`${API_BASE}/payment/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          amount: total,
-          userId: user.uid,
-          items: cartItems.map(item => ({
-            productId: item.id,
-            name: item.name,
-            qty: item.qty,
-            price: item.price,
-            size: item.size,
-            color: item.color,
-            photo: item.img,
-            img: item.img
-          })),
-          shippingAddress: {
-            name: selectedAddress.name || user.name,
-            phone: selectedAddress.phone || user.phone,
-            address: `${selectedAddress.line1}, ${selectedAddress.city}`,
-            pincode: selectedAddress.pincode,
-            city: selectedAddress.city
-          }
-        })
+        body: JSON.stringify({ amount: total })
       });
       const data = await res.json();
 
@@ -78,15 +58,8 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       }
 
       // 3. Open Razorpay checkout modal
-      const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
-      if (!razorpayKey) {
-        alert('Payment configuration missing. Please contact support.');
-        setLoading(false);
-        return;
-      }
-
       const options = {
-        key: razorpayKey,
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder', // Use your test key here or from .env
         amount: data.amount,
         currency: data.currency,
         name: 'Sumathi Trends',
@@ -101,7 +74,28 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
             body: JSON.stringify({
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature
+              razorpay_signature: response.razorpay_signature,
+              // Order data to save in DB
+              userId: user.uid,
+              userName: user.name || '',
+              userEmail: user.email || '',
+              amount: data.amount,
+              items: cartItems.map(item => ({
+                productId: item.productId || item.id || '',
+                name: item.name,
+                qty: item.qty || item.quantity || 1,
+                price: item.price,
+                size: item.size || '',
+                color: item.color || '',
+                img: item.img || item.photo || item.image || (item.photos && item.photos[0]) || '',
+              })),
+              shippingAddress: {
+                name: selectedAddress.name,
+                phone: selectedAddress.phone || '',
+                address: selectedAddress.line1 || selectedAddress.address || '',
+                pincode: selectedAddress.pincode || '',
+                city: selectedAddress.city || '',
+              },
             })
           });
           const verifyData = await verifyRes.json();
