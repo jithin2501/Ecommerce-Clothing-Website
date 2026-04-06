@@ -2,12 +2,11 @@ import { useRef, useState } from 'react';
 import '../../styles/collectiondetails/AddToCartBtn.css';
 
 export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor = '#2D3E50', isAvailable = true }) {
-  const [added, setAdded] = useState(false);
+  const [label, setLabel] = useState('ADD TO BAG');
   const btnRef = useRef(null);
   const animatingRef = useRef(false);
 
   const handleClick = () => {
-    if (!isAvailable) return;
     if (!isAvailable) return;
     if (animatingRef.current) return;
     if (onBeforeAdd && !onBeforeAdd()) return;
@@ -61,46 +60,48 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
     setTimeout(() => set('--cart-y', '3px'), 900);
     setTimeout(() => set('--cart-y', '0px'), 1020);
 
-    // t=1100: cart flies OUT to the right
+    // t=1100: cart flies OUT to the right, Success Message stays
     setTimeout(() => {
       trans('transform 0.35s cubic-bezier(.4,0,.6,1)');
       set('--cart-x', '160px');
       set('--cart-rotate', '-12deg');
+      
+      // SHOW SUCCESS TEXT ONLY
+      set('--text-o', '1');
+      set('--text-x', '0px'); // Center it
+      setLabel('ADDED TO BAG!');
+      onAdd?.(); 
     }, 1100);
 
-    // t=1450: instantly teleport cart to far left (no transition)
+    // t=2500: Success Message disappears
+    setTimeout(() => {
+      set('--text-o', '0');
+    }, 2500);
+
+    // t=2900: Reset to original state (Cart + Text slide back)
     setTimeout(() => {
       trans('none');
       set('--cart-x', '-160px');
       set('--cart-rotate', '0deg');
-      set('--text-x', '0px');
-    }, 1460);
-
-    // t=1480: cart smoothly slides IN from the left + text fades in
-    setTimeout(() => {
-      trans('transform 0.35s cubic-bezier(.25,.46,.45,.94)');
-      set('--cart-x', '-48px');
-      set('--cart-scale', '.75');
-      set('--text-o', '1');
-      set('--text-x', '12px');
-    }, 1500);
-
-    // t=1850: done
-    setTimeout(() => {
-      animatingRef.current = false;
-      setAdded(true);
-      onAdd?.();
-      // Reset after success so user can add more
-      setTimeout(() => setAdded(false), 2000);
-    }, 1850);
+      
+      setTimeout(() => {
+        trans('transform 0.4s cubic-bezier(.25,.46,.45,.94)');
+        setLabel('ADD TO BAG');
+        set('--text-o', '1');
+        set('--text-x', '12px');
+        set('--cart-x', '-48px');
+        set('--cart-scale', '.75');
+        animatingRef.current = false;
+      }, 50);
+    }, 2900);
   };
 
   return (
     <button
       ref={btnRef}
-      className={`atc-btn${added ? ' atc-added' : ''}${!isAvailable ? ' atc-disabled' : ''}`}
+      className={`atc-btn${!isAvailable ? ' atc-disabled' : ''}`}
       onClick={handleClick}
-      disabled={!isAvailable && !added}
+      disabled={!isAvailable}
     >
       <span className="atc-bg" />
 
@@ -125,7 +126,7 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
 
       {/* Label */}
       <span className="atc-label" aria-live="polite">
-        {!isAvailable ? 'Currently Unavailable' : (added ? 'Added to Bag!' : 'ADD TO BAG')}
+        {!isAvailable ? 'Currently Unavailable' : label}
       </span>
     </button>
   );

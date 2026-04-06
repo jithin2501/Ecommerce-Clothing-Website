@@ -25,8 +25,8 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
     }
 
     if (!selectedAddress) {
-       alert('Please select a delivery address first.');
-       return;
+      alert('Please select a delivery address first.');
+      return;
     }
 
     if (isNaN(total) || total <= 0) {
@@ -58,8 +58,15 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       }
 
       // 3. Open Razorpay checkout modal
+      const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
+      if (!razorpayKey) {
+        alert('Payment configuration missing. Please contact support.');
+        setLoading(false);
+        return;
+      }
+
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID || 'rzp_test_placeholder', // Use your test key here or from .env
+        key: razorpayKey,
         amount: data.amount,
         currency: data.currency,
         name: 'Sumathi Trends',
@@ -72,9 +79,9 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              razorpay_order_id:   response.razorpay_order_id,
+              razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature:  response.razorpay_signature
+              razorpay_signature: response.razorpay_signature
             })
           });
           const verifyData = await verifyRes.json();
@@ -88,7 +95,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
           }
         },
         prefill: {
-          name:  user.name || '',
+          name: user.name || '',
           email: user.email || '',
           contact: user.phone || ''
         },
@@ -145,21 +152,21 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         <span className="os-total-amount">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
       </div>
 
-      <button 
-        className="os-checkout-btn" 
-        onClick={handleCheckout} 
+      <button
+        className="os-checkout-btn"
+        onClick={handleCheckout}
         disabled={loading}
         style={{ opacity: loading ? 0.7 : 1, cursor: loading ? 'not-allowed' : 'pointer' }}
       >
         {loading ? (
-           'PROCESSING...'
+          'PROCESSING...'
         ) : (
           <>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="1" y="3" width="15" height="13"/>
-              <path d="M16 8h4l3 5v3h-7V8z"/>
-              <circle cx="5.5" cy="18.5" r="2.5"/>
-              <circle cx="18.5" cy="18.5" r="2.5"/>
+              <rect x="1" y="3" width="15" height="13" />
+              <path d="M16 8h4l3 5v3h-7V8z" />
+              <circle cx="5.5" cy="18.5" r="2.5" />
+              <circle cx="18.5" cy="18.5" r="2.5" />
             </svg>
             CHECKOUT NOW
           </>
@@ -168,7 +175,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
       <div className="os-secure">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
         </svg>
         SECURE CHECKOUT — Your data is encrypted and protected
       </div>
