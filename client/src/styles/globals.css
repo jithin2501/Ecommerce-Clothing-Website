@@ -184,4 +184,11 @@ img { max-width: 100%; display: block; }
     flex-direction: column;
     gap: 2rem;
   }
+
+  /* Hide all breadcrumbs on mobile */
+  .page-breadcrumb, 
+  .cp-breadcrumb, 
+  .cdp-breadcrumb { 
+    display: none !important; 
+  }
 }

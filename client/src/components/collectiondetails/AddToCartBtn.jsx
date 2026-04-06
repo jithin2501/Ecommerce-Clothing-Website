@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import '../../styles/collectiondetails/AddToCartBtn.css';
 
 export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor = '#2D3E50', isAvailable = true }) {
-  const [label, setLabel] = useState('ADD TO BAG');
+  const [label, setLabel] = useState('ADD TO CART');
   const btnRef = useRef(null);
   const animatingRef = useRef(false);
 
@@ -66,10 +66,9 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
       set('--cart-x', '160px');
       set('--cart-rotate', '-12deg');
       
-      // SHOW SUCCESS TEXT ONLY
-      set('--text-o', '1');
-      set('--text-x', '0px'); // Center it
-      setLabel('ADDED TO BAG!');
+      // SHOW SUCCESS TEXT ONLY (EMPTY PER USER REQUEST)
+      set('--text-o', '0');
+      set('--text-x', '0px'); 
       onAdd?.(); 
     }, 1100);
 
@@ -86,7 +85,7 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
       
       setTimeout(() => {
         trans('transform 0.4s cubic-bezier(.25,.46,.45,.94)');
-        setLabel('ADD TO BAG');
+        setLabel('ADD TO CART');
         set('--text-o', '1');
         set('--text-x', '12px');
         set('--cart-x', '-48px');
