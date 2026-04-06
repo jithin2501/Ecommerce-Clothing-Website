@@ -51,7 +51,8 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
             price: item.price,
             size: item.size,
             color: item.color,
-            photo: item.img
+            photo: item.img,
+            img: item.img
           })),
           shippingAddress: {
             name: selectedAddress.name || user.name,

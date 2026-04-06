@@ -99,7 +99,7 @@ export default function OrderDetail() {
                   <p className="od-prod-seller">Seller: SUMATHI TRENDS</p>
                   <div className="od-prod-price">₹{itemPrice.toLocaleString()}</div>
                 </div>
-                <img src={item.photo} alt={item.name} className="od-prod-img" />
+                <img src={item.img || item.photo} alt={item.name} className="od-prod-img" />
               </div>
 
               {/* Status Timeline */}
@@ -139,14 +139,19 @@ export default function OrderDetail() {
               <div className="od-card others-card">
                 <h3>Other Items In This Order</h3>
                 {otherItems.map((oi, idx) => (
-                  <div key={idx} className="od-other-item">
+                  <div 
+                    key={idx} 
+                    className="od-other-item clickable-other" 
+                    onClick={() => navigate(`/account/orders/${order.orderId}`, { state: { order, item: oi }, replace: true })}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <div className="od-other-info">
                        <h4>{oi.name}</h4>
                        <p className={`status-dot ${order.status === 'success' ? 'delivered' : 'pending'}`}>
                          • {order.status === 'success' ? 'Delivered' : 'Pending'} on {new Date(order.createdAt).toLocaleDateString()}
                        </p>
                     </div>
-                    <img src={oi.photo} alt={oi.name} className="od-other-img" />
+                    <img src={oi.img || oi.photo} alt={oi.name} className="od-other-img" />
                   </div>
                 ))}
               </div>

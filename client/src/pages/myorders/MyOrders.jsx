@@ -122,7 +122,7 @@ export default function MyOrders() {
                       cursor: 'pointer'
                     }}
                   >
-                    <img src={item.photo} alt={item.name} className="mo-card-img" />
+                    <img src={item.img || item.photo} alt={item.name} className="mo-card-img" />
                     
                     <div className="mo-card-info">
                       <div className="mo-card-name">{item.name}</div>
