@@ -11,13 +11,13 @@ exports.createOrder = async (req, res) => {
     return res.status(503).json({ success: false, error: 'Razorpay not configured' });
   }
   try {
-    const {
-      amount,
-      userId,
-      items,
-      shippingAddress,
-      currency = 'INR',
-      receipt = `rcpt_${Date.now()}`
+    const { 
+      amount, 
+      userId, 
+      items, 
+      shippingAddress, 
+      currency = 'INR', 
+      receipt = `rcpt_${Date.now()}` 
     } = req.body;
 
     if (!amount) {
@@ -45,8 +45,8 @@ exports.createOrder = async (req, res) => {
 
     res.json({
       success: true,
-      orderId: order.id,
-      amount: order.amount,
+      orderId:  order.id,
+      amount:   order.amount,
       currency: order.currency,
     });
 
@@ -65,10 +65,10 @@ exports.verifyPayment = async (req, res) => {
     return res.status(503).json({ success: false, error: 'Razorpay not configured' });
   }
   try {
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature
+    const { 
+      razorpay_order_id, 
+      razorpay_payment_id, 
+      razorpay_signature 
     } = req.body;
 
     const sign = razorpay_order_id + '|' + razorpay_payment_id;
@@ -80,7 +80,7 @@ exports.verifyPayment = async (req, res) => {
 
     if (razorpay_signature === expectedSignature) {
       console.log('✅ Razorpay Payment Verified:', razorpay_payment_id);
-
+      
       // Mark as success
       await Order.findOneAndUpdate(
         { orderId: razorpay_order_id },
