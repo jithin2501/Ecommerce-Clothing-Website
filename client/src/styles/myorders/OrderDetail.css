@@ -140,35 +140,57 @@
 
 
 /* ── RIGHT COLUMN ── */
-.info-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1.25rem; border-bottom: 1px solid #F0F0F0; padding-bottom: 0.75rem; }
+.info-card h2, .od-section-title { 
+  font-size: 1.1rem; 
+  font-weight: 700; 
+  margin-bottom: 1.25rem; 
+  border-bottom: 1px solid #F0F0F0; 
+  padding-bottom: 0.75rem; 
+  color: var(--charcoal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
 
-.od-info-row { display: flex; gap: 1rem; align-items: start; margin-bottom: 1rem; }
-.od-info-icon { font-size: 1.1rem; color: #757575; }
-.od-info-text { font-size: 0.95rem; line-height: 1.5; color: #212121; }
-.od-info-text strong { display: block; margin-bottom: 0.25rem; }
+.od-info-row { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem; }
+.od-info-icon { 
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: #f8fafc;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--charcoal);
+}
+.od-info-text { font-size: 0.95rem; line-height: 1.5; color: var(--charcoal); }
+.od-info-text strong { display: block; margin-bottom: 0.15rem; color: var(--charcoal); }
 
 .price-details h2 { border: none; margin-bottom: 1rem; }
-.od-price-row { display: flex; justify-content: space-between; font-size: 1rem; margin-bottom: 0.75rem; color: #212121; }
-.od-price-expand { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; }
+.od-price-row { display: flex; justify-content: space-between; font-size: 1rem; margin-bottom: 0.75rem; color: var(--charcoal); }
+.od-price-expand { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--charcoal); }
 
 .od-price-total {
-  display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700;
-  border-top: 1px dashed #E0E0E0; margin: 1rem 0; padding-top: 1rem;
+  display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 800;
+  border-top: 1px dashed #E0E0E0; margin: 1.25rem 0; padding-top: 1.25rem;
+  color: var(--charcoal);
 }
 
 .od-payment-method {
   background: #F8F9FA; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;
   display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;
+  color: var(--charcoal);
 }
-.od-pay-pill { display: flex; align-items: center; gap: 0.5rem; font-weight: 600; }
-.pill-icon { background: #FFF; border: 1px solid #E0E0E0; padding: 2px 6px; border-radius: 2px; font-size: 0.65rem; }
+.od-pay-pill { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--charcoal); }
+.pill-icon { background: #FFF; border: 1px solid #E0E0E0; padding: 2px 6px; border-radius: 2px; font-size: 0.65rem; color: var(--charcoal); }
 
 .od-download-btn {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.75rem;
-  background: #FFF; border: 1px solid #E0E0E0; padding: 1rem; border-radius: 8px;
-  font-size: 1rem; font-weight: 500; cursor: pointer; transition: background 0.2s;
+  background: #FFF; border: 1.5px solid var(--charcoal); padding: 1rem; border-radius: 8px;
+  font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  color: var(--charcoal);
 }
-.od-download-btn:hover { background: #F8FAFC; border-color: #CBD5E1; }
+.od-download-btn:hover { background: var(--charcoal); color: #FFF; }
 
 @media (max-width: 900px) {
   .od-grid { grid-template-columns: 1fr; }
