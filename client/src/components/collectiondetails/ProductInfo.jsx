@@ -4,7 +4,6 @@ import { Heart, Share2, MapPin, Truck, Package, RotateCcw, Banknote, ShieldCheck
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import AddToCartBtn from './AddToCartBtn';
-import ShareModal from './ShareModal';
 import '../../styles/collectiondetails/ProductInfo.css';
 
 const BADGES = [
@@ -33,16 +32,14 @@ export default function ProductInfo({
   userInfo = null,
   auth = null,
   inventory = {},
-  stock = 0
+  stock = 0,
+  onShare = () => {}
 }) {
   const [selectedSize,  setSelectedSize]  = useState('');
   const [selectedColor, setSelectedColor] = useState(colors[0]?.name || '');
   const { wishlist, toggleWishlist, isWishlisted } = useWishlist();
   const { addToCart } = useCart();
   const navigate = useNavigate();
-  const [isShareOpen, setIsShareOpen] = useState(false);
-
-  const productUrl = window.location.href;
 
   const selectedColorHex = colors.find(c => c.name === selectedColor)?.hex || '#2D3E50';
 
@@ -173,7 +170,7 @@ export default function ProductInfo({
         </button>
         <button 
           className="pi-icon-btn" 
-          onClick={() => setIsShareOpen(true)}
+          onClick={onShare}
         >
           <Share2 size={18} />
         </button>
@@ -210,13 +207,6 @@ export default function ProductInfo({
           </div>
         ))}
       </div>
-
-      <ShareModal 
-        isOpen={isShareOpen}
-        onClose={() => setIsShareOpen(false)}
-        productUrl={productUrl}
-        productName={name}
-      />
     </div>
   );
 }

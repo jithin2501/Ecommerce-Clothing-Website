@@ -6,6 +6,7 @@ import ProductAccordion from '../../components/collectiondetails/ProductAccordio
 import ProductReviews   from '../../components/collectiondetails/ProductReviews';
 import ProductRelated   from '../../components/collectiondetails/ProductRelated';
 import AddressSidebar   from '../../components/collectiondetails/AddressSidebar';
+import ShareModal      from '../../components/collectiondetails/ShareModal';
 import '../../styles/collectiondetails/CollectionDetailPage.css';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -78,6 +79,7 @@ export default function CollectionDetailPage() {
   const [userInfo, setUserInfo] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [zoomState, setZoomState] = useState({ isZoomed: false, x: 0, y: 0 });
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   const handleSelectAddress = (addr) => {
     setSelectedAddress(addr);
@@ -265,6 +267,7 @@ export default function CollectionDetailPage() {
               auth={auth}
               inventory={product?.inventory || {}}
               stock={product?.stock ?? 0}
+              onShare={() => setIsShareOpen(true)}
             />
             <ProductAccordion
               specifications={detail.specifications}
@@ -284,6 +287,13 @@ export default function CollectionDetailPage() {
           isOpen={isSidebarOpen} 
           onClose={() => setIsSidebarOpen(false)} 
           onSelectAddress={handleSelectAddress} 
+      />
+
+      <ShareModal 
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+        productUrl={window.location.href}
+        productName={product?.name}
       />
     </div>
   );
