@@ -62,7 +62,7 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
     // t=1100: cart flies OUT to the right, Success Message stays
     setTimeout(() => {
       trans('transform 0.35s cubic-bezier(.4,0,.6,1)');
-      set('--cart-x', '200px');
+      set('--cart-x', '500px');
       set('--cart-rotate', '-12deg');
       
       // SHOW SUCCESS TEXT ONLY (EMPTY PER USER REQUEST)
@@ -79,7 +79,7 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
     // t=2900: Reset to original state (Cart + Text slide back)
     setTimeout(() => {
       trans('none');
-      set('--cart-x', '-200px');
+      set('--cart-x', '-500px');
       set('--cart-rotate', '0deg');
       
       setTimeout(() => {
