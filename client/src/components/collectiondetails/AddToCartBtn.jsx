@@ -8,9 +8,9 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
 
   const handleClick = () => {
     if (!isAvailable) return;
-    if (added) { onGoToBag?.(); return; }
-    if (onBeforeAdd && !onBeforeAdd()) return;
+    if (!isAvailable) return;
     if (animatingRef.current) return;
+    if (onBeforeAdd && !onBeforeAdd()) return;
     animatingRef.current = true;
 
     const btn = btnRef.current;
@@ -90,6 +90,8 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
       animatingRef.current = false;
       setAdded(true);
       onAdd?.();
+      // Reset after success so user can add more
+      setTimeout(() => setAdded(false), 2000);
     }, 1850);
   };
 
@@ -123,7 +125,7 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
 
       {/* Label */}
       <span className="atc-label" aria-live="polite">
-        {!isAvailable ? 'Currently Unavailable' : added ? 'Go to Bag' : 'Add to Bag'}
+        {!isAvailable ? 'Currently Unavailable' : (added ? 'Added to Bag!' : 'ADD TO BAG')}
       </span>
     </button>
   );
