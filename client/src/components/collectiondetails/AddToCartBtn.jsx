@@ -61,7 +61,7 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
     setTimeout(() => set('--cart-y', '0px'), 1020);
     // t=1100: cart flies OUT to the right, Success Message stays
     setTimeout(() => {
-      trans('transform 0.35s cubic-bezier(.4,0,.6,1)');
+      trans('transform 0.7s cubic-bezier(.4,0,.2,1)');
       set('--cart-x', '500px');
       set('--cart-rotate', '-12deg');
       
@@ -76,14 +76,14 @@ export default function AddToCartBtn({ onAdd, onBeforeAdd, onGoToBag, shirtColor
       set('--text-o', '0');
     }, 2500);
 
-    // t=2900: Reset to original state (Cart + Text slide back)
+    // t=3200: Reset to original state (Cart + Text slide back)
     setTimeout(() => {
       trans('none');
       set('--cart-x', '-500px');
       set('--cart-rotate', '0deg');
       
       setTimeout(() => {
-        trans('transform 0.4s cubic-bezier(.25,.46,.45,.94)');
+        trans('transform 0.8s cubic-bezier(.17,.67,.83,.67)');
         setLabel('ADD TO BAG');
         set('--text-o', '1');
         set('--text-x', '12px');
