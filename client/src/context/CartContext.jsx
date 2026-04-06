@@ -69,8 +69,13 @@ export function CartProvider({ children }) {
     (sum, i) => sum + parseFloat(String(i.price).replace('$', '')) * i.qty, 0
   );
 
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem(STORAGE_KEY);
+  };
+
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, updateQty, removeItem, cartCount, subtotal }}>
+    <CartContext.Provider value={{ cartItems, addToCart, updateQty, removeItem, clearCart, cartCount, subtotal }}>
       {children}
     </CartContext.Provider>
   );

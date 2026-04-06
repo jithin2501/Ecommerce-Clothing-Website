@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useCart } from '../../context/CartContext';
 import '../../styles/cart/OrderSummary.css';
 
 const API_BASE = '/api';
 
 export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCost, total, user, cartItems, selectedAddress }) {
   const [loading, setLoading] = useState(false);
+  const { clearCart } = useCart();
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -74,7 +76,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
           if (verifyData.success) {
             alert('🎉 Payment Successful! Your order has been placed.');
-            // Update cart status, redirect to success page, etc.
+            clearCart();
             window.location.href = '/account/orders';
           } else {
             alert('⚠️ Payment verification failed. Please contact support.');
