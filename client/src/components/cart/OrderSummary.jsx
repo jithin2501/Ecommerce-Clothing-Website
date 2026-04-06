@@ -29,6 +29,11 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
        return;
     }
 
+    if (isNaN(total) || total <= 0) {
+      alert('Invalid cart total. Please check your items.');
+      return;
+    }
+
     setLoading(true);
 
     try {

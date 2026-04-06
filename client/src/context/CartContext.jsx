@@ -66,7 +66,7 @@ export function CartProvider({ children }) {
 
   const cartCount = cartItems.reduce((sum, i) => sum + i.qty, 0);
   const subtotal  = cartItems.reduce(
-    (sum, i) => sum + parseFloat(String(i.price).replace('$', '')) * i.qty, 0
+    (sum, i) => sum + parseFloat(String(i.price).replace(/[₹$,]/g, '')) * i.qty, 0
   );
 
   const clearCart = () => {

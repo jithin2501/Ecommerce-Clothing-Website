@@ -42,7 +42,7 @@
   pointer-events: none;
 }
 
-.atc-btn.atc-added .atc-bg { background: #2D3E50; }
+.atc-btn.atc-added .atc-bg { background: var(--accent-clay, #C17B5C); }
 .atc-btn:hover:not(.atc-disabled) .atc-bg { filter: brightness(0.92); }
 
 .atc-btn.atc-disabled {
@@ -92,8 +92,14 @@
   margin-top: -13px;
   z-index: 3;
   pointer-events: none;
+  pointer-events: none;
   transform: translateX(var(--cart-x)) translateY(var(--cart-y)) rotate(var(--cart-rotate)) scale(var(--cart-scale));
   transition: var(--cart-transition);
+  opacity: var(--cart-o, 1);
+}
+
+.atc-btn.atc-added .atc-cart {
+  opacity: 0;
 }
 
 /* Label */
@@ -106,8 +112,12 @@
   letter-spacing: 1px;
   color: #fff;
   opacity: var(--text-o);
-  transform: translateX(var(--text-x));
+  transform: translateX(var(--text-x-final, var(--text-x)));
   transition: opacity 0.25s, transform 0.25s;
   pointer-events: none;
   white-space: nowrap;
+}
+
+.atc-btn.atc-added .atc-label {
+  --text-x-final: 0px;
 }
