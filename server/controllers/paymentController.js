@@ -110,3 +110,19 @@ exports.getAllOrders = async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch orders' });
   }
 };
+
+/**
+ * ── Get User's Personal Orders ──
+ */
+exports.getUserOrders = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
+
+    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    res.json({ success: true, count: orders.length, data: orders });
+  } catch (error) {
+    console.error('❌ Get User Orders Error:', error);
+    res.status(500).json({ success: false, error: 'Failed to fetch your orders' });
+  }
+};
