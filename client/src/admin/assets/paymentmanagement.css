@@ -44,7 +44,8 @@
   align-items: center;
 }
 
-.dash-tool-btn, .dash-year-select {
+.dash-tool-btn,
+.dash-year-select {
   background: white;
   border: 1px solid #F1F5F9;
   padding: 0.5rem 1rem;
@@ -80,7 +81,7 @@
   padding: 1.25rem;
   border-radius: 12px;
   border: 1px solid #F1F5F9;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
 }
 
 .center-card {
@@ -117,8 +118,14 @@
   align-items: center;
   gap: 2px;
 }
-.sc-trend.green { color: #10B981; }
-.sc-trend.red { color: #EF4444; }
+
+.sc-trend.green {
+  color: #10B981;
+}
+
+.sc-trend.red {
+  color: #EF4444;
+}
 
 .sc-vs {
   font-size: 0.75rem;
@@ -131,7 +138,7 @@
   padding: 1.5rem;
   border-radius: 16px;
   border: 1px solid #F1F5F9;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
 }
 
 .dash-ac-header {
@@ -203,7 +210,7 @@
 .ac-metric-btn.active {
   background: white;
   color: #0F172A;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .ac-sort {
@@ -276,9 +283,20 @@
   gap: 2px;
 }
 
-.ac-m-badge.blue { background: #F1F3F6; color: #2D3E50; }
-.ac-m-badge.green { background: #F0FDF4; color: #16A34A; }
-.ac-m-badge.orange { background: #FFF7ED; color: #EA580C; }
+.ac-m-badge.blue {
+  background: #F1F3F6;
+  color: #2D3E50;
+}
+
+.ac-m-badge.green {
+  background: #F0FDF4;
+  color: #16A34A;
+}
+
+.ac-m-badge.orange {
+  background: #FFF7ED;
+  color: #EA580C;
+}
 
 /* ── Chart Area ── */
 .dash-ac-chart-area {
@@ -330,13 +348,15 @@
   text-align: center;
 }
 
-.dash-analytic-card, .dash-top-products-card {
+.dash-analytic-card,
+.dash-top-products-card {
   background: white;
   padding: 1.5rem;
   border-radius: 16px;
   border: 1px solid #F1F5F9;
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
-  height: 330px; /* Minimal height for space-saving */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+  height: 330px;
+  /* Minimal height for space-saving */
   display: flex;
   flex-direction: column;
 }
@@ -393,17 +413,20 @@
   overflow-y: auto;
   padding-right: 0.5rem;
   margin-top: 1.25rem;
-  max-height: 220px; /* Refined for ultra-compact 3-item view */
+  max-height: 220px;
+  /* Refined for ultra-compact 3-item view */
 }
 
 /* Custom Scrollbar for top products */
 .dash-tp-list::-webkit-scrollbar {
   width: 5px;
 }
+
 .dash-tp-list::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 10px;
 }
+
 .dash-tp-list::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 10px;
@@ -413,23 +436,26 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.65rem 0.75rem; /* Tightened padding for minimal height */
+  padding: 0.65rem 0.75rem;
+  /* Tightened padding for minimal height */
   background: #F8FAFB;
   border-radius: 12px;
   border: 1px solid transparent;
   transition: all 0.2s;
-  height: 70px; /* Ultra-compact item height */
+  height: 70px;
+  /* Ultra-compact item height */
   flex-shrink: 0;
 }
 
 .dash-tp-item:hover {
   border-color: #E2E8F0;
   background: white;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
 }
 
 .tp-img-wrap {
-  width: 44px; /* Slightly smaller image to match the smaller height */
+  width: 44px;
+  /* Slightly smaller image to match the smaller height */
   height: 44px;
   border-radius: 8px;
   overflow: hidden;
@@ -509,7 +535,7 @@
   padding: 1.5rem;
   border-radius: 16px;
   border: 1px solid #F1F5F9;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
 }
 
 .dash-table-card h3 {
@@ -573,8 +599,15 @@
   text-transform: capitalize;
 }
 
-.status-badge.success { background: #ECFDF5; color: #059669; }
-.status-badge.pending { background: #FFF1F2; color: #E11D48; }
+.status-badge.success {
+  background: #ECFDF5;
+  color: #059669;
+}
+
+.status-badge.pending {
+  background: #FFF1F2;
+  color: #E11D48;
+}
 
 .mono-text {
   font-family: 'Space Mono', 'Courier New', Courier, monospace;
@@ -592,10 +625,56 @@
 }
 
 @media (max-width: 1100px) {
-  .dash-stats-grid { grid-template-columns: repeat(2, 1fr); }
-  .dash-ac-metrics { gap: 1.5rem; }
+  .dash-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dash-ac-metrics {
+    gap: 1.5rem;
+  }
 }
 
 @media (max-width: 900px) {
-  .dash-ac-chart-area { flex-direction: column; height: auto; }
+  .dash-ac-chart-area {
+    flex-direction: column;
+    height: auto;
+  }
+}
+
+/* ── Dashboard Wrapper Box ── */
+.dash-wrapper-box {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #F1F5F9;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Unified White Stat Cards */
+.dash-wrapper-box .dash-stat-card {
+  box-shadow: none;
+  background: #FFFFFF;
+  border: 1px solid #F1F5F9;
+  transition: all 0.2s;
+}
+
+.dash-wrapper-box .dash-stat-card:hover {
+  background: #F8FAFC;
+  border-color: #E2E8F0;
+}
+
+.dash-wrapper-box .dash-stat-card .dash-sc-top {
+  color: #64748B;
+}
+
+.dash-wrapper-box .dash-stat-card .dash-sc-val {
+  color: #0F172A;
+}
+
+.dash-wrapper-box .dash-analytic-card,
+.dash-wrapper-box .dash-top-products-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
