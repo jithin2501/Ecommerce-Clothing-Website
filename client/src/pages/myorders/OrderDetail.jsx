@@ -169,7 +169,10 @@ export default function OrderDetail() {
                     </svg>
                   </div>
                   <div className="od-info-text">
-                    <strong>Home:</strong> {[order.shippingAddress?.address, order.shippingAddress?.city, order.shippingAddress?.pincode].filter(Boolean).join(', ')}
+                    <strong>Home:</strong> {(() => {
+                      const full = [order.shippingAddress?.address, order.shippingAddress?.city, order.shippingAddress?.pincode].filter(Boolean).join(', ');
+                      return full.length > 30 ? full.slice(0, 30) + '…' : full;
+                    })()}
                   </div>
                 </div>
                 <div className="od-info-row-divider" />
