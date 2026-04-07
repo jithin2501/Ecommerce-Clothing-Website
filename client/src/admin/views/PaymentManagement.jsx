@@ -82,46 +82,77 @@ export default function PaymentManagement() {
       .slice(0, 10);
   })();
 
+  const [selectedMonth, setSelectedMonth] = useState('All');
+
   const totalRev = orders.filter(o => o.status === 'success' && new Date(o.createdAt).getFullYear().toString() === selectedYear).reduce((acc, curr) => acc + curr.amount, 0);
   
   const monthlyLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   
   const getGraphData = () => {
-    return monthlyLabels.map((month, i) => {
-      const yearStr = selectedYear;
-      
-      const monthOrders = orders.filter(o => {
-        const d = new Date(o.createdAt);
-        return d.getFullYear().toString() === yearStr && d.getMonth() === i;
+    if (selectedMonth === 'All') {
+      return monthlyLabels.map((month, i) => {
+        const yearStr = selectedYear;
+        const monthOrders = orders.filter(o => {
+          const d = new Date(o.createdAt);
+          return d.getFullYear().toString() === yearStr && d.getMonth() === i;
+        });
+        const monthClients = clients.filter(c => {
+          const d = new Date(c.createdAt);
+          return d.getFullYear().toString() === yearStr && d.getMonth() === i;
+        });
+        const metrics = {
+          Revenue: monthOrders.filter(o => o.status === 'success').reduce((acc, curr) => acc + curr.amount, 0),
+          Customers: monthClients.length,
+          Transactions: monthOrders.length,
+          Products: stats.products 
+        };
+        return metrics[activeMetric];
       });
-
-      const monthClients = clients.filter(c => {
-        const d = new Date(c.createdAt);
-        return d.getFullYear().toString() === yearStr && d.getMonth() === i;
+    } else {
+      // Daily Drilldown for selectedMonth
+      const monthIdx = monthlyLabels.indexOf(selectedMonth);
+      const daysInMonth = new Date(selectedYear, monthIdx + 1, 0).getDate();
+      const dailyData = Array.from({ length: daysInMonth }, (_, i) => {
+        const day = i + 1;
+        const dayOrders = orders.filter(o => {
+          const d = new Date(o.createdAt);
+          return d.getFullYear().toString() === selectedYear && d.getMonth() === monthIdx && d.getDate() === day;
+        });
+        const dayClients = clients.filter(c => {
+          const d = new Date(c.createdAt);
+          return d.getFullYear().toString() === selectedYear && d.getMonth() === monthIdx && d.getDate() === day;
+        });
+        const metrics = {
+          Revenue: dayOrders.filter(o => o.status === 'success').reduce((acc, curr) => acc + curr.amount, 0),
+          Customers: dayClients.length,
+          Transactions: dayOrders.length,
+          Products: stats.products 
+        };
+        return metrics[activeMetric];
       });
-      
-      const metrics = {
-        Revenue: monthOrders.filter(o => o.status === 'success').reduce((acc, curr) => acc + curr.amount, 0),
-        Customers: monthClients.length, // Growth of total customers by join date
-        Transactions: monthOrders.length,
-        Products: stats.products 
-      };
-      return metrics[activeMetric];
-    });
+      return dailyData;
+    }
   };
 
   const graphValues = getGraphData();
   const maxVal = Math.max(...graphValues, 1);
   const chartWidth = 720;
-  const chartOffset = 50; // Move closer to text
+  const chartOffset = 50; 
+  const totalSteps = graphValues.length - 1;
 
-  const points = graphValues.map((v, i) => {
-    const x = chartOffset + (i * (chartWidth / 11));
-    const y = 200 - (v / maxVal * 180);
-    return `${x},${y}`;
-  });
-  const pathD = `M${points.join(' L')}`;
-  const areaD = `${pathD} L${chartOffset + (11 * (chartWidth / 11))},200 L${chartOffset},200 Z`;
+  const points = graphValues.map((v, i) => ({
+    x: chartOffset + (i * (chartWidth / totalSteps)),
+    y: 200 - (v / maxVal * 180)
+  }));
+
+  const smoothD = points.reduce((acc, p, i, a) => {
+    if (i === 0) return `M ${p.x},${p.y}`;
+    const prev = a[i - 1];
+    const cp1x = prev.x + (p.x - prev.x) / 2;
+    return `${acc} C ${cp1x},${prev.y} ${cp1x},${p.y} ${p.x},${p.y}`;
+  }, "");
+
+  const areaD = `${smoothD} L ${points[points.length - 1].x},200 L ${points[0].x},200 Z`;
 
   const exportTransactions = () => {
     const headers = ["ID", "Client", "Transaction ID", "Amount", "Method", "Status", "Date"];
@@ -196,12 +227,18 @@ export default function PaymentManagement() {
         <div className="dash-analytic-card">
           <div className="dash-ac-header align-between">
                <h3>Sales Analytic</h3>
-               <select className="ac-metric-select-dropdown matched-height" value={activeMetric} onChange={e => setActiveMetric(e.target.value)}>
-                 <option value="Revenue">Revenue</option>
-                 <option value="Customers">Customers</option>
-                 <option value="Transactions">Transactions</option>
-                 <option value="Products">Products</option>
-               </select>
+               <div className="ac-filter-group">
+                 <select className="ac-metric-select-dropdown matched-height-small" value={selectedMonth} onChange={e => setSelectedMonth(e.target.value)}>
+                   <option value="All">All Months</option>
+                   {monthlyLabels.map(m => <option key={m} value={m}>{m}</option>)}
+                 </select>
+                 <select className="ac-metric-select-dropdown matched-height-small" value={activeMetric} onChange={e => setActiveMetric(e.target.value)}>
+                   <option value="Revenue">Revenue</option>
+                   <option value="Customers">Customers</option>
+                   <option value="Transactions">Transactions</option>
+                   <option value="Products">Products</option>
+                 </select>
+               </div>
           </div>
 
           <div className="dash-ac-chart-area">
@@ -214,7 +251,6 @@ export default function PaymentManagement() {
                     </linearGradient>
                   </defs>
                   
-                  {/* Left labels */}
                   <g fill="#94A3B8" fontSize="10" fontWeight="600">
                      <text x="5" y="20">{activeMetric === 'Revenue' ? '₹' : ''}{(maxVal * 1).toLocaleString()}</text>
                      <text x="5" y="110">{activeMetric === 'Revenue' ? '₹' : ''}{(maxVal * 0.5).toLocaleString()}</text>
@@ -222,17 +258,25 @@ export default function PaymentManagement() {
                   </g>
 
                   {/* Grid */}
-                  <line x1={chartOffset} y1="20" x2="780" y2="20" stroke="#f1f5f9" />
-                  <line x1={chartOffset} y1="110" x2="780" y2="110" stroke="#f1f5f9" />
-                  <line x1={chartOffset} y1="200" x2="780" y2="200" stroke="#1e293b" />
+                  <line x1={chartOffset} y1="20" x2={chartOffset + chartWidth} y2="20" stroke="#f1f5f9" />
+                  <line x1={chartOffset} y1="110" x2={chartOffset + chartWidth} y2="110" stroke="#f1f5f9" />
+                  <line x1={chartOffset} y1="200" x2={chartOffset + chartWidth} y2="200" stroke="#1e293b" />
                   
-                  <path d={pathD} fill="none" stroke="#2DD4BF" strokeWidth="3" />
+                  <path d={smoothD} fill="none" stroke="#2DD4BF" strokeWidth="3" strokeLinecap="round" />
                   <path d={areaD} fill="url(#chartGradient)" />
 
-                  <g fill="#94A3B8" fontSize="10" fontWeight="600">
-                     {monthlyLabels.map((m, i) => (
-                       <text key={m} x={chartOffset + (i * (chartWidth / 11))} y="235" textAnchor={i === 0 ? "start" : i === 11 ? "end" : "middle"}>{m}</text>
-                     ))}
+                  <g fill="#94A3B8" fontSize="9" fontWeight="600">
+                     {selectedMonth === 'All' ? (
+                       monthlyLabels.map((m, i) => (
+                         <text key={m} x={chartOffset + (i * (chartWidth / 11))} y="235" textAnchor={i === 0 ? "start" : i === 11 ? "end" : "middle"}>{m}</text>
+                       ))
+                     ) : (
+                       // Show daily labels for selected month
+                       Array.from({ length: graphValues.length }, (_, i) => i + 1).filter(d => d % 3 === 0 || d === 1).map((d, i, arr) => {
+                         const x = chartOffset + ((d - 1) * (chartWidth / (graphValues.length - 1)));
+                         return <text key={d} x={x} y="235" textAnchor="middle">{d}</text>
+                       })
+                     )}
                   </g>
                 </svg>
              </div>

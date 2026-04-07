@@ -146,11 +146,17 @@
   justify-content: space-between !important;
   align-items: center;
   width: 100%;
-  min-height: 2.25rem; /* Ensure same height for all card headers */
+  min-height: 2.25rem;
 }
 
-.matched-height {
-  height: 2.25rem;
+.ac-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.matched-height-small {
+  height: 2rem;
   display: flex;
   align-items: center;
 }
