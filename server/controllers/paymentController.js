@@ -166,7 +166,8 @@ exports.getUserOrders = async (req, res) => {
     const { userId } = req.params;
     if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
 
-    const orders = await Order.find({ userId }).sort({ createdAt: -1 });
+    // Only fetch successful/paid orders for the user's history
+    const orders = await Order.find({ userId, status: 'success' }).sort({ createdAt: -1 });
     res.json({ success: true, count: orders.length, data: orders });
   } catch (error) {
     console.error('❌ Get User Orders Error:', error);
