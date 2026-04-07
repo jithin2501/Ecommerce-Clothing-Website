@@ -327,19 +327,10 @@ export default function PaymentManagement() {
                 </tr>
               </thead>
               <tbody>
-                {/* ── Example Transaction Entry (Hardcoded for Visual Guidance) ── */}
-                <tr>
-                  <td className="box-cell">Sumathi Trends</td>
-                  <td className="box-cell center-text"><span className="mono-text">A8B2C4</span></td>
-                  <td className="box-cell center-text mono-text">pay_P1rW3d7Lz9</td>
-                  <td className="box-cell center-text">Netbanking</td>
-                  <td className="box-cell center-text"><span className="status-badge success">success</span></td>
-                </tr>
-
                 {orders.map((o, i) => (
                   <tr key={o._id}>
-                    <td className="box-cell">{o.user?.name || 'Guest User'}</td>
-                    <td className="box-cell center-text"><span className="mono-text">{o.user?.id?.slice(-6) || 'N/A'}</span></td>
+                    <td className="box-cell">{o.user?.name || o.userName || 'Guest User'}</td>
+                    <td className="box-cell center-text"><span className="mono-text">{o.user?.id?.slice(-6) || o.userId?.slice(-6) || 'N/A'}</span></td>
                     <td className="box-cell center-text mono-text">{o.paymentId || o.orderId || 'PENDING'}</td>
                     <td className="box-cell center-text">Netbanking</td>
                     <td className="box-cell center-text"><span className={`status-badge ${o.status}`}>{o.status}</span></td>

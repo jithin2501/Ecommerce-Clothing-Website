@@ -44,6 +44,7 @@ import ProductDetailPage from './admin/views/ProductDetailPage';
 import ReviewQRPage from './admin/views/ReviewQRPage';
 import ClientManagement from './admin/views/ClientManagement';
 import PaymentManagement from './admin/views/PaymentManagement';
+import OrderManagement from './admin/views/OrderManagement';
 import Login from './admin/login/Login';
 import ProtectedRoute from './admin/login/Protectedroute';
 import UserLogin from './components/auth/Login';
@@ -120,6 +121,7 @@ function App() {
               <Route path="products/:productId/details" element={<ProductDetailPage />} />
               <Route path="clients" element={<ClientManagement />} />
               <Route path="payments" element={<PaymentManagement />} />
+              <Route path="orders" element={<OrderManagement />} />
             </Route>
 
             {/* Review submission page — no Navbar/Footer */}
