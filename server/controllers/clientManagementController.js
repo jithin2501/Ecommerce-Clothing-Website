@@ -1,4 +1,5 @@
 const ClientUser = require('../models/ClientUser');
+const Order = require('../models/Order');
 
 /* ── GET all clients (paginated + filtered) ── */
 exports.getAllClients = async (req, res) => {
@@ -7,14 +8,13 @@ exports.getAllClients = async (req, res) => {
     const query = {};
 
     if (loginType && loginType !== 'all') {
-      // $in matches whether loginTypes is stored as a string OR an array element
       query.$or = query.$or || [];
       query.$and = [
         {
           $or: [
-            { loginTypes: { $in: [loginType] } },  // array form: ['google']
-            { loginTypes: loginType },               // string form: 'google' (legacy)
-            { loginType: loginType },               // old singular field (legacy)
+            { loginTypes: { $in: [loginType] } },
+            { loginTypes: loginType },
+            { loginType: loginType },
           ]
         }
       ];
@@ -43,8 +43,13 @@ exports.getAllClients = async (req, res) => {
       .limit(Number(limit))
       .lean();
 
-    console.log('📋 getAllClients — total:', total);
-    res.json({ success: true, total, page: Number(page), users });
+    // Attach order counts for each user
+    const usersWithOrders = await Promise.all(users.map(async (u) => {
+      const orderCount = await Order.countDocuments({ userId: { $in: u.uids } });
+      return { ...u, orderCount };
+    }));
+
+    res.json({ success: true, total, page: Number(page), users: usersWithOrders });
   } catch (err) {
     console.error('❌ getAllClients error:', err);
     res.status(500).json({ error: 'Server error' });
@@ -56,8 +61,22 @@ exports.getClientDetail = async (req, res) => {
   try {
     const user = await ClientUser.findById(req.params.id).lean();
     if (!user) return res.status(404).json({ error: 'Client not found' });
-    res.json({ success: true, user });
+
+    // Fetch full order history from Order collection
+    const orders = await Order.find({ userId: { $in: user.uids } }).sort({ createdAt: -1 });
+    
+    // Map Order model fields to what ClientManagement.jsx expects (status, amount, createdAt/placedAt, etc.)
+    const formattedOrders = orders.map(o => ({
+      orderId: o.orderId,
+      status: o.status,
+      total: o.amount,
+      placedAt: o.createdAt,
+      items: o.items
+    }));
+
+    res.json({ success: true, user: { ...user, orders: formattedOrders } });
   } catch (err) {
+    console.error('❌ getClientDetail error:', err);
     res.status(500).json({ error: 'Server error' });
   }
 };

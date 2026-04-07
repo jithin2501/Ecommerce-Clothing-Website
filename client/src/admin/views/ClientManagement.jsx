@@ -314,7 +314,7 @@ export default function ClientManagement() {
                     <LoginBadge types={c.loginTypes || c.loginType} />
                   </td>
 
-                  <td className="cm-td-orders"><span className="cm-pill">{c.orders?.length || 0}</span></td>
+                  <td className="cm-td-orders"><span className="cm-pill">{c.orderCount || 0}</span></td>
 
                   <td className="cm-td-seen">{ago(c.lastSeen)}</td>
 
