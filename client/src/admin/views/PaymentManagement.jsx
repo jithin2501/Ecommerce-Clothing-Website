@@ -11,22 +11,139 @@ const authHeaders = () => ({
 export default function PaymentManagement() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedYear, setSelectedYear] = useState('2024');
+  const [selectedYear, setSelectedYear] = useState('2026');
+  const [stats, setStats] = useState({ clients: 0, products: 0 });
+  const [activeMetric, setActiveMetric] = useState('Revenue');
+  const [allProducts, setAllProducts] = useState([]);
+  const [clients, setClients] = useState([]);
 
   useEffect(() => {
-    async function fetchOrders() {
+    async function fetchData() {
       try {
-        const res = await fetch(API, { headers: authHeaders() });
-        const data = await res.json();
-        if (data.success) setOrders(data.data);
+        const [ordersRes, statsRes, productsRes, clientsListRes] = await Promise.all([
+          fetch(API, { headers: authHeaders() }),
+          fetch('/api/admin/clients/stats', { headers: authHeaders() }),
+          fetch('/api/products/admin', { headers: authHeaders() }),
+          fetch('/api/admin/clients?limit=1000', { headers: authHeaders() })
+        ]);
+
+        const ordersData = await ordersRes.json();
+        const statsData = await statsRes.json();
+        const productsData = await productsRes.json();
+        const clientsListData = await clientsListRes.json();
+
+        if (ordersData.success) {
+          setOrders(ordersData.data);
+        }
+        if (statsData.success) {
+          setStats(prev => ({ ...prev, clients: statsData.stats.total }));
+        }
+        if (productsData.success) {
+          setStats(prev => ({ ...prev, products: productsData.data.length }));
+          setAllProducts(productsData.data);
+        }
+        if (clientsListData.success) {
+          setClients(clientsListData.users);
+        }
+
       } catch (err) { console.error(err); }
       finally { setLoading(false); }
     }
-    fetchOrders();
+    fetchData();
   }, [selectedYear]);
 
-  const totalRev = orders.filter(o => o.status === 'success').reduce((acc, curr) => acc + curr.amount, 0);
-  const successCount = orders.filter(o => o.status === 'success').length;
+  const topProducts = (() => {
+    const counts = {};
+    orders.filter(o => o.status === 'success' && new Date(o.createdAt).getFullYear().toString() === selectedYear).forEach(o => {
+      if (!o.items) return;
+      o.items.forEach(item => {
+        const id = item.productId || item.id || item._id;
+        if (!id) return;
+        if (!counts[id]) counts[id] = 0;
+        counts[id] += Number(item.qty) || 1;
+      });
+    });
+    
+    return Object.entries(counts)
+      .map(([id, sold]) => {
+        const p = allProducts.find(x => x._id === id);
+        if (!p) return null;
+        return { 
+          id, 
+          sold, 
+          name: p.name, 
+          img: p.img, 
+          category: Array.isArray(p.category) ? p.category[0] : p.category,
+          subCategory: Array.isArray(p.subCategory) ? p.subCategory[0] : p.subCategory
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.sold - a.sold)
+      .slice(0, 10);
+  })();
+
+  const totalRev = orders.filter(o => o.status === 'success' && new Date(o.createdAt).getFullYear().toString() === selectedYear).reduce((acc, curr) => acc + curr.amount, 0);
+  
+  const monthlyLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  
+  const getGraphData = () => {
+    return monthlyLabels.map((month, i) => {
+      const yearStr = selectedYear;
+      
+      const monthOrders = orders.filter(o => {
+        const d = new Date(o.createdAt);
+        return d.getFullYear().toString() === yearStr && d.getMonth() === i;
+      });
+
+      const monthClients = clients.filter(c => {
+        const d = new Date(c.createdAt);
+        return d.getFullYear().toString() === yearStr && d.getMonth() === i;
+      });
+      
+      const metrics = {
+        Revenue: monthOrders.filter(o => o.status === 'success').reduce((acc, curr) => acc + curr.amount, 0),
+        Customers: monthClients.length, // Growth of total customers by join date
+        Transactions: monthOrders.length,
+        Products: stats.products 
+      };
+      return metrics[activeMetric];
+    });
+  };
+
+  const graphValues = getGraphData();
+  const maxVal = Math.max(...graphValues, 1);
+  const chartWidth = 720;
+  const chartOffset = 50; // Move closer to text
+
+  const points = graphValues.map((v, i) => {
+    const x = chartOffset + (i * (chartWidth / 11));
+    const y = 200 - (v / maxVal * 180);
+    return `${x},${y}`;
+  });
+  const pathD = `M${points.join(' L')}`;
+  const areaD = `${pathD} L${chartOffset + (11 * (chartWidth / 11))},200 L${chartOffset},200 Z`;
+
+  const exportTransactions = () => {
+    const headers = ["ID", "Client", "Transaction ID", "Amount", "Method", "Status", "Date"];
+    const rows = orders.map(o => [
+      o.user?.id?.slice(-6) || 'N/A',
+      o.user?.name || 'Guest',
+      o.paymentId || o.orderId,
+      o.amount,
+      'Netbanking',
+      o.status,
+      new Date(o.createdAt).toLocaleDateString()
+    ]);
+    
+    let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + rows.map(e => e.join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `Transactions_${selectedYear}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   return (
     <div className="dash-container">
@@ -37,13 +154,15 @@ export default function PaymentManagement() {
           Overview <span className="dash-sub">Show: {selectedYear}</span>
         </div>
         <div className="dash-tools">
-          <button className="dash-tool-btn"><Download size={14} /> Export</button>
+          <button className="dash-tool-btn" onClick={exportTransactions}><Download size={14} /> Export</button>
           <div className="dash-year-select">
             <Calendar size={14} />
             <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
+              <option value="2028">2028</option>
+              <option value="2027">2027</option>
+              <option value="2026">2026</option>
+              <option value="2025">2025</option>
               <option value="2024">2024</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
             </select>
           </div>
         </div>
@@ -51,157 +170,99 @@ export default function PaymentManagement() {
 
       {/* ── Statistics Summary Bar ── */}
       <div className="dash-stats-grid">
-        <div className="dash-stat-card">
+        <div className="dash-stat-card center-card">
           <div className="dash-sc-top"><span>Total Revenue</span></div>
           <div className="dash-sc-val">₹{totalRev.toLocaleString('en-IN')}</div>
-          <div className="dash-sc-foot">
-            <span className="sc-trend green">+4.5% <ArrowUpRight size={12} /></span>
-            <span className="sc-vs">Vs last month</span>
-          </div>
         </div>
 
-        <div className="dash-stat-card">
+        <div className="dash-stat-card center-card">
           <div className="dash-sc-top"><span>Total Customer</span></div>
-          <div className="dash-sc-val">{successCount}</div>
-          <div className="dash-sc-foot">
-            <span className="sc-trend green">+12.2% <ArrowUpRight size={12} /></span>
-            <span className="sc-vs">Vs last month</span>
-          </div>
+          <div className="dash-sc-val">{stats.clients}</div>
         </div>
 
-        <div className="dash-stat-card">
+        <div className="dash-stat-card center-card">
           <div className="dash-sc-top"><span>Total Transaction</span></div>
-          <div className="dash-sc-val">{orders.length}</div>
-          <div className="dash-sc-foot">
-            <span className="sc-trend red">-1.5% <ArrowDownRight size={12} /></span>
-            <span className="sc-vs">Vs last month</span>
-          </div>
+          <div className="dash-sc-val">{orders.filter(o => new Date(o.createdAt).getFullYear().toString() === selectedYear).length}</div>
         </div>
 
-        <div className="dash-stat-card">
+        <div className="dash-stat-card center-card">
           <div className="dash-sc-top"><span>Total Products</span></div>
-          <div className="dash-sc-val">987</div>
-          <div className="dash-sc-foot">
-            <span className="sc-trend green">+2.5% <ArrowUpRight size={12} /></span>
-            <span className="sc-vs">Vs last month</span>
-          </div>
+          <div className="dash-sc-val">{stats.products}</div>
         </div>
       </div>
 
-      {/* ── Main Analytical Chart Card (Matches New Mockup) ── */}
+      {/* ── Main Analytical Chart Card ── */}
       <div className="dash-mid-row">
         <div className="dash-analytic-card">
-          <div className="dash-ac-header">
-             <div className="ac-title-wrap">
+          <div className="dash-ac-header align-between">
                <h3>Sales Analytic</h3>
-             </div>
-             <div className="ac-sort">
-               <span>Sort by</span>
-               <div className="ac-sort-select">
-                 <Calendar size={14} /> Aug 2024
-               </div>
-             </div>
+               <select className="ac-metric-select-dropdown matched-height" value={activeMetric} onChange={e => setActiveMetric(e.target.value)}>
+                 <option value="Revenue">Revenue</option>
+                 <option value="Customers">Customers</option>
+                 <option value="Transactions">Transactions</option>
+                 <option value="Products">Products</option>
+               </select>
           </div>
 
           <div className="dash-ac-chart-area">
              <div className="ac-chart-canvas">
-               <svg viewBox="0 0 800 250" className="curved-analytic-svg">
-                 <defs>
-                   <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                     <stop offset="5%" stopColor="#2DD4BF" stopOpacity="0.3"/>
-                     <stop offset="95%" stopColor="#2DD4BF" stopOpacity="0"/>
-                   </linearGradient>
-                 </defs>
-                 
-                 {/* Left labels (Value Axis) */}
-                 <g fill="#94A3B8" fontSize="12" fontWeight="600">
-                    <text x="5" y="20">100k</text>
-                    <text x="5" y="65">50k</text>
-                    <text x="5" y="110">10k</text>
-                    <text x="5" y="155">1k</text>
-                    <text x="5" y="200">0</text>
-                 </g>
+                <svg viewBox="0 0 820 250" className="curved-analytic-svg">
+                  <defs>
+                    <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#2DD4BF" stopOpacity="0.3"/>
+                      <stop offset="95%" stopColor="#2DD4BF" stopOpacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  
+                  {/* Left labels */}
+                  <g fill="#94A3B8" fontSize="10" fontWeight="600">
+                     <text x="5" y="20">{activeMetric === 'Revenue' ? '₹' : ''}{(maxVal * 1).toLocaleString()}</text>
+                     <text x="5" y="110">{activeMetric === 'Revenue' ? '₹' : ''}{(maxVal * 0.5).toLocaleString()}</text>
+                     <text x="5" y="200">0</text>
+                  </g>
 
-                 {/* Custom Grid lines */}
-                 <line x1="45" y1="20" x2="800" y2="20" stroke="#f1f5f9" />
-                 <line x1="45" y1="65" x2="800" y2="65" stroke="#f1f5f9" />
-                 <line x1="45" y1="110" x2="800" y2="110" stroke="#f1f5f9" />
-                 <line x1="45" y1="155" x2="800" y2="155" stroke="#f1f5f9" />
-                 <line x1="45" y1="200" x2="800" y2="200" stroke="#1e293b" strokeWidth="1" />
-                 
-                 {/* Curved Path (Value range 20 to 200) */}
-                 <path 
-                   d="M45,180 C145,180 195,80 245,80 C295,80 345,160 445,160 C545,160 595,60 695,60 C795,60 815,100 845,100" 
-                   fill="none" 
-                   stroke="#2DD4BF" 
-                   strokeWidth="3" 
-                 />
-                 <path 
-                   d="M45,180 C145,180 195,80 245,80 C295,80 345,160 445,160 C545,160 595,60 695,60 C795,60 815,100 845,100 L845,200 L45,200 Z" 
-                   fill="url(#chartGradient)" 
-                 />
+                  {/* Grid */}
+                  <line x1={chartOffset} y1="20" x2="780" y2="20" stroke="#f1f5f9" />
+                  <line x1={chartOffset} y1="110" x2="780" y2="110" stroke="#f1f5f9" />
+                  <line x1={chartOffset} y1="200" x2="780" y2="200" stroke="#1e293b" />
+                  
+                  <path d={pathD} fill="none" stroke="#2DD4BF" strokeWidth="3" />
+                  <path d={areaD} fill="url(#chartGradient)" />
 
-                 {/* Bottom labels (Date Axis) */}
-                 <g fill="#94A3B8" fontSize="11" fontWeight="600">
-                    <text x="45" y="235">22 July</text>
-                    <text x="145" y="235">23 July</text>
-                    <text x="245" y="235">24 July</text>
-                    <text x="345" y="235">25 July</text>
-                    <text x="445" y="235">26 July</text>
-                    <text x="545" y="235">27 July</text>
-                    <text x="645" y="235">28 July</text>
-                    <text x="745" y="235">29 July</text>
-                 </g>
-               </svg>
+                  <g fill="#94A3B8" fontSize="10" fontWeight="600">
+                     {monthlyLabels.map((m, i) => (
+                       <text key={m} x={chartOffset + (i * (chartWidth / 11))} y="235" textAnchor={i === 0 ? "start" : i === 11 ? "end" : "middle"}>{m}</text>
+                     ))}
+                  </g>
+                </svg>
              </div>
           </div>
         </div>
 
-        <div className="dash-gauge-card premium-style">
-          <div className="dash-sc-top">
-            <span>Customers Volume</span>
+        <div className="dash-top-products-card">
+          <div className="dash-tp-header">
+            <h3>Most Ordered Products</h3>
           </div>
-          
-          <div className="dash-radial-wrap">
-             <div className="dash-radial-svg">
-                <svg viewBox="0 0 200 200">
-                   <defs>
-                      <linearGradient id="radialGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                         <stop offset="0%" stopColor="#2D3E50" />
-                         <stop offset="100%" stopColor="#8B5CF6" />
-                      </linearGradient>
-                      <filter id="glow">
-                         <feGaussianBlur stdDeviation="3" result="blur" />
-                         <feComposite in="SourceGraphic" in2="blur" operator="over" />
-                      </filter>
-                   </defs>
-                   {/* Background Track */}
-                   <circle cx="100" cy="100" r="70" fill="none" stroke="#F1F5F9" strokeWidth="18" strokeLinecap="round" />
-                   {/* Progress Ring */}
-                   <circle 
-                      cx="100" cy="100" r="70" 
-                      fill="none" stroke="url(#radialGradient)" 
-                      strokeWidth="18" 
-                      strokeLinecap="round" 
-                      strokeDasharray="440" 
-                      strokeDashoffset="132" /* 70% progress */
-                      transform="rotate(-90 100 100)"
-                      filter="url(#glow)"
-                   />
-                </svg>
-                <div className="dash-radial-content">
-                   <div className="radial-num">220</div>
-                   <div className="radial-label">New Customers</div>
+          <div className="dash-tp-list">
+            {topProducts.length === 0 ? (
+              <div className="dash-tp-empty">No sales recorded for {selectedYear}</div>
+            ) : topProducts.map((p, i) => (
+              <div key={p.id} className="dash-tp-item">
+                <div className="tp-img-wrap">
+                  <img src={p.img} alt={p.name} />
                 </div>
-             </div>
-          </div>
-
-          <div className="dash-radial-footer">
-             <div className="radial-footer-pill">
-                <div className="pill-dot blue" />
-                <span>Weekly Growth</span>
-                <span className="pill-val green">+15.4%</span>
-             </div>
+                <div className="tp-info">
+                  <div className="tp-name">{p.name}</div>
+                  <div className="tp-cats">
+                    {p.category} | {p.subCategory}
+                  </div>
+                </div>
+                <div className="tp-count">
+                  <div className="tp-count-num">{p.sold}</div>
+                  <div className="tp-count-label">sold</div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -209,7 +270,7 @@ export default function PaymentManagement() {
       <div className="dash-bottom-row-full">
         <div className="dash-table-card">
           <div className="dash-cc-header">
-            <h3>Recent Transaction</h3>
+            <h3>Recent Transaction ({orders.length})</h3>
           </div>
           <div className="dash-table-wrap">
             <table className="dash-table fixed-layout">
