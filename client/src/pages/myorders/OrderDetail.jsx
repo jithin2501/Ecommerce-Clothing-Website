@@ -122,12 +122,27 @@ export default function OrderDetail() {
             <div className="od-card rate-card">
               <h2>Rate your experience</h2>
               <div className="od-rate-box">
-                <div className="od-rate-flex">
-                  <div className="od-check-icon">✓</div>
-                  <span>Rate the product</span>
+                <div className="od-rate-write-row">
+                  <div className="od-rate-checkbox">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                  </div>
+                  <span>Write a product review</span>
                 </div>
+              </div>
+              <div className="od-rate-stars-row">
                 <StarRating value={rating} onChange={setRating} />
-                {rating > 0 && <p className="od-rate-thanks">Thank you for your rating!</p>}
+                <button
+                  className="od-write-review-btn"
+                  onClick={() => navigate('/account/write-review', { state: { order, item } })}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                  </svg>
+                  Write review
+                </button>
               </div>
               <button className="od-helpful-link">
                 Did you find this page helpful? <span>›</span>
@@ -143,7 +158,7 @@ export default function OrderDetail() {
                   <div
                     key={idx}
                     className="od-other-item"
-                    onClick={() => navigate(`/account/orders/${order.orderId}`, { state: { order, item: oi }, replace: true })}
+                    onClick={() => { navigate(`/account/orders/${order.orderId}`, { state: { order, item: oi }, replace: true }); window.scrollTo({ top: 0, behavior: 'instant' }); }}
                   >
                     <div className="od-other-item-name">{oi.name}</div>
                     <img src={oi.img || oi.photo} alt={oi.name} className="od-other-item-img" />

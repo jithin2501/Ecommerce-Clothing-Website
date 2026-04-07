@@ -194,65 +194,85 @@
 .rate-card h2 {
   font-size: 1rem;
   font-weight: 700;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
+/* "Write a product review" grey box */
 .od-rate-box {
   background: #F8F9FA;
-  padding: 1.5rem;
+  padding: 0.75rem 1rem;
   border-radius: 8px;
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
-.od-rate-flex {
+.od-rate-write-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: #878787;
+  gap: 0.6rem;
+  color: #555;
   font-size: 0.85rem;
-  margin-bottom: 1rem;
 }
 
-.od-check-icon {
+.od-rate-checkbox {
   width: 18px;
   height: 18px;
-  border: 2px solid #878787;
-  border-radius: 2px;
-  color: #FFF;
-  font-size: 0.7rem;
+  border: 1.5px solid #bbb;
+  border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
+  color: #555;
+  flex-shrink: 0;
+}
+
+/* Stars + Write review button on same line */
+.od-rate-stars-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  gap: 0.5rem;
 }
 
 .od-stars {
   display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
+  gap: 0.3rem;
+  font-size: 1.7rem;
 }
 
 .od-star {
   cursor: pointer;
-  color: #E0E0E0;
-  transition: color 0.2s;
+  color: #D1D5DB;
+  transition: color 0.15s;
 }
 
 .od-star.active {
-  color: #CBD5E1;
+  color: #22C55E;
 }
 
-/* Flipkart uses greyish stars in this section? No, probably yellow or grey. Screenshot shows grey ish stars */
 .od-star:hover {
-  color: #CBD5E1;
+  color: #22C55E;
 }
 
-.od-rate-thanks {
-  text-align: center;
-  color: #4CAF50;
-  font-size: 0.9rem;
-  font-weight: 500;
+.od-write-review-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: 1.5px solid #3B82F6;
+  color: #3B82F6;
+  border-radius: 20px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.od-write-review-btn:hover {
+  background: #EFF6FF;
 }
 
 .od-helpful-link {
@@ -336,9 +356,9 @@
 
 .od-info-row {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   align-items: center;
-  margin-bottom: 1.25rem;
+  margin-bottom: 0;
 }
 
 .od-info-icon {
@@ -381,8 +401,8 @@
 .od-boxed-content {
   background: #F8F9FA;
   border: 1px solid #F0F0F0;
-  border-radius: 12px;
-  padding: 1.25rem;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
 }
 
 .od-info-row-divider {
