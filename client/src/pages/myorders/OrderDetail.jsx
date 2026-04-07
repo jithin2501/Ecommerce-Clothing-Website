@@ -171,7 +171,7 @@ export default function OrderDetail() {
                       </svg>
                    </div>
                    <div className="od-info-text">
-                     <strong>Home:</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.pincode}
+                     <strong>Home:</strong> {[order.shippingAddress?.address, order.shippingAddress?.city, order.shippingAddress?.pincode].filter(Boolean).join(', ')}
                    </div>
                  </div>
                  <div className="od-info-row-divider" />
