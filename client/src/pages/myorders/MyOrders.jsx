@@ -103,7 +103,12 @@ export default function MyOrders() {
 
         {/* Orders List */}
         <div className="mo-list">
-          {filtered.length === 0 ? (
+          {dbOrders.length === 0 ? (
+            <div className="mo-empty">
+              <p>You haven't placed any orders yet.</p>
+              <button className="mo-shop-btn" onClick={() => navigate('/collections')}>Start Shopping</button>
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="mo-empty">
               <p>No orders found matching your search.</p>
             </div>
