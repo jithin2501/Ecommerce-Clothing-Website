@@ -48,17 +48,19 @@ function StarRating({ value, onChange }) {
 
 export default function WriteReview() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
-  const navigate   = useNavigate();
-  const location   = useLocation();
-  const order      = location.state?.order || null;
+  const navigate = useNavigate();
+  const location = useLocation();
+  const order = location.state?.order || null;
+  const item = location.state?.item || null;
+  const initRating = location.state?.rating || 0;
 
-  const [rating,      setRating]      = useState(0);
+  const [rating, setRating] = useState(initRating);
   const [description, setDescription] = useState('');
-  const [name,        setName]        = useState('');
-  const [file,        setFile]        = useState(null);
-  const [preview,     setPreview]     = useState(null);
-  const [submitted,   setSubmitted]   = useState(false);
-  const [error,       setError]       = useState('');
+  const [name, setName] = useState('');
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   const handleFile = (e) => {
     const f = e.target.files[0];
@@ -67,29 +69,29 @@ export default function WriteReview() {
     setPreview(URL.createObjectURL(f));
   };
 
-const handleSubmit = () => {
-  if (!rating) {
-    setError('Please select a star rating.');
-    return;
-  }
-  if (!description.trim()) {
-    setError('Please write a description.');
-    return;
-  }
+  const handleSubmit = () => {
+    if (!rating) {
+      setError('Please select a star rating.');
+      return;
+    }
+    if (!description.trim()) {
+      setError('Please write a description.');
+      return;
+    }
 
-  if (!name.trim()) {
-    setError('Please enter your display name.');
-    return;
-  }
-  if (!/^[A-Za-z\s]+$/.test(name.trim())) {
-    setError('Name should contain only alphabets.');
-    return;
-  }
+    if (!name.trim()) {
+      setError('Please enter your display name.');
+      return;
+    }
+    if (!/^[A-Za-z\s]+$/.test(name.trim())) {
+      setError('Name should contain only alphabets.');
+      return;
+    }
 
-  setError('');
-  setSubmitted(true);
-  setTimeout(() => navigate('/account/orders'), 2000);
-};
+    setError('');
+    setSubmitted(true);
+    setTimeout(() => navigate('/account/orders'), 2000);
+  };
 
   return (
     <div className="wr-page">
@@ -114,26 +116,28 @@ const handleSubmit = () => {
         <span className="wr-bc-current">Write a Review</span>
       </div>
 
-<div className="wr-header-center">
-  <h1 className="wr-page-title">Write a Review</h1>
+      <div className="wr-header-center">
+        <h1 className="wr-page-title">Write a Review</h1>
 
-{order && (
-  <div className="wr-product-strip">
-    <img
-      src={order.image}
-      alt={order.name}
-      className="wr-product-img"
-    />
-
-    <div className="wr-product-info">
-      <div className="wr-product-name">{order.name}</div>
-      <div className="wr-product-meta">
-        Color: {order.color} | Size: {order.size}
+        {item && (
+          <div className="wr-product-strip">
+            <img
+              src={item.img || item.photo}
+              alt={item.name}
+              className="wr-product-img"
+            />
+            <div className="wr-product-info">
+              <div className="wr-product-name">{item.name}</div>
+              <div className="wr-product-meta">
+                {item.color && `Color: ${item.color}`}{item.size && ` | Size: ${item.size}`}
+              </div>
+              <div className="wr-product-price">
+                {String(item.price).includes('₹') ? item.price : `₹${parseFloat(String(item.price).replace(/[₹$,]/g, '')).toLocaleString()}`}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </div>
-  </div>
-)}
-</div>
 
       <div className="wr-body">
 
@@ -141,7 +145,7 @@ const handleSubmit = () => {
         <div className="wr-left">
           <div className="wr-tips-card">
             <div className="wr-tips-title">
-               What makes a good review
+              What makes a good review
             </div>
             <Accordion items={FAQ} />
           </div>
@@ -153,7 +157,7 @@ const handleSubmit = () => {
                 <div className="wr-help-sub">Contact our dedicated support team for issues with shipping, sizing, or returns.</div>
               </div>
             </div>
-            <button className="wr-help-link" onClick={() => {}}>Visit Help Center</button>
+            <button className="wr-help-link" onClick={() => { }}>Visit Help Center</button>
           </div>
         </div>
 
@@ -183,16 +187,16 @@ const handleSubmit = () => {
 
             <div className="wr-field">
               <label className="wr-label">Name</label>
-                <input
-                  className="wr-input"
-                  type="text"
-                  placeholder="Your display name"
-                  value={name}
-                  onChange={(e) => {
+              <input
+                className="wr-input"
+                type="text"
+                placeholder="Your display name"
+                value={name}
+                onChange={(e) => {
                   const cleaned = e.target.value.replace(/[^A-Za-z\s]/g, '');
-                setName(cleaned);
-                   }}
-                />
+                  setName(cleaned);
+                }}
+              />
             </div>
 
             <div className="wr-field">
@@ -217,21 +221,21 @@ const handleSubmit = () => {
               SUBMIT REVIEW
             </button>
             <p className="wr-terms">
-  By submitting, you agree to our{" "}
-  <span
-    className="wr-link"
-    onClick={() => navigate('/account/policy/terms')}
-  >
-    Terms of Service
-  </span>{" "}
-  and{" "}
-  <span
-    className="wr-link"
-    onClick={() => navigate('/account/policy/privacy')}
-  >
-    Privacy Policy
-  </span>
-</p>
+              By submitting, you agree to our{" "}
+              <span
+                className="wr-link"
+                onClick={() => navigate('/account/policy/terms')}
+              >
+                Terms of Service
+              </span>{" "}
+              and{" "}
+              <span
+                className="wr-link"
+                onClick={() => navigate('/account/policy/privacy')}
+              >
+                Privacy Policy
+              </span>
+            </p>
           </div>
 
         </div>

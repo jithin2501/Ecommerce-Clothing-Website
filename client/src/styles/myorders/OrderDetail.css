@@ -197,40 +197,18 @@
   margin-bottom: 0.85rem;
 }
 
-/* "Write a product review" grey box */
+/* Grey box containing stars + Write review button */
 .od-rate-box {
   background: #F8F9FA;
-  padding: 0.75rem 1rem;
   border-radius: 8px;
-  margin-bottom: 0.85rem;
+  padding: 0.85rem 1rem;
 }
 
-.od-rate-write-row {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  color: #555;
-  font-size: 0.85rem;
-}
-
-.od-rate-checkbox {
-  width: 18px;
-  height: 18px;
-  border: 1.5px solid #bbb;
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #555;
-  flex-shrink: 0;
-}
-
-/* Stars + Write review button on same line */
+/* Stars + Write review button on same line inside grey box */
 .od-rate-stars-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
   gap: 0.5rem;
 }
 
@@ -273,21 +251,6 @@
 
 .od-write-review-btn:hover {
   background: #EFF6FF;
-}
-
-.od-helpful-link {
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  border-top: 1px solid #F0F0F0;
-  padding-top: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.85rem;
-  color: #212121;
-  cursor: pointer;
 }
 
 /* Others Card (Other Items In This Order — Image 3 style) */

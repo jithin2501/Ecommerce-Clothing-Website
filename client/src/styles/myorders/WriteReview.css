@@ -20,15 +20,21 @@
   max-width: 1000px;
   margin: 0 auto 16px;
 }
+
 .wr-bc-link {
   cursor: pointer;
   color: #555;
 }
+
 .wr-bc-link:hover {
   color: #2C3E50;
   text-decoration: underline;
 }
-.wr-bc-sep { color: #bbb; }
+
+.wr-bc-sep {
+  color: #bbb;
+}
+
 .wr-bc-current {
   color: #2C3E50;
   font-weight: 600;
@@ -50,17 +56,20 @@
 
 /* ===== PRODUCT STRIP ===== */
 .wr-product-strip {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center; /* center whole row */
+  justify-content: center;
   gap: 14px;
   margin-top: 16px;
+  background: #F8F9FA;
+  border-radius: 10px;
+  padding: 12px 18px;
 }
 
 /* Image */
 .wr-product-img {
-  width: 56px;
-  height: 56px;
+  width: 64px;
+  height: 64px;
   border-radius: 8px;
   object-fit: cover;
   border: 1px solid #eee;
@@ -84,6 +93,14 @@
 .wr-product-meta {
   font-size: 12px;
   color: #888;
+  margin-bottom: 4px;
+}
+
+.wr-product-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #212121;
+  margin-top: 4px;
 }
 
 /* ===== BODY LAYOUT ===== */
@@ -106,7 +123,7 @@
   background: #fff;
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .wr-tips-title {
@@ -185,13 +202,15 @@
   background: #fff;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
+
 .wr-form-title {
   font-size: 15px;
   font-weight: 700;
   color: #212121;
-  margin-bottom: 15px; /* 🔥 increase this */
+  margin-bottom: 15px;
+  /* 🔥 increase this */
 }
 
 /* Rating */
@@ -228,7 +247,8 @@
   font-weight: 600;
   color: #444;
 
-  margin-bottom: 5px; /* 🔥 increase this */
+  margin-bottom: 5px;
+  /* 🔥 increase this */
 }
 
 .wr-textarea,
@@ -285,9 +305,11 @@
   }
 
   .wr-product-strip {
-    justify-content: flex-start; /* better for mobile */
+    justify-content: flex-start;
+    /* better for mobile */
   }
 }
+
 /* ===== Upload Section ===== */
 
 .wr-upload-box {
