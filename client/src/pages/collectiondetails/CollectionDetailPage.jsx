@@ -7,6 +7,7 @@ import ProductReviews   from '../../components/collectiondetails/ProductReviews'
 import ProductRelated   from '../../components/collectiondetails/ProductRelated';
 import AddressSidebar   from '../../components/collectiondetails/AddressSidebar';
 import ShareModal      from '../../components/collectiondetails/ShareModal';
+import SEO from '../../components/SEO';
 import '../../styles/collectiondetails/CollectionDetailPage.css';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -236,6 +237,13 @@ export default function CollectionDetailPage() {
 
   return (
     <div className="cdp-page">
+      <SEO 
+        title={product?.name || 'Product Details'}
+        description={detail?.description || `Buy ${product?.name} online at Sumathi Trends. High-quality kids clothing in India.`}
+        keywords={`${product?.category}, ${product?.name}, kids clothes online`}
+        url={window.location.href}
+        image={activeImages?.[0] || "https://sumathitrends.com/images/logo.png"}
+      />
       {renderBreadcrumb()}
       <div className="cdp-main">
         <ProductGallery images={activeImages} onZoomChange={handleZoomChange} />
