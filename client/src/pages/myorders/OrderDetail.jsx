@@ -134,28 +134,25 @@ export default function OrderDetail() {
                </button>
             </div>
 
-            {/* 3. Other Items In Order */}
-            {otherItems.length > 0 && (
-              <div className="od-card others-card">
-                <h3>Other Items In This Order</h3>
-                {otherItems.map((oi, idx) => (
-                  <div 
-                    key={idx} 
-                    className="od-other-item clickable-other" 
-                    onClick={() => navigate(`/account/orders/${order.orderId}`, { state: { order, item: oi }, replace: true })}
-                    style={{ cursor: 'pointer' }}
-                  >
-                    <div className="od-other-info">
-                       <h4>{oi.name}</h4>
-                       <p className={`status-dot ${order.status === 'success' ? 'delivered' : 'pending'}`}>
-                         • {order.status === 'success' ? 'Delivered' : 'Pending'} on {new Date(order.createdAt).toLocaleDateString()}
-                       </p>
-                    </div>
-                    <img src={oi.img || oi.photo} alt={oi.name} className="od-other-img" />
+            {/* 3. Items In This Order */}
+            <div className="od-card others-card">
+              <h3>Items In This Order</h3>
+              {order.items.map((oi, idx) => (
+                <div 
+                  key={idx} 
+                  className={`od-list-item ${oi.productId === item.productId && oi.size === item.size ? 'active' : ''}`}
+                  onClick={() => navigate(`/account/orders/${order.orderId}`, { state: { order, item: oi }, replace: true })}
+                >
+                  <img src={oi.img || oi.photo} alt={oi.name} className="od-list-img" />
+                  <div className="od-list-info">
+                     <h4>{oi.name}</h4>
+                     <p className="od-list-meta">{oi.color}, {oi.size}</p>
+                     <p className="od-list-seller">Seller: SUMATHI TRENDS</p>
+                     <p className="od-list-price">₹{parseFloat(String(oi.price).replace(/[₹$,]/g, '')).toLocaleString()}</p>
                   </div>
-                ))}
-              </div>
-            )}
+                </div>
+              ))}
+            </div>
 
           </div>
 
@@ -165,54 +162,59 @@ export default function OrderDetail() {
             {/* 1. Delivery Details */}
             <div className="od-card info-card">
                <h2 className="od-section-title">Delivery details</h2>
-               <div className="od-info-row">
-                 <div className="od-info-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                      <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                    </svg>
+               <div className="od-boxed-content">
+                 <div className="od-info-row">
+                   <div className="od-info-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                      </svg>
+                   </div>
+                   <div className="od-info-text">
+                     <strong>Home</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.pincode}
+                   </div>
                  </div>
-                 <div className="od-info-text">
-                   <strong>Home</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.pincode}
+                 <div className="od-info-row-divider" />
+                 <div className="od-info-row">
+                   <div className="od-info-icon">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
+                   </div>
+                   <div className="od-info-text">
+                     <strong>{order.shippingAddress?.name?.toUpperCase()}</strong> {order.shippingAddress?.phone}
+                   </div>
                  </div>
                </div>
-                <div className="od-info-row">
-                  <div className="od-info-icon">
-                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                       <circle cx="12" cy="7" r="4"></circle>
-                     </svg>
-                  </div>
-                  <div className="od-info-text">
-                    {order.shippingAddress?.name}, {order.shippingAddress?.phone}
-                  </div>
-                </div>
-             </div>
+            </div>
 
              {/* 2. Price Details */}
              <div className="od-card info-card price-details">
                 <h2>Price details</h2>
-                <div className="od-price-row">
-                  <span>Listing price</span>
-                  <span>₹{listingPrice.toLocaleString()}</span>
-                </div>
-                <div className="od-price-row">
-                  <span>Shipping</span>
-                  <span className="od-free-shipping">FREE</span>
-                </div>
-                <div className="od-price-row">
-                  <span>Estimated Tax</span>
-                  <span>₹0.00</span>
-                </div>
-                
-                <div className="od-price-total">
-                  <span>Total Amount</span>
-                  <span>₹{itemPrice.toLocaleString()}</span>
-                </div>
+                <div className="od-boxed-content">
+                  <div className="od-price-row">
+                    <span>Listing price</span>
+                    <span>₹{listingPrice.toLocaleString()}</span>
+                  </div>
+                  <div className="od-price-row">
+                    <span>Shipping</span>
+                    <span className="od-free-shipping">FREE</span>
+                  </div>
+                  <div className="od-price-row">
+                    <span>Estimated Tax</span>
+                    <span>₹0.00</span>
+                  </div>
+                  
+                  <div className="od-price-total">
+                    <span>Total Amount</span>
+                    <span>₹{itemPrice.toLocaleString()}</span>
+                  </div>
 
-                <div className="od-payment-row">
-                  <span>Payment method</span>
-                  <span className="od-pay-val">{order.paymentMethod || 'Card Payment'}</span>
+                  <div className="od-payment-row">
+                    <span>Payment method</span>
+                    <span className="od-pay-val">{order.paymentMethod || 'Card Payment'}</span>
+                  </div>
                 </div>
 
                <button className="od-download-btn" onClick={() => window.print()}>
