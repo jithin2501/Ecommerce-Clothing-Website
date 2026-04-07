@@ -141,7 +141,7 @@
 
 /* ── RIGHT COLUMN ── */
 .info-card h2, .od-section-title { 
-  font-size: 1.1rem; 
+  font-size: 0.95rem; 
   font-weight: 700; 
   margin-bottom: 1.25rem; 
   border-bottom: 1px solid #F0F0F0; 
@@ -163,15 +163,15 @@
   justify-content: center;
   color: var(--charcoal);
 }
-.od-info-text { font-size: 0.95rem; line-height: 1.5; color: var(--charcoal); }
+.od-info-text { font-size: 0.85rem; line-height: 1.5; color: var(--charcoal); }
 .od-info-text strong { display: block; margin-bottom: 0.15rem; color: var(--charcoal); }
 
-.price-details h2 { border: none; margin-bottom: 1rem; }
-.od-price-row { display: flex; justify-content: space-between; font-size: 1rem; margin-bottom: 0.75rem; color: var(--charcoal); }
+.price-details h2 { border: none; margin-bottom: 1rem; font-size: 0.95rem; }
+.od-price-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.75rem; color: var(--charcoal); }
 .od-price-expand { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--charcoal); }
 
 .od-price-total {
-  display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 800;
+  display: flex; justify-content: space-between; font-size: 1rem; font-weight: 800;
   border-top: 1px dashed #E0E0E0; margin: 1.25rem 0; padding-top: 1.25rem;
   color: var(--charcoal);
 }
@@ -187,7 +187,7 @@
 .od-download-btn {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.75rem;
   background: #2D3E50; border: none; padding: 1rem; border-radius: 8px;
-  font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
   color: #FFF;
 }
 .od-download-btn:hover { opacity: 0.9; }
@@ -205,7 +205,7 @@
   background: #f8f9fa;
   border-radius: 8px;
   margin-bottom: 1.25rem;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--charcoal);
 }
 

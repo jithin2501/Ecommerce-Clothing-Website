@@ -67,9 +67,9 @@ export default function OrderDetail() {
 
   const otherItems = order.items.filter(i => i.productId !== item.productId || i.size !== item.size);
 
-  // Mock price breakdown based on total amount
+  // Price breakdown based on original paid amount
   const itemPrice = parseFloat(String(item.price).replace(/[₹$,]/g, '')) * item.qty;
-  const listingPrice = itemPrice + 200; // Mock higher original price
+  const listingPrice = itemPrice; 
   const specialPrice = itemPrice;
   const totalFees = 40; // Mock shipping or tax
   const totalAmount = order.amount;
