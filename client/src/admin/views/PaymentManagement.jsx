@@ -176,6 +176,29 @@ export default function PaymentManagement() {
     document.body.removeChild(link);
   };
 
+  const [transSearch, setTransSearch] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+
+  const filteredTransactions = orders.filter(o => {
+    // 1. Search filter
+    const searchMatch = !transSearch ||
+      o.user?.id?.toLowerCase().includes(transSearch.toLowerCase()) ||
+      o.paymentId?.toLowerCase().includes(transSearch.toLowerCase()) ||
+      o.orderId?.toLowerCase().includes(transSearch.toLowerCase());
+
+    // 2. Daily filter
+    const oDate = new Date(o.createdAt).toISOString().split('T')[0];
+    const dateMatch = oDate === selectedDate;
+
+    return searchMatch && dateMatch;
+  });
+
+  const stepDate = (days) => {
+    const d = new Date(selectedDate);
+    d.setDate(d.getDate() + days);
+    setSelectedDate(d.toISOString().split('T')[0]);
+  };
+
   return (
     <div className="dash-container">
       <h1 className="dash-main-title">Payment Dashboard</h1>
@@ -312,30 +335,61 @@ export default function PaymentManagement() {
 
       <div className="dash-bottom-row-full">
         <div className="dash-table-card">
-          <div className="dash-cc-header">
-            <h3>Recent Transaction ({orders.length})</h3>
+          <div className="dash-cc-header align-between" style={{ padding: '1rem 1.5rem', borderBottom: '1px solid #f1f5f9' }}>
+            <h3 style={{ margin: 0 }}>Recent Transaction ({filteredTransactions.length})</h3>
+
+            <div className="dash-table-controls" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+              <div className="dash-search-wrapper" style={{ position: 'relative' }}>
+                <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
+                <input
+                  type="text"
+                  placeholder="ID or Transaction ID..."
+                  className="dash-table-search"
+                  value={transSearch}
+                  onChange={e => setTransSearch(e.target.value)}
+                  style={{ padding: '6px 10px 6px 30px', borderRadius: '8px', border: '1px solid #e2e8f0', fontSize: '0.85rem', width: '200px' }}
+                />
+              </div>
+
+              <div className="dash-date-nav" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: '#f8fafc', padding: '4px 10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                <input
+                  type="date"
+                  value={selectedDate}
+                  onChange={e => setSelectedDate(e.target.value)}
+                  style={{ border: 'none', background: 'none', fontSize: '0.85rem', color: '#1e293b', fontWeight: 600, outline: 'none' }}
+                />
+              </div>
+            </div>
           </div>
+
           <div className="dash-table-wrap">
             <table className="dash-table fixed-layout">
               <thead>
                 <tr>
-                  <th style={{ width: '20%' }}>Client Name</th>
-                  <th style={{ width: '20%', textAlign: 'center' }}>ID</th>
-                  <th style={{ width: '20%', textAlign: 'center' }}>Transaction ID</th>
-                  <th style={{ width: '20%', textAlign: 'center' }}>Payment Method</th>
-                  <th style={{ width: '20%', textAlign: 'center' }}>Status</th>
+                  <th style={{ width: '15%' }}>Client Name</th>
+                  <th style={{ width: '15%', textAlign: 'center' }}>ID</th>
+                  <th style={{ width: '25%', textAlign: 'center' }}>Transaction ID</th>
+                  <th style={{ width: '15%', textAlign: 'center' }}>Amount</th>
+                  <th style={{ width: '15%', textAlign: 'center' }}>Payment Method</th>
+                  <th style={{ width: '15%', textAlign: 'center' }}>Status</th>
                 </tr>
               </thead>
               <tbody>
-                {orders.map((o, i) => (
+                {filteredTransactions.map((o, i) => (
                   <tr key={o._id}>
                     <td className="box-cell">{o.user?.name || o.userName || 'Guest User'}</td>
-                    <td className="box-cell center-text"><span className="mono-text">{o.user?.id?.slice(-6) || o.userId?.slice(-6) || 'N/A'}</span></td>
+                    <td className="box-cell center-text"><span className="mono-text">{o.user?.id || '—'}</span></td>
                     <td className="box-cell center-text mono-text">{o.paymentId || o.orderId || 'PENDING'}</td>
-                    <td className="box-cell center-text">Netbanking</td>
+                    <td className="box-cell center-text">₹{o.amount?.toLocaleString('en-IN')}</td>
+                    <td className="box-cell center-text" style={{ textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>{o.paymentMethod || 'Razorpay'}</td>
                     <td className="box-cell center-text"><span className={`status-badge ${o.status}`}>{o.status}</span></td>
                   </tr>
                 ))}
+                {filteredTransactions.length === 0 && (
+                  <tr>
+                    <td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8', fontStyle: 'italic' }}>No transactions found for this date.</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

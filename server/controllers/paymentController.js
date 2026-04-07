@@ -34,9 +34,15 @@ exports.createOrder = async (req, res) => {
     const order = await razorpay.orders.create(options);
     console.log('✅ Razorpay order created:', order.id);
 
+    // Generate a unique ID with letters and numbers (e.g. ST-A1B2)
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let displayId = 'ST-';
+    for (let i = 0; i < 6; i++) displayId += chars.charAt(Math.floor(Math.random() * chars.length));
+
     // Save initial order record as pending
     await Order.create({
       orderId: order.id,
+      displayId,
       userId: userId || 'guest',
       amount,
       currency,
@@ -91,10 +97,23 @@ exports.verifyPayment = async (req, res) => {
     if (razorpay_signature === expectedSignature) {
       console.log('✅ Razorpay Payment Verified:', razorpay_payment_id);
       
+      // FETCH PAYMENT DETAILS FROM RAZORPAY to get the specific method
+      let method = 'Unknown';
+      try {
+        const paymentDetails = await razorpay.payments.fetch(razorpay_payment_id);
+        method = paymentDetails.method; // e.g. 'upi', 'card', 'netbanking'
+      } catch (err) {
+        console.error('⚠️ Could not fetch payment method detail from Razorpay:', err);
+      }
+
       // Mark as success
       await Order.findOneAndUpdate(
         { orderId: razorpay_order_id },
-        { status: 'success', paymentId: razorpay_payment_id }
+        { 
+          status: 'success', 
+          paymentId: razorpay_payment_id,
+          paymentMethod: method 
+        }
       );
 
       return res.json({ success: true, message: 'Payment verified successfully' });
@@ -109,14 +128,32 @@ exports.verifyPayment = async (req, res) => {
   }
 };
 
+const ClientUser = require('../models/ClientUser');
+
 /**
  * ── Get All Orders (Admin) ──
  */
 exports.getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find().sort({ createdAt: -1 });
-    res.json({ success: true, count: orders.length, data: orders });
+    const orders = await Order.find().sort({ createdAt: -1 }).lean();
+    
+    // Dynamically join User Details for "LIVE" results
+    const joinedData = await Promise.all(orders.map(async (o) => {
+      if (o.userId && o.userId !== 'guest') {
+        const userDoc = await ClientUser.findOne({ uids: o.userId }).lean();
+        if (userDoc) {
+          o.user = {
+            id: userDoc.customerId || 'N/A', // e.g. CUST-00001
+            name: userDoc.name || 'Unknown'
+          };
+        }
+      }
+      return o;
+    }));
+
+    res.json({ success: true, count: joinedData.length, data: joinedData });
   } catch (error) {
+    console.error('❌ getAllOrders error:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch orders' });
   }
 };
