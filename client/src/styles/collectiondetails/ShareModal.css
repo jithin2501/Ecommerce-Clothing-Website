@@ -98,7 +98,7 @@
 }
 
 .sm-copy-box:focus-within {
-  border-color: #2874f0;
+  border-color: #2D3E50;
   background: #fff;
   box-shadow: 0 0 0 4px rgba(40, 116, 240, 0.1);
 }
@@ -129,7 +129,7 @@
 }
 
 .sm-copy-btn:hover {
-  color: #2874f0;
+  color: #2D3E50;
 }
 
 /* Social Icons Row */

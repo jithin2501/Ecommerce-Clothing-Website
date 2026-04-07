@@ -167,7 +167,7 @@ export default function PaymentManagement() {
                 <svg viewBox="0 0 200 200">
                    <defs>
                       <linearGradient id="radialGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                         <stop offset="0%" stopColor="#3B82F6" />
+                         <stop offset="0%" stopColor="#2D3E50" />
                          <stop offset="100%" stopColor="#8B5CF6" />
                       </linearGradient>
                       <filter id="glow">

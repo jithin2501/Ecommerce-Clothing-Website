@@ -100,7 +100,7 @@
 .sh-search-input::placeholder { color: #bbb; }
 
 .sh-search-btn {
-  background: #2874f0;
+  background: #2D3E50;
   color: #fff;
   border: none;
   padding: 11px 18px;
@@ -159,7 +159,7 @@
   position: absolute;
   top: -8px;
   left: 16px;
-  background: #2874f0;
+  background: #2D3E50;
   color: #fff;
   font-size: 9px;
   font-weight: 700;
@@ -212,7 +212,7 @@
   transition: all 0.2s;
   flex-shrink: 0;
 }
-.sh-need-help-btn:hover { border-color: #2874f0; color: #2874f0; }
+.sh-need-help-btn:hover { border-color: #2D3E50; color: #2D3E50; }
 
 /* ── ORDER HELP PAGE ── */
 .sh-hero--compact {
@@ -283,7 +283,7 @@
 .sh-channel-icon {
   width: 36px;
   height: 36px;
-  background: #2874f0;
+  background: #2D3E50;
   border-radius: 9px;
   display: flex;
   align-items: center;
@@ -366,7 +366,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2874f0;
+    color: #2D3E50;
     cursor: pointer;
     background: none;
     border: none;

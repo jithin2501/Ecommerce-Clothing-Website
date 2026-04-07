@@ -1,6 +1,6 @@
 /* ── Order Detail Styling ── */
 .od-page {
-  background: #F1F3F6;
+  background: #FFFFFF;
   min-height: 100vh;
   padding: 2rem 0;
   font-family: 'Inter', sans-serif;
@@ -18,7 +18,7 @@
   font-size: 0.9rem;
   color: #757575;
 }
-.od-breadcrumb span:nth-child(1) { cursor: pointer; color: #3B82F6; font-weight: 500; }
+.od-breadcrumb span:nth-child(1) { cursor: pointer; color: #2D3E50; font-weight: 500; }
 .od-breadcrumb .sep { margin: 0 0.5rem; }
 
 .od-grid {
@@ -80,8 +80,8 @@
 }
 
 .od-timeline-step.active .od-step-circle {
-  background: #2874F0;
-  border-color: #2874F0;
+  background: #2D3E50;
+  border-color: #2D3E50;
 }
 
 .od-check { color: #FFF; font-size: 0.7rem; font-weight: bold; }
@@ -95,12 +95,12 @@
   background: #E0E0E0;
   z-index: 1;
 }
-.od-step-line.active { background: #2874F0; }
+.od-step-line.active { background: #2D3E50; }
 
 .od-step-label { font-size: 0.95rem; color: #212121; font-weight: 500; }
 
 .od-updates-link {
-  background: none; border: none; color: #2874F0; font-size: 0.95rem; font-weight: 600;
+  background: none; border: none; color: #2D3E50; font-size: 0.95rem; font-weight: 600;
   margin-top: 1.5rem; cursor: pointer; display: block;
 }
 
@@ -110,7 +110,7 @@
   background: none; border: none; font-size: 1rem; color: #212121; font-weight: 500;
   display: flex; align-items: center; gap: 0.75rem; cursor: pointer; transition: color 0.2s;
 }
-.od-chat-btn:hover { color: #2874F0; }
+.od-chat-btn:hover { color: #2D3E50; }
 
 /* Rate Card */
 .rate-card h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; }
@@ -151,7 +151,7 @@
   letter-spacing: 0.5px;
 }
 
-.od-info-row { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1.25rem; }
+.od-info-row { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem; }
 .od-info-icon { 
   flex-shrink: 0;
   width: 32px;
@@ -186,11 +186,34 @@
 
 .od-download-btn {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.75rem;
-  background: #FFF; border: 1.5px solid var(--charcoal); padding: 1rem; border-radius: 8px;
+  background: #2D3E50; border: none; padding: 1rem; border-radius: 8px;
   font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+  color: #FFF;
+}
+.od-download-btn:hover { opacity: 0.9; }
+
+.od-free-shipping {
+  color: #388E3C;
+  font-weight: 600;
+}
+
+.od-payment-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin-bottom: 1.25rem;
+  font-size: 0.95rem;
   color: var(--charcoal);
 }
-.od-download-btn:hover { background: var(--charcoal); color: #FFF; }
+
+.od-pay-val {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
 
 @media (max-width: 900px) {
   .od-grid { grid-template-columns: 1fr; }

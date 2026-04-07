@@ -53,7 +53,7 @@
   background: var(--charcoal);
 }
 
-.pg-badge-new  { background: #2563eb; }
+.pg-badge-new  { background: #2D3E50; }
 .pg-badge-best { background: #92400e; color: #fef3c7; }
 .pg-badge-sale { background: var(--accent-clay, #c07a55); }
 

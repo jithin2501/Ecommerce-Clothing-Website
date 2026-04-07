@@ -176,46 +176,44 @@ export default function OrderDetail() {
                    <strong>Home</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.pincode}
                  </div>
                </div>
-               <div className="od-info-row">
-                 <div className="od-info-icon">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                      <circle cx="12" cy="7" r="4"></circle>
-                    </svg>
-                 </div>
-                 <div className="od-info-text">
-                   {order.shippingAddress?.name} &nbsp; {order.shippingAddress?.phone}
-                 </div>
-               </div>
-            </div>
+                <div className="od-info-row">
+                  <div className="od-info-icon">
+                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                       <circle cx="12" cy="7" r="4"></circle>
+                     </svg>
+                  </div>
+                  <div className="od-info-text">
+                    {order.shippingAddress?.name}, {order.shippingAddress?.phone}
+                  </div>
+                </div>
+             </div>
 
-            {/* 2. Price Details */}
-            <div className="od-card info-card price-details">
-               <h2>Price details</h2>
-               <div className="od-price-row">
-                 <span>Listing price</span>
-                 <span>₹{listingPrice.toLocaleString()}</span>
-               </div>
-               <div className="od-price-row">
-                 <span>Special price ⓘ</span>
-                 <span>₹{specialPrice.toLocaleString()}</span>
-               </div>
-               <div className="od-price-row">
-                 <span className="od-price-expand">Total fees ⌄</span>
-                 <span>₹{totalFees.toLocaleString()}</span>
-               </div>
-               
-               <div className="od-price-total">
-                 <span>Total amount</span>
-                 <span>₹{totalAmount.toLocaleString()}</span>
-               </div>
+             {/* 2. Price Details */}
+             <div className="od-card info-card price-details">
+                <h2>Price details</h2>
+                <div className="od-price-row">
+                  <span>Listing price</span>
+                  <span>₹{listingPrice.toLocaleString()}</span>
+                </div>
+                <div className="od-price-row">
+                  <span>Shipping</span>
+                  <span className="od-free-shipping">FREE</span>
+                </div>
+                <div className="od-price-row">
+                  <span>Estimated Tax</span>
+                  <span>₹0.00</span>
+                </div>
+                
+                <div className="od-price-total">
+                  <span>Total Amount</span>
+                  <span>₹{itemPrice.toLocaleString()}</span>
+                </div>
 
-               <div className="od-payment-method">
-                 <span>Payment method</span>
-                 <div className="od-pay-pill">
-                    <span className="pill-icon">UPI</span> UPI
-                 </div>
-               </div>
+                <div className="od-payment-row">
+                  <span>Payment method</span>
+                  <span className="od-pay-val">{order.paymentMethod || 'Card Payment'}</span>
+                </div>
 
                <button className="od-download-btn" onClick={() => window.print()}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

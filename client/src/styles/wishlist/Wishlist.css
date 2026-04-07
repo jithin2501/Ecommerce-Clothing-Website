@@ -58,7 +58,7 @@
 }
 
 .wl-breadcrumb-link {
-  color: #2874f0;
+  color: #2D3E50;
   cursor: pointer;
   font-weight: 500;
 }
@@ -99,7 +99,7 @@
 }
 
 .wl-shop-btn {
-  background-color: #2874f0;
+  background-color: #2D3E50;
   color: #fff;
   border: none;
   padding: 12px 36px;
@@ -268,7 +268,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2874f0;
+    color: #2D3E50;
     background: none;
     border: none;
     cursor: pointer;

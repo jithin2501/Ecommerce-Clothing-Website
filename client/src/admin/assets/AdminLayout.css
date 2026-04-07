@@ -70,7 +70,7 @@
 .admin-nav-link.active {
   background: rgba(255, 255, 255, 0.1);
   color: #fff;
-  border-left: 4px solid #3b82f6;
+  border-left: 4px solid #2D3E50;
 }
 
 .admin-signout {

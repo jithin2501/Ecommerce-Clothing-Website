@@ -212,7 +212,7 @@
   gap: 2px;
 }
 
-.ac-m-badge.blue { background: #EFF6FF; color: #3B82F6; }
+.ac-m-badge.blue { background: #F1F3F6; color: #2D3E50; }
 .ac-m-badge.green { background: #F0FDF4; color: #16A34A; }
 .ac-m-badge.orange { background: #FFF7ED; color: #EA580C; }
 
@@ -370,7 +370,7 @@
   height: 6px;
   border-radius: 50%;
 }
-.pill-dot.blue { background: #3B82F6; box-shadow: 0 0 8px #3B82F6; }
+.pill-dot.blue { background: #2D3E50; box-shadow: 0 0 8px #2D3E50; }
 
 .pill-val.green {
   margin-left: auto;

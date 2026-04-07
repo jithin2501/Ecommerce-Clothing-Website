@@ -362,7 +362,7 @@
 .cm-view-btn {
   background: none;
   border: none;
-  color: #3b82f6;
+  color: #2D3E50;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -373,7 +373,7 @@
 }
 
 .cm-view-btn:hover {
-  background: #eff6ff;
+  background: #F1F3F6;
 }
 
 .cm-loading {
@@ -557,8 +557,8 @@
 }
 
 .cm-tab-active {
-  color: #2563eb;
-  border-bottom-color: #2563eb;
+  color: #2D3E50;
+  border-bottom-color: #2D3E50;
 }
 
 .cm-tab-dot {
@@ -618,7 +618,7 @@
   font-size: 10px;
   font-weight: 700;
   text-transform: uppercase;
-  color: #3b82f6;
+  color: #2D3E50;
   letter-spacing: 0.5px;
 }
 

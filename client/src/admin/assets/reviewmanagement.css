@@ -107,8 +107,8 @@
   transition: all 0.2s;
   outline: none;
 }
-.rm-filter-btn:hover { border-color: #3b82f6; color: #3b82f6; }
-.rm-filter-btn.active { background: #3b82f6; border-color: #3b82f6; color: #fff; }
+.rm-filter-btn:hover { border-color: #2D3E50; color: #2D3E50; }
+.rm-filter-btn.active { background: #2D3E50; border-color: #2D3E50; color: #fff; }
 
 /* ── Table ── */
 .rm-table-outer {

@@ -83,7 +83,7 @@
 /* Edit button — blue, matches your screenshot */
 .edit-btn {
   font-size: 13px;
-  color: #2874f0;
+  color: #2D3E50;
   cursor: pointer;
   font-weight: 500;
 }
@@ -281,7 +281,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2874f0;
+    color: #2D3E50;
     cursor: pointer;
     background: none;
     border: none;

@@ -57,14 +57,14 @@
 .ma-add-plus {
   font-size: 20px;
   font-weight: 700;
-  color: #2874f0;
+  color: #2D3E50;
   line-height: 1;
 }
 
 .ma-add-label {
   font-size: 13px;
   font-weight: 700;
-  color: #2874f0;
+  color: #2D3E50;
   letter-spacing: 0.04em;
 }
 
@@ -396,7 +396,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #2874f0;
+    color: #2D3E50;
     cursor: pointer;
     background: none;
     border: none;
