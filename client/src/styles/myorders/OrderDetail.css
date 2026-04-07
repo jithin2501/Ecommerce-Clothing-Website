@@ -157,14 +157,13 @@
 
 /* ── RIGHT COLUMN ── */
 .info-card h2, .od-section-title { 
-  font-size: 0.95rem; 
-  font-weight: 700; 
-  margin-bottom: 1.25rem; 
-  border-bottom: 1px solid #F0F0F0; 
-  padding-bottom: 0.75rem; 
-  color: var(--charcoal);
+  font-size: 0.85rem; 
+  font-weight: 800; 
+  margin-bottom: 0.75rem; 
+  padding-bottom: 0.5rem; 
+  color: #757575;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 
 .od-info-row { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.25rem; }
@@ -179,8 +178,20 @@
   justify-content: center;
   color: var(--charcoal);
 }
-.od-info-text { font-size: 0.85rem; line-height: 1.5; color: var(--charcoal); }
-.od-info-text strong { display: block; margin-bottom: 0.2rem; color: #111; font-weight: 700; }
+.od-info-text { font-size: 0.82rem; line-height: 1.4; color: #333; }
+.od-info-text strong { color: #111; font-weight: 700; margin-right: 0.35rem; }
+
+.od-info-row.single-line {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.od-info-row.single-line .od-info-text {
+  display: flex;
+  align-items: center;
+}
 
 .od-boxed-content {
   background: #F8F9FA;
@@ -191,12 +202,12 @@
 
 .od-info-row-divider {
   height: 1px;
-  background: #E0E0E0;
-  margin: 1rem 0;
+  background: #EEE;
+  margin: 0.85rem 0;
   width: 100%;
 }
 
-.price-details h2 { border: none; margin-bottom: 1.25rem; font-size: 0.95rem; }
+.price-details h2 { margin-bottom: 0.75rem; }
 .od-price-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 0.75rem; color: var(--charcoal); }
 .od-price-expand { display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: var(--charcoal); }
 
@@ -223,9 +234,10 @@
 
 .od-download-btn {
   width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.75rem;
-  background: #2D3E50; border: none; padding: 1rem; border-radius: 8px;
+  background: #344455; border: none; padding: 1rem; border-radius: 8px;
   font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
   color: #FFF;
+  margin-top: 1.5rem;
 }
 .od-download-btn:hover { opacity: 0.9; }
 

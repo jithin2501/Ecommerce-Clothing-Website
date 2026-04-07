@@ -161,9 +161,9 @@ export default function OrderDetail() {
             
             {/* 1. Delivery Details */}
             <div className="od-card info-card">
-               <h2 className="od-section-title">Delivery details</h2>
+               <h2 className="od-section-title">DELIVERY DETAILS</h2>
                <div className="od-boxed-content">
-                 <div className="od-info-row">
+                 <div className="od-info-row single-line">
                    <div className="od-info-icon">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -171,11 +171,11 @@ export default function OrderDetail() {
                       </svg>
                    </div>
                    <div className="od-info-text">
-                     <strong>Home</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.pincode}
+                     <strong>Home:</strong> {order.shippingAddress?.address}, {order.shippingAddress?.city}, {order.shippingAddress?.pincode}
                    </div>
                  </div>
                  <div className="od-info-row-divider" />
-                 <div className="od-info-row">
+                 <div className="od-info-row single-line">
                    <div className="od-info-icon">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -183,7 +183,7 @@ export default function OrderDetail() {
                       </svg>
                    </div>
                    <div className="od-info-text">
-                     <strong>{order.shippingAddress?.name?.toUpperCase()}</strong> {order.shippingAddress?.phone}
+                     <strong>{order.shippingAddress?.name?.toUpperCase()}</strong>, {order.shippingAddress?.phone}
                    </div>
                  </div>
                </div>
@@ -191,7 +191,7 @@ export default function OrderDetail() {
 
              {/* 2. Price Details */}
              <div className="od-card info-card price-details">
-                <h2>Price details</h2>
+                <h2 className="od-section-title">PRICE DETAILS</h2>
                 <div className="od-boxed-content">
                   <div className="od-price-row">
                     <span>Listing price</span>
