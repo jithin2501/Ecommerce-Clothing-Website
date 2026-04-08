@@ -86,7 +86,7 @@ export default function OrderManagement() {
               <div className="order-fc-header">
                 <div className="order-fc-id">
                    <span className="fc-id-label">ORDER ID:</span>
-                   <span className="fc-id-val"># {o.orderId?.slice(-10)}</span>
+                   <span className="fc-id-val"># {o.displayId}</span>
                 </div>
                 <div className="order-fc-status success">Paid</div>
               </div>
@@ -174,14 +174,10 @@ export default function OrderManagement() {
                 </div>
               </div>
               
-              <div className="order-fc-footer">
-                <button 
-                  className="fc-btn primary" 
-                  onClick={() => window.open('https://app.shiprocket.in/seller/orders', '_blank')}
-                >
-                  Print Shipping Label
-                </button>
-                <button className="fc-btn secondary">Update Status</button>
+              <div className="order-fc-footer" style={{ borderTop: 'none', background: 'transparent', padding: '0 1.5rem 1.5rem' }}>
+                <p style={{ fontSize: '0.75rem', color: '#94A3B8', fontStyle: 'italic' }}>
+                  Live tracking automated by Shiprocket. No manual update required.
+                </p>
               </div>
             </div>
           ))}

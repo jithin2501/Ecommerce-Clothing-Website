@@ -90,88 +90,109 @@
   border: 1px solid #F0F0F0;
 }
 
-/* Timeline */
-.od-timeline-wrap {
-  padding: 2rem 0;
-  border-bottom: 1px solid #F0F0F0;
-}
-
-.od-timeline {
+/* Professional Tracker */
+.prof-tracker {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  position: relative;
-  margin-left: 0.5rem;
+  gap: 0;
+  margin-top: 1rem;
 }
 
-.od-timeline-step {
+.prof-step {
   display: flex;
-  align-items: start;
   gap: 1.5rem;
-  position: relative;
+  min-height: 80px;
 }
 
-.od-step-circle {
+.prof-dot-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
   width: 20px;
-  height: 20px;
+}
+
+.prof-dot {
+  width: 14px;
+  height: 14px;
+  background: #E0E0E0;
   border-radius: 50%;
-  background: #FFF;
-  border: 2px solid #E0E0E0;
   z-index: 2;
+  margin-top: 5px;
+}
+
+.prof-step.active .prof-dot {
+  background: #22C55E;
+}
+
+.prof-line {
+  flex: 1;
+  width: 3px;
+  background: #E0E0E0;
+}
+
+.prof-step.active .prof-line {
+  background: #22C55E;
+}
+
+.prof-info {
+  flex: 1;
+  padding-bottom: 2rem;
+}
+
+.prof-label-row {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-top: 2px;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
-.od-timeline-step.active .od-step-circle {
-  background: #2D3E50;
-  border-color: #2D3E50;
-}
-
-.od-check {
-  color: #FFF;
-  font-size: 0.7rem;
-  font-weight: bold;
-}
-
-.od-step-line {
-  position: absolute;
-  top: 22px;
-  left: 9px;
-  width: 2px;
-  height: calc(100% - 15px);
-  background: #E0E0E0;
-  z-index: 1;
-}
-
-.od-step-line.active {
-  background: #2D3E50;
-}
-
-.od-step-label {
-  font-size: 0.85rem;
-  color: #212121;
-  font-weight: 500;
-}
-
-.od-step-status-text {
-  font-size: 0.72rem;
-  color: #10B981;
+.prof-label {
+  font-size: 1rem;
   font-weight: 700;
-  text-transform: uppercase;
-  margin-top: 2px;
+  color: #BDBDBD;
 }
 
-.od-updates-link {
-  background: none;
-  border: none;
-  color: #2D3E50;
-  font-size: 0.85rem;
+.prof-step.active .prof-label {
+  color: #212121;
+}
+
+.prof-main-date {
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-top: 1.5rem;
-  cursor: pointer;
-  display: block;
+  color: #9E9E9E;
+}
+
+.prof-sub {
+  font-size: 0.85rem;
+  color: #757575;
+  line-height: 1.5;
+}
+
+.prof-courier {
+  font-weight: 700;
+  color: #212121;
+  margin-bottom: 4px;
+}
+
+.prof-time {
+  color: #9E9E9E;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.prof-location {
+  color: #757575;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.od-tracking-loading {
+  font-size: 0.9rem;
+  color: #3B82F6;
+  font-weight: 600;
+  padding: 1rem 0;
+  font-style: italic;
 }
 
 /* Chat Section */

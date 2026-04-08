@@ -213,13 +213,22 @@ exports.syncTrackingStatus = async (req, res) => {
     const tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
 
     if (tracking.success && tracking.data) {
-      // Access the status inside track_status
-      const liveStatus = tracking.data.track_status;
-      if (liveStatus) {
-         order.trackingStatus = liveStatus;
-         await order.save();
-      }
-      return res.json({ success: true, trackingStatus: liveStatus });
+      const td = tracking.data;
+      
+      // Update the order with live data
+      order.trackingStatus = td.track_status || order.trackingStatus;
+      
+      // We'll store the latest tracking info as a JSON blob for the frontend to use
+      const results = {
+        success: true,
+        trackingStatus: td.track_status,
+        courier: td.courier_name,
+        awb: td.awb_code,
+        activities: td.shipment_track_activities || []
+      };
+
+      await order.save();
+      return res.json(results);
     }
 
     res.status(400).json({ success: false, error: 'Could not fetch live status' });

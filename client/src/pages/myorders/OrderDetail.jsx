@@ -4,36 +4,89 @@ import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myorders/OrderDetail.css';
 
-function StatusTimeline({ status, shiprocketStatus, date }) {
-  // Mapping Shiprocket status to our simplified customer timeline
-  const s = (shiprocketStatus || '').toUpperCase();
-  
-  let currentIdx = 0; // Confirmed
-  if (['SHIPPED', 'PICKED UP', 'IN TRANSIT'].includes(s)) currentIdx = 1;
-  if (['OUT FOR DELIVERY', 'OUT-FOR-DELIVERY', 'OFD'].includes(s)) currentIdx = 2;
-  if (s === 'DELIVERED') currentIdx = 3;
+function ProfessionalTracker({ loading, trackingData, orderDate }) {
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const options = { weekday: 'short', day: 'numeric', month: 'short', year: '2-digit' };
+    const parts = date.toLocaleDateString('en-IN', options).split(' ');
+    // Format: Thu, 9 Oct '25
+    return `${parts[0]} ${parts[1]}${getOrdinal(parts[1])} ${parts[2]} '${parts[3]}`;
+  };
 
+  const formatTime = (dateStr) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
+  };
+
+  const getOrdinal = (n) => {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return s[(v - 20) % 10] || s[v] || s[0];
+  };
+
+  if (loading) return <div className="od-tracking-loading">Updating live tracking...</div>;
+
+  const activities = trackingData?.activities || [];
+  const courier = trackingData?.courier || 'Logistic Partner';
+  const awb = trackingData?.awb || '';
+
+  // Logical steps based on activities
   const steps = [
-    { label: 'Order Confirmed', date: date },
-    { label: 'Shipped', date: date },
-    { label: 'Out for Delivery', date: date },
-    { label: 'Delivered', date: date }
+    { label: 'Order Confirmed', key: 'NEW' },
+    { label: 'Shipped', key: 'SHIPPED' },
+    { label: 'Out For Delivery', key: 'OFD' },
+    { label: 'Delivered', key: 'DELIVERED' }
   ];
 
   return (
-    <div className="od-timeline">
-      {steps.map((step, i) => (
-        <div key={i} className={`od-timeline-step ${i <= currentIdx ? 'active' : ''}`}>
-          <div className="od-step-circle">
-            {i <= currentIdx && <span className="od-check">✓</span>}
+    <div className="prof-tracker">
+      {steps.map((step, idx) => {
+        const matchingActivity = activities.find(a => {
+          const s = a.status.toUpperCase();
+          if (step.key === 'NEW' && (s.includes('NEW') || s.includes('CONFIRMED'))) return true;
+          if (step.key === 'SHIPPED' && (s.includes('SHIPPED') || s.includes('PICKED UP') || s.includes('TRANSIT'))) return true;
+          if (step.key === 'OFD' && (s.includes('OFD') || s.includes('OUT FOR DELIVERY'))) return true;
+          if (step.key === 'DELIVERED' && s.includes('DELIVERED')) return true;
+          return false;
+        });
+
+        const isActive = !!matchingActivity;
+
+        return (
+          <div key={idx} className={`prof-step ${isActive ? 'active' : ''}`}>
+            <div className="prof-dot-line">
+              <div className="prof-dot" />
+              {idx < steps.length - 1 && <div className="prof-line" />}
+            </div>
+            <div className="prof-info">
+              <div className="prof-label-row">
+                <span className="prof-label">{step.label}</span>
+                {isActive && <span className="prof-main-date">{formatDate(matchingActivity.date)}</span>}
+              </div>
+              
+              {step.key === 'NEW' && !isActive && (
+                <div className="prof-sub">
+                  <p>Your Order has been placed.</p>
+                  <p className="prof-time">{formatDate(orderDate)} - {formatTime(orderDate)}</p>
+                </div>
+              )}
+
+              {isActive && (
+                <div className="prof-sub">
+                  {step.key === 'SHIPPED' && awb && (
+                    <p className="prof-courier">{courier} - {awb}</p>
+                  )}
+                  <p>{matchingActivity.activity || `Your item has been ${step.label.toLowerCase()}.`}</p>
+                  <p className="prof-location">{matchingActivity.location}</p>
+                  <p className="prof-time">{formatDate(matchingActivity.date)} - {formatTime(matchingActivity.date)}</p>
+                </div>
+              )}
+            </div>
           </div>
-          <div className="od-step-content">
-            <div className="od-step-label">{step.label}</div>
-            {i === currentIdx && <div className="od-step-status-text">{shiprocketStatus || 'Processing'}</div>}
-          </div>
-          {i < steps.length - 1 && <div className={`od-step-line ${i < currentIdx ? 'active' : ''}`} />}
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -60,8 +113,31 @@ export default function OrderDetail() {
   const location = useLocation();
   const { order, item } = location.state || {};
   const [rating, setRating] = useState(0);
+  const [trackingData, setTrackingData] = useState(null);
+  const [trackingLoading, setTrackingLoading] = useState(false);
 
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+  useEffect(() => { 
+    window.scrollTo({ top: 0, behavior: 'instant' }); 
+    
+    // Auto-sync detailed tracking on load
+    if (order?._id && order.shiprocketShipmentId) {
+      const syncTracking = async () => {
+        setTrackingLoading(true);
+        try {
+          const res = await fetch(`/api/payment/track/${order._id}`);
+          const data = await res.json();
+          if (data.success) {
+            setTrackingData(data);
+          }
+        } catch (err) {
+          console.error('Tracking fetch error:', err);
+        } finally {
+          setTrackingLoading(false);
+        }
+      };
+      syncTracking();
+    }
+  }, []);
 
   if (!order || !item) {
     return (
@@ -109,14 +185,13 @@ export default function OrderDetail() {
                 <img src={item.img || item.photo} alt={item.name} className="od-prod-img" />
               </div>
 
-              {/* Status Timeline */}
+              {/* Professional Tracking Timeline */}
               <div className="od-timeline-wrap">
-                <StatusTimeline 
-                  status={order.status} 
-                  shiprocketStatus={order.trackingStatus}
-                  date={order.createdAt} 
+                <ProfessionalTracker 
+                  loading={trackingLoading}
+                  trackingData={trackingData}
+                  orderDate={order.createdAt}
                 />
-                <button className="od-updates-link">See All Updates ›</button>
               </div>
 
               <div className="od-chat-section">
