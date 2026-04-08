@@ -4,15 +4,21 @@ import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myorders/OrderDetail.css';
 
-function StatusTimeline({ status, date }) {
-  const steps = [
-    { label: 'Order Confirmed', id: 'pending', date: date },
-    { label: 'Shipped', id: 'shipped', date: date },
-    { label: 'Out for Delivery', id: 'out_for_delivery', date: date },
-    { label: 'Delivered', id: 'success', date: date }
-  ];
+function StatusTimeline({ status, shiprocketStatus, date }) {
+  // Mapping Shiprocket status to our simplified customer timeline
+  const s = (shiprocketStatus || '').toUpperCase();
+  
+  let currentIdx = 0; // Confirmed
+  if (['SHIPPED', 'PICKED UP', 'IN TRANSIT'].includes(s)) currentIdx = 1;
+  if (['OUT FOR DELIVERY', 'OUT-FOR-DELIVERY', 'OFD'].includes(s)) currentIdx = 2;
+  if (s === 'DELIVERED') currentIdx = 3;
 
-  const currentIdx = status === 'success' ? 3 : 0; // Simplified for demo
+  const steps = [
+    { label: 'Order Confirmed', date: date },
+    { label: 'Shipped', date: date },
+    { label: 'Out for Delivery', date: date },
+    { label: 'Delivered', date: date }
+  ];
 
   return (
     <div className="od-timeline">
@@ -22,7 +28,8 @@ function StatusTimeline({ status, date }) {
             {i <= currentIdx && <span className="od-check">✓</span>}
           </div>
           <div className="od-step-content">
-            <div className="od-step-label">{step.label}, {new Date(step.date).toLocaleDateString()}</div>
+            <div className="od-step-label">{step.label}</div>
+            {i === currentIdx && <div className="od-step-status-text">{shiprocketStatus || 'Processing'}</div>}
           </div>
           {i < steps.length - 1 && <div className={`od-step-line ${i < currentIdx ? 'active' : ''}`} />}
         </div>
@@ -104,7 +111,11 @@ export default function OrderDetail() {
 
               {/* Status Timeline */}
               <div className="od-timeline-wrap">
-                <StatusTimeline status={order.status} date={order.createdAt} />
+                <StatusTimeline 
+                  status={order.status} 
+                  shiprocketStatus={order.trackingStatus}
+                  date={order.createdAt} 
+                />
                 <button className="od-updates-link">See All Updates ›</button>
               </div>
 
