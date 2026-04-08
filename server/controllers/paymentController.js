@@ -15,6 +15,8 @@ exports.createOrder = async (req, res) => {
     const { 
       amount, 
       userId, 
+      userName,
+      userEmail,
       items, 
       shippingAddress, 
       currency = 'INR', 
@@ -45,6 +47,8 @@ exports.createOrder = async (req, res) => {
       orderId: order.id,
       displayId,
       userId: userId || 'guest',
+      userName: userName || shippingAddress?.name || shippingAddress?.fullName,
+      userEmail: userEmail || shippingAddress?.email,
       amount,
       currency,
       items,
