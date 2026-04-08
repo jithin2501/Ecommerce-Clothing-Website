@@ -29,7 +29,23 @@ export default function OrderManagement() {
 
   useEffect(() => {
     fetchOrders();
+    // Auto-refresh the order list from our DB every 30 seconds
+    const interval = setInterval(fetchOrders, 30000);
+    return () => clearInterval(interval);
   }, []);
+
+  // BACKGROUND SYNC: Automatically ask Shiprocket for updates every 60s for orders in progress
+  useEffect(() => {
+    if (orders.length === 0) return;
+
+    const activeOrders = orders.filter(o => o.shiprocketShipmentId && o.trackingStatus !== 'DELIVERED');
+    
+    const syncInterval = setInterval(() => {
+      activeOrders.forEach(o => handleSyncStatus(o._id));
+    }, 60000); // Check Shiprocket every 60 seconds
+
+    return () => clearInterval(syncInterval);
+  }, [orders]);
 
   const handleSyncStatus = async (orderId) => {
     setSyncingId(orderId);
