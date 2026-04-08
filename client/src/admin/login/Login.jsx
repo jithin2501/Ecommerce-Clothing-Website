@@ -7,6 +7,7 @@ export default function Login() {
   const [form, setForm]         = useState({ username: '', password: '' });
   const [showPass, setShowPass] = useState(false);
   const [error, setError]       = useState('');
+  const [isReversing, setIsReversing] = useState(false);
   const [loading, setLoading]   = useState(false);
   const navigate = useNavigate();
 
@@ -32,7 +33,13 @@ export default function Login() {
     for (let i = 0; i < numBars; i++) {
       const bar = document.createElement('div');
       bar.className = 'login-bar';
-      bar.style.transform = `rotate(${(360 / numBars) * i}deg)`;
+      const rot = (360 / numBars) * i;
+      bar.style.transform = `rotate(${rot}deg)`;
+      bar.style.setProperty('--rot', `${rot}deg`);
+      // Scatter much further towards the corners
+      bar.style.setProperty('--tx', `${(Math.random() - 0.5) * 1500}px`);
+      bar.style.setProperty('--ty', `${-Math.random() * 1000 - 400}px`);
+      bar.style.setProperty('--delay', `${Math.random() * 0.5}s`);
       container.appendChild(bar);
     }
 
@@ -85,10 +92,21 @@ export default function Login() {
     }
   };
 
+  const handleInputChange = (field, value) => {
+    setForm(f => ({ ...f, [field]: value }));
+    if (error && !isReversing) {
+      setIsReversing(true);
+      setTimeout(() => {
+        setError('');
+        setIsReversing(false);
+      }, 1700); // Duration (1.2s) + Max Delay (0.5s)
+    }
+  };
+
   return (
     <div className="login-page">
       <div className="login-container">
-        <div className="login-circle-container" ref={circleRef} />
+        <div className={`login-circle-container ${error ? 'is-error' : ''} ${isReversing ? 'is-reversing' : ''}`} ref={circleRef} />
         <div className="login-box">
           <h2 className="login-heading">Login</h2>
           <form className="login-form" onSubmit={handleSubmit}>
@@ -98,7 +116,7 @@ export default function Login() {
                 type="text"
                 placeholder="Username"
                 value={form.username}
-                onChange={e => setForm(f => ({ ...f, username: e.target.value }))}
+                onChange={e => handleInputChange('username', e.target.value)}
                 required
               />
             </div>
@@ -107,7 +125,7 @@ export default function Login() {
                 type={showPass ? 'text' : 'password'}
                 placeholder="Password"
                 value={form.password}
-                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                onChange={e => handleInputChange('password', e.target.value)}
                 required
               />
               <span className="login-eye" onClick={() => setShowPass(s => !s)}>
