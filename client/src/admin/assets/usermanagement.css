@@ -62,6 +62,35 @@
 }
 .um-form-group input:focus { border-color: #4f46e5; }
 
+.um-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.um-password-wrapper input {
+  width: 100%;
+  padding-right: 3rem; /* Space for the toggle icon */
+}
+
+.um-password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #6b7280;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  transition: color 0.2s;
+}
+
+.um-password-toggle:hover {
+  color: #1e2139;
+}
+
 .um-create-btn {
   align-self: flex-start;
   background: #16a34a;
