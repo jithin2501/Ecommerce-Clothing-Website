@@ -104,8 +104,17 @@ exports.createOrder = async (orderData) => {
       shiprocketShipmentId: response.data.shipment_id
     };
   } catch (error) {
-    console.error('❌ Error creating order in Shiprocket:', error.response?.data || error.message);
-    return { success: false, error: error.response?.data?.message || error.message };
+    // Shiprocket often returns validation details in response.data.errors
+    const apiError = error.response?.data;
+    let errorMessage = apiError?.message || error.message;
+
+    if (apiError?.errors) {
+      // If there are specific field errors (like billing_pincode), combine them
+      errorMessage += ": " + JSON.stringify(apiError.errors);
+    }
+
+    console.error('❌ Error creating order in Shiprocket:', errorMessage);
+    return { success: false, error: errorMessage };
   }
 };
 
