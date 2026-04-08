@@ -18,6 +18,7 @@ const orderSchema = new mongoose.Schema({
   shiprocketShipmentId: { type: String },
   trackingStatus: { type: String, default: 'Unshipped' },
   trackingLink: { type: String },
+  shiprocketError: { type: String }, // NEW: Saves exact error rejection
   createdAt: { type: Date, default: Date.now }
 });
 

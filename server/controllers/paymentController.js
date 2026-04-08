@@ -120,13 +120,19 @@ exports.verifyPayment = async (req, res) => {
 
       // Push to Shiprocket
       if (updatedOrder) {
+        console.log("--> Attempting Shiprocket Sync for Order:", updatedOrder.displayId);
         const srResponse = await shiprocketService.createOrder(updatedOrder);
         if (srResponse.success) {
           updatedOrder.shiprocketOrderId = srResponse.shiprocketOrderId;
           updatedOrder.shiprocketShipmentId = srResponse.shiprocketShipmentId;
           updatedOrder.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
-          await updatedOrder.save();
+          console.log("--> Shiprocket Sync SUCCESS. SR_ORDER_ID:", srResponse.shiprocketOrderId);
+        } else {
+          // Log the exact rejection reason directly into the database
+          updatedOrder.shiprocketError = JSON.stringify(srResponse.error);
+          console.log("--> Shiprocket Sync FAILED. Error saved to DB:", srResponse.error);
         }
+        await updatedOrder.save();
       }
 
       return res.json({ success: true, message: 'Payment verified successfully and order pushed to Shiprocket' });

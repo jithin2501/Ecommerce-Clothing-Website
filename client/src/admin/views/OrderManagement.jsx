@@ -121,6 +121,10 @@ export default function OrderManagement() {
                            </div>
                          )}
                        </>
+                     ) : o.shiprocketError ? (
+                       <div style={{ color: '#ef4444', fontWeight: 600, width: '100%' }}>
+                         ❌ Shiprocket Rejected: <span style={{ fontWeight: 400 }}>{o.shiprocketError}</span>
+                       </div>
                      ) : (
                        <div style={{ color: '#64748b' }}>Shiprocket sync pending or not created.</div>
                      )}
