@@ -92,7 +92,9 @@
 
 /* Simplified Tracker (On Page) */
 .simple-tracker-wrap {
-  padding: 10px 0;
+  padding: 25px 0;
+  border-bottom: 1px solid #F0F0F0;
+  margin-bottom: 20px;
 }
 
 .simple-tracker {
