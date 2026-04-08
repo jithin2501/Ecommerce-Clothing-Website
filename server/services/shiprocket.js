@@ -13,7 +13,7 @@ async function getShiprocketToken() {
 
   if (!email || !password) {
     console.error('⚠️ Shiprocket credentials not found in environment variables.');
-    return null;
+    return { success: false, error: 'Credentials missing in .env' };
   }
 
   // Reuse token if valid
@@ -31,11 +31,12 @@ async function getShiprocketToken() {
       shiprocketToken = response.data.token;
       // Tokens are usually valid for 10 days, setting a safe 9-day buffer
       tokenExpiry = new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000);
-      return shiprocketToken;
+      return { success: true, token: shiprocketToken };
     }
   } catch (error) {
-    console.error('❌ Failed to authenticate with Shiprocket:', error.response?.data || error.message);
-    return null;
+    const errMsg = error.response?.data?.message || error.message;
+    console.error('❌ Failed to authenticate with Shiprocket:', errMsg);
+    return { success: false, error: `Login failed: ${errMsg}` };
   }
 }
 
@@ -45,8 +46,9 @@ async function getShiprocketToken() {
  */
 exports.createOrder = async (orderData) => {
   try {
-    const token = await getShiprocketToken();
-    if (!token) throw new Error('Shiprocket authentication failed');
+    const auth = await getShiprocketToken();
+    if (!auth.success) throw new Error(auth.error);
+    const token = auth.token;
 
     // Default weight/dimensions since it depends on product type, adjust as needed or fetch from DB
     const shiprocketOrderPayload = {
