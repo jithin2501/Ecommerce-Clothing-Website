@@ -124,3 +124,23 @@ exports.createOrder = async (orderData) => {
 exports.generateTrackingLink = (shipmentId) => {
   return `https://shiprocket.co/tracking/${shipmentId}`;
 };
+
+/**
+ * Fetch live tracking info from Shiprocket
+ */
+exports.getTrackingDetails = async (shipmentId) => {
+  try {
+    const auth = await getShiprocketToken();
+    if (!auth.success) return { success: false, error: auth.error };
+    const token = auth.token;
+
+    const response = await axios.get(`https://apiv2.shiprocket.in/v1/external/courier/track/shipment/${shipmentId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    return { success: true, data: response.data.tracking_data };
+  } catch (error) {
+    console.error('❌ Error fetching tracking details:', error.response?.data || error.message);
+    return { success: false, error: error.message };
+  }
+};

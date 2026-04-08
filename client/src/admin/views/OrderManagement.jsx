@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Download, Search, Filter } from 'lucide-react';
+import { Download, Search, Filter, RefreshCw, CheckCircle, Package, Truck, Home } from 'lucide-react';
 import '../assets/OrderManagement.css';
 
 const API = '/api/payment/orders';
@@ -11,24 +11,40 @@ const authHeaders = () => ({
 export default function OrderManagement() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [syncingId, setSyncingId] = useState(null);
+
+  const fetchOrders = async () => {
+    try {
+      const res = await fetch(API, { headers: authHeaders() });
+      const data = await res.json();
+      if (data.success) {
+        setOrders(data.data.filter(o => o.status === 'success'));
+      }
+    } catch (err) {
+      console.error('Error fetching orders:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchOrders() {
-      try {
-        const res = await fetch(API, { headers: authHeaders() });
-        const data = await res.json();
-        if (data.success) {
-          // We only care about successful payments for fulfillment
-          setOrders(data.data.filter(o => o.status === 'success'));
-        }
-      } catch (err) {
-        console.error('Error fetching orders for management:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchOrders();
   }, []);
+
+  const handleSyncStatus = async (orderId) => {
+    setSyncingId(orderId);
+    try {
+      const res = await fetch(`/api/payment/track/${orderId}`, { headers: authHeaders() });
+      const data = await res.json();
+      if (data.success) {
+        setOrders(prev => prev.map(o => o._id === orderId ? { ...o, trackingStatus: data.trackingStatus } : o));
+      }
+    } catch (err) {
+      console.error('Sync error:', err);
+    } finally {
+      setSyncingId(null);
+    }
+  };
 
   if (loading) return <div className="dash-container"><div className="no-orders-msg">Loading Orders...</div></div>;
 
@@ -100,26 +116,36 @@ export default function OrderManagement() {
 
                 {/* Shiprocket Delivery Section */}
                 <div className="fc-body-sect full-w">
-                   <h4>Shipping & Tracking</h4>
+                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                    <h4 style={{ margin: 0 }}>Shipping & Tracking</h4>
+                    {o.shiprocketShipmentId && (
+                      <button 
+                        className={`sync-btn ${syncingId === o._id ? 'loading' : ''}`}
+                        onClick={() => handleSyncStatus(o._id)}
+                        disabled={syncingId === o._id}
+                      >
+                        <RefreshCw size={12} /> Sync Status
+                      </button>
+                    )}
+                   </div>
+                   
                    <div className="fc-tracking-wrap" style={{ 
-                     display: 'flex', gap: '15px', background: '#f8fafc', 
-                     padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', 
-                     flexWrap: 'wrap', marginTop: '5px' 
+                     background: '#f8fafc', 
+                     padding: '15px', borderRadius: '12px', border: '1px solid #e2e8f0', 
+                     marginTop: '5px' 
                    }}>
                      {o.shiprocketOrderId ? (
                        <>
-                         <div><strong>SR Order ID:</strong> {o.shiprocketOrderId}</div>
-                         <div><strong>Shipment ID:</strong> {o.shiprocketShipmentId || 'Pending'}</div>
-                         <div>
-                           <strong>Status:</strong> <span style={{ color: o.trackingStatus === 'Delivered' ? '#16a34a' : '#d97706', fontWeight: 600 }}>{o.trackingStatus || 'Unshipped'}</span>
-                         </div>
-                         {o.trackingLink && (
-                           <div>
+                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem', marginBottom: '15px' }}>
+                           <span><strong>Shipment ID:</strong> {o.shiprocketShipmentId}</span>
+                           {o.trackingLink && (
                              <a href={o.trackingLink} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 600 }}>
                                Track Order ↗
                              </a>
-                           </div>
-                         )}
+                           )}
+                         </div>
+
+                         <TrackingTimeline currentStatus={o.trackingStatus} />
                        </>
                      ) : o.shiprocketError ? (
                        <div style={{ color: '#ef4444', fontWeight: 600, width: '100%' }}>
@@ -133,7 +159,12 @@ export default function OrderManagement() {
               </div>
               
               <div className="order-fc-footer">
-                <button className="fc-btn primary" onClick={() => window.print()}>Print Shipping Label</button>
+                <button 
+                  className="fc-btn primary" 
+                  onClick={() => window.open('https://app.shiprocket.in/seller/orders', '_blank')}
+                >
+                  Print Shipping Label
+                </button>
                 <button className="fc-btn secondary">Update Status</button>
               </div>
             </div>
@@ -144,6 +175,45 @@ export default function OrderManagement() {
           )}
         </div>
       </div>
+    </div>
+  );
+}
+
+function TrackingTimeline({ currentStatus }) {
+  const status = (currentStatus || '').toUpperCase();
+  
+  const steps = [
+    { key: 'ORDERED', label: 'Ordered', icon: CheckCircle, desc: 'Payment Verified' },
+    { key: 'SHIPPED', label: 'In Transit', icon: Truck, desc: 'Left Warehouse' },
+    { key: 'OUT_FOR_DELIVERY', label: 'Out for Delivery', icon: Package, desc: 'Near Destination' },
+    { key: 'DELIVERED', label: 'Delivered', icon: Home, desc: 'Package Received' }
+  ];
+
+  const getStepStatus = (index) => {
+    let currentIdx = 0;
+    if (['SHIPPED', 'PICKED UP', 'IN TRANSIT'].includes(status)) currentIdx = 1;
+    if (['OUT FOR DELIVERY', 'OUT-FOR-DELIVERY', 'OFD'].includes(status)) currentIdx = 2;
+    if (status === 'DELIVERED') currentIdx = 3;
+
+    if (index < currentIdx) return 'completed';
+    if (index === currentIdx) return 'active';
+    return 'pending';
+  };
+
+  return (
+    <div className="tracking-steps-container">
+      {steps.map((s, i) => {
+        const stepStatus = getStepStatus(i);
+        return (
+          <div key={s.key} className={`tracking-step ${stepStatus}`}>
+            <div className="step-circle" />
+            <div className="step-content">
+              <span className="step-title">{s.label}</span>
+              <span className="step-desc">{stepStatus === 'active' ? (currentStatus || s.desc) : s.desc}</span>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

@@ -236,3 +236,103 @@
   cursor: pointer;
   transition: all 0.2s;
 }
+
+/* Tracking Step Indicator Styles */
+.tracking-steps-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.tracking-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.tracking-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 15px;
+  bottom: -15px;
+  width: 2px;
+  background: #E2E8F0;
+  z-index: 1;
+}
+
+.step-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #E2E8F0;
+  border: 2px solid white;
+  z-index: 2;
+  box-shadow: 0 0 0 1px #E2E8F0;
+  transition: all 0.3s ease;
+}
+
+.tracking-step.active .step-circle {
+  background: #10B981;
+  box-shadow: 0 0 0 1px #10B981;
+}
+
+.tracking-step.completed .step-circle {
+  background: #10B981;
+}
+
+.tracking-step.completed:not(:last-child)::after {
+  background: #10B981;
+}
+
+.step-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.step-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #64748B;
+}
+
+.tracking-step.active .step-title {
+  color: #1E293B;
+}
+
+.step-desc {
+  font-size: 0.7rem;
+  color: #94A3B8;
+}
+
+.sync-btn {
+  background: none;
+  border: none;
+  color: #64748B;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.sync-btn:hover {
+  background: #E2E8F0;
+  color: #1E293B;
+}
+
+.sync-btn.loading {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

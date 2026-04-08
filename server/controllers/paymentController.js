@@ -197,3 +197,34 @@ exports.getUserOrders = async (req, res) => {
     res.status(500).json({ success: false, error: 'Failed to fetch your orders' });
   }
 };
+
+/**
+ * ── Sync Tracking Status with Shiprocket ──
+ */
+exports.syncTrackingStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findById(orderId);
+
+    if (!order || !order.shiprocketShipmentId) {
+      return res.status(404).json({ success: false, error: 'Shipment info not found' });
+    }
+
+    const tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
+
+    if (tracking.success && tracking.data) {
+      // Access the status inside track_status
+      const liveStatus = tracking.data.track_status;
+      if (liveStatus) {
+         order.trackingStatus = liveStatus;
+         await order.save();
+      }
+      return res.json({ success: true, trackingStatus: liveStatus });
+    }
+
+    res.status(400).json({ success: false, error: 'Could not fetch live status' });
+  } catch (error) {
+    console.error('❌ Sync Tracking Error:', error);
+    res.status(500).json({ success: false, error: 'Server error' });
+  }
+};

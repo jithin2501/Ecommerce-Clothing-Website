@@ -14,4 +14,7 @@ router.get('/orders', paymentCtrl.getAllOrders);
 // Route to fetch orders for a specific user
 router.get('/user-orders/:userId', paymentCtrl.getUserOrders);
 
+// Route to sync tracking status with Shiprocket
+router.get('/track/:orderId', paymentCtrl.syncTrackingStatus);
+
 module.exports = router;
