@@ -4,89 +4,96 @@ import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myorders/OrderDetail.css';
 
-function ProfessionalTracker({ loading, trackingData, orderDate }) {
-  const formatDate = (dateStr) => {
+function SimplifiedTracker({ trackingData, orderDate, onSeeAll }) {
+  const activities = trackingData?.activities || [];
+  const status = (trackingData?.trackingStatus || '').toUpperCase();
+
+  const formatDateShort = (dateStr) => {
     if (!dateStr) return '';
-    const date = new Date(dateStr);
-    const options = { weekday: 'short', day: 'numeric', month: 'short', year: '2-digit' };
-    const parts = date.toLocaleDateString('en-IN', options).split(' ');
-    // Format: Thu, 9 Oct '25
-    return `${parts[0]} ${parts[1]}${getOrdinal(parts[1])} ${parts[2]} '${parts[3]}`;
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
-  const formatTime = (dateStr) => {
-    if (!dateStr) return '';
-    const date = new Date(dateStr);
-    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
-  };
+  // Determine current/latest step
+  let latestStep = { label: 'Processing', date: orderDate };
+  if (activities.length > 0) {
+    const last = activities[0]; // Activities are usually sorted newest first from my sync
+    latestStep = { label: last.status, date: last.date };
+  }
 
-  const getOrdinal = (n) => {
-    const s = ["th", "st", "nd", "rd"];
-    const v = n % 100;
-    return s[(v - 20) % 10] || s[v] || s[0];
-  };
+  return (
+    <div className="simple-tracker-wrap">
+      <div className="simple-tracker">
+        {/* Step 1: Always Confirmed */}
+        <div className="s-step completed">
+          <div className="s-dot-wrap"><div className="s-dot" /><div className="s-line" /></div>
+          <div className="s-text">Order Confirmed, {formatDateShort(orderDate)}</div>
+        </div>
+        
+        {/* Step 2: Latest Update */}
+        <div className={`s-step ${latestStep.label !== 'Processing' ? 'completed' : ''}`}>
+          <div className="s-dot-wrap"><div className="s-dot" /></div>
+          <div className="s-text">{latestStep.label}, {formatDateShort(latestStep.date)}</div>
+        </div>
+      </div>
+      
+      <button className="see-all-btn" onClick={onSeeAll}>
+        See All Updates ›
+      </button>
+    </div>
+  );
+}
 
-  if (loading) return <div className="od-tracking-loading">Updating live tracking...</div>;
+function TrackingModal({ isOpen, onClose, trackingData, orderDate }) {
+  if (!isOpen) return null;
 
   const activities = trackingData?.activities || [];
   const courier = trackingData?.courier || 'Logistic Partner';
   const awb = trackingData?.awb || '';
 
-  // Logical steps based on activities
-  const steps = [
-    { label: 'Order Confirmed', key: 'NEW' },
-    { label: 'Shipped', key: 'SHIPPED' },
-    { label: 'Out For Delivery', key: 'OFD' },
-    { label: 'Delivered', key: 'DELIVERED' }
-  ];
+  const getDay = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: '2-digit' });
+  const getTime = (dateStr) => new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
 
   return (
-    <div className="prof-tracker">
-      {steps.map((step, idx) => {
-        const matchingActivity = activities.find(a => {
-          const s = a.status.toUpperCase();
-          if (step.key === 'NEW' && (s.includes('NEW') || s.includes('CONFIRMED'))) return true;
-          if (step.key === 'SHIPPED' && (s.includes('SHIPPED') || s.includes('PICKED UP') || s.includes('TRANSIT'))) return true;
-          if (step.key === 'OFD' && (s.includes('OFD') || s.includes('OUT FOR DELIVERY'))) return true;
-          if (step.key === 'DELIVERED' && s.includes('DELIVERED')) return true;
-          return false;
-        });
-
-        const isActive = !!matchingActivity;
-
-        return (
-          <div key={idx} className={`prof-step ${isActive ? 'active' : ''}`}>
-            <div className="prof-dot-line">
-              <div className="prof-dot" />
-              {idx < steps.length - 1 && <div className="prof-line" />}
-            </div>
-            <div className="prof-info">
-              <div className="prof-label-row">
-                <span className="prof-label">{step.label}</span>
-                {isActive && <span className="prof-main-date">{formatDate(matchingActivity.date)}</span>}
+    <div className="od-modal-overlay" onClick={onClose}>
+      <div className="od-modal-content" onClick={e => e.stopPropagation()}>
+        <div className="od-modal-header">
+          <h3>Tracking Updates</h3>
+          <button className="od-modal-close" onClick={onClose}>&times;</button>
+        </div>
+        <div className="od-modal-body">
+          <div className="full-tracker">
+            {/* Start with Order Placed if no activities yet */}
+            {activities.length === 0 && (
+              <div className="full-step active">
+                 <div className="fs-dot-line"><div className="fs-dot"/><div className="fs-line"/></div>
+                 <div className="fs-info">
+                   <div className="fs-label">Order Confirmed <span className="fs-date">{getDay(orderDate)}</span></div>
+                   <p className="fs-msg">Your order has been placed and is being processed.</p>
+                   <p className="fs-time">{getDay(orderDate)} - {getTime(orderDate)}</p>
+                 </div>
               </div>
-              
-              {step.key === 'NEW' && !isActive && (
-                <div className="prof-sub">
-                  <p>Your Order has been placed.</p>
-                  <p className="prof-time">{formatDate(orderDate)} - {formatTime(orderDate)}</p>
-                </div>
-              )}
+            )}
 
-              {isActive && (
-                <div className="prof-sub">
-                  {step.key === 'SHIPPED' && awb && (
-                    <p className="prof-courier">{courier} - {awb}</p>
-                  )}
-                  <p>{matchingActivity.activity || `Your item has been ${step.label.toLowerCase()}.`}</p>
-                  <p className="prof-location">{matchingActivity.location}</p>
-                  <p className="prof-time">{formatDate(matchingActivity.date)} - {formatTime(matchingActivity.date)}</p>
+            {/* Live Activities from Shiprocket */}
+            {activities.map((a, i) => (
+              <div key={i} className="full-step active">
+                <div className="fs-dot-line">
+                  <div className="fs-dot" />
+                  {i < activities.length - 1 && <div className="fs-line" />}
                 </div>
-              )}
-            </div>
+                <div className="fs-info">
+                  <div className="fs-label">{a.status} <span className="fs-date">{getDay(a.date)}</span></div>
+                  {i === 0 && awb && <p className="fs-courier">{courier} - {awb}</p>}
+                  <p className="fs-msg">{a.activity}</p>
+                  <p className="fs-time">{getDay(a.date)} - {getTime(a.date)}</p>
+                  {a.location && <p className="fs-loc">{a.location}</p>}
+                </div>
+              </div>
+            ))}
           </div>
-        );
-      })}
+        </div>
+      </div>
     </div>
   );
 }
@@ -115,6 +122,7 @@ export default function OrderDetail() {
   const [rating, setRating] = useState(0);
   const [trackingData, setTrackingData] = useState(null);
   const [trackingLoading, setTrackingLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => { 
     window.scrollTo({ top: 0, behavior: 'instant' }); 
@@ -187,12 +195,23 @@ export default function OrderDetail() {
 
               {/* Professional Tracking Timeline */}
               <div className="od-timeline-wrap">
-                <ProfessionalTracker 
-                  loading={trackingLoading}
-                  trackingData={trackingData}
-                  orderDate={order.createdAt}
-                />
+                {trackingLoading ? (
+                  <div className="od-tracking-loading">Updating live tracking...</div>
+                ) : (
+                  <SimplifiedTracker 
+                    trackingData={trackingData} 
+                    orderDate={order.createdAt} 
+                    onSeeAll={() => setIsModalOpen(true)}
+                  />
+                )}
               </div>
+
+              <TrackingModal 
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                trackingData={trackingData}
+                orderDate={order.createdAt}
+              />
 
               <div className="od-chat-section">
                 <button className="od-chat-btn">

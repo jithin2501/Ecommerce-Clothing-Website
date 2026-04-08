@@ -90,109 +90,209 @@
   border: 1px solid #F0F0F0;
 }
 
-/* Professional Tracker */
-.prof-tracker {
+/* Simplified Tracker (On Page) */
+.simple-tracker-wrap {
+  padding: 10px 0;
+}
+
+.simple-tracker {
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-top: 1rem;
+  margin-bottom: 20px;
 }
 
-.prof-step {
+.s-step {
   display: flex;
-  gap: 1.5rem;
-  min-height: 80px;
+  gap: 15px;
+  align-items: flex-start;
+  min-height: 40px;
 }
 
-.prof-dot-line {
+.s-dot-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
-  width: 20px;
+  width: 14px;
 }
 
-.prof-dot {
+.s-dot {
   width: 14px;
   height: 14px;
   background: #E0E0E0;
   border-radius: 50%;
   z-index: 2;
-  margin-top: 5px;
-}
-
-.prof-step.active .prof-dot {
-  background: #22C55E;
-}
-
-.prof-line {
-  flex: 1;
-  width: 3px;
-  background: #E0E0E0;
-}
-
-.prof-step.active .prof-line {
-  background: #22C55E;
-}
-
-.prof-info {
-  flex: 1;
-  padding-bottom: 2rem;
-}
-
-.prof-label-row {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.prof-label {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #BDBDBD;
-}
-
-.prof-step.active .prof-label {
-  color: #212121;
-}
-
-.prof-main-date {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #9E9E9E;
-}
-
-.prof-sub {
-  font-size: 0.85rem;
-  color: #757575;
-  line-height: 1.5;
-}
-
-.prof-courier {
-  font-weight: 700;
-  color: #212121;
-  margin-bottom: 4px;
-}
-
-.prof-time {
-  color: #9E9E9E;
-  font-weight: 500;
   margin-top: 4px;
 }
 
-.prof-location {
-  color: #757575;
-  font-size: 0.8rem;
-  font-style: italic;
+.s-step.completed .s-dot {
+  background: #388E3C;
+  box-shadow: 0 0 0 4px rgba(56, 142, 60, 0.1);
 }
 
-.od-tracking-loading {
+.s-line {
+  flex: 1;
+  width: 2px;
+  background: #388E3C;
+  min-height: 25px;
+}
+
+.s-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #212121;
+}
+
+.see-all-btn {
+  background: none;
+  border: none;
+  color: #2874F0;
   font-size: 0.9rem;
-  color: #3B82F6;
   font-weight: 600;
-  padding: 1rem 0;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.see-all-btn:hover {
+  text-decoration: underline;
+}
+
+/* Modal Overlay */
+.od-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.od-modal-content {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  max-height: 80vh;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  animation: modalIn 0.3s ease-out;
+}
+
+@keyframes modalIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.od-modal-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #F0F0F0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.od-modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.od-modal-close {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #757575;
+  line-height: 1;
+}
+
+.od-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* Full Tracker (Inside Modal) */
+.full-tracker {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-step {
+  display: flex;
+  gap: 20px;
+  min-height: 80px;
+}
+
+.fs-dot-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 12px;
+}
+
+.fs-dot {
+  width: 12px;
+  height: 12px;
+  background: #388E3C;
+  border-radius: 50%;
+  z-index: 2;
+  margin-top: 5px;
+}
+
+.fs-line {
+  flex: 1;
+  width: 2px;
+  background: #388E3C;
+}
+
+.fs-info {
+  flex: 1;
+  padding-bottom: 25px;
+}
+
+.fs-label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #212121;
+}
+
+.fs-date {
+  color: #878787;
+  font-weight: 400;
+  margin-left: 8px;
+}
+
+.fs-courier {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #212121;
+  margin: 8px 0 4px;
+}
+
+.fs-msg {
+  font-size: 0.85rem;
+  color: #212121;
+  margin: 4px 0;
+}
+
+.fs-time {
+  font-size: 0.8rem;
+  color: #878787;
+}
+
+.fs-loc {
+  font-size: 0.8rem;
+  color: #878787;
   font-style: italic;
+  margin-top: 2px;
 }
 
 /* Chat Section */
