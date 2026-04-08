@@ -12,6 +12,8 @@ export default function OrderManagement() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [syncingId, setSyncingId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]); // Default to today
 
   const fetchOrders = async () => {
     try {
@@ -38,7 +40,7 @@ export default function OrderManagement() {
   useEffect(() => {
     if (orders.length === 0) return;
 
-    const activeOrders = orders.filter(o => o.shiprocketShipmentId && o.trackingStatus !== 'DELIVERED');
+    const activeOrders = orders.filter(o => o.shiprocketShipmentId && (o.trackingStatus || '').toUpperCase() !== 'DELIVERED');
     
     const syncInterval = setInterval(() => {
       activeOrders.forEach(o => handleSyncStatus(o._id));
@@ -62,26 +64,46 @@ export default function OrderManagement() {
     }
   };
 
+  const filteredOrders = orders.filter(o => {
+    const status = (o.trackingStatus || '').toUpperCase();
+    const isUnfinished = status !== 'DELIVERED';
+    const isSameDay = o.createdAt?.split('T')[0] === selectedDate;
+    const matchesSearch = o.displayId?.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    // Logic: Show if (match search) AND (either unfinished OR from selected date)
+    return matchesSearch && (isUnfinished || isSameDay);
+  });
+
   if (loading) return <div className="dash-container"><div className="no-orders-msg">Loading Orders...</div></div>;
 
   return (
     <div className="dash-container">
-      <h1 className="dash-main-title">Order Management</h1>
-      
-      <div className="dash-wrapper-box">
-        <div className="align-between" style={{ marginBottom: '1.5rem' }}>
-          <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, color: '#1e293b', margin: 0 }}>Courier Fulfillment</h2>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '4px 0 0' }}>Manage shipments for paid orders</p>
+      <div className="dash-wrapper-box" style={{ marginTop: '0' }}>
+        <div className="dash-work-header">
+          <div className="search-group">
+            <Search size={16} />
+            <input 
+              type="text" 
+              placeholder="Search Order ID..." 
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="filter-group">
+            <span>Show Date:</span>
+            <input 
+              type="date" 
+              value={selectedDate}
+              onChange={(e) => setSelectedDate(e.target.value)}
+            />
           </div>
           <div className="dash-tools">
-            <button className="dash-tool-btn"><Filter size={14} /> Filter</button>
-            <button className="dash-tool-btn"><Download size={14} /> Export List</button>
+            <button className="dash-tool-btn"><Download size={14} /> Export</button>
           </div>
         </div>
 
         <div className="dash-order-grid">
-          {orders.map((o) => (
+          {filteredOrders.map((o) => (
             <div key={o._id} className="dash-order-full-card">
               <div className="order-fc-header">
                 <div className="order-fc-id">
@@ -175,15 +197,12 @@ export default function OrderManagement() {
               </div>
               
               <div className="order-fc-footer" style={{ borderTop: 'none', background: 'transparent', padding: '0 1.5rem 1.5rem' }}>
-                <p style={{ fontSize: '0.75rem', color: '#94A3B8', fontStyle: 'italic' }}>
-                  Live tracking automated by Shiprocket. No manual update required.
-                </p>
               </div>
             </div>
           ))}
 
-          {orders.length === 0 && (
-            <div className="no-orders-msg">No successful orders found for shipment processing.</div>
+          {filteredOrders.length === 0 && (
+            <div className="no-orders-msg">No orders found matching your search/date criteria.</div>
           )}
         </div>
       </div>
