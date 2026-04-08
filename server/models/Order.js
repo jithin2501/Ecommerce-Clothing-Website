@@ -14,6 +14,10 @@ const orderSchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.Mixed }, // Snapshot of { name, customerId }
   items: [{ type: mongoose.Schema.Types.Mixed }],
   shippingAddress: { type: mongoose.Schema.Types.Mixed },
+  shiprocketOrderId: { type: String },
+  shiprocketShipmentId: { type: String },
+  trackingStatus: { type: String, default: 'Unshipped' },
+  trackingLink: { type: String },
   createdAt: { type: Date, default: Date.now }
 });
 

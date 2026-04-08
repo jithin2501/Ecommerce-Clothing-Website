@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const razorpay = require('../conf/razorpay');
 const Order = require('../models/Order');
+const shiprocketService = require('../services/shiprocket');
 
 /**
  * ── Create Razorpay Order ──
@@ -106,17 +107,29 @@ exports.verifyPayment = async (req, res) => {
         console.error('⚠️ Could not fetch payment method detail from Razorpay:', err);
       }
 
-      // Mark as success
-      await Order.findOneAndUpdate(
+      // Mark as success and fetch original order info for Shiprocket
+      const updatedOrder = await Order.findOneAndUpdate(
         { orderId: razorpay_order_id },
         { 
           status: 'success', 
           paymentId: razorpay_payment_id,
           paymentMethod: method 
-        }
+        },
+        { new: true } // Return updated doc
       );
 
-      return res.json({ success: true, message: 'Payment verified successfully' });
+      // Push to Shiprocket
+      if (updatedOrder) {
+        const srResponse = await shiprocketService.createOrder(updatedOrder);
+        if (srResponse.success) {
+          updatedOrder.shiprocketOrderId = srResponse.shiprocketOrderId;
+          updatedOrder.shiprocketShipmentId = srResponse.shiprocketShipmentId;
+          updatedOrder.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
+          await updatedOrder.save();
+        }
+      }
+
+      return res.json({ success: true, message: 'Payment verified successfully and order pushed to Shiprocket' });
     } else {
       console.error('⚠️ Razorpay Signature Mismatch');
       return res.status(400).json({ success: false, error: 'Invalid payment signature' });

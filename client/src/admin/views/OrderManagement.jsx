@@ -97,6 +97,35 @@ export default function OrderManagement() {
                       ))}
                    </div>
                 </div>
+
+                {/* Shiprocket Delivery Section */}
+                <div className="fc-body-sect full-w">
+                   <h4>Shipping & Tracking</h4>
+                   <div className="fc-tracking-wrap" style={{ 
+                     display: 'flex', gap: '15px', background: '#f8fafc', 
+                     padding: '12px', borderRadius: '8px', border: '1px solid #e2e8f0', 
+                     flexWrap: 'wrap', marginTop: '5px' 
+                   }}>
+                     {o.shiprocketOrderId ? (
+                       <>
+                         <div><strong>SR Order ID:</strong> {o.shiprocketOrderId}</div>
+                         <div><strong>Shipment ID:</strong> {o.shiprocketShipmentId || 'Pending'}</div>
+                         <div>
+                           <strong>Status:</strong> <span style={{ color: o.trackingStatus === 'Delivered' ? '#16a34a' : '#d97706', fontWeight: 600 }}>{o.trackingStatus || 'Unshipped'}</span>
+                         </div>
+                         {o.trackingLink && (
+                           <div>
+                             <a href={o.trackingLink} target="_blank" rel="noopener noreferrer" style={{ color: '#2563eb', textDecoration: 'none', fontWeight: 600 }}>
+                               Track Order ↗
+                             </a>
+                           </div>
+                         )}
+                       </>
+                     ) : (
+                       <div style={{ color: '#64748b' }}>Shiprocket sync pending or not created.</div>
+                     )}
+                   </div>
+                </div>
               </div>
               
               <div className="order-fc-footer">

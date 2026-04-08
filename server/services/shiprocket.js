@@ -1,0 +1,115 @@
+const axios = require('axios');
+
+let shiprocketToken = null;
+let tokenExpiry = null;
+
+/**
+ * ── Authenticate with Shiprocket ──
+ * Returns a valid JWT token
+ */
+async function getShiprocketToken() {
+  const email = process.env.SHIPROCKET_EMAIL;
+  const password = process.env.SHIPROCKET_PASSWORD;
+
+  if (!email || !password) {
+    console.error('⚠️ Shiprocket credentials not found in environment variables.');
+    return null;
+  }
+
+  // Reuse token if valid
+  if (shiprocketToken && tokenExpiry && new Date() < tokenExpiry) {
+    return shiprocketToken;
+  }
+
+  try {
+    const response = await axios.post('https://apiv2.shiprocket.in/v1/external/auth/login', {
+      email,
+      password
+    });
+
+    if (response.data && response.data.token) {
+      shiprocketToken = response.data.token;
+      // Tokens are usually valid for 10 days, setting a safe 9-day buffer
+      tokenExpiry = new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000);
+      return shiprocketToken;
+    }
+  } catch (error) {
+    console.error('❌ Failed to authenticate with Shiprocket:', error.response?.data || error.message);
+    return null;
+  }
+}
+
+/**
+ * ── Create Shiprocket Order ──
+ * Pushes standard order to Shiprocket
+ */
+exports.createOrder = async (orderData) => {
+  try {
+    const token = await getShiprocketToken();
+    if (!token) throw new Error('Shiprocket authentication failed');
+
+    // Default weight/dimensions since it depends on product type, adjust as needed or fetch from DB
+    const shiprocketOrderPayload = {
+      order_id: orderData.displayId,
+      order_date: new Date().toISOString().replace('T', ' ').substring(0, 19),
+      pickup_location: process.env.SHIPROCKET_PICKUP_LOCATION || 'Primary',
+      billing_customer_name: orderData.shippingAddress.name || orderData.shippingAddress.fullName || 'Guest',
+      billing_last_name: '',
+      billing_address: orderData.shippingAddress.street || orderData.shippingAddress.address || 'Address',
+      billing_city: orderData.shippingAddress.city || 'City',
+      billing_pincode: orderData.shippingAddress.pincode || orderData.shippingAddress.zip || '000000',
+      billing_state: orderData.shippingAddress.state || 'State',
+      billing_country: orderData.shippingAddress.country || 'India',
+      billing_email: orderData.userEmail || orderData.shippingAddress.email || 'guest@example.com',
+      billing_phone: orderData.shippingAddress.phone || orderData.shippingAddress.mobile || '0000000000',
+      shipping_is_billing: true,
+      order_items: orderData.items.map(item => ({
+        name: item.name || 'Clothing Item',
+        sku: item.sku || item.id || 'SKU-001',
+        units: item.qty || 1,
+        selling_price: item.price || 0,
+        discount: 0,
+        tax: 0,
+        hsn: ''
+      })),
+      payment_method: orderData.paymentMethod === 'cod' ? 'COD' : 'Prepaid',
+      shipping_charges: 0,
+      giftwrap_charges: 0,
+      transaction_charges: 0,
+      total_discount: 0,
+      sub_total: orderData.amount,
+      length: 10,
+      breadth: 10,
+      height: 10,
+      weight: 0.5 // weight in kgs
+    };
+
+    const response = await axios.post(
+      'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
+      shiprocketOrderPayload,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    );
+
+    console.log('✅ Shiprocket Order Created successfully:', response.data.order_id);
+    return {
+      success: true,
+      shiprocketOrderId: response.data.order_id,
+      shiprocketShipmentId: response.data.shipment_id
+    };
+  } catch (error) {
+    console.error('❌ Error creating order in Shiprocket:', error.response?.data || error.message);
+    return { success: false, error: error.response?.data?.message || error.message };
+  }
+};
+
+/**
+ * ── Generate Tracking Link ──
+ */
+exports.generateTrackingLink = (shipmentId) => {
+  return `https://shiprocket.co/tracking/${shipmentId}`;
+};
