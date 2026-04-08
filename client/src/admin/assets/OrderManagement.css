@@ -1,6 +1,6 @@
 /* om = Order Management */
 .om-page {
-  padding: 0 2.5rem 2.5rem;
+  padding: 0 0 2.5rem; /* Removed side padding to take full width of AdminLayout */
   background: #f8fafc;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
@@ -11,16 +11,18 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2.1rem 0 1.5rem; /* Align baseline with sidebar's Admin Dashboard text */
-  margin-bottom: 1.5rem;
+  padding: 0 0 0.5rem;
+  margin-top: -0.5rem;
+  margin-bottom: 1.5rem; /* Increased gap between line and content */
   border-bottom: 1px solid #e2e8f0;
 }
 
 .om-title {
-  font-size: 1.5rem;
-  font-weight: 800;
+  font-size: 1.3rem;
+  font-weight: 900;
   color: #1e293b;
   letter-spacing: -0.5px;
+  text-transform: uppercase;
 }
 
 .om-header-tools {
@@ -124,8 +126,14 @@
   background: #94a3b8;
 }
 
-.om-status-dot.active { background: #3b82f6; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1); }
-.om-status-dot.done { background: #10b981; }
+.om-status-dot.active {
+  background: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.om-status-dot.done {
+  background: #10b981;
+}
 
 .om-client-cell {
   display: flex;
@@ -157,8 +165,15 @@
   background: #f1f5f9;
 }
 
-.om-tag.delivered { background: #dcfce7; color: #166534; }
-.om-tag.shipped { background: #dbeafe; color: #1e40af; }
+.om-tag.delivered {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.om-tag.shipped {
+  background: #dbeafe;
+  color: #1e40af;
+}
 
 .om-sync-btn {
   background: none;
@@ -167,8 +182,19 @@
   cursor: pointer;
 }
 
-.om-sync-btn.spinning { animation: omSpin 1s linear infinite; }
-@keyframes omSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.om-sync-btn.spinning {
+  animation: omSpin 1s linear infinite;
+}
+
+@keyframes omSpin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
 
 .om-view-btn {
   background: #f1f5f9;
@@ -206,7 +232,15 @@
   position: relative;
 }
 
-@keyframes omSlideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+@keyframes omSlideIn {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
 
 .om-drawer-close {
   position: absolute;
@@ -312,8 +346,15 @@
   border: 1px solid #f1f5f9;
 }
 
-.om-p-name { font-size: 0.85rem; font-weight: 600; }
-.om-p-meta { font-size: 0.75rem; color: #64748b; }
+.om-p-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.om-p-meta {
+  font-size: 0.75rem;
+  color: #64748b;
+}
 
 /* ── DETAILED TRACKING (SIDEBAR) ── */
 .om-detailed-tracking {
@@ -379,6 +420,17 @@
 .om-t-time {
   font-size: 0.75rem;
   color: #94a3b8;
+}
+
+.om-tracking-pending {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
+  font-style: italic;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px dashed #e2e8f0;
 }
 
 .om-track-link {

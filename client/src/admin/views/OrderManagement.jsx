@@ -291,7 +291,7 @@ function OrderDrawer({ order, onClose }) {
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><Truck size={16} /> Live Tracking</h4>
             <DetailedTracking status={order.trackingStatus} trackingData={order.trackingPayload} />
-            {order.trackingLink && (
+            {order.trackingLink && order.trackingPayload?.activities?.length > 0 && (
               <a href={order.trackingLink} target="_blank" rel="noopener noreferrer" className="om-track-link">
                 Tracking Page ↗
               </a>
@@ -301,7 +301,7 @@ function OrderDrawer({ order, onClose }) {
 
         <div className="om-drawer-footer">
           <button className="om-print-btn" onClick={handlePrint}>
-            <Printer size={16} /> Print Shipping Label
+            <Printer size={16} /> Print
           </button>
         </div>
       </aside>
@@ -318,7 +318,7 @@ function DetailedTracking({ status, trackingData }) {
   return (
     <div className="om-detailed-tracking">
       {activities.length === 0 ? (
-        <div className="om-tracking-pending">No tracking scans yet. Synchronization in progress...</div>
+        <div className="om-tracking-pending">No tracking scans yet</div>
       ) : (
         activities.map((a, i) => (
           <div key={i} className="om-t-step active">
