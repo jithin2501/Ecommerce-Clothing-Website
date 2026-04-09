@@ -136,9 +136,32 @@ export default function ProductGrid({
   if (sustainableOnly) filtered = filtered.filter(p => p.sustainability);
 
   // 6. Sorting
-  if (sortBy === 'Price: Low to High') filtered.sort((a, b) => parseFloat(String(a.price).replace(/[^\d.]/g, '')) - parseFloat(String(b.price).replace(/[^\d.]/g, '')));
-  if (sortBy === 'Price: High to Low') filtered.sort((a, b) => parseFloat(String(b.price).replace(/[^\d.]/g, '')) - parseFloat(String(a.price).replace(/[^\d.]/g, '')));
-  if (sortBy === 'Best Rated') filtered.sort((a, b) => (b.stars || 0) - (a.stars || 0));
+  // 6. Primary Sort: Stock Status (In-stock first), then Secondary Sort: User Selection
+  filtered.sort((a, b) => {
+    const aStock = Number(a.stock) || 0;
+    const bStock = Number(b.stock) || 0;
+    const aOut = aStock <= 0;
+    const bOut = bStock <= 0;
+
+    // Phase 1: Out of stock always goes to the bottom
+    if (aOut !== bOut) {
+      return aOut ? 1 : -1;
+    }
+
+    // Phase 2: If both have same stock status, use the secondary sort (sortBy)
+    if (sortBy === 'Price: Low to High') {
+      return parseFloat(String(a.price).replace(/[^\d.]/g, '')) - parseFloat(String(b.price).replace(/[^\d.]/g, ''));
+    }
+    if (sortBy === 'Price: High to Low') {
+      return parseFloat(String(b.price).replace(/[^\d.]/g, '')) - parseFloat(String(a.price).replace(/[^\d.]/g, ''));
+    }
+    if (sortBy === 'Best Rated') {
+      return (b.stars || 0) - (a.stars || 0);
+    }
+    
+    // Default: Sort by newest arrivals (usually the order they come from API)
+    return 0;
+  });
 
 
   useEffect(() => {

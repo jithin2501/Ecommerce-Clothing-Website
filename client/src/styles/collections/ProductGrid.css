@@ -222,9 +222,10 @@
 }
 
 .pg-out-overlay span {
-  color: #ef4444;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.3px;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 1.2px;
   text-align: center;
+  text-transform: lowercase;
 }
