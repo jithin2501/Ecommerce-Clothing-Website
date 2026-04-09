@@ -95,6 +95,81 @@ export default function OrderHelp() {
               </div>
             </section>
 
+            {/* Support Issue Form */}
+            <section className="sh-section" style={{marginTop:'30px'}}>
+              <h2 className="sh-section-title">Report a Problem</h2>
+              <div className="sh-issue-form">
+                <p className="sh-form-hint">Describe the issue and upload photos/videos of the product for quick resolution.</p>
+                <textarea 
+                  className="sh-issue-desc" 
+                  placeholder="Tell us what's wrong with this order..."
+                  rows={4}
+                  id="issue-description"
+                />
+                <div className="sh-file-upload">
+                  <label htmlFor="support-files" className="sh-file-label">
+                    <span>📷 Upload Photos/Videos</span>
+                    <input 
+                      type="file" 
+                      id="support-files" 
+                      multiple 
+                      accept="image/*,video/*" 
+                      style={{display:'none'}}
+                      onChange={(e) => {
+                        const count = e.target.files.length;
+                        document.getElementById('file-count').innerText = count > 0 ? `${count} file(s) selected` : '';
+                      }}
+                    />
+                  </label>
+                  <span id="file-count" style={{fontSize:'12px', color:'#666', marginLeft:'10px'}}></span>
+                </div>
+                <button 
+                  className="sh-search-btn" 
+                  style={{width:'100%', marginTop:'15px'}}
+                  onClick={async (e) => {
+                    const btn = e.currentTarget;
+                    const desc = document.getElementById('issue-description').value;
+                    const files = document.getElementById('support-files').files;
+
+                    if (!desc) return alert('Please describe the issue.');
+                    
+                    btn.disabled = true;
+                    btn.innerText = 'Submitting...';
+
+                    const formData = new FormData();
+                    formData.append('userId', order.userId);
+                    formData.append('orderId', order.id);
+                    formData.append('description', desc);
+                    for (let i = 0; i < files.length; i++) {
+                      formData.append('attachments', files[i]);
+                    }
+
+                    try {
+                      const res = await fetch('/api/support/submit', {
+                        method: 'POST',
+                        body: formData
+                      });
+                      const data = await res.json();
+                      if (data.success) {
+                        alert('Issue reported successfully. Our team will review it.');
+                        navigate('/support');
+                      } else {
+                        alert(data.message || 'Failed to submit issue.');
+                      }
+                    } catch (err) {
+                      alert('Error submitting report.');
+                    } finally {
+                      btn.disabled = false;
+                      btn.innerText = 'Submit Report';
+                    }
+                  }}
+                >
+                  Submit Report
+                </button>
+              </div>
+            </section>
+
+
           </div>
         </main>
       </div>

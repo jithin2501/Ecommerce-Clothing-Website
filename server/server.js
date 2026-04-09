@@ -13,6 +13,7 @@ const { seedSuperAdmin } = require('./controllers/authController');
 const clientRoutes           = require('./routers/clientRoutes');
 const clientManagementRoutes = require('./routers/clientManagementRoutes');
 const paymentRouter          = require('./routers/paymentRouter');
+const supportRouter          = require('./routers/supportRouter');
 
 const app = express();
 
@@ -33,6 +34,8 @@ app.use('/api/product-details', productDetailRoutes);
 app.use('/api/client-auth',    clientRoutes);           
 app.use('/api/admin/clients',  clientManagementRoutes);
 app.use('/api/payment',        paymentRouter);
+app.use('/api/support',        supportRouter);
+
 
 app.get('/', (req, res) => res.json({ message: 'Sumathi Trends API running.' }));
 

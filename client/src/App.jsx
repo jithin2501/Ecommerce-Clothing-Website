@@ -45,6 +45,7 @@ import ReviewQRPage from './admin/views/ReviewQRPage';
 import ClientManagement from './admin/views/ClientManagement';
 import PaymentManagement from './admin/views/PaymentManagement';
 import OrderManagement from './admin/views/OrderManagement';
+import SupportManagement from './admin/views/SupportManagement';
 import Login from './admin/login/Login';
 import ProtectedRoute from './admin/login/Protectedroute';
 import UserLogin from './components/auth/Login';
@@ -122,6 +123,7 @@ function App() {
               <Route path="clients" element={<ClientManagement />} />
               <Route path="payments" element={<PaymentManagement />} />
               <Route path="orders" element={<OrderManagement />} />
+              <Route path="support" element={<SupportManagement />} />
             </Route>
 
             {/* Review submission page — no Navbar/Footer */}
