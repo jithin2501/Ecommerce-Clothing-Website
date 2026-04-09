@@ -125,6 +125,25 @@ export default function SupportManagement() {
               <div className="issue-description-well">{selected.description}</div>
             </div>
 
+            {/* NEW: Product Context from the Order */}
+            {selected.orderContext && (
+              <div className="modal-msg-section">
+                <h4>Ordered Products</h4>
+                <div className="order-context-list" style={{ background: '#f8fafc', padding: '15px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                  {selected.orderContext.items?.map((it, idx) => (
+                    <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', paddingBottom: '8px', borderBottom: idx < selected.orderContext.items.length -1 ? '1px dotted #cbd5e1' : 'none' }}>
+                       <span style={{ fontSize: '14px', fontWeight: '600' }}>{it.name} <small style={{ color: '#64748b', fontWeight: '400' }}>({it.size})</small></span>
+                       <span style={{ fontSize: '14px', color: '#1e293b' }}>Qty: {it.qty}</span>
+                    </div>
+                  ))}
+                  <div style={{ marginTop: '10px', paddingTop: '10px', borderTop: '2px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', fontWeight: '700' }}>
+                    <span>Total Order Amount:</span>
+                    <span style={{ color: '#10b981' }}>₹{selected.orderContext.amount?.toLocaleString()}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {selected.attachments?.length > 0 && (
               <div className="modal-msg-section">
                 <h4>Evidence (Photos/Videos)</h4>

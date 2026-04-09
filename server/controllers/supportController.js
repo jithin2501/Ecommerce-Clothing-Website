@@ -45,11 +45,25 @@ exports.submitSupportIssue = async (req, res) => {
   }
 };
 
+const Order = require('../models/Order');
+
 exports.getAllIssues = async (req, res) => {
   try {
-    const issues = await SupportIssue.find().sort({ createdAt: -1 });
-    res.json({ success: true, data: issues });
+    const issues = await SupportIssue.find().sort({ createdAt: -1 }).lean();
+    
+    // Dynamically join order data for each issue
+    const enhancedIssues = await Promise.all(issues.map(async (issue) => {
+      // Look up order using displayId (which is what orderId stores in SupportIssue)
+      const orderData = await Order.findOne({ displayId: issue.orderId }).lean();
+      return {
+        ...issue,
+        orderContext: orderData || null
+      };
+    }));
+
+    res.json({ success: true, data: enhancedIssues });
   } catch (error) {
+    console.error('getAllIssues error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch support issues' });
   }
 };
