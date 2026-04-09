@@ -5,9 +5,14 @@ const shiprocket = require('./services/shiprocket');
 // ── Run immediately on startup to catch any missed orders ──
 const syncUnsyncedOrders = async () => {
     try {
+        // Fix: catch null/empty fields too, not just $exists: false
         const unsyncedOrders = await Order.find({
             status: 'success',
-            shiprocketOrderId: { $exists: false }
+            $or: [
+                { shiprocketOrderId: { $exists: false } },
+                { shiprocketOrderId: null },
+                { shiprocketOrderId: '' }
+            ]
         });
 
         if (unsyncedOrders.length === 0) {
@@ -19,6 +24,7 @@ const syncUnsyncedOrders = async () => {
 
         for (const order of unsyncedOrders) {
             try {
+                console.log(`📦 Attempting to sync order: ${order.displayId}`);
                 const result = await shiprocket.createOrder(order);
 
                 if (result.success) {
@@ -28,8 +34,12 @@ const syncUnsyncedOrders = async () => {
                         trackingStatus: 'PROCESSING',
                         trackingLink: shiprocket.generateTrackingLink(result.shiprocketShipmentId)
                     });
-                    console.log(`✅ Synced order to Shiprocket: ${order.displayId}`);
+                    console.log(`✅ Synced order to Shiprocket: ${order.displayId} → SR ID: ${result.shiprocketOrderId}`);
                 } else {
+                    // Save the error back to DB so you can see it in admin dashboard
+                    await Order.findByIdAndUpdate(order._id, {
+                        shiprocketError: result.error
+                    });
                     console.warn(`⚠️  Shiprocket rejected order ${order.displayId}:`, result.error);
                 }
             } catch (err) {
@@ -43,18 +53,13 @@ const syncUnsyncedOrders = async () => {
 
 module.exports = function startCronJobs() {
     console.log('🕐 Cron jobs initialized...');
-    
-    const email = process.env.SHIPROCKET_EMAIL || 'NOT SET';
-    const maskedEmail = email.replace(/^(..)(.*)(@.*)$/, '$1***$3');
-    console.log(`📡 Shiprocket sync target: ${maskedEmail}`);
 
     // ── Run immediately when server starts ──
-    // This catches all missed orders right away after deploy
     syncUnsyncedOrders();
 
     // ── Then run every 5 minutes automatically ──
     cron.schedule('*/5 * * * *', async () => {
-        console.log(`⏰ [${new Date().toLocaleTimeString()}] Running Shiprocket sync check...`);
+        console.log('⏰ [Cron] Running Shiprocket sync check...');
         await syncUnsyncedOrders();
     });
 };

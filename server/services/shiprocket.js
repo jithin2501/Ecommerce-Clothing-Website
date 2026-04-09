@@ -77,7 +77,7 @@ exports.createOrder = async (orderData) => {
       payment_method: 'Prepaid',
       sub_total: orderData.amount,
       length: 10,
-      width: 10,
+      breadth: 10,
       height: 10,
       weight: 0.5
     };
