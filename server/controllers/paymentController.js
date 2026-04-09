@@ -176,26 +176,39 @@ const ClientUser = require('../models/ClientUser');
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 }).lean();
-    
-    // Dynamically join User Details for "LIVE" results
-    const joinedData = await Promise.all(orders.map(async (o) => {
-      // ── AUTO-REPAIR: Push to Shiprocket if somehow missed ──
-      if (o.status === 'success' && !o.shiprocketOrderId) {
-        console.log(`🔄 [Auto-Sync] Attempting background push for ${o.displayId}`);
-        const srResponse = await shiprocketService.createOrder(o);
-        if (srResponse.success) {
-          const doc = await Order.findById(o._id);
-          doc.shiprocketOrderId = srResponse.shiprocketOrderId;
-          doc.shiprocketShipmentId = srResponse.shiprocketShipmentId;
-          doc.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
-          await doc.save();
-          // Update the local object being returned
-          o.shiprocketOrderId = srResponse.shiprocketOrderId;
-          o.shiprocketShipmentId = srResponse.shiprocketShipmentId;
-          o.trackingStatus = 'NEW';
+    // 1. First, process any "Auto-Repairs" sequentially to avoid Shiprocket rate limits
+    // Only attempt auto-repair for orders from the last 24 hours to keep things fast
+    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+    const pendingAutoSync = orders.filter(o => o.status === 'success' && !o.shiprocketOrderId && o.createdAt > oneDayAgo);
+
+    if (pendingAutoSync.length > 0) {
+      console.log(`🔄 Found ${pendingAutoSync.length} orders for background auto-sync...`);
+      for (const o of pendingAutoSync) {
+        try {
+          console.log(`📦 [Auto-Sync] Processing ${o.displayId}`);
+          const srResponse = await shiprocketService.createOrder(o);
+          if (srResponse.success) {
+            const doc = await Order.findById(o._id);
+            doc.shiprocketOrderId = srResponse.shiprocketOrderId;
+            doc.shiprocketShipmentId = srResponse.shiprocketShipmentId;
+            doc.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
+            await doc.save();
+            // Update the local object in our list for the immediate response
+            const target = orders.find(orig => orig._id.toString() === o._id.toString());
+            if (target) {
+              target.shiprocketOrderId = srResponse.shiprocketOrderId;
+              target.shiprocketShipmentId = srResponse.shiprocketShipmentId;
+              target.trackingStatus = 'NEW';
+            }
+          }
+        } catch (err) {
+          console.error(`❌ Auto-sync failed for ${o.displayId}:`, err.message);
         }
       }
+    }
 
+    // 2. Then proceed with normal user detail joining
+    const joinedData = await Promise.all(orders.map(async (o) => {
       if (o.userId && o.userId !== 'guest') {
         const userDoc = await ClientUser.findOne({ uids: o.userId }).lean();
         if (userDoc) {
