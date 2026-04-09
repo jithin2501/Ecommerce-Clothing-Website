@@ -18,7 +18,7 @@ async function getShiprocketToken() {
 
   // Reuse token if valid
   if (shiprocketToken && tokenExpiry && new Date() < tokenExpiry) {
-    return shiprocketToken;
+    return { success: true, token: shiprocketToken };
   }
 
   try {
@@ -50,9 +50,7 @@ exports.createOrder = async (orderData) => {
     if (!auth.success) throw new Error(auth.error);
     const token = auth.token;
 
-    // Default weight/dimensions since it depends on product type, adjust as needed or fetch from DB
-    const state = orderData.shippingAddress.state || 
-                  (orderData.shippingAddress.city === 'Bengaluru' ? 'Karnataka' : 'Karnataka'); // Default to Karnataka as safety for this shop
+    const state = orderData.shippingAddress.state || 'Karnataka';
 
     const shiprocketOrderPayload = {
       order_id: orderData.displayId,
@@ -62,25 +60,27 @@ exports.createOrder = async (orderData) => {
       billing_last_name: '',
       billing_address: orderData.shippingAddress.street || orderData.shippingAddress.address || 'Address',
       billing_city: orderData.shippingAddress.city || 'City',
-      billing_pincode: orderData.shippingAddress.pincode || '000000',
+      billing_pincode: String(orderData.shippingAddress.pincode || '560001'),
       billing_state: state,
       billing_country: 'India',
       billing_email: orderData.userEmail || 'customer@gmail.com',
-      billing_phone: orderData.shippingAddress.phone || orderData.shippingAddress.mobile || '9999999999',
+      billing_phone: String(orderData.shippingAddress.phone || orderData.shippingAddress.mobile || '9999999999'),
       shipping_is_billing: true,
       order_items: orderData.items.map(item => ({
         name: item.name,
-        sku: item.sku || item.productId || item._id || 'SKU-001',
+        sku: item.sku || item.productId || item._id?.toString() || 'SKU-001',
         units: item.qty || 1,
         selling_price: item.price,
       })),
       payment_method: 'Prepaid',
       sub_total: orderData.amount,
       length: 10,
-      breadth: 10,
+      breadth: 10,   // ✅ Fixed: Shiprocket requires 'breadth' not 'width'
       height: 10,
       weight: 0.5
     };
+
+    console.log(`📦 Pushing order ${orderData.displayId} to Shiprocket...`);
 
     const response = await axios.post(
       'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
@@ -93,9 +93,9 @@ exports.createOrder = async (orderData) => {
       }
     );
 
-    // Shiprocket returns status_code: 1 for success. 0 for validation/other errors.
+    // Shiprocket returns status_code: 1 for success
     if (response.data.status_code === 1) {
-      console.log('✅ Shiprocket Order Created successfully:', response.data.order_id);
+      console.log('✅ Shiprocket Order Created:', response.data.order_id);
       return {
         success: true,
         shiprocketOrderId: response.data.order_id,
@@ -104,24 +104,22 @@ exports.createOrder = async (orderData) => {
     } else {
       const errorMsg = response.data.message || 'Validation error from Shiprocket';
       const detail = response.data.errors ? JSON.stringify(response.data.errors) : '';
-      console.error('❌ Shiprocket rejection for Order:', orderData.displayId, errorMsg, detail);
-      return { 
-        success: false, 
-        error: `${errorMsg}${detail ? ': ' + detail : ''}` 
+      console.error('❌ Shiprocket rejected order:', orderData.displayId, errorMsg, detail);
+      return {
+        success: false,
+        error: `${errorMsg}${detail ? ': ' + detail : ''}`
       };
     }
   } catch (error) {
     const apiError = error.response?.data;
     let errorMessage = apiError?.message || error.message;
-
     if (apiError?.errors) {
-      errorMessage += ": " + JSON.stringify(apiError.errors);
+      errorMessage += ': ' + JSON.stringify(apiError.errors);
     }
-
     console.error('❌ Shiprocket Technical Error:', errorMessage);
     return { success: false, error: errorMessage };
   }
-}
+};
 
 /**
  * ── Generate Tracking Link ──
@@ -131,7 +129,7 @@ exports.generateTrackingLink = (shipmentId) => {
 };
 
 /**
- * Fetch live tracking info from Shiprocket
+ * ── Fetch live tracking info from Shiprocket ──
  */
 exports.getTrackingDetails = async (shipmentId) => {
   try {
@@ -139,9 +137,10 @@ exports.getTrackingDetails = async (shipmentId) => {
     if (!auth.success) return { success: false, error: auth.error };
     const token = auth.token;
 
-    const response = await axios.get(`https://apiv2.shiprocket.in/v1/external/courier/track/shipment/${shipmentId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await axios.get(
+      `https://apiv2.shiprocket.in/v1/external/courier/track/shipment/${shipmentId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
 
     return { success: true, data: response.data.tracking_data };
   } catch (error) {
