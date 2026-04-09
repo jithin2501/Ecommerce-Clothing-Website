@@ -1,0 +1,185 @@
+/* InvoiceTemplate.css */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .invoice-container, .invoice-container * {
+    visibility: visible;
+  }
+  .invoice-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: white;
+  }
+}
+
+.invoice-container {
+  width: 210mm; /* A4 width */
+  min-height: 297mm;
+  padding: 20mm;
+  margin: 10mm auto;
+  border: 1px solid #eee;
+  background: #fff;
+  color: #000;
+  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.4;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  display: none; /* Hidden on screen, shown in print via media query or manual display */
+}
+
+/* Header Styles */
+.inv-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.inv-shop-name {
+  font-size: 28px;
+  font-weight: 800;
+  margin: 0;
+  color: #000;
+  text-transform: uppercase;
+}
+
+.inv-address {
+  font-size: 13px;
+  color: #444;
+  margin: 5px 0;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.inv-tax-title {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 4px 20px;
+  border: 1.5px solid #000;
+  font-weight: 800;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+/* Info Section */
+.inv-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.inv-meta-left {
+  text-align: left;
+}
+
+.inv-meta-right {
+  text-align: right;
+}
+
+.inv-customer-pill {
+  background: #f8f8f8;
+  padding: 10px 15px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+/* Table Styles */
+.inv-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 30px;
+}
+
+.inv-table th {
+  border-top: 1.5px solid #000;
+  border-bottom: 1.5px solid #000;
+  padding: 10px 5px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.inv-table td {
+  padding: 12px 5px;
+  border-bottom: 1px dashed #ddd;
+  font-size: 14px;
+}
+
+.inv-col-sn { width: 40px; }
+.inv-col-qty { width: 60px; text-align: center; }
+.inv-col-rate { width: 100px; text-align: right; }
+.inv-col-amt { width: 120px; text-align: right; }
+
+.inv-table th:nth-child(3), .inv-table td:nth-child(3),
+.inv-table th:nth-child(4), .inv-table td:nth-child(4),
+.inv-table th:nth-child(5), .inv-table td:nth-child(5) {
+  text-align: right;
+}
+
+/* Summary Styles */
+.inv-summary {
+  margin-left: auto;
+  width: 300px;
+}
+
+.inv-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 14px;
+}
+
+.inv-total-line {
+  margin-top: 10px;
+  border-top: 1.5px solid #000;
+  padding-top: 10px;
+  font-size: 18px;
+  font-weight: 800;
+}
+
+/* Payment Details */
+.inv-payment-box {
+  margin-top: 30px;
+  border-top: 1px solid #eee;
+  padding-top: 15px;
+}
+
+.inv-payment-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* GST Table */
+.inv-gst-summary {
+  margin-top: 40px;
+}
+
+.gst-table {
+  width: 100%;
+  border: 1px solid #000;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.gst-table th, .gst-table td {
+  border: 1px solid #000;
+  padding: 6px;
+  text-align: center;
+}
+
+.gst-table th {
+  background: #f0f0f0;
+}
+
+.inv-footer-note {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 12px;
+  color: #888;
+}
