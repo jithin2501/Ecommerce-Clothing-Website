@@ -83,8 +83,12 @@ function OrderInvoice({ order }) {
       <div className="inv-payment-box">
         <div className="inv-payment-title">Payment Details</div>
         <div className="inv-summary-row">
-          <span>Razorpay ID:</span>
+          <span>Payment ID:</span>
           <span>{order.paymentId || 'PREPAID ONLINE'}</span>
+        </div>
+        <div className="inv-summary-row">
+          <span>Payment Method:</span>
+          <span>{order.paymentMethod || 'Razorpay (Online)'}</span>
         </div>
       </div>
 

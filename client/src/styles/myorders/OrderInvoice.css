@@ -4,7 +4,6 @@
   left: -9999px; /* Hide off-screen instead of display:none */
   top: 0;
   width: 210mm;
-  min-height: 297mm;
   padding: 20mm;
   background: #fff;
   color: #000;
@@ -12,26 +11,46 @@
   line-height: 1.4;
 }
 
+@page {
+  size: A4;
+  margin: 10mm;
+}
+
 @media print {
-  /* Hide the main website content */
-  .od-page, .navbar, .footer, #root > *:not(.invoice-container) {
+  /* Hide every part of the standard website */
+  body > *:not(.invoice-container),
+  #root > *:not(.invoice-container),
+  .od-page, .navbar, .footer, .od-container, .od-breadcrumb, .od-grid {
     display: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
   }
 
-  /* Show only the invoice */
+  /* Force only the invoice to show */
   .invoice-container {
-    position: static !important;
+    position: absolute !important;
+    top: 0 !important;
     left: 0 !important;
     display: block !important;
     visibility: visible !important;
-    width: 100% !important;
+    width: 100% !important; 
+    height: auto !important;
     margin: 0 !important;
-    padding: 10mm !important;
-    box-shadow: none !important;
+    padding: 0 !important;
+    background: white !important;
+    border: none !important;
   }
   
   .invoice-container * {
     visibility: visible !important;
+  }
+
+  body, html {
+    background: #fff !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
   }
 }
 
