@@ -43,6 +43,10 @@ const syncUnsyncedOrders = async () => {
 
 module.exports = function startCronJobs() {
     console.log('🕐 Cron jobs initialized...');
+    
+    const email = process.env.SHIPROCKET_EMAIL || 'NOT SET';
+    const maskedEmail = email.replace(/^(..)(.*)(@.*)$/, '$1***$3');
+    console.log(`📡 Shiprocket sync target: ${maskedEmail}`);
 
     // ── Run immediately when server starts ──
     // This catches all missed orders right away after deploy
@@ -50,7 +54,7 @@ module.exports = function startCronJobs() {
 
     // ── Then run every 5 minutes automatically ──
     cron.schedule('*/5 * * * *', async () => {
-        console.log('⏰ [Cron] Running Shiprocket sync check...');
+        console.log(`⏰ [${new Date().toLocaleTimeString()}] Running Shiprocket sync check...`);
         await syncUnsyncedOrders();
     });
 };
