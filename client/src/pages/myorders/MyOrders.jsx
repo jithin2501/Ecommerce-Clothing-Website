@@ -144,10 +144,12 @@ export default function MyOrders() {
                         label={order.status === 'success' ? `Paid on ${new Date(order.createdAt).toLocaleDateString()}` : 'Payment Pending'} 
                       />
                       <div className="mo-status-sub">Order ID: {order.orderId?.slice(-12)}</div>
-                      <button
-                        className="mo-review-btn"
-                        onClick={(e) => { e.stopPropagation(); navigate('/account/write-review', { state: { order, item } }); }}
-                      >☆ Rate &amp; Review Product</button>
+                      {order.trackingStatus?.toLowerCase() === 'delivered' && (
+                        <button
+                          className="mo-review-btn"
+                          onClick={(e) => { e.stopPropagation(); navigate('/account/write-review', { state: { order, item } }); }}
+                        >☆ Rate &amp; Review Product</button>
+                      )}
                     </div>
                   </div>
                 ))}

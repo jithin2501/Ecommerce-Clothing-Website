@@ -69,7 +69,7 @@ export default function WriteReview() {
     setPreview(URL.createObjectURL(f));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!rating) {
       setError('Please select a star rating.');
       return;
@@ -78,7 +78,6 @@ export default function WriteReview() {
       setError('Please write a description.');
       return;
     }
-
     if (!name.trim()) {
       setError('Please enter your display name.');
       return;
@@ -89,8 +88,32 @@ export default function WriteReview() {
     }
 
     setError('');
-    setSubmitted(true);
-    setTimeout(() => navigate('/account/orders'), 2000);
+    const userId = localStorage.getItem('sumathi_uid'); // Assume uid is stored or use Firebase
+    
+    try {
+      const response = await fetch('/api/reviews/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          rating: Number(rating),
+          message: description.trim(),
+          productId: item.productId,
+          orderId: order.orderId,
+          uid: userId
+        })
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setSubmitted(true);
+        setTimeout(() => navigate('/account/orders'), 2000);
+      } else {
+        setError(data.message || 'Failed to submit review.');
+      }
+    } catch (err) {
+      setError('Failed to connect to server.');
+    }
   };
 
   return (

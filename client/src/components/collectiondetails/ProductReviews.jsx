@@ -1,63 +1,68 @@
+import { useEffect, useState } from 'react';
 import '../../styles/collectiondetails/ProductReviews.css';
 
-const BARS = [
-  { stars: 5, count: 28 },
-  { stars: 4, count: 8 },
-  { stars: 3, count: 4 },
-  { stars: 2, count: 1 },
-  { stars: 1, count: 1 },
-];
-const TOTAL = BARS.reduce((s, b) => s + b.count, 0);
-
-const REVIEWS = [
-  {
-    id: 1,
-    name: 'Sarah M.',
-    rating: 5,
-    date: 'Feb 12, 2025',
-    avatar: '/images/reviews.png',
-    text: 'The quality of this organic cotton is exceptional. It\'s incredibly soft and I know it\'ll be perfect for my 4-year-old. Love that natural botanical print!',
-    image: '/images/img1.webp',
-  },
-  {
-    id: 2,
-    name: 'Priya K.',
-    rating: 4,
-    date: 'Jan 28, 2025',
-    avatar: '/images/reviews.png',
-    text: 'Beautiful dress, runs slightly large but the adjustable waist tie helps. My daughter refuses to take it off!',
-    image: null,
-  },
-];
-
 function Stars({ count }) {
+  const rounded = Math.round(count);
   return (
     <span className="pr-stars">
-      {'★'.repeat(count)}{'☆'.repeat(5 - count)}
+      {'★'.repeat(rounded)}{'☆'.repeat(5 - rounded)}
     </span>
   );
 }
 
-export default function ProductReviews() {
+export default function ProductReviews({ productId }) {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!productId) return;
+    const fetchReviews = async () => {
+      try {
+        const res = await fetch(`/api/reviews/product/${productId}`);
+        const data = await res.json();
+        if (data.success) {
+          setReviews(data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch reviews", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReviews();
+  }, [productId]);
+
+  if (loading) return <div className="pr-loading">Loading reviews...</div>;
+
+  const totalReviews = reviews.length;
+  const avgRating = totalReviews > 0 
+    ? (reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews).toFixed(1)
+    : 0;
+
+  const bars = [5, 4, 3, 2, 1].map(star => {
+    const count = reviews.filter(r => r.rating === star).length;
+    return { stars: star, count };
+  });
+
   return (
     <section className="pr-wrapper">
       <h2 className="pr-heading">Rating &amp; Reviews</h2>
 
       <div className="pr-summary">
         <div className="pr-score-block">
-          <p className="pr-score">4.5</p>
-          <Stars count={4} />
-          <p className="pr-total">({TOTAL} reviews)</p>
+          <p className="pr-score">{avgRating}</p>
+          <Stars count={Number(avgRating)} />
+          <p className="pr-total">({totalReviews} reviews)</p>
         </div>
 
         <div className="pr-bars">
-          {BARS.map(b => (
+          {bars.map(b => (
             <div key={b.stars} className="pr-bar-row">
               <span className="pr-bar-label">{b.stars}</span>
               <div className="pr-bar-track">
                 <div
                   className="pr-bar-fill"
-                  style={{ width: `${(b.count / TOTAL) * 100}%` }}
+                  style={{ width: totalReviews > 0 ? `${(b.count / totalReviews) * 100}%` : '0%' }}
                 />
               </div>
               <span className="pr-bar-count">{b.count}</span>
@@ -67,22 +72,25 @@ export default function ProductReviews() {
       </div>
 
       <div className="pr-list">
-        {REVIEWS.map(r => (
-          <div key={r.id} className="pr-card">
-            <div className="pr-card-header">
-              <img src={r.avatar} alt={r.name} className="pr-avatar" />
-              <div>
-                <p className="pr-name">{r.name}</p>
-                <Stars count={r.rating} />
+        {reviews.length === 0 ? (
+          <p className="pr-empty">No reviews yet. Be the first to review!</p>
+        ) : (
+          reviews.map(r => (
+            <div key={r._id} className="pr-card">
+              <div className="pr-card-header">
+                <div className="pr-avatar-placeholder">
+                  {r.name.charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="pr-name">{r.name}</p>
+                  <Stars count={r.rating} />
+                </div>
+                <p className="pr-date">{new Date(r.createdAt).toLocaleDateString()}</p>
               </div>
-              <p className="pr-date">{r.date}</p>
+              <p className="pr-text">{r.message}</p>
             </div>
-            <p className="pr-text">{r.text}</p>
-            {r.image && (
-              <img src={r.image} alt="Review" className="pr-review-img" />
-            )}
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </section>
   );

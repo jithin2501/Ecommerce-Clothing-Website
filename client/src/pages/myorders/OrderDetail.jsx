@@ -194,33 +194,37 @@ export default function OrderDetail() {
                   trackingData={trackingData}
                   orderDate={order.createdAt}
                 />
-                <div className="od-chat-section">
-                  <button className="od-chat-btn">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                    </svg>
-                    Chat with us
-                  </button>
-                </div>
-              </div>
-              <div className="od-card rate-card">
-                <h2>Rate your experience</h2>
-                <div className="od-rate-box">
-                  <div className="od-rate-stars-row">
-                    <StarRating value={rating} onChange={setRating} />
-                    <button
-                      className="od-write-review-btn"
-                      onClick={() => navigate('/account/write-review', { state: { order, item, rating } })}
-                    >
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                {order.trackingStatus?.toLowerCase() === 'delivered' && (
+                  <div className="od-chat-section">
+                    <button className="od-chat-btn" onClick={() => navigate('/support')}>
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                       </svg>
-                      Write review
+                      Chat with us
                     </button>
                   </div>
-                </div>
+                )}
               </div>
+              {order.trackingStatus?.toLowerCase() === 'delivered' && (
+                <div className="od-card rate-card">
+                  <h2>Rate your experience</h2>
+                  <div className="od-rate-box">
+                    <div className="od-rate-stars-row">
+                      <StarRating value={rating} onChange={setRating} />
+                      <button
+                        className="od-write-review-btn"
+                        onClick={() => navigate('/account/write-review', { state: { order, item, rating } })}
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        Write review
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
               {otherItems.length > 0 && (
                 <div className="od-card others-card">
                   <h3>Other Items In This Order</h3>

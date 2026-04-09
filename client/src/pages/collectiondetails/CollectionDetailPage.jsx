@@ -287,7 +287,7 @@ export default function CollectionDetailPage() {
         </div>
       </div>
       <div className="cdp-lower">
-        <ProductReviews />
+        <ProductReviews productId={detail.product?._id} />
         <ProductRelated />
       </div>
 
