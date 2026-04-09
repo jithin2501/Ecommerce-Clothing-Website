@@ -3,7 +3,7 @@ const jwt     = require('jsonwebtoken');
 const router  = express.Router();
 
 const {
-  submitReview, getProductReviews, getApprovedReviews, getAllReviews,
+  submitReview, getProductReviews, getUserReviews, getApprovedReviews, getAllReviews,
   approveReview, unapproveReview, deleteReview,
 } = require('../controllers/reviewController');
 
@@ -22,6 +22,7 @@ const verifyAdmin = (req, res, next) => {
 // ── Public ──
 router.post('/submit',             submitReview);
 router.get ('/product/:productId', getProductReviews);
+router.get ('/user/:uid',          getUserReviews);
 router.get ('/approved',           getApprovedReviews);
 
 // ── Admin ──

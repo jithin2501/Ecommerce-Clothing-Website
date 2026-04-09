@@ -140,4 +140,15 @@ const deleteReview = async (req, res) => {
   }
 };
 
-module.exports = { submitReview, getProductReviews, getApprovedReviews, getAllReviews, approveReview, unapproveReview, deleteReview };
+// GET /api/reviews/user/:uid — public
+const getUserReviews = async (req, res) => {
+  try {
+    const { uid } = req.params;
+    const reviews = await Review.find({ uid }).sort({ createdAt: -1 });
+    res.json({ success: true, data: reviews });
+  } catch {
+    res.status(500).json({ success: false });
+  }
+};
+
+module.exports = { submitReview, getProductReviews, getUserReviews, getApprovedReviews, getAllReviews, approveReview, unapproveReview, deleteReview };

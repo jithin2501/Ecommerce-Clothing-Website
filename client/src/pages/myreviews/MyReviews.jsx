@@ -1,33 +1,67 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
+import { auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myreviews/MyReviews.css';
 
-const suggestedProducts = [
-  {
-    id: 1,
-    name: 'Organic Cotton Cloud-Soft Romper Sage Green',
-    image: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=100&h=100&fit=crop',
-  },
-  {
-    id: 2,
-    name: 'Organic Cotton Cloud-Soft Romper Sage Green',
-    image: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=100&h=100&fit=crop',
-  },
-];
-
 export default function MyReviews() {
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
   const navigate = useNavigate();
-
   const [activeNav, setActiveNav] = useState('mystuff');
   const [activeSubNav, setActiveSubNav] = useState('reviews');
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState([]);
+  const [pendingReviews, setPendingReviews] = useState([]);
+
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
   useEffect(() => {
-    // Simple delay to ensure smooth transition
-    const timer = setTimeout(() => setLoading(false), 300);
-    return () => clearTimeout(timer);
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          // 1. Fetch user reviews
+          const revRes = await fetch(`/api/reviews/user/${user.uid}`);
+          const revData = await revRes.json();
+          const userReviews = revData.success ? revData.data : [];
+          setReviews(userReviews);
+
+          // 2. Fetch user orders to find things to review
+          const ordRes = await fetch(`/api/payment/user-orders/${user.uid}`);
+          const ordData = await ordRes.json();
+          
+          if (ordData.success) {
+            // Get all delivered items
+            const deliveredOrders = ordData.data.filter(o => o.trackingStatus?.toLowerCase() === 'delivered');
+            const allItems = [];
+            deliveredOrders.forEach(order => {
+              order.items.forEach(item => {
+                // Attach order for context
+                allItems.push({ ...item, order });
+              });
+            });
+
+            // Filter out items already reviewed (match by productId)
+            const reviewedProductIds = new Set(userReviews.map(r => r.productId));
+            const toReview = allItems.filter(item => !reviewedProductIds.has(item.productId));
+            
+            // Remove duplicates (same product in different orders/same order)
+            const uniqueToReview = [];
+            const seenIds = new Set();
+            for (const item of toReview) {
+              if (!seenIds.has(item.productId)) {
+                uniqueToReview.push(item);
+                seenIds.add(item.productId);
+              }
+            }
+            setPendingReviews(uniqueToReview);
+          }
+        } catch (err) {
+          console.error("MyReviews: Data fetch error", err);
+        }
+      }
+      setLoading(false);
+    });
+    return () => unsub();
   }, []);
 
   if (loading) {
@@ -42,7 +76,6 @@ export default function MyReviews() {
   return (
     <div className="mr-page">
       <div className="mr-container">
-
         <Sidebar
           activeNav={activeNav}
           setActiveNav={setActiveNav}
@@ -51,7 +84,6 @@ export default function MyReviews() {
         />
 
         <main className="mr-main">
-
           <div className="mr-mobile-header">
             <button className="mobile-back-btn" onClick={() => navigate('/account')}>
               <span className="back-chevron">
@@ -60,50 +92,62 @@ export default function MyReviews() {
                 </svg>
               </span>
             </button>
-            <div className="mr-header">
-              <h1>My Reviews & Ratings</h1>
-            </div>
           </div>
 
-          {/* Empty State */}
-          <div className="mr-empty-section">
-            <div className="mr-icon-wrap">
-              <img
-                src="/images/reviews/no-reviews.png"
-                alt="No Reviews"
-                className="mr-empty-img"
-              />
-            </div>
-
-            <h2 className="mr-empty-title">No Reviews &amp; Ratings</h2>
-            <p className="mr-empty-text">
-              You haven't shared your thoughts on any products yet. Your feedback helps other parents find the perfect fit for their little ones!
-            </p>
+          {/* User's Reviews */}
+          <div className="mr-reviews-section">
+            <h2 className="mr-section-title">Your Reviews</h2>
+            {reviews.length === 0 ? (
+              <div className="mr-empty-state">
+                <p>You haven't submitted any reviews yet.</p>
+              </div>
+            ) : (
+              <div className="mr-reviews-list">
+                {reviews.map(r => (
+                  <div key={r._id} className="mr-review-card">
+                    <div className="mr-review-header">
+                      <div className="mr-stars">
+                        {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
+                      </div>
+                      <span className="mr-review-date">{new Date(r.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <p className="mr-review-msg">{r.message}</p>
+                    {r.status === 'pending' && <span className="mr-review-status">Awaiting Approval</span>}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* Suggested Products */}
+          {/* Pending Reviews Section */}
           <div className="mr-suggested-section">
             <h3 className="mr-suggested-title">Orders you might be interested in reviewing</h3>
             <div className="mr-product-grid">
-              {suggestedProducts.map(p => (
-                <div key={p.id} className="mr-product-card">
-                  <img src={p.image} alt={p.name} className="mr-product-img" />
-                  <div className="mr-product-info">
-                    <p className="mr-product-name">{p.name}</p>
-                    <div className="mr-stars">
-                      {[1, 2, 3, 4, 5].map(s => (
-                        <span key={s} className="mr-star">★</span>
-                      ))}
+              {pendingReviews.length === 0 ? (
+                <p className="mr-no-pending">No new orders to review at the moment.</p>
+              ) : (
+                pendingReviews.map(item => (
+                  <div key={item.productId || item._id} className="mr-product-card">
+                    <img src={item.img || item.photo} alt={item.name} className="mr-product-img" />
+                    <div className="mr-product-info">
+                      <p className="mr-product-name">{item.name}</p>
+                      <div className="mr-stars-static">
+                        {[1, 2, 3, 4, 5].map(s => (
+                          <span key={s} className="mr-star-empty">☆</span>
+                        ))}
+                      </div>
+                      <button 
+                        className="mr-rate-btn" 
+                        onClick={() => navigate('/account/write-review', { state: { order: item.order, item } })}
+                      >
+                        Rate and Review ›
+                      </button>
                     </div>
-                    <button className="mr-rate-btn" onClick={() => navigate('/collections')}>
-                      Rate and Review ›
-                    </button>
                   </div>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
-
         </main>
       </div>
     </div>
