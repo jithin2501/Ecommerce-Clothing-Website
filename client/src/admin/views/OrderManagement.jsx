@@ -42,7 +42,7 @@ export default function OrderManagement() {
     if (orders.length === 0) return;
 
     const activeOrders = orders.filter(o => o.shiprocketShipmentId && (o.trackingStatus || '').toUpperCase() !== 'DELIVERED');
-    
+
     const syncInterval = setInterval(() => {
       activeOrders.forEach(o => handleSyncStatus(o._id));
     }, 60000); // Check Shiprocket every 60 seconds
@@ -70,7 +70,7 @@ export default function OrderManagement() {
     const isUnfinished = status !== 'DELIVERED';
     const isSameDay = o.createdAt?.split('T')[0] === selectedDate;
     const matchesSearch = o.displayId?.toLowerCase().includes(searchTerm.toLowerCase());
-    
+
     // Logic: Show if (match search) AND (either unfinished OR from selected date)
     return matchesSearch && (isUnfinished || isSameDay);
   });
@@ -81,19 +81,19 @@ export default function OrderManagement() {
     <div className="om-page">
       {/* Aligned Header */}
       <header className="om-header">
-        <h1 className="om-title">ORDER DASHBOARD</h1>
+        <h1 className="om-title">Order Dashboard</h1>
         <div className="om-header-tools">
           <div className="om-search-box">
             <Search size={16} />
-            <input 
-              placeholder="Search Display ID..." 
+            <input
+              placeholder="Search Display ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div className="om-date-filter">
-            <input 
-              type="date" 
+            <input
+              type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
@@ -120,8 +120,8 @@ export default function OrderManagement() {
                 <tr key={o._id} className="om-row" onClick={() => setSelectedOrder(o)}>
                   <td>
                     <div className="om-id-cell">
-                       <span className={`om-status-dot ${o.trackingStatus === 'DELIVERED' ? 'done' : 'active'}`} />
-                       <strong>#{o.displayId}</strong>
+                      <span className={`om-status-dot ${o.trackingStatus === 'DELIVERED' ? 'done' : 'active'}`} />
+                      <strong>#{o.displayId}</strong>
                     </div>
                   </td>
                   <td>
@@ -135,18 +135,18 @@ export default function OrderManagement() {
                     <div className="om-tracking-cell">
                       <span className={`om-tag ${(o.trackingStatus || '').toLowerCase()}`}>{o.trackingStatus || 'Pending'}</span>
                       {o.shiprocketShipmentId && (
-                         <button 
-                           className={`om-sync-btn ${syncingId === o._id ? 'spinning' : ''}`}
-                           onClick={(e) => { e.stopPropagation(); handleSyncStatus(o._id); }}
-                         >
-                           <RefreshCw size={12} />
-                         </button>
+                        <button
+                          className={`om-sync-btn ${syncingId === o._id ? 'spinning' : ''}`}
+                          onClick={(e) => { e.stopPropagation(); handleSyncStatus(o._id); }}
+                        >
+                          <RefreshCw size={12} />
+                        </button>
                       )}
                     </div>
                   </td>
                   <td className="om-date-cell">{new Date(o.createdAt).toLocaleDateString()}</td>
                   <td>
-                     <button className="om-view-btn">View</button>
+                    <button className="om-view-btn">View</button>
                   </td>
                 </tr>
               ))}
@@ -159,9 +159,9 @@ export default function OrderManagement() {
       </div>
 
       {selectedOrder && (
-        <OrderDrawer 
-          order={selectedOrder} 
-          onClose={() => setSelectedOrder(null)} 
+        <OrderDrawer
+          order={selectedOrder}
+          onClose={() => setSelectedOrder(null)}
         />
       )}
     </div>
@@ -243,7 +243,7 @@ function OrderDrawer({ order, onClose }) {
     <div className="om-drawer-overlay" onClick={onClose}>
       <aside className="om-drawer" onClick={e => e.stopPropagation()}>
         <button className="om-drawer-close" onClick={onClose}><X size={20} /></button>
-        
+
         <div className="om-drawer-head">
           <div className="om-drawer-id">ORDER #{order.displayId}</div>
           <div className={`om-drawer-status ${order.trackingStatus?.toLowerCase()}`}>{order.trackingStatus}</div>
@@ -311,7 +311,7 @@ function OrderDrawer({ order, onClose }) {
 
 function DetailedTracking({ status, trackingData }) {
   const activities = trackingData?.activities || [];
-  
+
   const getDay = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
   const getTime = (dateStr) => new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
 

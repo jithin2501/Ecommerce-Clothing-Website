@@ -48,7 +48,7 @@ export default function SupportManagement() {
 
   return (
     <div className="contact-page">
-      <h1 className="contact-title">Support issues ({issues.length})</h1>
+      <h1 className="contact-title"> Support Management ({issues.length})</h1>
 
       {loading ? (
         <div className="contact-outer">
@@ -75,7 +75,7 @@ export default function SupportManagement() {
               <tbody>
                 {issues.map(iss => (
                   <tr key={iss._id}>
-                    <td className="bold" style={{color:'#2D3E50', fontWeight:'700'}}>#{iss.orderId}</td>
+                    <td className="bold" style={{ color: '#2D3E50', fontWeight: '700' }}>#{iss.orderId}</td>
                     <td className="td-name">{iss.customerId || (typeof iss.userId === 'string' ? iss.userId.slice(-6).toUpperCase() : 'N/A')}</td>
                     <td className="td-msg">{iss.description.slice(0, 50)}...</td>
                     <td>
@@ -98,17 +98,17 @@ export default function SupportManagement() {
       {/* Details Modal */}
       {selected && (
         <div className="modal-overlay" onClick={() => setSelected(null)}>
-          <div className="modal-box" style={{maxWidth:'700px'}} onClick={e => e.stopPropagation()}>
+          <div className="modal-box" style={{ maxWidth: '700px' }} onClick={e => e.stopPropagation()}>
             <button className="modal-close" onClick={() => setSelected(null)}>×</button>
             <h3 className="modal-title">Issue Details: #{selected.orderId}</h3>
             <hr className="modal-divider" />
-            
+
             <div className="modal-fields">
-              <p><strong>Current Status:</strong> 
-                <select 
+              <p><strong>Current Status:</strong>
+                <select
                   className="admin-select"
-                  style={{marginLeft:'10px', padding:'6px 12px', borderRadius:'8px', border:'1px solid #ddd', outline:'none'}}
-                  value={selected.status} 
+                  style={{ marginLeft: '10px', padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }}
+                  value={selected.status}
                   onChange={(e) => updateStatus(selected._id, e.target.value)}
                 >
                   <option value="Pending">Pending</option>
@@ -119,12 +119,12 @@ export default function SupportManagement() {
               <p><strong>Customer ID:</strong> {selected.customerId || selected.userId}</p>
               <p><strong>Date Submitted:</strong> {new Date(selected.createdAt).toLocaleString('en-IN')}</p>
             </div>
-            
+
             <div className="modal-msg-section">
               <h4>Problem Description</h4>
               <div className="issue-description-well">{selected.description}</div>
             </div>
-              
+
             {selected.attachments?.length > 0 && (
               <div className="modal-msg-section">
                 <h4>Evidence (Photos/Videos)</h4>
@@ -134,7 +134,7 @@ export default function SupportManagement() {
                       {att.fileType === 'video' ? (
                         <video src={att.url} controls className="admin-prev-media" />
                       ) : (
-                        <img src={att.url} alt="Evidence" className="admin-prev-media" onClick={() => window.open(att.url, '_blank')}/>
+                        <img src={att.url} alt="Evidence" className="admin-prev-media" onClick={() => window.open(att.url, '_blank')} />
                       )}
                     </div>
                   ))}

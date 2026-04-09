@@ -219,7 +219,7 @@ export default function ClientManagement() {
     <div className="cm-page">
 
       {/* Header */}
-      <h1 className="cm-title">CLIENT MANAGEMENT</h1>
+      <h1 className="cm-title">Client Management</h1>
 
       {/* Stats */}
       {stats && (

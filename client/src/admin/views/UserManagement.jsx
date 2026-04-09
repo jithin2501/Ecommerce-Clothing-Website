@@ -9,16 +9,16 @@ const authHeaders = () => ({
 });
 
 export default function UserManagement() {
-  const [users, setUsers]     = useState([]);
+  const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [form, setForm]       = useState({ username: '', password: '' });
-  const [msg, setMsg]         = useState({ text: '', type: '' });
+  const [form, setForm] = useState({ username: '', password: '' });
+  const [msg, setMsg] = useState({ text: '', type: '' });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const fetchUsers = async () => {
     try {
-      const res  = await fetch(API, { headers: authHeaders() });
+      const res = await fetch(API, { headers: authHeaders() });
       const data = await res.json();
       if (data.success) {
         // Sort: superadmin always first
@@ -42,7 +42,7 @@ export default function UserManagement() {
 
   const handleCreate = async (e) => {
     e.preventDefault();
-    
+
     // Password validation
     const { password } = form;
     const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@#%&*!^$])[A-Za-z\d@#%&*!^$]{8,}$/;
@@ -52,7 +52,7 @@ export default function UserManagement() {
     }
 
     try {
-      const res  = await fetch(API, { method: 'POST', headers: authHeaders(), body: JSON.stringify(form) });
+      const res = await fetch(API, { method: 'POST', headers: authHeaders(), body: JSON.stringify(form) });
       const data = await res.json();
       if (data.success) {
         setUsers(u => {
@@ -67,7 +67,7 @@ export default function UserManagement() {
 
   const handleToggle = async (id) => {
     try {
-      const res  = await fetch(`${API}/${id}/toggle`, { method: 'PATCH', headers: authHeaders() });
+      const res = await fetch(`${API}/${id}/toggle`, { method: 'PATCH', headers: authHeaders() });
       const data = await res.json();
       if (data.success) setUsers(u => u.map(x => x._id === id ? { ...x, isActive: data.isActive } : x));
     } catch { flash('Server error.', 'error'); }
@@ -76,7 +76,7 @@ export default function UserManagement() {
   const handleDelete = async (id, username) => {
     if (!window.confirm(`Delete user "${username}"?`)) return;
     try {
-      const res  = await fetch(`${API}/${id}`, { method: 'DELETE', headers: authHeaders() });
+      const res = await fetch(`${API}/${id}`, { method: 'DELETE', headers: authHeaders() });
       const data = await res.json();
       if (data.success) { setUsers(u => u.filter(x => x._id !== id)); flash('User deleted.'); }
     } catch { flash('Server error.', 'error'); }
@@ -84,7 +84,7 @@ export default function UserManagement() {
 
   return (
     <div className="um-page">
-      <h1 className="um-title">USER MANAGEMENT</h1>
+      <h1 className="um-title">User Management</h1>
 
       {/* ── Create Admin ── */}
       <div className="um-card">
@@ -100,15 +100,15 @@ export default function UserManagement() {
           <div className="um-form-group">
             <label>Password:</label>
             <div className="um-password-wrapper">
-              <input 
-                type={showPassword ? "text" : "password"} 
-                placeholder="Enter a strong password" 
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter a strong password"
                 value={form.password}
-                onChange={e => setForm(f => ({ ...f, password: e.target.value }))} 
-                required 
+                onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
+                required
               />
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="um-password-toggle"
                 onClick={() => setShowPassword(!showPassword)}
                 title={showPassword ? "Hide Password" : "Show Password"}
