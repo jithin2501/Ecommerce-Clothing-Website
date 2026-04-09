@@ -137,6 +137,29 @@
   margin: 0 0 14px;
 }
 
+.sh-orders-scroll-container {
+  max-height: 400px; /* HEIGHT FOR ABOUT 4 ORDERS */
+  overflow-y: auto;
+  padding-right: 8px; /* SPACE FOR SCROLLBAR */
+  margin-bottom: 8px;
+}
+
+/* CUSTOM SCROLLBAR FOR ORDERS */
+.sh-orders-scroll-container::-webkit-scrollbar {
+  width: 5px;
+}
+.sh-orders-scroll-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+.sh-orders-scroll-container::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
+.sh-orders-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
+}
+
 /* ── ORDERS LIST ── */
 .sh-orders-list {
   display: flex;
@@ -155,19 +178,6 @@
   position: relative;
 }
 
-.sh-order-badge {
-  position: absolute;
-  top: -8px;
-  left: 16px;
-  background: #2D3E50;
-  color: #fff;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.8px;
-  padding: 2px 8px;
-  border-radius: 20px;
-}
-
 .sh-order-img {
   width: 60px;
   height: 60px;
@@ -177,7 +187,7 @@
   flex-shrink: 0;
 }
 
-.sh-order-info { flex: 1; }
+.sh-order-info { flex: 1; min-width: 0; }
 
 .sh-order-label {
   font-size: 10px;
@@ -192,6 +202,9 @@
   font-weight: 700;
   color: #212121;
   margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sh-order-status { font-size: 12px; color: #666; }
@@ -213,6 +226,10 @@
   flex-shrink: 0;
 }
 .sh-need-help-btn:hover { border-color: #2D3E50; color: #2D3E50; }
+
+.sh-channel-icon svg {
+  color: #fff;
+}
 
 /* ── ORDER HELP PAGE ── */
 .sh-hero--compact {

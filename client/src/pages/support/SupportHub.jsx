@@ -1,45 +1,44 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
+import { auth } from '../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/support/SupportHub.css';
 
-const recentOrders = [
-  {
-    id: 'PP-82934',
-    name: 'Organic Cotton Romper',
-    status: 'Delivered',
-    date: 'Oct 12, 2023',
-    image: 'https://images.unsplash.com/photo-1522771930-78848d9293e8?w=80&h=80&fit=crop',
-  },
-  {
-    id: 'PP-71823',
-    name: 'Premium Wool Cardigan',
-    status: 'Delivered',
-    date: 'Nov 10, 2023',
-    image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=80&h=80&fit=crop',
-  },
-  {
-    id: 'PP-63491',
-    name: 'Essential Linen Shirt',
-    status: 'Delivered',
-    date: 'Sep 11, 2023',
-    image: 'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=80&h=80&fit=crop',
-  },
-  {
-    id: 'PP-55820',
-    name: 'Classic Velvet Party Dress',
-    status: 'Delivered',
-    date: 'Dec 01, 2023',
-    image: 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=80&h=80&fit=crop',
-  },
-];
+const API = '/api';
 
 export default function SupportHub() {
-  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
   const navigate = useNavigate();
+  useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
+
   const [search, setSearch] = useState('');
   const [activeNav, setActiveNav]       = useState('');
   const [activeSubNav, setActiveSubNav] = useState('support');
+  
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, async (fbUser) => {
+      if (fbUser) {
+        try {
+          const res = await fetch(`${API}/payment/user-orders/${fbUser.uid}`);
+          const data = await res.json();
+          if (data.success) {
+            // Filter only delivered orders for the support hub help section
+            const delivered = data.data.filter(o => o.trackingStatus?.toLowerCase() === 'delivered');
+            setOrders(delivered);
+          }
+        } catch (err) {
+          console.error("SupportHub: Failed to fetch orders", err);
+        }
+      } else {
+        setOrders([]);
+      }
+      setLoading(false);
+    });
+    return () => unsub();
+  }, []);
 
   return (
     <div className="sh-page">
@@ -84,26 +83,77 @@ export default function SupportHub() {
             {/* Recent Orders */}
             <section className="sh-section">
               <h2 className="sh-section-title">Help with recent orders</h2>
-              <div className="sh-orders-list">
-                {recentOrders.map((order, i) => (
-                  <div key={order.id} className="sh-order-card">
+              <div className="sh-orders-scroll-container">
+                <div className="sh-orders-list">
+                  {loading ? (
+                    <p style={{textAlign:'center', padding:'20px', color:'#888'}}>Loading orders...</p>
+                  ) : orders.length === 0 ? (
+                    <p style={{textAlign:'center', padding:'20px', color:'#888'}}>No delivered orders found.</p>
+                  ) : (
+                    orders.map((order) => {
+                      const firstItem = order.items?.[0];
+                      const itemName = firstItem?.name || 'Order Item';
+                      const extraCount = (order.items?.length || 0) - 1;
+                      const displayTitle = extraCount > 0 ? `${itemName} + ${extraCount} more` : itemName;
+                      
+                      return (
+                        <div key={order._id} className="sh-order-card">
+                          <img 
+                            src={firstItem?.image || firstItem?.img || firstItem?.photo || '/logo.png'} 
+                            alt={itemName} 
+                            className="sh-order-img" 
+                          />
+                          <div className="sh-order-info">
+                            <div className="sh-order-label">ORDER #{order.displayId}</div>
+                            <div className="sh-order-id">{displayTitle}</div>
+                            <div className="sh-order-status">
+                              Status: <span className="sh-status-delivered">{order.trackingStatus}</span>
+                            </div>
+                          </div>
+                          <button
+                            className="sh-need-help-btn"
+                            onClick={() => navigate('/support/order-help', { state: { order } })}
+                          >
+                            Need help?
+                          </button>
+                        </div>
+                      );
+                    })
+                  )}
+                </div>
+              </div>
+            </section>
 
-                    <img src={order.image} alt={order.name} className="sh-order-img" />
-                    <div className="sh-order-info">
-                      <div className="sh-order-label">ORDER #{order.id}</div>
-                      <div className="sh-order-id">{order.name}</div>
-                      <div className="sh-order-status">
-                        Status: <span className="sh-status-delivered">{order.status}</span> on {order.date}
-                      </div>
-                    </div>
-                    <button
-                      className="sh-need-help-btn"
-                      onClick={() => navigate('/support/order-help', { state: { order } })}
-                    >
-                      Need help? ›
-                    </button>
+             {/* Still need help */}
+             <section className="sh-still-section">
+              <h2 className="sh-still-title">Still need help?</h2>
+              <p className="sh-still-sub">
+                Our dedicated team is ready to assist you with anything you need.
+              </p>
+              <div className="sh-channels sh-channels--two">
+                <div className="sh-channel-card" onClick={() => navigate('/support/chat')} style={{cursor:'pointer'}}>
+                  <div className="sh-channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
                   </div>
-                ))}
+                  <div>
+                    <div className="sh-channel-title">Chat with us</div>
+                    <div className="sh-channel-sub">Typical response time · 2 min</div>
+                  </div>
+                </div>
+                <div className="sh-channel-card" onClick={() => window.location.href = 'mailto:sumathitrends.in@gmail.com'}>
+                  <div className="sh-channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="sh-channel-title">Email us</div>
+                    <div className="sh-channel-sub">sumathitrends.in@gmail.com</div>
+                  </div>
+                </div>
               </div>
             </section>
 
