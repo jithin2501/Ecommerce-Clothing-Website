@@ -125,6 +125,23 @@ exports.verifyPayment = async (req, res) => {
       // Push to Shiprocket
       if (updatedOrder) {
         console.log("--> Attempting Shiprocket Sync for Order:", updatedOrder.displayId);
+
+        // ── Reduce Product Stock ──
+        try {
+          const Product = require('../models/Product');
+          for (const item of updatedOrder.items) {
+            if (item.productId && item.qty) {
+              await Product.findByIdAndUpdate(item.productId, {
+                $inc: { stock: -Number(item.qty) }
+              });
+              console.log(`📉 Reduced stock for ${item.productId} by ${item.qty}`);
+            }
+          }
+        } catch (stockError) {
+          console.error('⚠️ Stock reduction error:', stockError);
+          // We don't fail the whole request if stock reduction fails, but we log it
+        }
+
         const srResponse = await shiprocketService.createOrder(updatedOrder);
         if (srResponse.success) {
           updatedOrder.shiprocketOrderId = srResponse.shiprocketOrderId;

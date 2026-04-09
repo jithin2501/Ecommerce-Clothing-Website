@@ -207,8 +207,13 @@ export default function ProductGrid({
             to={`/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}`}
             className="pg-card"
           >
-            <div className="pg-img-wrap">
+            <div className={`pg-img-wrap ${product.stock <= 0 ? 'pg-out-of-stock' : ''}`}>
               <img src={product.img} alt={product.name} />
+              {product.stock <= 0 && (
+                <div className="pg-out-overlay">
+                  <span>Currently not available</span>
+                </div>
+              )}
               {product.badge && (
                 <span className={getBadgeClass(product.badge)}>{product.badge}</span>
               )}

@@ -360,7 +360,7 @@ export default function ProductManagement() {
 
   return (
     <div className="pm-page">
-      <h1 className="pm-title">Product Management</h1>
+      <h1 className="pm-title">Product management</h1>
 
       <div className="pm-form-card">
         <h3 className="pm-form-title">{editId ? 'Edit Product' : 'Add New Product'}</h3>
@@ -459,8 +459,7 @@ export default function ProductManagement() {
       <div className="pm-existing-card">
         <div className="pm-section-header">
           <div className="pm-section-title-wrap">
-            <h2 className="pm-section-title">Existing Products</h2>
-            <span className="pm-section-count">{displayed.length} product{displayed.length !== 1 ? 's' : ''} found</span>
+            <h2 className="pm-section-title">Existing products ({displayed.length})</h2>
           </div>
 
           <div className="pm-section-controls">

@@ -203,3 +203,33 @@
 @media (max-width: 900px) {
   .pg-grid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ── Out of Stock Overlay ── */
+.pg-img-wrap.pg-out-of-stock img {
+  opacity: 0.6;
+  filter: grayscale(0.5);
+}
+
+.pg-out-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  padding: 1rem;
+}
+
+.pg-out-overlay span {
+  background: #ffffff;
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  text-align: center;
+}
