@@ -200,39 +200,46 @@ function OrderDrawer({ order, onClose }) {
         <head>
           <title>Order #${order.displayId}</title>
           <style>
-             body { font-family: 'Inter', sans-serif; padding: 40px; color: #1e293b; }
-             .print-card { border: 1px solid #e2e8f0; border-radius: 12px; padding: 25px; max-width: 600px; margin: auto; }
-             .p-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 25px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px; }
+             @page { size: A4; margin: 10mm; }
+             body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: #1e293b; font-size: 11px; }
+             .print-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; width: 100%; box-sizing: border-box; }
+             .p-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
              .p-id-grp { display: flex; flex-direction: column; }
-             .p-id-lab { font-size: 10px; font-weight: 800; color: #64748b; text-transform: uppercase; }
-             .p-id-val { font-size: 18px; font-weight: 800; margin-top: 4px; }
-             .p-paid { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-weight: 700; font-size: 12px; }
-             .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 25px; }
-             .p-sect h4 { font-size: 11px; font-weight: 800; color: #94A3B8; text-transform: uppercase; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; margin-bottom: 10px; }
-             .p-info { font-size: 13px; line-height: 1.5; color: #334155; }
-             .p-prod-list { margin-top: 20px; }
-             .p-prod-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px dotted #e2e8f0; font-size: 13px; }
+             .p-id-lab { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; }
+             .p-id-val { font-size: 16px; font-weight: 800; margin-top: 2px; }
+             .p-paid { border: 2px solid #166534; color: #166534; padding: 3px 10px; border-radius: 4px; font-weight: 800; font-size: 11px; text-transform: uppercase; }
+             .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+             .p-sect h4 { font-size: 10px; font-weight: 800; color: #94A3B8; text-transform: uppercase; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; margin-bottom: 8px; }
+             .p-info { font-size: 11px; line-height: 1.4; color: #334155; }
+             .p-prod-list { margin-top: 15px; }
+             .p-prod-item { display: grid; grid-template-columns: 2fr 1fr 1fr; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 11px; }
+             .p-total-box { margin-top: 20px; display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+             .p-total-row { display: flex; justify-content: space-between; width: 200px; font-size: 11px; }
+             .p-total-final { border-top: 2px solid #1e293b; padding-top: 5px; margin-top: 5px; font-weight: 800; font-size: 14px; }
           </style>
         </head>
         <body onload="window.print();window.close()">
            <div class="print-card">
               <div class="p-header">
                 <div class="p-id-grp">
-                   <span class="p-id-lab">ORDER ID:</span>
-                   <span class="p-id-val"># ${order.displayId}</span>
+                   <span class="p-id-lab">Digital Invoice</span>
+                   <span class="p-id-val">#${order.displayId}</span>
                 </div>
-                <span class="p-paid">PAID</span>
+                <div style="text-align: right">
+                  <span class="p-paid">PAID IN FULL</span><br/>
+                  <small style="color: #64748b; font-size: 8px;">Date: ${new Date(order.createdAt).toLocaleDateString()}</small>
+                </div>
               </div>
               <div class="p-grid">
                  <div class="p-sect">
-                    <h4>CLIENT INFORMATION</h4>
+                    <h4>BILL TO</h4>
                     <div class="p-info">
-                       <strong>Name:</strong> ${order.userName || 'Guest'}<br/>
-                       <strong>Email:</strong> ${order.userEmail || 'N/A'}
+                       <strong>${order.userName || 'Guest'}</strong><br/>
+                       ${order.userEmail || 'Customer Email N/A'}
                     </div>
                  </div>
                  <div class="p-sect">
-                    <h4>SHIPPING ADDRESS</h4>
+                    <h4>SHIP TO</h4>
                     <div class="p-info">
                        <strong>${order.shippingAddress?.name || 'Customer'}</strong><br/>
                        ${order.shippingAddress?.street || order.shippingAddress?.address || ''}<br/>
@@ -242,14 +249,26 @@ function OrderDrawer({ order, onClose }) {
                  </div>
               </div>
               <div class="p-prod-list">
-                 <div class="p-sect"><h4>ORDERED PRODUCTS (${order.items?.length})</h4></div>
+                 <h4 style="font-size: 10px; color: #94A3B8; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9;">ITEMS AND DESCRIPTION</h4>
                  ${order.items.map(it => `
                    <div class="p-prod-item">
-                      <span><strong>${it.name}</strong></span>
-                      <span>Qty: ${it.qty} | Price: ₹${it.price}</span>
+                      <span><strong>${it.name}</strong><br/><small>${it.size ? 'Size: '+it.size : ''}</small></span>
+                      <span style="text-align: center">Qty: ${it.qty}</span>
+                      <span style="text-align: right">₹${it.price.toLocaleString()}</span>
                    </div>
                  `).join('')}
               </div>
+              <div class="p-total-box">
+                <div class="p-total-row"><span>Sub Total (Excl. Tax)</span><span>₹${(order.amount / 1.05).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+                <div class="p-total-row"><span>CGST (2.5%)</span><span>₹${((order.amount - (order.amount / 1.05)) / 2).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+                <div class="p-total-row"><span>SGST (2.5%)</span><span>₹${((order.amount - (order.amount / 1.05)) / 2).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+                <div class="p-total-row p-total-final"><span>Total Amount</span><span>₹${order.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+              </div>
+              <div style="margin-top: 40px; text-align: center; font-size: 9px; color: #94A3B8;">
+                Thank you for shopping with Sumathi Trends!<br/>
+                For any support, please contact us at sumathitrends.in@gmail.com
+              </div>
+           </div>
            </div>
         </body>
       </html>
