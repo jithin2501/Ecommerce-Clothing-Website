@@ -51,39 +51,35 @@ exports.createOrder = async (orderData) => {
     const token = auth.token;
 
     // Default weight/dimensions since it depends on product type, adjust as needed or fetch from DB
+    const state = orderData.shippingAddress.state || 
+                  (orderData.shippingAddress.city === 'Bengaluru' ? 'Karnataka' : 'Karnataka'); // Default to Karnataka as safety for this shop
+
     const shiprocketOrderPayload = {
       order_id: orderData.displayId,
       order_date: new Date().toISOString().replace('T', ' ').substring(0, 19),
       pickup_location: process.env.SHIPROCKET_PICKUP_LOCATION || 'Home',
-      billing_customer_name: orderData.shippingAddress.name || orderData.shippingAddress.fullName || 'Guest',
+      billing_customer_name: orderData.shippingAddress.name || 'Guest',
       billing_last_name: '',
       billing_address: orderData.shippingAddress.street || orderData.shippingAddress.address || 'Address',
       billing_city: orderData.shippingAddress.city || 'City',
-      billing_pincode: orderData.shippingAddress.pincode || orderData.shippingAddress.zip || '000000',
-      billing_state: orderData.shippingAddress.state || 'State',
-      billing_country: orderData.shippingAddress.country || 'India',
-      billing_email: orderData.userEmail || orderData.shippingAddress.email || 'guest@example.com',
-      billing_phone: orderData.shippingAddress.phone || orderData.shippingAddress.mobile || '0000000000',
+      billing_pincode: orderData.shippingAddress.pincode || '000000',
+      billing_state: state,
+      billing_country: 'India',
+      billing_email: orderData.userEmail || 'customer@gmail.com',
+      billing_phone: orderData.shippingAddress.phone || orderData.shippingAddress.mobile || '9999999999',
       shipping_is_billing: true,
       order_items: orderData.items.map(item => ({
-        name: item.name || 'Clothing Item',
-        sku: item.sku || item.id || 'SKU-001',
+        name: item.name,
+        sku: item.sku || item.productId || item._id || 'SKU-001',
         units: item.qty || 1,
-        selling_price: item.price || 0,
-        discount: 0,
-        tax: 0,
-        hsn: ''
+        selling_price: item.price,
       })),
-      payment_method: orderData.paymentMethod === 'cod' ? 'COD' : 'Prepaid',
-      shipping_charges: 0,
-      giftwrap_charges: 0,
-      transaction_charges: 0,
-      total_discount: 0,
+      payment_method: 'Prepaid',
       sub_total: orderData.amount,
       length: 10,
-      breadth: 10,
+      width: 10,
       height: 10,
-      weight: 0.5 // weight in kgs
+      weight: 0.5
     };
 
     const response = await axios.post(
@@ -108,14 +104,13 @@ exports.createOrder = async (orderData) => {
     } else {
       const errorMsg = response.data.message || 'Validation error from Shiprocket';
       const detail = response.data.errors ? JSON.stringify(response.data.errors) : '';
-      console.error('❌ Shiprocket rejection:', errorMsg, detail);
+      console.error('❌ Shiprocket rejection for Order:', orderData.displayId, errorMsg, detail);
       return { 
         success: false, 
         error: `${errorMsg}${detail ? ': ' + detail : ''}` 
       };
     }
   } catch (error) {
-    // Shiprocket often returns validation details in response.data.errors
     const apiError = error.response?.data;
     let errorMessage = apiError?.message || error.message;
 
@@ -123,7 +118,7 @@ exports.createOrder = async (orderData) => {
       errorMessage += ": " + JSON.stringify(apiError.errors);
     }
 
-    console.error('❌ Error creating order in Shiprocket:', errorMessage);
+    console.error('❌ Shiprocket Technical Error:', errorMessage);
     return { success: false, error: errorMessage };
   }
 }

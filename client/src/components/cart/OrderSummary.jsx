@@ -29,6 +29,12 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       return;
     }
 
+    const customerPhone = selectedAddress.phone || user.phone;
+    if (!customerPhone || customerPhone.trim() === '' || customerPhone === '+91') {
+      alert('Please update your address with a valid 10-digit phone number before proceeding. Shiprocket requires this for delivery.');
+      return;
+    }
+
     if (isNaN(total) || total <= 0) {
       alert('Invalid cart total. Please check your items.');
       return;
