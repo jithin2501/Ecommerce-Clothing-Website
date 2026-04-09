@@ -96,7 +96,6 @@ export default function MyReviews() {
 
           {/* User's Reviews */}
           <div className="mr-reviews-section">
-            <h2 className="mr-section-title">Your Reviews</h2>
             {reviews.length === 0 ? (
               <div className="mr-empty-section">
                 <div className="mr-icon-wrap">

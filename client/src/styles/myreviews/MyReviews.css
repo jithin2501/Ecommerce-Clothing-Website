@@ -220,6 +220,15 @@
 
 .mr-rate-btn:hover { opacity: 0.75; text-decoration: underline; }
 
+.mr-no-pending {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #94A3B8;
+  font-size: 14px;
+  padding: 40px 0;
+  width: 100%;
+}
+
 /* Responsive - tablet */
 @media (max-width: 900px) {
   .mr-container { flex-direction: column; }
