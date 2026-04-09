@@ -98,8 +98,18 @@ export default function MyReviews() {
           <div className="mr-reviews-section">
             <h2 className="mr-section-title">Your Reviews</h2>
             {reviews.length === 0 ? (
-              <div className="mr-empty-state">
-                <p>You haven't submitted any reviews yet.</p>
+              <div className="mr-empty-section">
+                <div className="mr-icon-wrap">
+                  <img
+                    src="/images/reviews/no-reviews.png"
+                    alt="No Reviews"
+                    className="mr-empty-img"
+                  />
+                </div>
+                <h2 className="mr-empty-title">No Reviews &amp; Ratings</h2>
+                <p className="mr-empty-text">
+                  You haven't shared your thoughts on any products yet. Your feedback helps other parents find the perfect fit for their little ones!
+                </p>
               </div>
             ) : (
               <div className="mr-reviews-list">
