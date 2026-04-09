@@ -64,25 +64,34 @@ export default function OrderHelp() {
 
             {/* Still need help */}
             <section className="sh-still-section sh-still-section--stretch">
-              <h2 className="sh-still-title">Need Help?</h2>
+              <h2 className="sh-still-title">Still need help?</h2>
               <p className="sh-still-sub">
                 Our dedicated team is ready to assist you with anything you need. Reach out through our priority channels.
               </p>
               <div className="sh-channels sh-channels--two">
                 <div className="sh-channel-card" onClick={() => navigate('/support/chat', { state: { order } })} style={{cursor:'pointer'}}>
-                  <div className="sh-channel-icon">💬</div>
+                  <div className="sh-channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
                   <div>
                     <div className="sh-channel-title">Chat with us</div>
                     <div className="sh-channel-sub">Typical response time · 2 min</div>
                   </div>
                 </div>
                 <div className="sh-channel-card" onClick={() => window.location.href = 'mailto:sumathitrends.in@gmail.com'}>
-                <div className="sh-channel-icon">✉️</div>
-              <div>
-                  <div className="sh-channel-title">Email us</div>
-                  <div className="sh-channel-sub">sumathitrends.in@gmail.com</div>
-              </div>
-              </div>
+                  <div className="sh-channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="sh-channel-title">Email us</div>
+                    <div className="sh-channel-sub">sumathitrends.in@gmail.com</div>
+                  </div>
+                </div>
               </div>
             </section>
 
