@@ -179,6 +179,23 @@ exports.getAllOrders = async (req, res) => {
     
     // Dynamically join User Details for "LIVE" results
     const joinedData = await Promise.all(orders.map(async (o) => {
+      // ── AUTO-REPAIR: Push to Shiprocket if somehow missed ──
+      if (o.status === 'success' && !o.shiprocketOrderId) {
+        console.log(`🔄 [Auto-Sync] Attempting background push for ${o.displayId}`);
+        const srResponse = await shiprocketService.createOrder(o);
+        if (srResponse.success) {
+          const doc = await Order.findById(o._id);
+          doc.shiprocketOrderId = srResponse.shiprocketOrderId;
+          doc.shiprocketShipmentId = srResponse.shiprocketShipmentId;
+          doc.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
+          await doc.save();
+          // Update the local object being returned
+          o.shiprocketOrderId = srResponse.shiprocketOrderId;
+          o.shiprocketShipmentId = srResponse.shiprocketShipmentId;
+          o.trackingStatus = 'NEW';
+        }
+      }
+
       if (o.userId && o.userId !== 'guest') {
         const userDoc = await ClientUser.findOne({ uids: o.userId }).lean();
         if (userDoc) {

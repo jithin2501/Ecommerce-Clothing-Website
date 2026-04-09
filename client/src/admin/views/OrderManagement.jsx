@@ -160,23 +160,6 @@ export default function OrderManagement() {
                   <td>
                     <div className="om-tracking-cell">
                       <span className={`om-tag ${(o.trackingStatus || '').toLowerCase()}`}>{o.trackingStatus || 'Pending'}</span>
-                      {o.shiprocketShipmentId ? (
-                        <button
-                          className={`om-sync-btn ${syncingId === o._id ? 'spinning' : ''}`}
-                          onClick={(e) => { e.stopPropagation(); handleSyncStatus(o._id); }}
-                          title="Refresh Tracking Info"
-                        >
-                          <RefreshCw size={12} />
-                        </button>
-                      ) : (
-                        <button
-                          className={`om-sync-fail-btn ${syncingId === o._id ? 'spinning' : ''}`}
-                          onClick={(e) => { e.stopPropagation(); handleManualSRSync(o._id); }}
-                          title="Click to PUSH to Shiprocket"
-                        >
-                          <RefreshCw size={12} />
-                        </button>
-                      )}
                     </div>
                   </td>
                   <td className="om-date-cell">{new Date(o.createdAt).toLocaleDateString()}</td>
