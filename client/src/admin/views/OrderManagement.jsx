@@ -336,30 +336,9 @@ function OrderDrawer({ order, onClose }) {
           </div>
         </div>
 
-        <div className="om-drawer-footer" style={{ display: 'flex', gap: '8px' }}>
+        <div className="om-drawer-footer">
           <button className="om-print-btn" onClick={handlePrint}>
             <Printer size={16} /> Print
-          </button>
-          <button 
-            className="om-print-btn" 
-            style={{ background: '#10b981' }} 
-            onClick={async () => {
-              if(!window.confirm('Force this order to DELIVERED for testing? (Site-wide)')) return;
-              try {
-                const res = await fetch(`/api/payment/force-status/${order._id}`, {
-                  method: 'PATCH',
-                  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('adminToken')}` },
-                  body: JSON.stringify({ status: 'DELIVERED' })
-                });
-                const data = await res.json();
-                if(data.success) {
-                  alert('Status updated! Reload user side to see review/support buttons.');
-                  window.location.reload();
-                }
-              } catch (e) { alert('Failed to update: ' + e.message); }
-            }}
-          >
-            Test: Force Delivered
           </button>
         </div>
       </aside>
