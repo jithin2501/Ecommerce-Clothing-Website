@@ -97,26 +97,36 @@ exports.createOrder = async (orderData) => {
       }
     );
 
-    console.log('✅ Shiprocket Order Created successfully:', response.data.order_id);
-    return {
-      success: true,
-      shiprocketOrderId: response.data.order_id,
-      shiprocketShipmentId: response.data.shipment_id
-    };
+    // Shiprocket returns status_code: 1 for success. 0 for validation/other errors.
+    if (response.data.status_code === 1) {
+      console.log('✅ Shiprocket Order Created successfully:', response.data.order_id);
+      return {
+        success: true,
+        shiprocketOrderId: response.data.order_id,
+        shiprocketShipmentId: response.data.shipment_id
+      };
+    } else {
+      const errorMsg = response.data.message || 'Validation error from Shiprocket';
+      const detail = response.data.errors ? JSON.stringify(response.data.errors) : '';
+      console.error('❌ Shiprocket rejection:', errorMsg, detail);
+      return { 
+        success: false, 
+        error: `${errorMsg}${detail ? ': ' + detail : ''}` 
+      };
+    }
   } catch (error) {
     // Shiprocket often returns validation details in response.data.errors
     const apiError = error.response?.data;
     let errorMessage = apiError?.message || error.message;
 
     if (apiError?.errors) {
-      // If there are specific field errors (like billing_pincode), combine them
       errorMessage += ": " + JSON.stringify(apiError.errors);
     }
 
     console.error('❌ Error creating order in Shiprocket:', errorMessage);
     return { success: false, error: errorMessage };
   }
-};
+}
 
 /**
  * ── Generate Tracking Link ──

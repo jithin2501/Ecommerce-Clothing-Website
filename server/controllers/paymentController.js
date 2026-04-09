@@ -254,3 +254,36 @@ exports.syncTrackingStatus = async (req, res) => {
     res.status(500).json({ success: false, error: 'Server error' });
   }
 };
+
+/**
+ * ── Manual Push to Shiprocket ──
+ * Used if the automatic push failed during payment (e.g. env issues)
+ */
+exports.manualSyncToShiprocket = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findById(orderId);
+
+    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+    if (order.shiprocketOrderId) return res.status(400).json({ success: false, error: 'Order already exists in Shiprocket' });
+
+    console.log("--> Manual Sync Attempt for DisplayID:", order.displayId);
+    
+    const srResponse = await shiprocketService.createOrder(order);
+    if (srResponse.success) {
+      order.shiprocketOrderId = srResponse.shiprocketOrderId;
+      order.shiprocketShipmentId = srResponse.shiprocketShipmentId;
+      order.shiprocketError = null; // Clear old error
+      order.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
+      await order.save();
+      return res.json({ success: true, message: 'Successfully pushed to Shiprocket', srOrderId: srResponse.shiprocketOrderId });
+    } else {
+      order.shiprocketError = JSON.stringify(srResponse.error);
+      await order.save();
+      return res.status(400).json({ success: false, error: srResponse.error });
+    }
+  } catch (error) {
+    console.error('❌ Manual Sync Error:', error);
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
