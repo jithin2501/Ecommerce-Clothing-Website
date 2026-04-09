@@ -213,7 +213,7 @@
 .pg-out-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,14 +222,9 @@
 }
 
 .pg-out-overlay span {
-  background: #ffffff;
   color: #ef4444;
-  font-size: 0.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 6px 12px;
-  border-radius: 4px;
-  letter-spacing: 0.5px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
   text-align: center;
 }
