@@ -1,6 +1,7 @@
 /* om = Order Management */
 .om-page {
-  padding: 0 0 2.5rem; /* Removed side padding to take full width of AdminLayout */
+  padding: 0 0 2.5rem;
+  /* Removed side padding to take full width of AdminLayout */
   background: #f8fafc;
   min-height: 100vh;
   font-family: 'Inter', sans-serif;
@@ -13,7 +14,8 @@
   align-items: center;
   padding: 0 0 0.5rem;
   margin-top: -0.5rem;
-  margin-bottom: 1.5rem; /* Increased gap between line and content */
+  margin-bottom: 1.5rem;
+  /* Increased gap between line and content */
   border-bottom: 1px solid #e2e8f0;
 }
 

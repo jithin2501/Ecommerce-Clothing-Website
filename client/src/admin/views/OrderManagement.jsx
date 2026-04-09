@@ -13,7 +13,7 @@ export default function OrderManagement() {
   const [loading, setLoading] = useState(true);
   const [syncingId, setSyncingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(''); // Empty by default to show 'All'
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const fetchOrders = async () => {
@@ -66,13 +66,9 @@ export default function OrderManagement() {
   };
 
   const filteredOrders = orders.filter(o => {
-    const status = (o.trackingStatus || '').toUpperCase();
-    const isUnfinished = status !== 'DELIVERED';
-    const isSameDay = o.createdAt?.split('T')[0] === selectedDate;
+    const isSameDay = !selectedDate || o.createdAt?.split('T')[0] === selectedDate;
     const matchesSearch = o.displayId?.toLowerCase().includes(searchTerm.toLowerCase());
-
-    // Logic: Show if (match search) AND (either unfinished OR from selected date)
-    return matchesSearch && (isUnfinished || isSameDay);
+    return matchesSearch && isSameDay;
   });
 
   if (loading) return <div className="om-page"><div className="no-orders-msg">Loading Orders...</div></div>;
@@ -91,14 +87,21 @@ export default function OrderManagement() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <div className="om-date-filter">
+          <div className="om-date-filter" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <input
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
             />
+            {selectedDate && (
+              <button 
+                onClick={() => setSelectedDate('')}
+                style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '11px', cursor: 'pointer', fontWeight: '600' }}
+              >
+                CLEAR
+              </button>
+            )}
           </div>
-          <button className="om-export-btn"><Download size={14} /> Export</button>
         </div>
       </header>
 
