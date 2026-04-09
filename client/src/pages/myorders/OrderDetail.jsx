@@ -170,6 +170,7 @@ export default function OrderDetail() {
               <div className="od-card main-prod-card">
                 <div className="od-prod-header">
                   <div className="od-prod-main">
+                    <div className="od-header-id">Order ID: #{order.displayId}</div>
                     <h1>{item.name}</h1>
                     <p className="od-prod-meta">{item.color}, {item.size}</p>
                     <p className="od-prod-seller">Seller: SUMATHI TRENDS</p>

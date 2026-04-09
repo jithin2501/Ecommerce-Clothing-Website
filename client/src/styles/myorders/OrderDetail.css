@@ -58,6 +58,15 @@
   border-bottom: 1px solid #F0F0F0;
 }
 
+.od-header-id {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #878787;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.4rem;
+}
+
 .od-prod-main h1 {
   font-size: 1rem;
   font-weight: 700;

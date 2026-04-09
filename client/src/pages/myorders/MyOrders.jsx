@@ -143,7 +143,7 @@ export default function MyOrders() {
                         status={order.status} 
                         label={order.status === 'success' ? `Paid on ${new Date(order.createdAt).toLocaleDateString()}` : 'Payment Pending'} 
                       />
-                      <div className="mo-status-sub">Order ID: {order.orderId?.slice(-12)}</div>
+                      <div className="mo-status-sub">Order ID: #{order.displayId}</div>
                       {order.trackingStatus?.toLowerCase() === 'delivered' && (
                         <button
                           className="mo-review-btn"
