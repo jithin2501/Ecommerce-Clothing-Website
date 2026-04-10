@@ -53,7 +53,7 @@ export default function MyReviews() {
                 seenIds.add(item.productId);
               }
             }
-            setPendingReviews(uniqueToReview);
+            setPendingReviews(uniqueToReview.slice(0, 4));
           }
         } catch (err) {
           console.error("MyReviews: Data fetch error", err);
