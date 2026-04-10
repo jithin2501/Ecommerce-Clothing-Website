@@ -19,15 +19,15 @@
   width: 100%;
   max-width: 1100px;
   gap: 16px;
-  align-items: flex-start;
+  align-items: stretch; /* Match sidebar bottom level constant */
 }
 
 /* ── Main area ── */
 .policy-main {
   flex-grow: 1;
   background: #ffffff;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
-  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
   padding: 28px 32px 32px;
   min-width: 0;
 }

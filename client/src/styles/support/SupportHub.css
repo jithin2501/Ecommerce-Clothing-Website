@@ -26,7 +26,7 @@
 .sh-main {
   flex-grow: 1;
   background: #fff;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
   overflow: hidden;
   min-width: 0;
