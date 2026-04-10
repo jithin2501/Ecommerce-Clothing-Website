@@ -8,13 +8,14 @@
   display: flex;
   justify-content: center;
   padding: 40px 20px;
+  padding: 24px 20px;
   font-family: 'Inter', sans-serif;
   color: #212121;
   margin-top: 30px;
   margin-bottom: 30px;
 }
 
-.policy-container {
+.policy.sh-container {
   display: flex;
   width: 100%;
   max-width: 1100px;
@@ -28,13 +29,13 @@
   background: #ffffff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
-  padding: 28px 32px 32px;
+  padding: 24px 32px 32px;
   min-width: 0;
 }
 
 /* ── Header ── */
 .policy-content-header {
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 }
 
 .policy-content-header h1 {
