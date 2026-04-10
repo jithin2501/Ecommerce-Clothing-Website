@@ -457,7 +457,7 @@ export default function ManageAddresses() {
                   {errors.type && <span className="ma-error">{errors.type}</span>}
                 </div>
 
-                <div className="ma-field ma-field-full" style={{ marginTop: '15px' }}>
+                <div className="ma-field ma-field-full">
                   <label className="ma-checkbox-container">
                     <div className="ma-checkbox-wrapper">
                       <input
