@@ -159,6 +159,47 @@ exports.getTrackingByOrderId = async (orderId) => {
   }
 };
 
+// Check if a pincode is serviceable (delivery possible)
+exports.checkServiceability = async (deliveryPincode) => {
+  try {
+    const auth = await getShiprocketToken();
+    if (!auth.success) return { success: false, error: auth.error };
+    const token = auth.token;
+    
+    const pickupPincode = process.env.SHIPROCKET_PICKUP_PINCODE || '560092'; 
+    
+    // Step 1: Check for COD couriers first
+    const codUrl = `https://apiv2.shiprocket.in/v1/external/courier/serviceability/?pickup_postcode=${pickupPincode}&delivery_postcode=${deliveryPincode}&weight=0.5&cod=1`;
+    
+    console.log(`🔍 Checking Shiprocket COD Serviceability for ${deliveryPincode}...`);
+    let res = await axios.get(codUrl, { headers: { 'Authorization': `Bearer ${token}` } });
+    let data = res.data;
+
+    let available = data.data?.available_courier_companies || [];
+
+    // Step 2: If no COD couriers, check for Prepaid
+    if (available.length === 0) {
+      console.log(`ℹ️ No COD couriers found for ${deliveryPincode}. Checking Prepaid...`);
+      const prepaidUrl = `https://apiv2.shiprocket.in/v1/external/courier/serviceability/?pickup_postcode=${pickupPincode}&delivery_postcode=${deliveryPincode}&weight=0.5&cod=0`;
+      res = await axios.get(prepaidUrl, { headers: { 'Authorization': `Bearer ${token}` } });
+      data = res.data;
+      available = data.data?.available_courier_companies || [];
+    }
+    
+    console.log(`📦 Shiprocket Status: ${data.status}. Couriers found: ${available.length}`);
+
+    return {
+      success: data.status === 200,
+      serviceable: data.status === 200 && available.length > 0,
+      data: data.data
+    };
+  } catch (error) {
+    const apiError = error.response?.data;
+    console.error("Shiprocket Serviceability Error:", apiError || error.message);
+    return { success: false, serviceable: false, message: apiError?.message || error.message };
+  }
+};
+
 /**
  * ── Fetch live tracking info from Shiprocket (by Shipment ID) ──
  */
