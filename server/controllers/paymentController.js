@@ -1,7 +1,11 @@
 const crypto = require('crypto');
 const razorpay = require('../conf/razorpay');
 const Order = require('../models/Order');
+const Product = require('../models/Product');
 const shiprocketService = require('../services/shiprocket');
+
+const FREE_SHIPPING_THRESHOLD = 136;
+const GIFT_WRAP_COST = 6;
 
 /**
  * ── Create Razorpay Order ──
@@ -13,22 +17,60 @@ exports.createOrder = async (req, res) => {
   }
   try {
     const { 
-      amount, 
+      amount: clientAmount, // We'll validate this
       userId, 
       userName,
       userEmail,
       items, 
+      giftWrapping,
       shippingAddress, 
       currency = 'INR', 
       receipt = `rcpt_${Date.now()}` 
     } = req.body;
 
-    if (!amount) {
-      return res.status(400).json({ success: false, error: 'Amount is required' });
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ success: false, error: 'Items are required' });
     }
 
+    // ── Price Validation Step ──
+    // Never trust the price sent from the frontend.
+    let calculatedSubtotal = 0;
+    const validatedItems = [];
+
+    for (const item of items) {
+      const product = await Product.findById(item.productId);
+      if (!product) {
+        return res.status(404).json({ success: false, error: `Product not found: ${item.name}` });
+      }
+      
+      const itemPrice = product.price;
+      const itemQty = Number(item.qty) || 1;
+
+      // Check if enough stock is available before creating the order
+      if (product.stock < itemQty) {
+        return res.status(400).json({ 
+          success: false, 
+          error: `Sorry, only ${product.stock} units of "${product.name}" are available.` 
+        });
+      }
+
+      calculatedSubtotal += itemPrice * itemQty;
+
+      // Build validated item object
+      validatedItems.push({
+        ...item,
+        price: itemPrice // Use DB price
+      });
+    }
+
+    const shipping = calculatedSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
+    const giftCost = giftWrapping ? GIFT_WRAP_COST : 0;
+    const finalCalculatedAmount = calculatedSubtotal + shipping + giftCost;
+
+    console.log(`💰 Price Validation: Client sent ₹${clientAmount}, Server calculated ₹${finalCalculatedAmount}`);
+
     const options = {
-      amount: Math.round(amount * 100), // Razorpay expects amount in paise (1 INR = 100 paise)
+      amount: Math.round(finalCalculatedAmount * 100), // Use server-calculated amount
       currency,
       receipt,
     };
@@ -49,9 +91,9 @@ exports.createOrder = async (req, res) => {
       userId: userId || 'guest',
       userName: userName || shippingAddress?.name || shippingAddress?.fullName,
       userEmail: userEmail || shippingAddress?.email,
-      amount,
+      amount: finalCalculatedAmount,
       currency,
-      items,
+      items: validatedItems,
       shippingAddress,
       status: 'pending'
     });
@@ -128,7 +170,6 @@ exports.verifyPayment = async (req, res) => {
 
         // ── Reduce Product Stock ──
         try {
-          const Product = require('../models/Product');
           for (const item of updatedOrder.items) {
             if (item.productId && item.qty) {
               await Product.findByIdAndUpdate(item.productId, {
