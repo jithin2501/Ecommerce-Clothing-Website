@@ -320,11 +320,20 @@ exports.syncTrackingStatus = async (req, res) => {
     const { orderId } = req.params;
     const order = await Order.findById(orderId);
 
-    if (!order || !order.shiprocketShipmentId) {
-      return res.status(404).json({ success: false, error: 'Shipment info not found' });
+    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+
+    let tracking = { success: false };
+    
+    // 1. Try tracking by Shipment ID (AWB) first
+    if (order.shiprocketShipmentId) {
+      tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
     }
 
-    const tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
+    // 2. Fallback to Order ID tracking if Shipment ID failed or is missing
+    if (!tracking.success && order.displayId) {
+      console.log(`🔍 Falling back to Order ID tracking for: ${order.displayId}`);
+      tracking = await shiprocketService.getTrackingByOrderId(order.displayId);
+    }
 
     if (tracking.success && tracking.data) {
       const td = tracking.data;
@@ -332,12 +341,11 @@ exports.syncTrackingStatus = async (req, res) => {
       // Update the order with live data
       order.trackingStatus = td.track_status || order.trackingStatus;
       
-      // We'll store the latest tracking info as a JSON blob for the frontend to use
       const results = {
         success: true,
-        trackingStatus: td.track_status,
-        courier: td.courier_name,
-        awb: td.awb_code,
+        trackingStatus: td.track_status || 'Order Processed',
+        courier: td.courier_name || 'Logistic Partner',
+        awb: td.awb_code || order.shiprocketShipmentId || 'Generating...',
         activities: td.shipment_track_activities || []
       };
 
@@ -345,7 +353,7 @@ exports.syncTrackingStatus = async (req, res) => {
       return res.json(results);
     }
 
-    res.status(400).json({ success: false, error: 'Could not fetch live status' });
+    res.status(400).json({ success: false, error: tracking.error || 'Could not fetch live status' });
   } catch (error) {
     console.error('❌ Sync Tracking Error:', error);
     res.status(500).json({ success: false, error: 'Server error' });

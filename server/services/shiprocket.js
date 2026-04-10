@@ -148,3 +148,31 @@ exports.getTrackingDetails = async (shipmentId) => {
     return { success: false, error: error.message };
   }
 };
+
+/**
+ * ── Fetch live tracking info using Order ID ──
+ * Uses the store's Order ID (the displayId)
+ */
+exports.getTrackingByOrderId = async (orderId) => {
+  try {
+    const auth = await getShiprocketToken();
+    if (!auth.success) return { success: false, error: auth.error };
+    const token = auth.token;
+
+    // The orderId here is your store's displayId (e.g. ST-ABCD)
+    const response = await axios.get(
+      `https://apiv2.shiprocket.in/v1/external/courier/track?order_id=${orderId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    // Shiprocket returns an object where the key is the order ID
+    if (response.data && response.data[orderId]) {
+      return { success: true, data: response.data[orderId].tracking_data };
+    }
+
+    return { success: false, error: 'No tracking data found for this Order ID' };
+  } catch (error) {
+    console.error('❌ Error fetching tracking by Order ID:', error.response?.data || error.message);
+    return { success: false, error: error.message };
+  }
+};
