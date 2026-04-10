@@ -41,18 +41,7 @@ export default function Wishlist() {
   return (
     <div className="wl-page">
       <div className="wl-layout">
-        {/* Desktop Header */}
-        <div className="wl-desktop-header">
-          <div className="wl-header-content">
-            <h1 className="wl-page-title">My Wishlist <span className="wl-count">({wishlist.length})</span></h1>
-            <div className="wl-breadcrumb">
-              <span onClick={() => navigate('/account')} className="wl-breadcrumb-link">Account</span>
-              <span className="wl-breadcrumb-sep">/</span>
-              <span>Wishlist</span>
-            </div>
-          </div>
-        </div>
-
+        
         <div className="wl-container">
           <Sidebar
             activeNav={activeNav}
@@ -62,21 +51,22 @@ export default function Wishlist() {
           />
 
           <main className="wl-main">
-            {/* Mobile Header (Back button + Title) */}
-            <div className="wl-mobile-header">
-              <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+            {/* Header section (Desktop & Mobile unified) */}
+            <div className="wl-main-header">
+              <button className="mobile-only-back" onClick={() => navigate('/account')}>
                 <span className="back-chevron">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>
                 </span>
               </button>
-              <div className="wl-header">
-                <h1>My Wishlist <span className="wl-count">({wishlist.length})</span></h1>
+              <div className="wl-header-text">
+                <h1>My Wishlist <span className="wl-count-pill">({wishlist.length})</span></h1>
+                <p>Manage your favorites and moving them to cart whenever you're ready.</p>
               </div>
             </div>
 
-            {/* Empty State or List */}
+            {/* Empty State or Grid */}
             {wishlist.length === 0 ? (
               <div className="wl-empty">
                 <div className="wl-empty-icon">
@@ -97,34 +87,38 @@ export default function Wishlist() {
                 </button>
               </div>
             ) : (
-              <div className="wl-list">
+              <div className="wl-grid">
                 {wishlist.map(item => (
-                  <div key={item.id} className="wl-card">
+                  <div key={item.id} className="wl-item-card">
                     <div
-                      className="wl-card-inner"
+                      className="wl-item-img-wrap"
                       onClick={() => navigate(`/collections/product/${item.productId || item.id}`)}
-                      style={{ cursor: 'pointer' }}
                     >
                       <img
                         src={item.img}
                         alt={item.name}
-                        className="wl-card-img"
+                        className="wl-item-img"
                       />
-                      <div className="wl-card-info">
-                        <div className="wl-card-name">{item.name}</div>
-                        <div className="wl-card-brand">
-                          <span className="wl-brand-dot" /> {item.category}
-                        </div>
-                        <div className="wl-card-pricing">
-                          <span className="wl-price">₹{item.price}</span>
-                          {item.oldPrice && (
-                            <span className="wl-old-price">₹{item.oldPrice}</span>
-                          )}
-                        </div>
-                      </div>
-                      <button className="wl-remove-btn" onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}>
-                        <img src="/images/EmptyCart/delete.png" alt="delete" className="wl-remove-icon" />
+                      <button 
+                        className="wl-item-remove" 
+                        onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}
+                        title="Remove from wishlist"
+                      >
+                        <img src="/images/EmptyCart/delete.png" alt="delete" />
                       </button>
+                    </div>
+                    <div 
+                      className="wl-item-info"
+                      onClick={() => navigate(`/collections/product/${item.productId || item.id}`)}
+                    >
+                      <div className="wl-item-cat">{item.category}</div>
+                      <div className="wl-item-name">{item.name}</div>
+                      <div className="wl-item-price-row">
+                        <span className="wl-item-price">₹{item.price}</span>
+                        {item.oldPrice && (
+                          <span className="wl-item-old-price">₹{item.oldPrice}</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
