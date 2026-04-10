@@ -84,14 +84,19 @@ export default function MyReviews() {
         />
 
         <main className="mr-main">
-          <div className="mr-mobile-header">
-            <button className="mobile-back-btn" onClick={() => navigate('/account')}>
+          {/* Header section (Desktop & Mobile unified) */}
+          <div className="mr-main-header">
+            <button className="mobile-only-back" onClick={() => navigate('/account')}>
               <span className="back-chevron">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="15 18 9 12 15 6"></polyline>
                 </svg>
               </span>
             </button>
+            <div className="mr-header-text">
+              <h1>My Reviews & Ratings <span className="mr-count-pill">({reviews.length})</span></h1>
+              <p>Share your thoughts on products you've purchased to help others make the right choice.</p>
+            </div>
           </div>
 
           {/* User's Reviews */}

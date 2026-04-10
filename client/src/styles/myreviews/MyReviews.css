@@ -28,11 +28,42 @@
   background: #fff;
   box-shadow: 0 8px 30px rgba(0,0,0,0.12);
   border-radius: 12px;
-  padding: 36px 40px 32px;
+  padding: 28px 32px;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+}
+
+/* ── Header mirroring Manage Addresses & Wishlist ── */
+.mr-main-header {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.mobile-only-back {
+  display: none; /* Desktop hidden */
+}
+
+.mr-header-text h1 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212121;
+  margin: 0 0 4px;
+}
+
+.mr-count-pill {
+  font-size: 14px;
+  color: #9CA3AF;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.mr-header-text p {
+  font-size: 13px;
+  color: #878787;
+  margin: 0;
 }
 
 /* ===== EMPTY STATE ===== */
@@ -263,15 +294,14 @@
     box-shadow: 0 4px 16px rgba(0,0,0,0.07);
   }
 
-  .mr-mobile-header {
+  .mr-main-header {
     display: flex;
     align-items: center;
     gap: 12px;
     margin-bottom: 24px;
   }
 
-  /* Show back button */
-  .mobile-back-btn {
+  .mobile-only-back {
     display: flex;
     align-items: center;
     justify-content: center;
