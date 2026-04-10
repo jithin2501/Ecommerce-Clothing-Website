@@ -322,6 +322,29 @@ exports.syncTrackingStatus = async (req, res) => {
 
     if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
 
+    // ── Simulator Mode ──
+    // Allows testing of "Delivered" UI features (Chat, Review) without live Shiprocket data
+    if (order.shiprocketShipmentId === 'MOCK-DELIVERED') {
+      const mockResults = {
+        success: true,
+        trackingStatus: 'Delivered',
+        courier: 'Sumathi Express (Simulator)',
+        awb: 'SIM-999-888',
+        activities: [
+          { status: 'Delivered', activity: 'Package handed over to customer', date: new Date(), location: 'Bengaluru' },
+          { status: 'Out for Delivery', activity: 'Rider is on the way', date: new Date(Date.now() - 3600000), location: 'Bengaluru' },
+          { status: 'Shipped', activity: 'Sent from Warehouse', date: new Date(Date.now() - 86400000), location: 'Hub' },
+          { status: 'Confirmed', activity: 'Order placed successfully', date: order.createdAt, location: 'Online' }
+        ]
+      };
+      // Auto-update order status in DB for the simulator
+      if (order.trackingStatus !== 'Delivered') {
+        order.trackingStatus = 'Delivered';
+        await order.save();
+      }
+      return res.json(mockResults);
+    }
+
     let tracking = { success: false };
     
     // 1. Try tracking by Shipment ID (AWB) first
