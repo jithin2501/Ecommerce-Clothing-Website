@@ -9,8 +9,6 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
   const [serverTotals, setServerTotals] = useState({ subtotal, shipping, giftCost, total });
   const { clearCart } = useCart();
 
-  const [status, setStatus] = useState({ show: false, type: '', message: '' });
-
   // Fetch official totals from backend to ensure synchronization
   useEffect(() => {
     const fetchTotals = async () => {
@@ -52,23 +50,23 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
   const handleCheckout = async () => {
     if (!user) {
-      setStatus({ show: true, type: 'error', message: 'Please login to continue with checkout.' });
+      alert('Please login to continue with checkout.');
       return;
     }
 
     if (!selectedAddress) {
-      setStatus({ show: true, type: 'error', message: 'Please select a delivery address first.' });
+      alert('Please select a delivery address first.');
       return;
     }
 
     const customerPhone = selectedAddress.phone || user.phone;
     if (!customerPhone || customerPhone.trim() === '' || customerPhone === '+91') {
-      setStatus({ show: true, type: 'error', message: 'Please update your address with a valid 10-digit phone number. Shiprocket requires this for delivery.' });
+      alert('Please update your address with a valid 10-digit phone number. Shiprocket requires this for delivery.');
       return;
     }
 
     if (isNaN(total) || total <= 0) {
-      setStatus({ show: true, type: 'error', message: 'Invalid cart total. Please check your items.' });
+      alert('Invalid cart total. Please check your items.');
       return;
     }
 
@@ -115,7 +113,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       // 2. Load Razorpay script
       const isLoaded = await loadRazorpayScript();
       if (!isLoaded) {
-        setStatus({ show: true, type: 'error', message: 'Razorpay SDK failed to load. Are you online?' });
+        alert('Razorpay SDK failed to load. Are you online?');
         setLoading(false);
         return;
       }
@@ -123,7 +121,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       // 3. Open Razorpay checkout modal
       const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
       if (!razorpayKey) {
-        setStatus({ show: true, type: 'error', message: 'Payment configuration missing. Please contact support.' });
+        alert('Payment configuration missing. Please contact support.');
         setLoading(false);
         return;
       }
@@ -150,11 +148,10 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
           const verifyData = await verifyRes.json();
 
           if (verifyData.success) {
-            clearCart(); // Clear cart immediately
-            if (onPaymentSuccess) onPaymentSuccess(true);
-            setStatus({ show: true, type: 'success', message: ' Payment Successful! Your order has been placed.' });
+            clearCart();
+            window.location.href = '/account/orders';
           } else {
-            setStatus({ show: true, type: 'error', message: ' Payment verification failed. Please contact support.' });
+            alert('⚠️ Payment verification failed. Please contact support.');
           }
         },
         prefill: {
@@ -171,14 +168,11 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       };
 
       const rzp = new window.Razorpay(options);
-      rzp.on('payment.failed', function (response) {
-        setStatus({ show: true, type: 'error', message: `❌ Payment failed: ${response.error.description}` });
-      });
       rzp.open();
 
     } catch (err) {
       console.error('Checkout error:', err);
-      setStatus({ show: true, type: 'error', message: 'An error occurred during checkout. Please try again.' });
+      alert('An error occurred during checkout. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -186,40 +180,6 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
   return (
     <div className="os-wrapper">
-      {/* ── Floating Message ── */}
-      {status.show && (
-        <div className="os-status-overlay">
-          <div className={`os-status-card ${status.type}`}>
-            <div className="os-status-icon">
-              {status.type === 'success' ? (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-              ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                  <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                </svg>
-              )}
-            </div>
-            <p className="os-status-msg">{status.message}</p>
-            {status.type === 'success' ? (
-              <button 
-                className="os-status-close success-btn" 
-                onClick={() => window.location.href = '/account/orders'}
-              >
-                VIEW MY ORDERS
-              </button>
-            ) : (
-              <button 
-                className="os-status-close" 
-                onClick={() => setStatus({ ...status, show: false })}
-              >
-                OK
-              </button>
-            )}
-          </div>
-        </div>
-      )}
       <h2 className="os-title">Order Summary</h2>
 
       <div className="os-rows">
