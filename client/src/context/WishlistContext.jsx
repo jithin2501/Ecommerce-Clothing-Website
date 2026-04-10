@@ -5,12 +5,28 @@ import { useNavigate } from 'react-router-dom';
 
 const WishlistContext = createContext();
 
+const STORAGE_KEY = 'sumathi_wishlist';
+
+function loadLocalWishlist() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
 export function WishlistProvider({ children }) {
-  const [wishlist, setWishlist] = useState([]);
+  const [wishlist, setWishlist] = useState(loadLocalWishlist);
   const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
 
-  // ── 1. Fetch wishlist from DB on login ──
+  // 1. Persist to localStorage always (for instant feedback on refresh)
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  // 2. Fetch wishlist from DB on login and merge/overwrite
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -20,8 +36,11 @@ export function WishlistProvider({ children }) {
           if (data.success && data.user) {
             const dbWishlist = (data.user.wishlist || []).map(item => ({
               ...item,
-              id: item.productId // Ensure frontend uses 'id' consistently
+              id: item.productId || item._id || item.id
             }));
+            
+            // On refresh, we trust the DB if the user is logged in, 
+            // but we could also merge. Overwriting is cleaner for account sync.
             setWishlist(dbWishlist);
           }
         } catch (err) {
@@ -30,18 +49,17 @@ export function WishlistProvider({ children }) {
           setIsLoaded(true);
         }
       } else {
-        setWishlist([]);
-        setIsLoaded(true); // Treat guest as loaded (empty)
+        // If logged out, we keep the LOCAL wishlist but stop DB sync
+        setIsLoaded(true);
       }
     });
     return () => unsub();
   }, []);
 
-  // ── 2. Sync wishlist to DB whenever it changes ──
+  // 3. Sync wishlist to DB whenever it changes (only for logged in users)
   useEffect(() => {
-    // ONLY sync if we have successfully loaded the initial data from DB
-    // AND we have a user.
     const user = auth.currentUser;
+    // CRITICAL: We only sync if we are logged in AND the initial fetch has finished.
     if (!user || !isLoaded) return;
 
     const syncTimeout = setTimeout(async () => {
@@ -62,7 +80,7 @@ export function WishlistProvider({ children }) {
       } catch (err) {
         console.error('Failed to sync wishlist:', err);
       }
-    }, 1000);
+    }, 1500); // 1.5s debounce to avoid flickering
 
     return () => clearTimeout(syncTimeout);
   }, [wishlist, isLoaded]);
@@ -76,14 +94,14 @@ export function WishlistProvider({ children }) {
 
     setWishlist(prev => {
       const productId = product.id || product._id;
-      const exists = prev.find(p => p.id === productId);
-      if (exists) return prev.filter(p => p.id !== productId);
+      const exists = prev.find(p => (p.id === productId || p._id === productId));
+      if (exists) return prev.filter(p => (p.id !== productId && p._id !== productId));
       return [...prev, { ...product, id: productId }];
     });
   };
 
   const removeFromWishlist = (id) => {
-    setWishlist(prev => prev.filter(p => p.id !== id));
+    setWishlist(prev => prev.filter(p => (p.id !== id && p._id !== id)));
   };
 
   const isWishlisted = (id) => wishlist.some(p => (p.id === id || p._id === id));

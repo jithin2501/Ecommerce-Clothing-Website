@@ -30,10 +30,12 @@
 .wl-main {
   flex-grow: 1;
   background: #ffffff;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.12); /* Brighter shadow similar to Manage Addresses */
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
   border-radius: 12px;
   padding: 28px 32px;
   min-width: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ── Header mirroring Manage Addresses ── */
@@ -116,9 +118,10 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-height: calc(100vh - 240px);
-  overflow-y: auto;
   padding-right: 12px;
+  flex-grow: 1; /* Allow it to fill the available space in the stretched box */
+  margin-bottom: 0;
+  overflow-y: auto; /* Allow scrolling within the full box height */
 }
 
 /* Custom Scrollbar */
