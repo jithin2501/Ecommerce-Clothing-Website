@@ -1,3 +1,82 @@
+/* ── Status Overlay (NEW) ── */
+.os-status-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.os-status-card {
+  background: white;
+  padding: 2.5rem;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  transform: scale(0.9);
+  animation: slideInModal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.os-status-card.success { border-bottom: 5px solid #10b981; }
+.os-status-card.error { border-bottom: 5px solid #ef4444; }
+
+.os-status-icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.success .os-status-icon {
+  background: #ecfdf5;
+  color: #10b981;
+}
+
+.error .os-status-icon {
+  background: #fef2f2;
+  color: #ef4444;
+}
+
+.os-status-msg {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.os-status-sub {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+}
+
+.os-status-close {
+  margin-top: 1.5rem;
+  padding: 0.8rem 2rem;
+  background: #111827;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.os-status-close:hover { transform: scale(1.05); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideInModal { from { transform: scale(0.85) translateY(20px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
 .os-wrapper { 
   background: #fff; 
   border: 1px solid #eee; 

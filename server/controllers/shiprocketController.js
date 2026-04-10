@@ -9,15 +9,26 @@ exports.checkPincode = async (req, res) => {
 
     const result = await shiprocketService.checkServiceability(pincode);
     
-    // Extract the earliest delivery date if available
+    // Extract the delivery date range if available
     let estimatedDate = null;
     if (result.serviceable && result.data.available_courier_companies.length > 0) {
-      // Find the courier with the earliest ETD
-      const couriers = result.data.available_courier_companies;
-      const sorted = couriers.filter(c => c.etd).sort((a,b) => new Date(a.etd) - new Date(b.etd));
-      if (sorted.length > 0) {
-        const dateObj = new Date(sorted[0].etd);
-        estimatedDate = dateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', weekday: 'short' });
+      const couriers = result.data.available_courier_companies.filter(c => c.etd);
+      
+      if (couriers.length > 0) {
+        const sorted = couriers.sort((a,b) => new Date(a.etd) - new Date(b.etd));
+        
+        const earliest = new Date(sorted[0].etd);
+        const latest = new Date(sorted[sorted.length - 1].etd);
+
+        const fmt = { day: 'numeric', month: 'short' };
+        const d1 = earliest.toLocaleDateString('en-IN', fmt);
+        const d2 = latest.toLocaleDateString('en-IN', fmt);
+
+        if (d1 === d2) {
+          estimatedDate = d1;
+        } else {
+          estimatedDate = `${d1} - ${d2}`;
+        }
       }
     }
 
