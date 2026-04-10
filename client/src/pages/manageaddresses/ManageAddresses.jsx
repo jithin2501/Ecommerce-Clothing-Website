@@ -441,7 +441,7 @@ export default function ManageAddresses() {
                       />
                       <span className="ma-checkmark"></span>
                     </div>
-                    <span style={{ fontSize: '13px', fontWeight: '600', color: '#212121', paddingTop: '1px' }}>MAKE THIS MY DEFAULT ADDRESS</span>
+                    <span className="ma-checkbox-text">MAKE THIS MY DEFAULT ADDRESS</span>
                   </label>
                 </div>
               </div>

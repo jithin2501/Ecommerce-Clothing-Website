@@ -172,15 +172,16 @@
 .ma-checkbox-container {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px; /* Matched to .ma-radio */
   cursor: pointer;
   user-select: none;
+  margin-top: 4px;
 }
 
 .ma-checkbox-wrapper {
   position: relative;
-  width: 20px;
-  height: 20px;
+  width: 18px; /* Reduced from 20px to match 17px radio buttons */
+  height: 18px;
   flex-shrink: 0;
 }
 
@@ -196,8 +197,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  height: 20px;
-  width: 20px;
+  height: 18px;
+  width: 18px;
   background-color: #fff;
   border: 2px solid #e0e0e0;
   border-radius: 50%; /* Makes it circular */
@@ -224,13 +225,20 @@
 }
 
 .ma-checkbox-wrapper .ma-checkmark:after {
-  left: 6px;
-  top: 2px;
+  left: 5px;
+  top: 1px;
   width: 5px;
-  height: 10px;
+  height: 9px;
   border: solid white;
   border-width: 0 2px 2px 0;
   transform: rotate(45deg);
+}
+
+.ma-checkbox-text {
+  font-size: 14px; /* Matched to .ma-radio */
+  color: #212121;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 /* Form Actions */

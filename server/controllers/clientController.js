@@ -208,6 +208,7 @@ exports.addAddress = async (req, res) => {
       user.addresses.forEach(a => { a.isDefault = false; });
     }
     user.addresses.push(req.body);
+    user.markModified('addresses'); // Force Mongoose to see the nested change
     await user.save();
 
     res.json({ success: true, addresses: user.addresses });
@@ -231,6 +232,7 @@ exports.updateAddress = async (req, res) => {
     if (addrIndex === -1) return res.status(404).json({ error: 'Address not found' });
 
     user.addresses[addrIndex] = { ...user.addresses[addrIndex].toObject(), ...req.body };
+    user.markModified('addresses'); // Force Mongoose to see the nested change
     await user.save();
 
     res.json({ success: true, addresses: user.addresses });
