@@ -57,12 +57,21 @@ export default function MyOrders() {
   }
 
   const filtered = dbOrders.filter(order => {
-    const searchLower = query.toLowerCase();
+    // Process query: remove '#' if user typed it at the start
+    const searchLower = query.toLowerCase().replace('#', '').trim();
+    if (!searchLower) return true;
+
     // Check if any item in the order matches search
-    return order.items?.some(item => 
+    const matchesItems = order.items?.some(item => 
       item.name?.toLowerCase().includes(searchLower) || 
       item.color?.toLowerCase().includes(searchLower)
-    ) || order.orderId?.toLowerCase().includes(searchLower);
+    );
+
+    // Check if Order IDs match
+    const matchesOrderId = order.orderId?.toLowerCase().includes(searchLower);
+    const matchesDisplayId = order.displayId?.toLowerCase().includes(searchLower);
+
+    return matchesItems || matchesOrderId || matchesDisplayId;
   });
 
   return (

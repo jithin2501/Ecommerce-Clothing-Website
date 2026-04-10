@@ -17,6 +17,13 @@
   margin-bottom: 1.5rem;
   font-size: 0.82rem;
   color: #757575;
+  display: none; /* Hidden on Desktop */
+}
+
+@media (max-width: 900px) {
+  .od-breadcrumb {
+    display: block; /* Visible on Mobile/Tablet */
+  }
 }
 
 .od-breadcrumb span:nth-child(1) {
