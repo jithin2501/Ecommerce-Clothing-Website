@@ -324,7 +324,7 @@ exports.syncTrackingStatus = async (req, res) => {
 
     // ── Simulator Mode ──
     // Allows testing of "Delivered" UI features (Chat, Review) without live Shiprocket data
-    if (order.shiprocketShipmentId === 'MOCK-DELIVERED') {
+    if (order.shiprocketShipmentId === 'MOCK-DELIVERED' || order.shiprocketOrderId === 'MOCK-DELIVERED') {
       const mockResults = {
         success: true,
         trackingStatus: 'Delivered',
