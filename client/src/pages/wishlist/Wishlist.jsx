@@ -18,18 +18,11 @@ export default function Wishlist() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
   const navigate = useNavigate();
-  const { wishlist, removeFromWishlist } = useWishlist();
+  const { wishlist, removeFromWishlist, isLoaded } = useWishlist();
   const [activeNav, setActiveNav] = useState('mystuff');
   const [activeSubNav, setActiveSubNav] = useState('wishlist');
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    // Simple delay to ensure smooth transition and allow sidebar to load
-    const timer = setTimeout(() => setLoading(false), 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) {
+  if (!isLoaded) {
     return (
       <div className="account-loading-wrapper">
         <div className="account-loading-spinner"></div>
@@ -66,7 +59,7 @@ export default function Wishlist() {
               </div>
             </div>
 
-            {/* Empty State or Grid */}
+            {/* Empty State or List */}
             {wishlist.length === 0 ? (
               <div className="wl-empty">
                 <div className="wl-empty-icon">
@@ -87,9 +80,9 @@ export default function Wishlist() {
                 </button>
               </div>
             ) : (
-              <div className="wl-grid">
+              <div className="wl-list">
                 {wishlist.map(item => (
-                  <div key={item.id} className="wl-item-card">
+                  <div key={item.id} className="wl-item-card horizontal">
                     <div
                       className="wl-item-img-wrap"
                       onClick={() => navigate(`/collections/product/${item.productId || item.id}`)}
@@ -99,13 +92,6 @@ export default function Wishlist() {
                         alt={item.name}
                         className="wl-item-img"
                       />
-                      <button 
-                        className="wl-item-remove" 
-                        onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}
-                        title="Remove from wishlist"
-                      >
-                        <img src="/images/EmptyCart/delete.png" alt="delete" />
-                      </button>
                     </div>
                     <div 
                       className="wl-item-info"
@@ -120,6 +106,13 @@ export default function Wishlist() {
                         )}
                       </div>
                     </div>
+                    <button 
+                      className="wl-item-remove-side" 
+                      onClick={(e) => { e.stopPropagation(); removeFromWishlist(item.id); }}
+                      title="Remove from wishlist"
+                    >
+                      <img src="/images/EmptyCart/delete.png" alt="delete" />
+                    </button>
                   </div>
                 ))}
               </div>

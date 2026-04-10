@@ -7,6 +7,7 @@ const WishlistContext = createContext();
 
 export function WishlistProvider({ children }) {
   const [wishlist, setWishlist] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   const navigate = useNavigate();
 
   // ── 1. Fetch wishlist from DB on login ──
@@ -17,8 +18,6 @@ export function WishlistProvider({ children }) {
           const res = await fetch(`/api/client-auth/profile/${user.uid}`);
           const data = await res.json();
           if (data.success && data.user) {
-            // Map DB 'productId' back to 'id' for frontend consistency if needed, 
-            // or just ensure we store them correctly.
             const dbWishlist = (data.user.wishlist || []).map(item => ({
               ...item,
               id: item.productId // Ensure frontend uses 'id' consistently
@@ -27,9 +26,12 @@ export function WishlistProvider({ children }) {
           }
         } catch (err) {
           console.error('Failed to fetch wishlist:', err);
+        } finally {
+          setIsLoaded(true);
         }
       } else {
-        setWishlist([]); // Clear on logout
+        setWishlist([]);
+        setIsLoaded(true); // Treat guest as loaded (empty)
       }
     });
     return () => unsub();
@@ -37,12 +39,13 @@ export function WishlistProvider({ children }) {
 
   // ── 2. Sync wishlist to DB whenever it changes ──
   useEffect(() => {
+    // ONLY sync if we have successfully loaded the initial data from DB
+    // AND we have a user.
     const user = auth.currentUser;
-    if (!user || wishlist.length === 0 && !user) return; 
+    if (!user || !isLoaded) return;
 
     const syncTimeout = setTimeout(async () => {
       try {
-        // Map 'id' to 'productId' for DB schema
         const syncData = wishlist.map(item => ({
           productId: item.id || item._id,
           name: item.name,
@@ -59,10 +62,10 @@ export function WishlistProvider({ children }) {
       } catch (err) {
         console.error('Failed to sync wishlist:', err);
       }
-    }, 1000); // Debounce sync by 1s
+    }, 1000);
 
     return () => clearTimeout(syncTimeout);
-  }, [wishlist]);
+  }, [wishlist, isLoaded]);
 
   const toggleWishlist = (product) => {
     if (!auth.currentUser) {
@@ -86,7 +89,7 @@ export function WishlistProvider({ children }) {
   const isWishlisted = (id) => wishlist.some(p => (p.id === id || p._id === id));
 
   return (
-    <WishlistContext.Provider value={{ wishlist, toggleWishlist, removeFromWishlist, isWishlisted }}>
+    <WishlistContext.Provider value={{ wishlist, toggleWishlist, removeFromWishlist, isWishlisted, isLoaded }}>
       {children}
     </WishlistContext.Provider>
   );
