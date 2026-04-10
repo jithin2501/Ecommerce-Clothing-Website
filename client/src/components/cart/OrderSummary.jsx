@@ -19,9 +19,9 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         const res = await fetch(`${API_BASE}/payment/calculate-summary`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            items: cartItems.map(i => ({ productId: i.id, qty: i.qty })), 
-            giftWrapping 
+          body: JSON.stringify({
+            items: cartItems.map(i => ({ productId: i.id, qty: i.qty })),
+            giftWrapping
           })
         });
         const data = await res.json();
@@ -79,7 +79,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       const res = await fetch(`${API_BASE}/payment/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           amount: serverTotals.total,
           userId: user.uid,
           userName: user.name,
@@ -150,13 +150,11 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
           const verifyData = await verifyRes.json();
 
           if (verifyData.success) {
-            setStatus({ show: true, type: 'success', message: '🎉 Payment Successful! Your order has been placed.' });
-            clearCart();
-            setTimeout(() => {
-                window.location.href = '/account/orders';
-            }, 3000);
+            clearCart(); // Clear cart immediately
+            if (onPaymentSuccess) onPaymentSuccess(true);
+            setStatus({ show: true, type: 'success', message: ' Payment Successful! Your order has been placed.' });
           } else {
-            setStatus({ show: true, type: 'error', message: '⚠️ Payment verification failed. Please contact support.' });
+            setStatus({ show: true, type: 'error', message: ' Payment verification failed. Please contact support.' });
           }
         },
         prefill: {
@@ -204,14 +202,24 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
               )}
             </div>
             <p className="os-status-msg">{status.message}</p>
-            {status.type !== 'success' && (
-              <button className="os-status-close" onClick={() => setStatus({ ...status, show: false })}>OK</button>
+            {status.type === 'success' ? (
+              <button 
+                className="os-status-close success-btn" 
+                onClick={() => window.location.href = '/account/orders'}
+              >
+                VIEW MY ORDERS
+              </button>
+            ) : (
+              <button 
+                className="os-status-close" 
+                onClick={() => setStatus({ ...status, show: false })}
+              >
+                OK
+              </button>
             )}
-            {status.type === 'success' && <p className="os-status-sub">Redirecting to your orders...</p>}
           </div>
         </div>
       )}
--wrapper">
       <h2 className="os-title">Order Summary</h2>
 
       <div className="os-rows">

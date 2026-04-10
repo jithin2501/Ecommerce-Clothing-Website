@@ -26,6 +26,7 @@ export default function CartPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
 
   /* ── Save selection to localStorage and state ── */
   const handleSelectAddress = (addr) => {
@@ -156,7 +157,7 @@ export default function CartPage() {
     }
   }, []);
 
-  if (cartItems.length === 0) return <EmptyCart />;
+  if (cartItems.length === 0 && !isPaymentSuccess) return <EmptyCart />;
 
   const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
   const giftCost = giftWrapping ? GIFT_WRAP_COST : 0;
@@ -225,6 +226,7 @@ export default function CartPage() {
             } : null}
             cartItems={cartItems}
             selectedAddress={selectedAddress}
+            onPaymentSuccess={setIsPaymentSuccess}
           />
         </div>
 
