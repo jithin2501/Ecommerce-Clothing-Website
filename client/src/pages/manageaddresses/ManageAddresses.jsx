@@ -471,8 +471,8 @@ export default function ManageAddresses() {
                       <button className="ma-addr-menu">⋮</button>
                       {menuOpen === addr.id && (
                         <div className="ma-dropdown">
-                          <button onClick={() => handleEdit(addr)}>✏️ Edit</button>
-                          <button className="ma-dropdown-delete" onClick={() => handleDelete(addr.id)}>🗑️ Delete</button>
+                          <button onClick={() => handleEdit(addr)}>Edit</button>
+                          <button className="ma-dropdown-delete" onClick={() => handleDelete(addr.id)}>Delete</button>
                         </div>
                       )}
                     </div>
