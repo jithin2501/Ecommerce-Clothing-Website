@@ -14,6 +14,7 @@ const clientRoutes = require('./routers/clientRoutes');
 const clientManagementRoutes = require('./routers/clientManagementRoutes');
 const paymentRouter = require('./routers/paymentRouter');
 const supportRouter = require('./routers/supportRouter');
+const shiprocketRouter = require('./routers/shiprocketRouter');
 const startCronJobs = require('./cronJobs'); // ← ADDED
 
 const app = express();
@@ -38,6 +39,7 @@ app.use('/api/client-auth', clientRoutes);
 app.use('/api/admin/clients', clientManagementRoutes);
 app.use('/api/payment', paymentRouter);
 app.use('/api/support', supportRouter);
+app.use('/api/shiprocket', shiprocketRouter);
 
 
 app.get('/', (req, res) => res.json({ message: 'Sumathi Trends API running.' }));

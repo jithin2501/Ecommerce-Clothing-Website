@@ -108,6 +108,18 @@ export default function ManageAddresses() {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
 
+    // ── NEW: Shiprocket Pincode Check ──
+    try {
+      const pinRes = await fetch(`/api/shiprocket/check-pincode/${form.pincode}`);
+      const pinData = await pinRes.json();
+      if (!pinData.serviceable) {
+        alert(`Sorry, we cannot deliver to pincode ${form.pincode}. Our delivery partners do not currently service this area.`);
+        return;
+      }
+    } catch (err) {
+      console.warn("Pincode check failed, proceeding anyway", err);
+    }
+
     const newAddrPart = {
       type: form.type.toUpperCase(),
       name: form.fullName, phone: form.mobile,
