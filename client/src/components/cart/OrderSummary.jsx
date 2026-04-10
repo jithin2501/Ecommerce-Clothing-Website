@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import '../../styles/cart/OrderSummary.css';
 
 const API_BASE = '/api';
 
-export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCost, total, user, cartItems, selectedAddress }) {
+export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCost, total, user, cartItems, selectedAddress, onPaymentSuccess }) {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [serverTotals, setServerTotals] = useState({ subtotal, shipping, giftCost, total });
   const { clearCart } = useCart();
@@ -148,10 +150,12 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
           const verifyData = await verifyRes.json();
 
           if (verifyData.success) {
+            if (onPaymentSuccess) onPaymentSuccess(true);
             clearCart();
             window.location.href = '/account/orders';
           } else {
-            alert('⚠️ Payment verification failed. Please contact support.');
+            // Failure logic: do nothing, Razorpay handles the error modal
+            // and the cartItems are still in the state (not cleared).
           }
         },
         prefill: {
@@ -172,7 +176,6 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
     } catch (err) {
       console.error('Checkout error:', err);
-      alert('An error occurred during checkout. Please try again.');
     } finally {
       setLoading(false);
     }
