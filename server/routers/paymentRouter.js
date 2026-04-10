@@ -8,6 +8,9 @@ router.post('/create-order', paymentCtrl.createOrder);
 // Route to verify Razorpay payment signature
 router.post('/verify-payment', paymentCtrl.verifyPayment);
 
+// Route to calculate order summary server-side
+router.post('/calculate-summary', paymentCtrl.calculateSummary);
+
 // Route to fetch all orders (for Admin)
 router.get('/orders', paymentCtrl.getAllOrders);
 

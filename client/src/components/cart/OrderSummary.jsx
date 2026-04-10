@@ -6,7 +6,37 @@ const API_BASE = '/api';
 
 export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCost, total, user, cartItems, selectedAddress }) {
   const [loading, setLoading] = useState(false);
+  const [serverTotals, setServerTotals] = useState({ subtotal, shipping, giftCost, total });
   const { clearCart } = useCart();
+
+  // Fetch official totals from backend to ensure synchronization
+  useEffect(() => {
+    const fetchTotals = async () => {
+      if (cartItems.length === 0) return;
+      try {
+        const res = await fetch(`${API_BASE}/payment/calculate-summary`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            items: cartItems.map(i => ({ productId: i.id, qty: i.qty })), 
+            giftWrapping 
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          setServerTotals({
+            subtotal: data.subtotal,
+            shipping: data.shipping,
+            giftCost: data.giftCost,
+            total: data.total
+          });
+        }
+      } catch (err) {
+        console.error('Failed to sync with server:', err);
+      }
+    };
+    fetchTotals();
+  }, [cartItems, giftWrapping]);
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -48,7 +78,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
-          amount: total,
+          amount: serverTotals.total,
           userId: user.uid,
           userName: user.name,
           userEmail: user.email,
@@ -57,6 +87,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
             productId: item.id,
             name: item.name,
             qty: item.qty,
+            // Price is handled by backend, but we send it for logging/UI fallback
             price: item.price,
             size: item.size,
             color: item.color,
@@ -157,17 +188,17 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
       <div className="os-rows">
         <div className="os-row">
           <span>Subtotal</span>
-          <span>₹{subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <span>₹{serverTotals.subtotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
         <div className="os-row">
           <span>Shipping</span>
-          <span>{shipping === 0 ? 'FREE' : `₹${shipping.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}</span>
+          <span>{serverTotals.shipping === 0 ? 'FREE' : `₹${serverTotals.shipping.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}</span>
         </div>
 
         {giftWrapping && (
           <div className="os-row os-gift-row">
             <span>Gift Wrapping</span>
-            <span>+₹{giftCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span>+₹{serverTotals.giftCost.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
         )}
 
@@ -179,7 +210,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
       <div className="os-total">
         <span>Total</span>
-        <span className="os-total-amount">₹{total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+        <span className="os-total-amount">₹{serverTotals.total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
       </div>
 
       <button

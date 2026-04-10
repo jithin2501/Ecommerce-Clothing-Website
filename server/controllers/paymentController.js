@@ -8,6 +8,40 @@ const FREE_SHIPPING_THRESHOLD = 136;
 const GIFT_WRAP_COST = 6;
 
 /**
+ * ── Helper: Calculate Totals ──
+ * Centralized logic for subtotal, shipping, and gift wrapping.
+ */
+const calculateOrderTotals = async (items, giftWrapping) => {
+  let subtotal = 0;
+  const validatedItems = [];
+
+  for (const item of items) {
+    const product = await Product.findById(item.productId);
+    if (!product) throw new Error(`Product not found: ${item.name || item.productId}`);
+    
+    // Check stock
+    if (product.stock < (item.qty || 1)) {
+      throw new Error(`Sorry, only ${product.stock} units of "${product.name}" are available.`);
+    }
+
+    const itemPrice = product.price;
+    const itemQty = Number(item.qty) || 1;
+    subtotal += itemPrice * itemQty;
+
+    validatedItems.push({
+      ...item,
+      price: itemPrice
+    });
+  }
+
+  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
+  const giftCost = giftWrapping ? GIFT_WRAP_COST : 0;
+  const total = subtotal + shipping + giftCost;
+
+  return { subtotal, shipping, giftCost, total, validatedItems };
+};
+
+/**
  * ── Create Razorpay Order ──
  * Generates an order ID that the frontend uses to open the payment modal.
  */
@@ -17,7 +51,7 @@ exports.createOrder = async (req, res) => {
   }
   try {
     const { 
-      amount: clientAmount, // We'll validate this
+      amount: clientAmount, 
       userId, 
       userName,
       userEmail,
@@ -32,45 +66,19 @@ exports.createOrder = async (req, res) => {
       return res.status(400).json({ success: false, error: 'Items are required' });
     }
 
-    // ── Price Validation Step ──
-    // Never trust the price sent from the frontend.
-    let calculatedSubtotal = 0;
-    const validatedItems = [];
-
-    for (const item of items) {
-      const product = await Product.findById(item.productId);
-      if (!product) {
-        return res.status(404).json({ success: false, error: `Product not found: ${item.name}` });
-      }
-      
-      const itemPrice = product.price;
-      const itemQty = Number(item.qty) || 1;
-
-      // Check if enough stock is available before creating the order
-      if (product.stock < itemQty) {
-        return res.status(400).json({ 
-          success: false, 
-          error: `Sorry, only ${product.stock} units of "${product.name}" are available.` 
-        });
-      }
-
-      calculatedSubtotal += itemPrice * itemQty;
-
-      // Build validated item object
-      validatedItems.push({
-        ...item,
-        price: itemPrice // Use DB price
-      });
+    // ── Server-Side Recalculation ──
+    let totals;
+    try {
+      totals = await calculateOrderTotals(items, giftWrapping);
+    } catch (err) {
+      return res.status(400).json({ success: false, error: err.message });
     }
 
-    const shipping = calculatedSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
-    const giftCost = giftWrapping ? GIFT_WRAP_COST : 0;
-    const finalCalculatedAmount = calculatedSubtotal + shipping + giftCost;
-
-    console.log(`💰 Price Validation: Client sent ₹${clientAmount}, Server calculated ₹${finalCalculatedAmount}`);
+    const { total: finalCalculatedAmount, validatedItems } = totals;
+    console.log(`💰 Checkout: Client sent ₹${clientAmount}, Server calculated ₹${finalCalculatedAmount}`);
 
     const options = {
-      amount: Math.round(finalCalculatedAmount * 100), // Use server-calculated amount
+      amount: Math.round(finalCalculatedAmount * 100), 
       currency,
       receipt,
     };
@@ -116,6 +124,24 @@ exports.createOrder = async (req, res) => {
       error: 'Failed to create Razorpay order',
       detail: error.message 
     });
+  }
+};
+
+/**
+ * ── Calculate Order Summary ──
+ * Used by the frontend to show "official" totals from the backend.
+ */
+exports.calculateSummary = async (req, res) => {
+  try {
+    const { items, giftWrapping } = req.body;
+    if (!items || !Array.isArray(items)) {
+      return res.status(400).json({ success: false, error: 'Items are required' });
+    }
+
+    const totals = await calculateOrderTotals(items, giftWrapping);
+    res.json({ success: true, ...totals });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
   }
 };
 
