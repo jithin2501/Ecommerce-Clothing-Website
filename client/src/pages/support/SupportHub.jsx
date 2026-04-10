@@ -12,11 +12,12 @@ export default function SupportHub() {
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
   const [search, setSearch] = useState('');
-  const [activeNav, setActiveNav]       = useState('');
+  const [activeNav, setActiveNav] = useState('');
   const [activeSubNav, setActiveSubNav] = useState('support');
-  
+
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (fbUser) => {
@@ -25,9 +26,11 @@ export default function SupportHub() {
           const res = await fetch(`${API}/payment/user-orders/${fbUser.uid}`);
           const data = await res.json();
           if (data.success) {
-            // Filter only delivered orders for the support hub help section
-            const delivered = data.data.filter(o => o.trackingStatus?.toLowerCase() === 'delivered');
-            setOrders(delivered);
+            // Filter only delivered orders and sort by date descending
+            const delivered = data.data
+              .filter(o => o.trackingStatus?.toLowerCase() === 'delivered')
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            setOrders(delivered.slice(0, 5)); // Show 5 most recent
           }
         } catch (err) {
           console.error("SupportHub: Failed to fetch orders", err);
@@ -67,7 +70,6 @@ export default function SupportHub() {
             </div>
             <p className="sh-hero-sub">Experience seamless assistance for your little one's wardrobe.</p>
             <div className="sh-search-wrap">
-              <span className="sh-search-icon">🔍</span>
               <input
                 className="sh-search-input"
                 placeholder="Search order using order ID"
@@ -86,35 +88,39 @@ export default function SupportHub() {
               <div className="sh-orders-scroll-container">
                 <div className="sh-orders-list">
                   {loading ? (
-                    <p style={{textAlign:'center', padding:'20px', color:'#888'}}>Loading orders...</p>
+                    <p style={{ textAlign: 'center', padding: '20px', color: '#888' }}>Loading orders...</p>
                   ) : orders.length === 0 ? (
-                    <p style={{textAlign:'center', padding:'20px', color:'#888'}}>No delivered orders found.</p>
+                    <p style={{ textAlign: 'center', padding: '20px', color: '#888' }}>No delivered orders found.</p>
                   ) : (
                     orders.map((order) => {
                       const firstItem = order.items?.[0];
                       const itemName = firstItem?.name || 'Order Item';
                       const extraCount = (order.items?.length || 0) - 1;
                       const displayTitle = extraCount > 0 ? `${itemName} + ${extraCount} more` : itemName;
-                      
+
                       return (
-                        <div key={order._id} className="sh-order-card">
-                          <img 
-                            src={firstItem?.image || firstItem?.img || firstItem?.photo || '/logo.png'} 
-                            alt={itemName} 
-                            className="sh-order-img" 
+                        <div 
+                          key={order._id} 
+                          className={`sh-order-card ${selectedOrderId === order.displayId ? 'sh-order-selected' : ''}`}
+                          onClick={() => setSelectedOrderId(order.displayId)}
+                        >
+                          <img
+                            src={firstItem?.image || firstItem?.img || firstItem?.photo || '/logo.png'}
+                            alt={itemName}
+                            className="sh-order-img"
                           />
                           <div className="sh-order-info">
                             <div className="sh-order-label">ORDER #{order.displayId}</div>
                             <div className="sh-order-id">{displayTitle}</div>
                             <div className="sh-order-status">
-                              Status: <span className="sh-status-delivered">{order.trackingStatus}</span>
+                              Status: <span className="sh-status-delivered">Delivered</span>
                             </div>
                           </div>
                           <button
                             className="sh-need-help-btn"
-                            onClick={() => navigate('/support/order-help', { state: { order } })}
+                            onClick={(e) => { e.stopPropagation(); setSelectedOrderId(order.displayId); }}
                           >
-                            Need help?
+                            {selectedOrderId === order.displayId ? 'Selected' : 'Need help?'}
                           </button>
                         </div>
                       );
@@ -124,26 +130,28 @@ export default function SupportHub() {
               </div>
             </section>
 
-            {/* Ways to Connect */}
-            <section className="sh-section" style={{ marginTop: '40px' }}>
-              <h2 className="sh-section-title">Ways to connect</h2>
-              <div className="sh-connect-grid">
-                <div className="sh-connect-card" onClick={() => navigate('/support/chat')}>
-                  <div className="sh-connect-icon">💬</div>
-                  <div className="sh-connect-info">
-                    <div className="sh-connect-label">Chat with us</div>
-                    <div className="sh-connect-sub">Get instant support for your queries.</div>
+            {/* Ways to Connect — Only shown when an order is selected */}
+            {selectedOrderId && (
+              <section className="sh-section" style={{ marginTop: '40px' }}>
+                <h2 className="sh-section-title">Ways to connect for Order #{selectedOrderId}</h2>
+                <div className="sh-connect-grid">
+                  <div className="sh-connect-card" onClick={() => navigate('/support/chat', { state: { orderId: selectedOrderId } })}>
+                    <div className="sh-connect-icon">💬</div>
+                    <div className="sh-connect-info">
+                      <div className="sh-connect-label">Chat with us</div>
+                      <div className="sh-connect-sub">Get instant support for your queries.</div>
+                    </div>
+                  </div>
+                  <div className="sh-connect-card" onClick={() => window.location.href = `mailto:support@sumathitrends.com?subject=Help with Order ${selectedOrderId}`}>
+                    <div className="sh-connect-icon">✉️</div>
+                    <div className="sh-connect-info">
+                      <div className="sh-connect-label">Email us</div>
+                      <div className="sh-connect-sub">Response within 24 business hours.</div>
+                    </div>
                   </div>
                 </div>
-                <div className="sh-connect-card" onClick={() => window.location.href = 'mailto:support@sumathitrends.com'}>
-                  <div className="sh-connect-icon">✉️</div>
-                  <div className="sh-connect-info">
-                    <div className="sh-connect-label">Email us</div>
-                    <div className="sh-connect-sub">Response within 24 business hours.</div>
-                  </div>
-                </div>
-              </div>
-            </section>
+              </section>
+            )}
 
           </div>
         </main>

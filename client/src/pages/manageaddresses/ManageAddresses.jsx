@@ -343,7 +343,7 @@ export default function ManageAddresses() {
               <div className="ma-form-title-row">
                 <span className="ma-form-title">{editingId ? 'EDIT ADDRESS' : 'ADD A NEW ADDRESS'}</span>
                 <button className="ma-location-btn" onClick={handleLocation}>
-                  📍 Use my current location
+                  Use my current location
                 </button>
               </div>
 
@@ -434,10 +434,10 @@ export default function ManageAddresses() {
                 <div className="ma-field ma-field-full" style={{ marginTop: '15px' }}>
                   <label className="ma-checkbox-container">
                     <div className="ma-checkbox-wrapper">
-                      <input 
-                        type="checkbox" 
-                        checked={form.isDefault || false} 
-                        onChange={e => handleChange('isDefault', e.target.checked)} 
+                      <input
+                        type="checkbox"
+                        checked={form.isDefault || false}
+                        onChange={e => handleChange('isDefault', e.target.checked)}
                       />
                       <span className="ma-checkmark"></span>
                     </div>
