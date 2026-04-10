@@ -28,7 +28,7 @@
   background: #fff;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
-  padding: 24px 32px;
+  padding: 28px 32px;
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -36,7 +36,7 @@
 
 /* ── Header mirroring Manage Addresses & Wishlist ── */
 .mr-main-header {
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 15px;

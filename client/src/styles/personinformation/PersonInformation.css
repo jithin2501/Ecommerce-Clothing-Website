@@ -39,11 +39,11 @@
   background: var(--white);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 0 0 1px rgba(0, 0, 0, 0.2);
   border-radius: 12px;
-  padding: 24px 32px 24px; /* Reduced top padding */
+  padding: 28px 32px 24px;
   min-width: 0;
 }
 
-.content-header { margin-bottom: 8px; } /* Further reduced gap */
+.content-header { margin-bottom: 16px; } /* Reduced gap */
 
 .content-header h1 {
   font-size: 18px;
@@ -60,7 +60,7 @@
 /* Form Cards */
 .form-card {
   border: 1px solid transparent;
-  margin-bottom: 12px; /* Reduced gap between cards */
+  margin-bottom: 16px; /* Reduced gap */
   border-radius: 8px;
 }
 
