@@ -129,7 +129,38 @@ exports.generateTrackingLink = (shipmentId) => {
 };
 
 /**
- * ── Fetch live tracking info from Shiprocket ──
+ * ── Fetch live tracking info using Order ID ──
+ * Uses the store's Order ID (the displayId)
+ */
+exports.getTrackingByOrderId = async (orderId) => {
+  try {
+    const auth = await getShiprocketToken();
+    if (!auth.success) return { success: false, error: auth.error };
+    const token = auth.token;
+
+    const response = await axios.get(
+      `https://apiv2.shiprocket.in/v1/external/courier/track?order_id=${orderId}`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    // Shiprocket returns an object where the key is the order ID
+    if (response.data && response.data[orderId]) {
+      return { 
+        success: true, 
+        data: response.data[orderId].tracking_data,
+        isOrderLevel: true 
+      };
+    }
+
+    return { success: false, error: 'No tracking data found for this Order ID' };
+  } catch (error) {
+    console.error('❌ Shiprocket Order Tracking Error:', error.response?.data || error.message);
+    return { success: false, error: error.message };
+  }
+};
+
+/**
+ * ── Fetch live tracking info from Shiprocket (by Shipment ID) ──
  */
 exports.getTrackingDetails = async (shipmentId) => {
   try {
@@ -144,7 +175,7 @@ exports.getTrackingDetails = async (shipmentId) => {
 
     return { success: true, data: response.data.tracking_data };
   } catch (error) {
-    console.error('❌ Error fetching tracking details:', error.response?.data || error.message);
+    console.error('❌ Shiprocket Shipment Tracking Error:', error.response?.data || error.message);
     return { success: false, error: error.message };
   }
 };

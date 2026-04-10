@@ -320,11 +320,23 @@ exports.syncTrackingStatus = async (req, res) => {
     const { orderId } = req.params;
     const order = await Order.findById(orderId);
 
-    if (!order || !order.shiprocketShipmentId) {
-      return res.status(404).json({ success: false, error: 'Shipment info not found' });
+    if (!order) {
+      return res.status(404).json({ success: false, error: 'Order not found' });
     }
 
-    const tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
+    let tracking = { success: false };
+
+    // 1. Try tracking by Shipment ID (More specific)
+    if (order.shiprocketShipmentId) {
+      console.log(`🔍 Tracking by Shipment ID: ${order.shiprocketShipmentId}`);
+      tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
+    }
+
+    // 2. Fallback: Try tracking by Order ID (Display ID)
+    if (!tracking.success || !tracking.data) {
+      console.log(`🔍 Fallback: Tracking by Order ID: ${order.displayId}`);
+      tracking = await shiprocketService.getTrackingByOrderId(order.displayId);
+    }
 
     if (tracking.success && tracking.data) {
       const td = tracking.data;
@@ -332,12 +344,11 @@ exports.syncTrackingStatus = async (req, res) => {
       // Update the order with live data
       order.trackingStatus = td.track_status || order.trackingStatus;
       
-      // We'll store the latest tracking info as a JSON blob for the frontend to use
       const results = {
         success: true,
         trackingStatus: td.track_status,
-        courier: td.courier_name,
-        awb: td.awb_code,
+        courier: td.courier_name || 'Logistic Partner',
+        awb: td.awb_code || '',
         activities: td.shipment_track_activities || []
       };
 
@@ -345,7 +356,8 @@ exports.syncTrackingStatus = async (req, res) => {
       return res.json(results);
     }
 
-    res.status(400).json({ success: false, error: 'Could not fetch live status' });
+    // Instead of 400, return 200 with success: false for "Quiet" failure (Order too new)
+    res.json({ success: false, message: 'Tracking info not yet available from Shiprocket' });
   } catch (error) {
     console.error('❌ Sync Tracking Error:', error);
     res.status(500).json({ success: false, error: 'Server error' });
