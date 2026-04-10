@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Sidebar from '../../components/sidebar/Sidebar';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myorders/MyOrders.css';
@@ -20,8 +21,9 @@ export default function MyOrders() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [query, setQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
   const [user, setUser] = useState(null);
+  const [activeNav, setActiveNav] = useState('my-orders');
+  const [activeSubNav, setActiveSubNav] = useState('orders');
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
@@ -57,17 +59,14 @@ export default function MyOrders() {
   }
 
   const filtered = dbOrders.filter(order => {
-    // Process query: remove '#' if user typed it at the start
     const searchLower = query.toLowerCase().replace('#', '').trim();
     if (!searchLower) return true;
 
-    // Check if any item in the order matches search
     const matchesItems = order.items?.some(item => 
       item.name?.toLowerCase().includes(searchLower) || 
       item.color?.toLowerCase().includes(searchLower)
     );
 
-    // Check if Order IDs match
     const matchesOrderId = order.orderId?.toLowerCase().includes(searchLower);
     const matchesDisplayId = order.displayId?.toLowerCase().includes(searchLower);
 
@@ -76,106 +75,116 @@ export default function MyOrders() {
 
   return (
     <div className="mo-page">
-      <div className="mo-content">
+      <div className="mo-container">
+        
+        <Sidebar 
+          activeNav={activeNav}
+          setActiveNav={setActiveNav}
+          activeSubNav={activeSubNav}
+          setActiveSubNav={setActiveSubNav}
+        />
 
-        <div className="mo-mobile-header">
-          <button className="mobile-back-btn" onClick={() => navigate('/account')}>
-            <span className="back-chevron">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="15 18 9 12 15 6"></polyline>
-              </svg>
-            </span>
-          </button>
-          <div className="mo-header">
-            <h1>My Orders History</h1>
-            <p>View and track your recent boutique purchases.</p>
-          </div>
-        </div>
-
-        {/* Search */}
-        <div className="mo-search-row">
-          <div className="mo-search-input-wrapper">
-            <img src="/images/myorders/search.png" alt="search" className="mo-search-icon-img" />
-            <input
-              type="text"
-              className="mo-search-input"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter') setQuery(search); }}
-              placeholder="Search by product name or order ID"
-            />
-          </div>
-          <button className="mo-search-btn" onClick={() => setQuery(search)}>
-            Search Orders
-          </button>
-        </div>
-
-        {/* Orders List */}
-        <div className="mo-list">
-          {dbOrders.length === 0 ? (
-            <div className="mo-empty">
-              <p>You haven't placed any orders yet.</p>
-              <button className="mo-shop-btn" onClick={() => navigate('/collections')}>Start Shopping</button>
+        <main className="mo-main">
+          {/* Header section (Desktop & Mobile unified) */}
+          <div className="mo-main-header">
+            <button className="mobile-only-back" onClick={() => navigate('/account')}>
+              <span className="back-chevron">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </span>
+            </button>
+            <div className="mo-header-text">
+              <h1>My Orders History</h1>
+              <p>View and track your recent purchases.</p>
             </div>
-          ) : filtered.length === 0 ? (
-            <div className="mo-empty">
-              <p>No orders found matching your search.</p>
-            </div>
-          ) : (
-            filtered.map(order => (
-              <div key={order._id} className="mo-card">
-                {order.items?.map((item, idx) => (
-                  <div 
-                    key={`${order._id}-${idx}`} 
-                    className="mo-card-top" 
-                    onClick={() => navigate(`/account/orders/${order.orderId}`, { state: { order, item } })}
-                    style={{ 
-                      borderBottom: idx < order.items.length - 1 ? '1px solid #f1f5f9' : 'none', 
-                      marginBottom: '10px', 
-                      paddingBottom: '10px',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    <img src={item.img || item.photo} alt={item.name} className="mo-card-img" />
-                    
-                    <div className="mo-card-info">
-                      <div className="mo-card-name">{item.name}</div>
-                      <div className="mo-card-meta">
-                        {item.color && `Color: ${item.color}`} {item.size && ` | Size: ${item.size}`}
-                        {item.qty > 1 && ` | Qty: ${item.qty}`}
-                      </div>
-                      <div className="mo-card-price">{String(item.price).includes('₹') ? item.price : `₹${item.price?.toLocaleString()}`}</div>
-                    </div>
+          </div>
 
-                    <div className="mo-card-status">
-                      <StatusBadge 
-                        status={order.status} 
-                        label={order.status === 'success' ? `Paid on ${new Date(order.createdAt).toLocaleDateString()}` : 'Payment Pending'} 
-                      />
-                      <div className="mo-status-sub">Order ID: #{order.displayId}</div>
-                      {order.trackingStatus?.toLowerCase() === 'delivered' && (
-                        <button
-                          className="mo-review-btn"
-                          onClick={(e) => { e.stopPropagation(); navigate('/account/write-review', { state: { order, item } }); }}
-                        >☆ Rate &amp; Review Product</button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+          {/* Search */}
+          <div className="mo-search-row">
+            <div className="mo-search-input-wrapper">
+              <img src="/images/myorders/search.png" alt="search" className="mo-search-icon-img" />
+              <input
+                type="text"
+                className="mo-search-input"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') setQuery(search); }}
+                placeholder="Search by product name or order ID"
+              />
+            </div>
+            <button className="mo-search-btn" onClick={() => setQuery(search)}>
+              Search Orders
+            </button>
+          </div>
+
+          {/* Orders List */}
+          <div className="mo-list">
+            {dbOrders.length === 0 ? (
+              <div className="mo-empty">
+                <p>You haven't placed any orders yet.</p>
+                <button className="mo-shop-btn" onClick={() => navigate('/collections')}>Start Shopping</button>
               </div>
-            ))
-          )}
-        </div>
+            ) : filtered.length === 0 ? (
+              <div className="mo-empty">
+                <p>No orders found matching your search.</p>
+              </div>
+            ) : (
+              filtered.map(order => (
+                <div key={order._id} className="mo-card">
+                  {order.items?.map((item, idx) => (
+                    <div 
+                      key={`${order._id}-${idx}`} 
+                      className="mo-card-top" 
+                      onClick={() => navigate(`/account/orders/${order.orderId}`, { state: { order, item } })}
+                      style={{ 
+                        borderBottom: idx < order.items.length - 1 ? '1px solid #f1f5f9' : 'none', 
+                        marginBottom: '10px', 
+                        paddingBottom: '10px',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <img src={item.img || item.photo} alt={item.name} className="mo-card-img" />
+                      
+                      <div className="mo-card-info">
+                        <div className="mo-card-name">{item.name}</div>
+                        <div className="mo-card-meta">
+                          {item.color && `Color: ${item.color}`} {item.size && ` | Size: ${item.size}`}
+                          {item.qty > 1 && ` | Qty: ${item.qty}`}
+                        </div>
+                        <div className="mo-card-price">{String(item.price).includes('₹') ? item.price : `₹${item.price?.toLocaleString()}`}</div>
+                      </div>
 
-        {/* Pagination (Simplified for now) */}
-        {filtered.length > 5 && (
-          <div className="mo-pagination">
-            <button className="mo-page-btn" disabled>‹</button>
-            <button className="mo-page-btn active">1</button>
-            <button className="mo-page-btn" disabled>›</button>
+                      <div className="mo-card-status">
+                        <StatusBadge 
+                          status={order.status === 'success' ? 'delivered' : 'cancelled'} 
+                          label={order.status === 'success' ? `Paid on ${new Date(order.createdAt).toLocaleDateString()}` : 'Payment Pending'} 
+                        />
+                        <div className="mo-status-sub">Order ID: #{order.displayId}</div>
+                        {order.trackingStatus?.toLowerCase() === 'delivered' && (
+                          <button
+                            className="mo-review-btn"
+                            onClick={(e) => { e.stopPropagation(); navigate('/account/write-review', { state: { order, item } }); }}
+                          >☆ Rate &amp; Review Product</button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ))
+            )}
           </div>
-        )}
 
+          {/* Pagination */}
+          {filtered.length > 5 && (
+            <div className="mo-pagination">
+              <button className="mo-page-btn" disabled>‹</button>
+              <button className="mo-page-btn active">1</button>
+              <button className="mo-page-btn" disabled>›</button>
+            </div>
+          )}
+
+        </main>
       </div>
     </div>
   );
