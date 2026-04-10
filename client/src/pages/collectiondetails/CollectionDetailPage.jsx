@@ -89,37 +89,61 @@ export default function CollectionDetailPage() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
-      // Priority 1: Check localStorage for a manual selection made in this session
-      const savedSelection = localStorage.getItem('sumathi_selected_address');
-      if (savedSelection) {
-        try {
-          setSelectedAddress(JSON.parse(savedSelection));
-          if (user) {
-             const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
-             const data = await res.json();
-             if (data.success) setUserInfo(data.user);
-          }
-          return;
-        } catch (e) {}
-      }
-
+      // 1. If logged in, fetch from DB to get the latest addresses and default
       if (user) {
         try {
           const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
           const data = await res.json();
           if (data.success && data.addresses) {
             setUserInfo(data.user);
-            const defAddr = data.addresses.find(a => a.isDefault);
-            if (defAddr) setSelectedAddress(defAddr);
+            
+            // Priority Check:
+            // A. Manual selection from localStorage (if it still exists in the list)
+            // B. Default address from DB
+            const savedSelection = localStorage.getItem('sumathi_selected_address');
+            let manualAddr = null;
+            if (savedSelection) {
+              try {
+                const parsed = JSON.parse(savedSelection);
+                manualAddr = data.addresses.find(a => String(a.id || a._id) === String(parsed.id || parsed._id));
+              } catch (e) {}
+            }
+
+            if (manualAddr) {
+              setSelectedAddress(manualAddr);
+            } else {
+              const defAddr = data.addresses.find(a => a.isDefault);
+              if (defAddr) {
+                setSelectedAddress(defAddr);
+              } else if (data.addresses.length > 0) {
+                setSelectedAddress(data.addresses[0]);
+              }
+            }
+            return;
           }
-        } catch (e) {}
-      } else {
+        } catch (e) {
+          console.error("Auth sync error", e);
+        }
+      }
+
+      // 2. Fallback for guests or if DB fetch failed
+      const savedSelection = localStorage.getItem('sumathi_selected_address');
+      if (savedSelection) {
         try {
-          const saved = JSON.parse(localStorage.getItem('sumathi_addresses') || '[]');
-          const defAddr = saved.find(a => a.isDefault);
-          if (defAddr) setSelectedAddress(defAddr);
+          setSelectedAddress(JSON.parse(savedSelection));
+          return;
         } catch (e) {}
       }
+
+      try {
+        const saved = JSON.parse(localStorage.getItem('sumathi_addresses') || '[]');
+        const defAddr = saved.find(a => a.isDefault);
+        if (defAddr) {
+          setSelectedAddress(defAddr);
+        } else if (saved.length > 0) {
+          setSelectedAddress(saved[0]);
+        }
+      } catch (e) {}
     });
     return () => unsub();
   }, []);

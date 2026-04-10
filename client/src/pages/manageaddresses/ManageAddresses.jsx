@@ -146,16 +146,19 @@ export default function ManageAddresses() {
           setAddresses_(updatedAddresses);
 
           // If this edited address is the active one, update it in localStorage too
-          try {
-            const activeStr = localStorage.getItem('sumathi_active_address');
-            if (activeStr) {
-              const active = JSON.parse(activeStr);
-              if (String(active.id || active._id) === String(editingId)) {
-                const updated = updatedAddresses.find(a => String(a.id || a._id) === String(editingId));
-                if (updated) localStorage.setItem('sumathi_active_address', JSON.stringify(updated));
+          const KEYS_TO_SYNC = ['sumathi_active_address', 'sumathi_selected_address'];
+          for (const k of KEYS_TO_SYNC) {
+            try {
+              const str = localStorage.getItem(k);
+              if (str) {
+                const active = JSON.parse(str);
+                if (String(active.id || active._id) === String(editingId)) {
+                  const updated = updatedAddresses.find(a => String(a.id || a._id) === String(editingId));
+                  if (updated) localStorage.setItem(k, JSON.stringify(updated));
+                }
               }
-            }
-          } catch { }
+            } catch { }
+          }
         }
       } else {
         const payload = { ...newAddrPart, id: Date.now().toString() };
@@ -184,6 +187,12 @@ export default function ManageAddresses() {
     }
 
     broadcastAddressChange(updatedAddresses);
+
+    // ── NEW: Force sync localStorage if a new default was set ──
+    if (newAddrPart.isDefault) {
+      const KEYS = ['sumathi_active_address', 'sumathi_selected_address'];
+      KEYS.forEach(k => localStorage.removeItem(k));
+    }
 
     // ─────────────────────────────────────────────────────────────────
     // AUTO-SYNC PERSONAL INFORMATION

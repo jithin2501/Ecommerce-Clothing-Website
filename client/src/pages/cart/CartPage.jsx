@@ -38,48 +38,56 @@ export default function CartPage() {
   /* ── Load address on mount / auth change ── */
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
-      // Priority 1: a manual selection made in this session
-      const savedSelection =
-        localStorage.getItem(SELECTED_KEY) ||
-        localStorage.getItem(ACTIVE_KEY);
-
-      if (savedSelection) {
-        try {
-          setSelectedAddress(JSON.parse(savedSelection));
-          if (user) {
-            const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
-            const data = await res.json();
-            if (data.success) setUserInfo(data.user);
-          }
-          return;
-        } catch { }
-      }
-
       if (user) {
         try {
           const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
           const data = await res.json();
           if (data.success && data.addresses) {
             setUserInfo(data.user);
-            const defAddr = data.addresses.find(a => a.isDefault);
-            if (defAddr) {
-              setSelectedAddress(defAddr);
-              localStorage.setItem(SELECTED_KEY, JSON.stringify(defAddr));
-              localStorage.setItem(ACTIVE_KEY, JSON.stringify(defAddr));
+
+            // Priority: Manual selection (if still valid) > DB Default
+            const savedSelection = localStorage.getItem(SELECTED_KEY) || localStorage.getItem(ACTIVE_KEY);
+            let manualAddr = null;
+            if (savedSelection) {
+              try {
+                const parsed = JSON.parse(savedSelection);
+                manualAddr = data.addresses.find(a => String(a.id || a._id) === String(parsed.id || parsed._id));
+              } catch (e) {}
             }
+
+            if (manualAddr) {
+              setSelectedAddress(manualAddr);
+            } else {
+              const defAddr = data.addresses.find(a => a.isDefault) || data.addresses[0];
+              if (defAddr) {
+                setSelectedAddress(defAddr);
+                localStorage.setItem(SELECTED_KEY, JSON.stringify(defAddr));
+                localStorage.setItem(ACTIVE_KEY, JSON.stringify(defAddr));
+              }
+            }
+            return;
           }
-        } catch { }
-      } else {
-        try {
-          const saved = JSON.parse(localStorage.getItem('sumathi_addresses') || '[]');
-          const defAddr = saved.find(a => a.isDefault);
-          if (defAddr) {
-            setSelectedAddress(defAddr);
-            localStorage.setItem(SELECTED_KEY, JSON.stringify(defAddr));
-            localStorage.setItem(ACTIVE_KEY, JSON.stringify(defAddr));
-          }
-        } catch { }
+        } catch (e) {}
       }
+
+      // Guest fallback
+      const savedSelection = localStorage.getItem(SELECTED_KEY) || localStorage.getItem(ACTIVE_KEY);
+      if (savedSelection) {
+        try {
+          setSelectedAddress(JSON.parse(savedSelection));
+          return;
+        } catch (e) {}
+      }
+
+      try {
+        const saved = JSON.parse(localStorage.getItem('sumathi_addresses') || '[]');
+        const defAddr = saved.find(a => a.isDefault) || saved[0];
+        if (defAddr) {
+          setSelectedAddress(defAddr);
+          localStorage.setItem(SELECTED_KEY, JSON.stringify(defAddr));
+          localStorage.setItem(ACTIVE_KEY, JSON.stringify(defAddr));
+        }
+      } catch (e) {}
     });
     return () => unsub();
   }, []);
