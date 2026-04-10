@@ -52,6 +52,7 @@ export default function ManageAddresses() {
   const [saved, setSaved] = useState(false);
   const [menuOpen, setMenuOpen] = useState(null);
   const [editingId, setEditingId] = useState(null);
+  const [locating, setLocating] = useState(false);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
@@ -278,7 +279,7 @@ export default function ManageAddresses() {
       const wasDefault = addressToDelete?.isDefault;
 
       updatedAddresses = addresses.filter(x => x.id !== id);
-      
+
       // If deleted was default, make the next one default
       if (wasDefault && updatedAddresses.length > 0) {
         updatedAddresses[0].isDefault = true;
@@ -304,11 +305,23 @@ export default function ManageAddresses() {
 
   const handleLocation = () => {
     if (!navigator.geolocation) return;
-    navigator.geolocation.getCurrentPosition(() => {
-      handleChange('city', 'Bengaluru');
-      handleChange('state', 'Karnataka');
-      handleChange('pincode', '560001');
-    });
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        // Simulated or real fetch of city/state from lat/long if needed, 
+        // but sticking to user's existing mock-fill for now
+        setTimeout(() => {
+          handleChange('city', 'Bengaluru');
+          handleChange('state', 'Karnataka');
+          handleChange('pincode', '560001');
+          setLocating(false);
+        }, 1500); // 1.5s delay to show loading feel
+      },
+      (err) => {
+        console.error(err);
+        setLocating(false);
+      }
+    );
   };
 
   return (
@@ -351,8 +364,12 @@ export default function ManageAddresses() {
             <div className="ma-form-section">
               <div className="ma-form-title-row">
                 <span className="ma-form-title">{editingId ? 'EDIT ADDRESS' : 'ADD A NEW ADDRESS'}</span>
-                <button className="ma-location-btn" onClick={handleLocation}>
-                  Use my current location
+                <button
+                  className={`ma-location-btn ${locating ? 'ma-locating' : ''}`}
+                  onClick={handleLocation}
+                  disabled={locating}
+                >
+                  {locating ? ' Locating...' : 'Use my current location'}
                 </button>
               </div>
 
