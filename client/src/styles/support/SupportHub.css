@@ -19,7 +19,7 @@
   width: 100%;
   max-width: 1100px;
   gap: 16px;
-  align-items: stretch;
+  align-items: flex-start;
 }
 
 /* ── MAIN ── */

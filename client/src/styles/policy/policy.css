@@ -19,7 +19,7 @@
   width: 100%;
   max-width: 1100px;
   gap: 16px;
-  align-items: stretch; /* Match sidebar bottom level constant */
+  align-items: flex-start;
 }
 
 /* ── Main area ── */
@@ -34,7 +34,7 @@
 
 /* ── Header ── */
 .policy-content-header {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .policy-content-header h1 {

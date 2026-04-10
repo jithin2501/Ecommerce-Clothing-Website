@@ -19,7 +19,7 @@
   width: 100%;
   max-width: 1100px;
   gap: 16px;
-  align-items: stretch; /* Matches sidebar bottom level */
+  align-items: flex-start;
 }
 
 /* Main */
@@ -33,7 +33,7 @@
 }
 
 /* Header */
-.ma-header { margin-bottom: 24px; }
+.ma-header { margin-bottom: 16px; }
 .ma-header h1 { font-size: 18px; font-weight: 700; margin: 0 0 4px; color: #212121; }
 .ma-header p  { font-size: 13px; color: #878787; margin: 0; }
 

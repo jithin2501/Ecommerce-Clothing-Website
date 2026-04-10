@@ -19,7 +19,7 @@
   width: 100%;
   max-width: 1100px;
   gap: 16px;
-  align-items: stretch;
+  align-items: flex-start;
 }
 
 .wl-layout {
@@ -43,7 +43,7 @@
 
 /* ── Header mirroring Manage Addresses ── */
 .wl-main-header {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 15px;

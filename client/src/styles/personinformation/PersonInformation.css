@@ -30,7 +30,7 @@
   width: 100%;
   max-width: 1100px;
   gap: 16px;
-  align-items: stretch; /* Makes sidebar and main content bottom edges align */
+  align-items: flex-start; /* Reverted: Sidebar stops at its content */
 }
 
 /* Main Content */
@@ -43,7 +43,7 @@
   min-width: 0;
 }
 
-.content-header { margin-bottom: 24px; }
+.content-header { margin-bottom: 16px; } /* Reduced gap */
 
 .content-header h1 {
   font-size: 18px;
@@ -60,7 +60,7 @@
 /* Form Cards */
 .form-card {
   border: 1px solid transparent;
-  margin-bottom: 24px;
+  margin-bottom: 16px; /* Reduced gap */
   border-radius: 8px;
 }
 
