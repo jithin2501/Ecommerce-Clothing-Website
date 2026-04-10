@@ -39,9 +39,17 @@ export function WishlistProvider({ children }) {
               id: item.productId || item._id || item.id
             }));
             
-            // On refresh, we trust the DB if the user is logged in, 
-            // but we could also merge. Overwriting is cleaner for account sync.
-            setWishlist(dbWishlist);
+            // MERGE LOGIC: Combine local items with DB items to prevent data loss
+            setWishlist(prev => {
+              const merged = [...dbWishlist];
+              prev.forEach(localItem => {
+                const alreadyExists = merged.some(dbItem => dbItem.id === localItem.id);
+                if (!alreadyExists) {
+                  merged.push(localItem);
+                }
+              });
+              return merged;
+            });
           }
         } catch (err) {
           console.error('Failed to fetch wishlist:', err);

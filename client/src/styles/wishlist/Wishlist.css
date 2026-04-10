@@ -121,7 +121,7 @@
   padding-right: 12px;
   flex-grow: 1;
   margin-bottom: 0;
-  max-height: 520px; /* Constrains list to sidebar's approx bottom level */
+  max-height: 640px; /* Aligns with sidebar and shows approx 4.5 cards */
   overflow-y: auto;   /* Enables internal scroll for extra cards */
 }
 
