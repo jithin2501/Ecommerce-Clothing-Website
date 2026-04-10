@@ -320,43 +320,11 @@ exports.syncTrackingStatus = async (req, res) => {
     const { orderId } = req.params;
     const order = await Order.findById(orderId);
 
-    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
-
-    // ── Simulator Mode ──
-    // Allows testing of "Delivered" UI features (Chat, Review) without live Shiprocket data
-    if (order.shiprocketShipmentId === 'MOCK-DELIVERED' || order.shiprocketOrderId === 'MOCK-DELIVERED') {
-      const mockResults = {
-        success: true,
-        trackingStatus: 'Delivered',
-        courier: 'Sumathi Express (Simulator)',
-        awb: 'SIM-999-888',
-        activities: [
-          { status: 'Delivered', activity: 'Package handed over to customer', date: new Date(), location: 'Bengaluru' },
-          { status: 'Out for Delivery', activity: 'Rider is on the way', date: new Date(Date.now() - 3600000), location: 'Bengaluru' },
-          { status: 'Shipped', activity: 'Sent from Warehouse', date: new Date(Date.now() - 86400000), location: 'Hub' },
-          { status: 'Confirmed', activity: 'Order placed successfully', date: order.createdAt, location: 'Online' }
-        ]
-      };
-      // Auto-update order status in DB for the simulator
-      if (order.trackingStatus !== 'Delivered') {
-        order.trackingStatus = 'Delivered';
-        await order.save();
-      }
-      return res.json(mockResults);
+    if (!order || !order.shiprocketShipmentId) {
+      return res.status(404).json({ success: false, error: 'Shipment info not found' });
     }
 
-    let tracking = { success: false };
-    
-    // 1. Try tracking by Shipment ID (AWB) first
-    if (order.shiprocketShipmentId) {
-      tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
-    }
-
-    // 2. Fallback to Order ID tracking if Shipment ID failed or is missing
-    if (!tracking.success && order.displayId) {
-      console.log(`🔍 Falling back to Order ID tracking for: ${order.displayId}`);
-      tracking = await shiprocketService.getTrackingByOrderId(order.displayId);
-    }
+    const tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
 
     if (tracking.success && tracking.data) {
       const td = tracking.data;
@@ -364,11 +332,12 @@ exports.syncTrackingStatus = async (req, res) => {
       // Update the order with live data
       order.trackingStatus = td.track_status || order.trackingStatus;
       
+      // We'll store the latest tracking info as a JSON blob for the frontend to use
       const results = {
         success: true,
-        trackingStatus: td.track_status || 'Order Processed',
-        courier: td.courier_name || 'Logistic Partner',
-        awb: td.awb_code || order.shiprocketShipmentId || 'Generating...',
+        trackingStatus: td.track_status,
+        courier: td.courier_name,
+        awb: td.awb_code,
         activities: td.shipment_track_activities || []
       };
 
@@ -376,7 +345,7 @@ exports.syncTrackingStatus = async (req, res) => {
       return res.json(results);
     }
 
-    res.status(400).json({ success: false, error: tracking.error || 'Could not fetch live status' });
+    res.status(400).json({ success: false, error: 'Could not fetch live status' });
   } catch (error) {
     console.error('❌ Sync Tracking Error:', error);
     res.status(500).json({ success: false, error: 'Server error' });
