@@ -41,6 +41,34 @@ export default function ProductInfo({
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
+  const [dynamicDelivery, setDynamicDelivery] = useState(null);
+  const [isCheckingPin, setIsCheckingPin] = useState(false);
+
+  // Fetch real delivery date when address changes
+  useEffect(() => {
+    if (!selectedAddress?.pincode) {
+      setDynamicDelivery(null);
+      return;
+    }
+    const fetchEDD = async () => {
+      setIsCheckingPin(true);
+      try {
+        const res = await fetch(`/api/shiprocket/check-pincode/${selectedAddress.pincode}`);
+        const data = await res.json();
+        if (data.success && data.estimatedDate) {
+          setDynamicDelivery(data.estimatedDate);
+        } else {
+          setDynamicDelivery(null);
+        }
+      } catch (err) {
+        setDynamicDelivery(null);
+      } finally {
+        setIsCheckingPin(false);
+      }
+    };
+    fetchEDD();
+  }, [selectedAddress?.pincode]);
+
   const selectedColorHex = colors.find(c => c.name === selectedColor)?.hex || '#2D3E50';
 
   const isAvailable = stock > 0;
@@ -194,7 +222,14 @@ export default function ProductInfo({
               )}
             </span>
           </li>
-          <li><Truck size={14} /><span>Delivery by {deliveryDate}</span></li>
+          <li>
+            <Truck size={14} />
+            <span>
+              {isCheckingPin ? 'Calculating...' : (
+                dynamicDelivery ? `Delivery by ${dynamicDelivery}` : (selectedAddress ? 'Not serviceable for this area' : `Delivery by ${deliveryDate}`)
+              )}
+            </span>
+          </li>
           <li><Package size={14} /><span>Fulfilled by Sumathi Trends</span></li>
         </ul>
       </div>
