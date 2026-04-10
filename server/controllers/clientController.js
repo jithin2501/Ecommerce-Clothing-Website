@@ -248,7 +248,17 @@ exports.deleteAddress = async (req, res) => {
     const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
+    const addressToDelete = user.addresses.find(a => String(a.id || a._id) === String(addrId));
+    const wasDefault = addressToDelete?.isDefault;
+
     user.addresses = user.addresses.filter(a => String(a.id || a._id) !== String(addrId));
+
+    // If we deleted the default, and there are other addresses, make the first one the new default
+    if (wasDefault && user.addresses.length > 0) {
+      user.addresses[0].isDefault = true;
+    }
+
+    user.markModified('addresses');
     await user.save();
 
     res.json({ success: true, addresses: user.addresses });

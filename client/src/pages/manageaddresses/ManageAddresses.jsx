@@ -274,7 +274,16 @@ export default function ManageAddresses() {
         // leave selectedAddress blank so the user must pick a new one.
       }
     } else {
+      const addressToDelete = addresses.find(x => x.id === id);
+      const wasDefault = addressToDelete?.isDefault;
+
       updatedAddresses = addresses.filter(x => x.id !== id);
+      
+      // If deleted was default, make the next one default
+      if (wasDefault && updatedAddresses.length > 0) {
+        updatedAddresses[0].isDefault = true;
+      }
+
       setAddresses_(updatedAddresses);
       try { localStorage.setItem('sumathi_addresses', JSON.stringify(updatedAddresses)); } catch { }
     }
