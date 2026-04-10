@@ -27,7 +27,6 @@ export default function ProductDetailPage() {
 
   const [sizes,            setSizes]            = useState(['']);
   const [colors,           setColors]           = useState([{ ...EMPTY_COLOR, id: uuid() }]);
-  const [deliveryDate,     setDeliveryDate]      = useState('');
   const [specifications,   setSpecifications]    = useState([{ ...EMPTY_SPEC, id: uuid() }]);
   const [description,      setDescription]       = useState('');
   const [manufacturerInfo, setManufacturerInfo]  = useState([{ ...EMPTY_SPEC, id: uuid() }]);
@@ -55,7 +54,6 @@ export default function ProductDetailPage() {
           const d = dData.data;
 
           if (d.sizes?.length)   setSizes(d.sizes);
-          if (d.deliveryDate)    setDeliveryDate(d.deliveryDate);
           if (d.description)     setDescription(d.description);
           if (d.specifications?.length)   setSpecifications(d.specifications.map(s => ({ ...s, id: uuid() })));
           if (d.manufacturerInfo?.length) setManufacturerInfo(d.manufacturerInfo.map(s => ({ ...s, id: uuid() })));
@@ -156,7 +154,6 @@ export default function ProductDetailPage() {
 
       fd.append('sizes',            JSON.stringify(sizes.filter(Boolean)));
       fd.append('colors',           JSON.stringify(colors.map(({ id, ...rest }) => rest)));
-      fd.append('deliveryDate',     deliveryDate);
       fd.append('specifications',   JSON.stringify(specifications.map(({ id, ...r }) => r).filter(r => r.label)));
       fd.append('description',      description);
       fd.append('manufacturerInfo', JSON.stringify(manufacturerInfo.map(({ id, ...r }) => r).filter(r => r.label)));
@@ -366,10 +363,7 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <div className="pdp-field-group">
-              <label className="pdp-label">DELIVERY DATE</label>
-              <input className="pdp-input" type="text" placeholder="e.g. 5 Mar, Thu" value={deliveryDate} onChange={e => setDeliveryDate(e.target.value)} />
-            </div>
+
 
           </div>
         </div>
