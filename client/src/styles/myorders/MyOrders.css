@@ -339,6 +339,7 @@
     width: 100%;
     text-align: left;
     min-width: unset;
+    margin-left: 88px; /* Align with product text (72px img + 16px gap) */
   }
 
   .mo-status-badge {

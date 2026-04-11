@@ -362,22 +362,12 @@
   .pi-mobile-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0;
     margin-bottom: 24px;
   }
 
   .mobile-back-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #2D3E50;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0;
-    margin-bottom: 0;
-    /* Changed from 20px */
-    flex-shrink: 0;
+    display: none !important;
   }
 
   .content-header {

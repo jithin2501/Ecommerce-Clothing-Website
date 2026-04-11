@@ -635,4 +635,14 @@
   .main-prod-card {
     padding: 1.25rem;
   }
+
+  .od-info-row.single-line {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .od-info-row.single-line .od-info-text {
+    display: block;
+  }
 }
