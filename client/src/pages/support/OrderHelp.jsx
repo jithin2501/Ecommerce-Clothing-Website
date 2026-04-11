@@ -36,12 +36,12 @@ export default function OrderHelp() {
             <div className="sh-mobile-header">
               <button className="mobile-back-btn" onClick={() => navigate('/support')}>
                 <span className="back-chevron">
-                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <polyline points="15 18 9 12 15 6"></polyline>
                   </svg>
                 </span>
               </button>
-              <h1 className="sh-hero-title">Ways to connect for Order #{order?.displayId || order?.id}</h1>
+              <h1 className="sh-hero-title">How can we help?</h1>
             </div>
             <p className="sh-hero-sub">We're here to sort things out quickly for you.</p>
           </div>
@@ -51,49 +51,52 @@ export default function OrderHelp() {
             {/* Order info strip */}
             {order && (
               <div className="sh-oh-order-strip">
-                <img src={order.items?.[0]?.image || order.items?.[0]?.img || order.items?.[0]?.photo || '/logo.png'} alt="Product" className="sh-order-img" />
+                <img src={order.image} alt={order.name} className="sh-order-img" />
                 <div className="sh-order-info">
-                  <div className="sh-order-label">ORDER #{order.displayId || order.id}</div>
-                  <div className="sh-order-id">{order.items?.[0]?.name || 'Recent Order'}</div>
+                  <div className="sh-order-label">ORDER #{order.id}</div>
+                  <div className="sh-order-id">{order.name}</div>
                   <div className="sh-order-status">
-                    Status: <span className="sh-status-delivered">Delivered</span>
+                    Status: <span className="sh-status-delivered">{order.status}</span> on {order.date}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Channels */}
-            <div className="sh-connect-grid" style={{ marginTop: '30px' }}>
-              <div 
-                className="sh-connect-card" 
-                onClick={() => navigate('/support/chat', { 
-                  state: { 
-                    orderId: order?.displayId || order?.id,
-                    initialMessage: `Hi, I need help with a recent order. Order ID: #${order?.displayId || order?.id}`
-                  } 
-                })}
-              >
-                <div className="sh-connect-icon">💬</div>
-                <div className="sh-connect-info">
-                  <div className="sh-connect-label">Chat with us</div>
-                  <div className="sh-connect-sub">Typical response time · 2 min</div>
+            {/* Still need help */}
+            <section className="sh-still-section sh-still-section--stretch">
+              <h2 className="sh-still-title">Still need help?</h2>
+              <p className="sh-still-sub">
+                Our dedicated team is ready to assist you with anything you need. Reach out through our priority channels.
+              </p>
+              <div className="sh-channels sh-channels--two">
+                <div className="sh-channel-card" onClick={() => navigate('/support/chat', { state: { order } })} style={{cursor:'pointer'}}>
+                  <div className="sh-channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="sh-channel-title">Chat with us</div>
+                    <div className="sh-channel-sub">Typical response time · 2 min</div>
+                  </div>
+                </div>
+                <div className="sh-channel-card" onClick={() => window.location.href = 'mailto:sumathitrends.in@gmail.com'}>
+                  <div className="sh-channel-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                      <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="sh-channel-title">Email us</div>
+                    <div className="sh-channel-sub">sumathitrends.in@gmail.com</div>
+                  </div>
                 </div>
               </div>
-              
-              <div 
-                className="sh-connect-card" 
-                onClick={() => window.location.href = `mailto:sumathitrends.in@gmail.com?subject=Help with Order #${order?.displayId || order?.id}`}
-              >
-                <div className="sh-connect-icon">✉️</div>
-                <div className="sh-connect-info">
-                  <div className="sh-connect-label">Email us</div>
-                  <div className="sh-connect-sub">sumathitrends.in@gmail.com</div>
-                </div>
-              </div>
-            </div>
+            </section>
 
             {/* Support Issue Form */}
-            <section className="sh-section" style={{marginTop:'40px'}}>
+            <section className="sh-section" style={{marginTop:'30px'}}>
               <h2 className="sh-section-title">Report a Problem</h2>
               <div className="sh-issue-form">
                 <p className="sh-form-hint">Describe the issue and upload photos/videos of the product for quick resolution.</p>
@@ -134,8 +137,8 @@ export default function OrderHelp() {
                     btn.innerText = 'Submitting...';
 
                     const formData = new FormData();
-                    formData.append('userId', order.userId || localStorage.getItem('sumathi_uid'));
-                    formData.append('orderId', order.displayId || order.id);
+                    formData.append('userId', order.userId);
+                    formData.append('orderId', order.id);
                     formData.append('description', desc);
                     for (let i = 0; i < files.length; i++) {
                       formData.append('attachments', files[i]);
@@ -165,6 +168,8 @@ export default function OrderHelp() {
                 </button>
               </div>
             </section>
+
+
           </div>
         </main>
       </div>
