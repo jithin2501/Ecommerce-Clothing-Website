@@ -1,6 +1,6 @@
 const ClientUser = require('../models/ClientUser');
 const Order = require('../models/Order');
-const Review = require('../models/Review');
+const ProductReview = require('../models/ProductReview');
 
 /* ── GET all clients (paginated + filtered) ── */
 exports.getAllClients = async (req, res) => {
@@ -66,14 +66,10 @@ exports.getClientDetail = async (req, res) => {
     // Fetch full order history from Order collection
     const orders = await Order.find({ userId: { $in: user.uids } }).sort({ createdAt: -1 });
 
-    // Fetch product reviews from Review collection
-    console.log(`🔍 Fetching reviews for client ${user.customerId}. UIDs:`, user.uids);
-    const reviews = await Review.find({ 
-      uid: { $in: user.uids }, 
-      productId: { $exists: true, $ne: null } 
+    // Fetch product reviews linked to this client's firebase UIDs
+    const reviews = await ProductReview.find({
+      uid: { $in: user.uids },
     }).sort({ createdAt: -1 }).lean();
-    
-    console.log(`✅ Found ${reviews.length} reviews for ${user.customerId}`);
     // Map Order model fields to what ClientManagement.jsx expects (status, amount, createdAt/placedAt, etc.)
     const formattedOrders = orders.map(o => ({
       orderId: o.orderId,

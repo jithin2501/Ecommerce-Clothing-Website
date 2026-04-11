@@ -20,7 +20,7 @@ export default function MyReviews() {
       if (user) {
         try {
           // 1. Fetch user reviews
-          const revRes = await fetch(`/api/reviews/user/${user.uid}`);
+          const revRes = await fetch(`/api/product-reviews/user/${user.uid}`);
           const revData = await revRes.json();
           const userReviews = revData.success ? revData.data : [];
           setReviews(userReviews);
@@ -28,7 +28,7 @@ export default function MyReviews() {
           // 2. Fetch user orders to find things to review
           const ordRes = await fetch(`/api/payment/user-orders/${user.uid}`);
           const ordData = await ordRes.json();
-          
+
           if (ordData.success) {
             // Get all delivered items
             const deliveredOrders = ordData.data.filter(o => o.trackingStatus?.toLowerCase() === 'delivered');
@@ -43,7 +43,7 @@ export default function MyReviews() {
             // Filter out items already reviewed (match by productId)
             const reviewedProductIds = new Set(userReviews.map(r => r.productId));
             const toReview = allItems.filter(item => !reviewedProductIds.has(item.productId));
-            
+
             // Remove duplicates (same product in different orders/same order)
             const uniqueToReview = [];
             const seenIds = new Set();
@@ -150,8 +150,8 @@ export default function MyReviews() {
                           <span key={s} className="mr-star-empty">☆</span>
                         ))}
                       </div>
-                      <button 
-                        className="mr-rate-btn" 
+                      <button
+                        className="mr-rate-btn"
                         onClick={() => navigate('/account/write-review', { state: { order: item.order, item } })}
                       >
                         Rate and Review ›

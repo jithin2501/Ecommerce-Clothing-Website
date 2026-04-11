@@ -138,7 +138,7 @@ export default function WriteReview() {
     if (video) fd.append('attachments', video);
 
     try {
-      const response = await fetch('/api/reviews/submit', {
+      const response = await fetch('/api/product-reviews/submit', {
         method: 'POST',
         body: fd
       });

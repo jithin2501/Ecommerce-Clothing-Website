@@ -20,7 +20,7 @@ export default function ProductReviews({ productId }) {
     if (!productId) return;
     const fetchReviews = async () => {
       try {
-        const res = await fetch(`/api/reviews/product/${productId}`);
+        const res = await fetch(`/api/product-reviews/product/${productId}`);
         const data = await res.json();
         if (data.success) {
           setReviews(data.data);

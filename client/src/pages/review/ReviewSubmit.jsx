@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import '../../styles/review/ReviewSubmit.css';
 
-const API = '/api/reviews/submit';
+const API = '/api/qr-reviews/submit';
 
 export default function ReviewSubmit() {
-  const [form, setForm]       = useState({ name: '', rating: 0, message: '' });
-  const [hover, setHover]     = useState(0);
-  const [sent, setSent]       = useState(false);
-  const [error, setError]     = useState('');
+  const [form, setForm] = useState({ name: '', rating: 0, message: '' });
+  const [hover, setHover] = useState(0);
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   useEffect(() => {
     document.body.classList.add('has-review-bg');
     return () => document.body.classList.remove('has-review-bg');
@@ -32,7 +32,7 @@ export default function ReviewSubmit() {
     }
     setLoading(true);
     try {
-      const res  = await fetch(API, {
+      const res = await fetch(API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -60,7 +60,7 @@ export default function ReviewSubmit() {
             Your review has been submitted and is awaiting approval.
             We'll feature it on our website soon!
           </p>
-          <img src="/images/logo.png" alt="Sumathi Trends" className="rs-logo" onError={e => e.target.style.display='none'} />
+          <img src="/images/logo.png" alt="Sumathi Trends" className="rs-logo" onError={e => e.target.style.display = 'none'} />
         </div>
       </div>
     );
@@ -69,7 +69,7 @@ export default function ReviewSubmit() {
   return (
     <div className="rs-page">
       <div className="rs-card">
-        <img src="/images/logo.png" alt="Sumathi Trends" className="rs-logo" onError={e => e.target.style.display='none'} />
+        <img src="/images/logo.png" alt="Sumathi Trends" className="rs-logo" onError={e => e.target.style.display = 'none'} />
         <h2 className="rs-title">Share Your Experience</h2>
         <p className="rs-sub">We'd love to hear what you think about Sumathi Trends!</p>
 
