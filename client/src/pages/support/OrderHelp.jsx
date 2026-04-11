@@ -30,11 +30,6 @@ export default function OrderHelp() {
           <div className="sh-hero sh-hero--compact">
             <div className="sh-mobile-header">
               <button className="mobile-back-btn" onClick={() => navigate('/support')}>
-                <span className="back-chevron">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="15 18 9 12 15 6"></polyline>
-                  </svg>
-                </span>
               </button>
               <h1 className="sh-hero-title">Sumathi Trends Support Hub</h1>
             </div>
@@ -62,7 +57,7 @@ export default function OrderHelp() {
             {/* Still need help */}
             <section className="sh-still-section sh-still-section--stretch">
               <div className="sh-connect-box">
-                <h2 className="sh-still-title">Ways to connect for Order #{order?.displayId}</h2>
+                <h2 className="sh-still-title">Ways to connect for <br/> Order #{order?.displayId}</h2>
                 <div className="sh-channels sh-channels--two">
                   <div className="sh-channel-card" onClick={() => navigate('/support/chat', { state: { order } })} style={{ cursor: 'pointer' }}>
                     <div className="sh-channel-icon">

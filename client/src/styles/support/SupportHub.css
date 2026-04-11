@@ -669,14 +669,25 @@
   }
 
   /* ❗ STACK CHANNELS VERTICALLY ON MOBILE ❗ */
-  .sh-channels--two {
-    grid-template-columns: 1fr !important;
-    max-width: 100%;
+  .sh-channels {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .sh-channel-card {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .sh-still-title {
+    text-align: center;
+    line-height: 1.4;
+    margin-bottom: 20px;
   }
 
   .sh-channel-sub {
     white-space: normal;
-    /* allow wrap */
   }
 
   .sh-oh-order-strip {

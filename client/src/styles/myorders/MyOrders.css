@@ -401,6 +401,16 @@
 
   .mo-header {
     margin-bottom: 0 !important;
+    text-align: left;
+  }
+
+  .mo-header h1 {
+    text-align: left;
+    font-size: 20px;
+  }
+
+  .mo-header p {
+    text-align: left;
   }
 
   .mobile-back-btn span.back-chevron {
