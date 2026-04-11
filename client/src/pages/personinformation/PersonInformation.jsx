@@ -333,11 +333,11 @@ export default function PersonInformation() {
               )}
             </div>
 
-          </div>{/* end pi-scrollable */}
+            <div className="delete-account-wrapper">
+              <span className="delete-account" onClick={handleDeleteAccount} style={{ cursor: 'pointer' }}>Delete Account</span>
+            </div>
 
-          <div className="delete-account-wrapper">
-            <span className="delete-account" onClick={handleDeleteAccount} style={{ cursor: 'pointer' }}>Delete Account</span>
-          </div>
+          </div>{/* end pi-scrollable */}
 
         </main>
       </div>
