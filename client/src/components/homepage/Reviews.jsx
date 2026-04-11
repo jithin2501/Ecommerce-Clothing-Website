@@ -3,16 +3,8 @@ import '../../styles/homepage/Reviews.css';
 
 const API = '/api/reviews/approved';
 
-// Fallback static review shown when no approved reviews yet
-const FALLBACK = [{
-  _id: 'fallback',
-  name: 'Meera Suresh',
-  rating: 5,
-  message: "Sumathi Trends is truly in a league of its own. The quality, the care, the packaging — everything felt premium. My son wore his outfit to a wedding and received non-stop compliments all evening!",
-}];
-
 export default function Reviews() {
-  const [reviews, setReviews] = useState(FALLBACK);
+  const [reviews, setReviews] = useState([]);
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -38,6 +30,8 @@ export default function Reviews() {
     const timer = setInterval(() => setCurrent(c => (c + 1) % reviews.length), 5000);
     return () => clearInterval(timer);
   }, [reviews]);
+
+  if (reviews.length === 0) return null;
 
   const review = reviews[current];
 
@@ -78,7 +72,7 @@ export default function Reviews() {
               <div className="rv2-box-footer">
                 <div className="rv2-box-avatar rv2-box-avatar-initials">
                   {review.name
-                    .split(' ')
+                    ?.split(' ')
                     .slice(0, 2)
                     .map(w => w[0]?.toUpperCase())
                     .join('')}
