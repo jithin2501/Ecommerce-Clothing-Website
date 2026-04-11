@@ -203,8 +203,8 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         )}
 
         <div className="os-row">
-          <span>Estimated Tax</span>
-          <span>₹0.00</span>
+          <span>Estimated Tax (5%)</span>
+          <span>₹{(serverTotals.total * 0.05).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
         </div>
       </div>
 

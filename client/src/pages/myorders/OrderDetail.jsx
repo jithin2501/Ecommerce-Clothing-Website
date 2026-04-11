@@ -287,8 +287,8 @@ export default function OrderDetail() {
                     <span className="od-free-shipping">FREE</span>
                   </div>
                   <div className="od-price-row">
-                    <span>Estimated Tax</span>
-                    <span>₹0.00</span>
+                    <span>Estimated Tax (5%)</span>
+                    <span>₹{(order.amount * 0.05).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                   </div>
                   <div className="od-price-total">
                     <span>Total Amount</span>
