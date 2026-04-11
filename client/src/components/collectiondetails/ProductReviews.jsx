@@ -14,6 +14,7 @@ export default function ProductReviews({ productId }) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState(null); // { type: 'img'|'vid', url: string }
 
   useEffect(() => {
     if (!productId) return;
@@ -96,13 +97,14 @@ export default function ProductReviews({ productId }) {
                 {(r.images?.length > 0 || r.video) && (
                   <div className="pr-media">
                     {r.images?.map((img, i) => (
-                      <div key={i} className="pr-media-item">
-                        <img src={img} alt={`Review ${i}`} onClick={() => window.open(img, '_blank')} />
+                      <div key={i} className="pr-media-item" onClick={() => setSelectedMedia({ type: 'img', url: img })}>
+                        <img src={img} alt={`Review ${i}`} />
                       </div>
                     ))}
                     {r.video && (
-                      <div className="pr-media-item">
-                        <video src={r.video} controls />
+                      <div className="pr-media-item" onClick={() => setSelectedMedia({ type: 'vid', url: r.video })}>
+                        <div className="pr-video-overlay">▶</div>
+                        <video src={r.video} muted />
                       </div>
                     )}
                   </div>
@@ -123,6 +125,20 @@ export default function ProductReviews({ productId }) {
           </>
         )}
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedMedia && (
+        <div className="pr-lightbox-overlay" onClick={() => setSelectedMedia(null)}>
+          <div className="pr-lightbox-content" onClick={e => e.stopPropagation()}>
+            <button className="pr-lightbox-close" onClick={() => setSelectedMedia(null)}>✕</button>
+            {selectedMedia.type === 'img' ? (
+              <img src={selectedMedia.url} alt="Full view" className="pr-lightbox-media" />
+            ) : (
+              <video src={selectedMedia.url} controls autoPlay className="pr-lightbox-media" />
+            )}
+          </div>
+        </div>
+      )}
     </section>
   );
 }

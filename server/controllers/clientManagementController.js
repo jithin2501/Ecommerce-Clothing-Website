@@ -67,8 +67,13 @@ exports.getClientDetail = async (req, res) => {
     const orders = await Order.find({ userId: { $in: user.uids } }).sort({ createdAt: -1 });
 
     // Fetch product reviews from Review collection
-    const reviews = await Review.find({ uid: { $in: user.uids }, productId: { $ne: null } }).sort({ createdAt: -1 });
+    console.log(`🔍 Fetching reviews for client ${user.customerId}. UIDs:`, user.uids);
+    const reviews = await Review.find({ 
+      uid: { $in: user.uids }, 
+      productId: { $exists: true, $ne: null } 
+    }).sort({ createdAt: -1 }).lean();
     
+    console.log(`✅ Found ${reviews.length} reviews for ${user.customerId}`);
     // Map Order model fields to what ClientManagement.jsx expects (status, amount, createdAt/placedAt, etc.)
     const formattedOrders = orders.map(o => ({
       orderId: o.orderId,

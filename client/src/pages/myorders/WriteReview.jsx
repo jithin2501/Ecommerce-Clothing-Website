@@ -120,38 +120,39 @@ export default function WriteReview() {
     }
 
     setError('');
+    setIsSubmitting(true);
     const userId = localStorage.getItem('sumathi_uid');
     
-    // Simulating file upload to get URLs (since no real storage is configured yet)
-    // In a real app, you'd upload to S3/Cloudinary and get real URLs back.
-    const imageURLs = previews; // Temporary: using current blobs/previews as URLs
-    const videoURL = vPreview;
+    const fd = new FormData();
+    fd.append('name', name.trim());
+    fd.append('rating', Number(rating));
+    fd.append('message', description.trim());
+    fd.append('productId', item?.productId);
+    fd.append('orderId', order?.orderId);
+    fd.append('uid', userId || '');
+
+    // Add files
+    images.forEach(f => fd.append('attachments', f));
+    if (video) fd.append('attachments', video);
 
     try {
       const response = await fetch('/api/reviews/submit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name.trim(),
-          rating: Number(rating),
-          message: description.trim(),
-          productId: item?.productId,
-          orderId: order?.orderId,
-          uid: userId,
-          images: imageURLs,
-          video: videoURL
-        })
+        body: fd
       });
-
+      
       const data = await response.json();
       if (data.success) {
         setSubmitted(true);
         setTimeout(() => navigate('/account/orders'), 3000);
       } else {
-        setError(data.message || 'Failed to submit review.');
+        setError(data.message || 'Error submitting review');
       }
     } catch (err) {
-      setError('Failed to connect to server.');
+      console.error(err);
+      setError('Network error. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 

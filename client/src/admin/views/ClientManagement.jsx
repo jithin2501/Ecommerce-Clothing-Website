@@ -150,9 +150,20 @@ function ClientDrawer({ client, onClose }) {
                   {(r.images?.length > 0 || r.video) && (
                     <div style={{display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap'}}>
                       {r.images?.map((img, j) => (
-                        <img key={j} src={img} alt="review" style={{width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #eee'}} />
+                        <img 
+                          key={j} 
+                          src={img} 
+                          alt="review" 
+                          onClick={() => window.open(img, '_blank')}
+                          style={{width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #eee', cursor: 'pointer'}} 
+                        />
                       ))}
-                      {r.video && <div style={{width: '50px', height: '50px', background: '#f5f5f5', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px'}}>📹</div>}
+                      {r.video && (
+                        <div 
+                          onClick={() => window.open(r.video, '_blank')}
+                          style={{width: '50px', height: '50px', background: '#f5f5f5', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', cursor: 'pointer'}}
+                        >📹</div>
+                      )}
                     </div>
                   )}
                 </div>

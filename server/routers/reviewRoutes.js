@@ -6,6 +6,12 @@ const {
   submitReview, getProductReviews, getUserReviews, getApprovedReviews, getAllReviews,
   approveReview, unapproveReview, deleteReview,
 } = require('../controllers/reviewController');
+const multer = require('multer');
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
+});
 
 // ── Auth middleware ──
 const verifyAdmin = (req, res, next) => {
@@ -20,7 +26,7 @@ const verifyAdmin = (req, res, next) => {
 };
 
 // ── Public ──
-router.post('/submit',             submitReview);
+router.post('/submit',             upload.array('attachments', 5), submitReview);
 router.get ('/product/:productId', getProductReviews);
 router.get ('/user/:uid',          getUserReviews);
 router.get ('/approved',           getApprovedReviews);
