@@ -56,3 +56,30 @@
   font-size: 14px;
   line-height: 1.5;
 }
+
+/* ── MOBILE RESPONSIVENESS ── */
+@media (max-width: 768px) {
+  .support-management-container {
+    padding: 10px;
+  }
+
+  .support-table-container {
+    overflow-x: auto;
+  }
+
+  .support-table-container table {
+    min-width: 600px;
+  }
+
+  .support-management-container h2 {
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .attachment-preview-grid {
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 10px;
+  }
+}
