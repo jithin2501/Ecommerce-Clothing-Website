@@ -2,6 +2,25 @@
 const Review = require('../models/Review');
 const Product = require('../models/Product');
 
+/**
+ * ── Helper: Update Product Aggregate Stats ──
+ */
+const updateProductStats = async (productId) => {
+  if (!productId) return;
+  const product = await Product.findById(productId);
+  if (!product) return;
+
+  const allReviewsForProduct = await Review.find({ productId, status: 'approved' });
+  const totalReviews = allReviewsForProduct.length;
+  const avgStars = totalReviews > 0 
+    ? allReviewsForProduct.reduce((acc, r) => acc + r.rating, 0) / totalReviews
+    : 0;
+  
+  product.stars = parseFloat(avgStars.toFixed(1));
+  product.reviews = totalReviews;
+  await product.save();
+};
+
 // POST /api/reviews/submit — public
 const submitReview = async (req, res) => {
   try {
@@ -12,6 +31,9 @@ const submitReview = async (req, res) => {
     if (rating < 1 || rating > 5)
       return res.status(400).json({ success: false, message: 'Rating must be 1–5.' });
 
+    // AUTO-APPROVE Product Reviews, KEEP QR Reviews Pending
+    const status = productId ? 'approved' : 'pending';
+
     const review = await Review.create({ 
       name, 
       rating: Number(rating), 
@@ -21,10 +43,15 @@ const submitReview = async (req, res) => {
       orderId,
       images: images || [],
       video: video || null,
-      status: 'pending' // Default to pending until admin approval
+      status
     });
 
-    res.json({ success: true, data: review });
+    // If auto-approved, update product rating immediately
+    if (status === 'approved') {
+      await updateProductStats(productId);
+    }
+
+    res.json({ success: true, data: review, autoApproved: status === 'approved' });
   } catch (error) {
     console.error("Review submit error:", error);
     res.status(500).json({ success: false, message: 'Server error.' });
@@ -73,16 +100,7 @@ const approveReview = async (req, res) => {
     if (!review) return res.status(404).json({ success: false });
 
     // Update Product Stats if approved
-    const product = await Product.findById(review.productId);
-    if (product) {
-      const allReviewsForProduct = await Review.find({ productId: review.productId, status: 'approved' });
-      const totalReviews = allReviewsForProduct.length;
-      const avgStars = allReviewsForProduct.reduce((acc, r) => acc + r.rating, 0) / totalReviews;
-      
-      product.stars = parseFloat(avgStars.toFixed(1));
-      product.reviews = totalReviews;
-      await product.save();
-    }
+    await updateProductStats(review.productId);
 
     res.json({ success: true, data: review });
   } catch {
@@ -101,15 +119,7 @@ const unapproveReview = async (req, res) => {
     if (!review) return res.status(404).json({ success: false });
 
     // Re-calc product stats
-    const product = await Product.findById(review.productId);
-    if (product) {
-       const allReviews = await Review.find({ productId: review.productId, status: 'approved' });
-       const total = allReviews.length;
-       const avg = total > 0 ? allReviews.reduce((s,r)=>s+r.rating,0)/total : 0;
-       product.stars = parseFloat(avg.toFixed(1));
-       product.reviews = total;
-       await product.save();
-    }
+    await updateProductStats(review.productId);
 
     res.json({ success: true, data: review });
   } catch {
