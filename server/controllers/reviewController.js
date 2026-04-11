@@ -19,22 +19,8 @@ const submitReview = async (req, res) => {
       productId: productId || null, 
       uid, 
       orderId,
-      status: 'approved' // Auto-approve as per current requirement
+      status: 'pending' // Default to pending until admin approval
     });
-
-    // Update Product Stats ONLY if productId is provided
-    if (productId) {
-      const product = await Product.findById(productId);
-      if (product) {
-        const allReviewsForProduct = await Review.find({ productId, status: 'approved' });
-        const totalReviews = allReviewsForProduct.length;
-        const avgStars = allReviewsForProduct.reduce((acc, r) => acc + r.rating, 0) / totalReviews;
-        
-        product.stars = parseFloat(avgStars.toFixed(1));
-        product.reviews = totalReviews;
-        await product.save();
-      }
-    }
 
     res.json({ success: true, data: review });
   } catch (error) {
