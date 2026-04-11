@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/policy/policy.css';
 
@@ -291,6 +291,9 @@ export default function Policy() {
 
   const [activeNav, setActiveNav] = useState('policy');
   const [activeSubNav, setActiveSubNav] = useState(type || 'privacy');
+  const [mainHeight, setMainHeight] = useState(null);
+
+  const sidebarRef = useRef(null);
 
   // Scroll to top instantly every time the policy type changes
   useEffect(() => {
@@ -302,17 +305,35 @@ export default function Policy() {
     setActiveSubNav(type || 'privacy');
   }, [type]);
 
+  // Measure sidebar height and keep main panel in sync
+  useEffect(() => {
+    const sidebarEl = sidebarRef.current;
+    if (!sidebarEl) return;
+
+    const update = () => setMainHeight(sidebarEl.offsetHeight);
+    update();
+
+    const ro = new ResizeObserver(update);
+    ro.observe(sidebarEl);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div className="policy-page">
       <div className="policy-container">
-        <Sidebar
-          activeNav={activeNav}
-          setActiveNav={setActiveNav}
-          activeSubNav={activeSubNav}
-          setActiveSubNav={setActiveSubNav}
-        />
+        <div ref={sidebarRef}>
+          <Sidebar
+            activeNav={activeNav}
+            setActiveNav={setActiveNav}
+            activeSubNav={activeSubNav}
+            setActiveSubNav={setActiveSubNav}
+          />
+        </div>
 
-        <main className="policy-main">
+        <main
+          className="policy-main"
+          style={mainHeight ? { height: mainHeight + 'px' } : {}}
+        >
 
           <div className="policy-mobile-header">
             <button className="mobile-back-btn" onClick={() => navigate('/account')}>
