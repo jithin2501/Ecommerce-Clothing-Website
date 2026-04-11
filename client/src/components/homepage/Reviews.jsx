@@ -20,7 +20,13 @@ export default function Reviews() {
   useEffect(() => {
     fetch(API)
       .then(r => r.json())
-      .then(data => { if (data.success && data.data.length > 0) setReviews(data.data); })
+      .then(data => {
+        if (data.success && data.data.length > 0) {
+          // Filter out reviews that belong to specific products
+          const storeReviews = data.data.filter(rev => !rev.productId);
+          setReviews(storeReviews);
+        }
+      })
       .catch(() => { });
   }, []);
 
