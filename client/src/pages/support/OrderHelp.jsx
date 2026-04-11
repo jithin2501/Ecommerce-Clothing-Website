@@ -50,13 +50,15 @@ export default function OrderHelp() {
 
             {/* Order info strip */}
             {order && (
-              <div className="sh-oh-order-strip">
-                <img src={order.items?.[0]?.image || order.items?.[0]?.img || order.items?.[0]?.photo || '/logo.png'} alt="Product" className="sh-order-img" />
-                <div className="sh-order-info">
-                  <div className="sh-order-label">ORDER #{order.displayId}</div>
-                  <div className="sh-order-id">{order.items?.[0]?.name || 'Product'}</div>
-                  <div className="sh-order-status">
-                    Status: <span className="sh-status-delivered">Delivered</span>
+              <div className="sh-oh-order-strip-wrapper">
+                <div className="sh-oh-order-strip">
+                  <img src={order.items?.[0]?.image || order.items?.[0]?.img || order.items?.[0]?.photo || '/logo.png'} alt="Product" className="sh-order-img" />
+                  <div className="sh-order-info">
+                    <div className="sh-order-label">ORDER #{order.displayId}</div>
+                    <div className="sh-order-id">{order.items?.[0]?.name || 'Product'}</div>
+                    <div className="sh-order-status">
+                      Status: <span className="sh-status-delivered">Delivered</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -64,20 +66,22 @@ export default function OrderHelp() {
 
             {/* Still need help */}
             <section className="sh-still-section sh-still-section--stretch">
-              <h2 className="sh-still-title" style={{textAlign:'center', marginBottom:'10px'}}>Ways to connect for Order #{order?.displayId}</h2>
-              <div className="sh-channels sh-channels--two">
-                <div className="sh-channel-card" onClick={() => navigate('/support/chat', { state: { order } })} style={{cursor:'pointer'}}>
-                  <div className="sh-channel-icon">💬</div>
-                  <div>
-                    <div className="sh-channel-title">Chat with us</div>
-                    <div className="sh-channel-sub">Get instant support for your queries.</div>
+              <div className="sh-connect-box">
+                <h2 className="sh-still-title">Ways to connect for Order #{order?.displayId}</h2>
+                <div className="sh-channels sh-channels--two">
+                  <div className="sh-channel-card" onClick={() => navigate('/support/chat', { state: { order } })} style={{cursor:'pointer'}}>
+                    <div className="sh-channel-icon">💬</div>
+                    <div>
+                      <div className="sh-channel-title">Chat with us</div>
+                      <div className="sh-channel-sub">Get instant support for your queries.</div>
+                    </div>
                   </div>
-                </div>
-                <div className="sh-channel-card" onClick={() => window.location.href = `mailto:sumathitrends.in@gmail.com?subject=Help with Order ${order?.displayId}`}>
-                  <div className="sh-channel-icon">✉️</div>
-                  <div>
-                    <div className="sh-channel-title">Email us</div>
-                    <div className="sh-channel-sub">Response within 24 business hours.</div>
+                  <div className="sh-channel-card" onClick={() => window.location.href = `mailto:sumathitrends.in@gmail.com?subject=Help with Order ${order?.displayId}`}>
+                    <div className="sh-channel-icon">✉️</div>
+                    <div>
+                      <div className="sh-channel-title">Email us</div>
+                      <div className="sh-channel-sub">Response within 24 business hours.</div>
+                    </div>
                   </div>
                 </div>
               </div>

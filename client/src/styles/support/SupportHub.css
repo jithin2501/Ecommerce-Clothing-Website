@@ -320,45 +320,51 @@
 
 /* ── ORDER HELP PAGE ── */
 .sh-hero--compact {
-  padding: 28px 32px 24px;
-  text-align: left;
+  padding: 32px 32px 28px;
+  text-align: center;
 }
 
 .sh-oh-breadcrumb {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  font-size: 12px;
-  margin-bottom: 12px;
+  font-size: 11px;
+  margin-bottom: 16px;
 }
 
-.sh-bc-link {
-  color: rgba(255, 255, 255, 0.65);
-  cursor: pointer;
-  transition: color 0.15s;
-}
-
-.sh-bc-link:hover {
-  color: #fff;
-}
-
-.sh-bc-sep {
-  color: rgba(255, 255, 255, 0.35);
-}
-
-.sh-bc-current {
-  color: #fff;
-  font-weight: 600;
+.sh-oh-order-strip-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
 }
 
 .sh-oh-order-strip {
   background: #f7f9ff;
   border-radius: 12px;
-  padding: 16px 20px;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   border: 1px solid #e8eeff;
+  width: fit-content;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+}
+
+.sh-connect-box {
+  background: #fff;
+  border: 1px solid #f1f1f1;
+  border-radius: 16px;
+  padding: 32px 24px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+  text-align: center;
+}
+
+.sh-still-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 24px; /* Gap between title and cards */
 }
 
 /* ── SUPPORT ISSUE FORM ── */
@@ -451,61 +457,68 @@
 }
 
 .sh-channels {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  max-width: 280px;
+  display: flex;
+  justify-content: center;
+  gap: 16px;
   margin: 0 auto;
 }
 
 .sh-channel-card {
   background: #f7f9ff;
   border-radius: 12px;
-  padding: 14px 16px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: all 0.2s;
   text-align: left;
+  border: 1px solid transparent;
+  width: 240px;
 }
 
 .sh-channel-card:hover {
-  background: #eef3ff;
+  background: #fff;
+  border-color: #e8eeff;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transform: translateY(-2px);
 }
 
 .sh-channel-icon {
-  width: 36px;
-  height: 36px;
-  background: #2D3E50;
-  border-radius: 9px;
+  width: 44px;
+  height: 44px;
+  background: #ffffff;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 20px;
   flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .sh-channel-title {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
-  color: #212121;
-  margin-bottom: 3px;
+  color: #111;
+  margin-bottom: 4px;
 }
 
 .sh-channel-sub {
   font-size: 11px;
   color: #888;
+  line-height: 1.4;
 }
 
 .sh-channels--two {
-  grid-template-columns: 1fr 1fr;
-  max-width: 440px;
+  display: flex;
+  /* Override grid if it was there */
 }
 
 .sh-channel-sub {
-  white-space: nowrap;
+  white-space: normal;
 }
+
 
 /* OrderHelp — stretch */
 .sh-body--stretch {
