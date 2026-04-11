@@ -36,7 +36,7 @@ function ClientDrawer({ client, onClose }) {
   const [tab, setTab] = useState('info');
   if (!client) return null;
 
-  const TABS = ['info', 'addresses', 'orders'];
+  const TABS = ['info', 'addresses', 'orders', 'reviews'];
 
   return (
     <div className="cm-overlay" onClick={onClose}>
@@ -133,6 +133,31 @@ function ClientDrawer({ client, onClose }) {
                 </div>
               ))
               : <EmptyState text="No orders placed yet" />
+          )}
+
+          {/* REVIEWS */}
+          {tab === 'reviews' && (
+            client.reviews?.length
+              ? client.reviews.map((r, i) => (
+                <div className="cm-order-card" key={i}>
+                   <div className="cm-order-head">
+                    <span className="cm-order-id" style={{color: '#E8A020'}}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</span>
+                    <span className="cm-order-date">{new Date(r.createdAt).toLocaleDateString('en-IN')}</span>
+                  </div>
+                  <div style={{fontSize: '13px', color: '#555', marginTop: '8px', lineHeight: '1.5'}}>
+                    {r.message}
+                  </div>
+                  {(r.images?.length > 0 || r.video) && (
+                    <div style={{display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap'}}>
+                      {r.images?.map((img, j) => (
+                        <img key={j} src={img} alt="review" style={{width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #eee'}} />
+                      ))}
+                      {r.video && <div style={{width: '50px', height: '50px', background: '#f5f5f5', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px'}}>📹</div>}
+                    </div>
+                  )}
+                </div>
+              ))
+              : <EmptyState text="No reviews submitted yet" />
           )}
 
         </div>

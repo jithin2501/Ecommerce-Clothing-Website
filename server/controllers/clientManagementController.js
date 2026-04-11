@@ -1,5 +1,6 @@
 const ClientUser = require('../models/ClientUser');
 const Order = require('../models/Order');
+const Review = require('../models/Review');
 
 /* ── GET all clients (paginated + filtered) ── */
 exports.getAllClients = async (req, res) => {
@@ -64,6 +65,9 @@ exports.getClientDetail = async (req, res) => {
 
     // Fetch full order history from Order collection
     const orders = await Order.find({ userId: { $in: user.uids } }).sort({ createdAt: -1 });
+
+    // Fetch product reviews from Review collection
+    const reviews = await Review.find({ uid: { $in: user.uids }, productId: { $ne: null } }).sort({ createdAt: -1 });
     
     // Map Order model fields to what ClientManagement.jsx expects (status, amount, createdAt/placedAt, etc.)
     const formattedOrders = orders.map(o => ({
@@ -74,7 +78,7 @@ exports.getClientDetail = async (req, res) => {
       items: o.items
     }));
 
-    res.json({ success: true, user: { ...user, orders: formattedOrders } });
+    res.json({ success: true, user: { ...user, orders: formattedOrders, reviews } });
   } catch (err) {
     console.error('❌ getClientDetail error:', err);
     res.status(500).json({ error: 'Server error' });

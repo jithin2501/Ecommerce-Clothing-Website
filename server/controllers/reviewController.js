@@ -82,7 +82,14 @@ const getApprovedReviews = async (req, res) => {
 // GET /api/reviews/admin — admin
 const getAllReviews = async (req, res) => {
   try {
-    const reviews = await Review.find({}).sort({ createdAt: -1 });
+    // ONLY show QR reviews (where productId is missing) in the general review management
+    const reviews = await Review.find({ 
+      $or: [
+        { productId: null }, 
+        { productId: { $exists: false } }
+      ]
+    }).sort({ createdAt: -1 });
+
     res.json({ success: true, data: reviews });
   } catch {
     res.status(500).json({ success: false });
