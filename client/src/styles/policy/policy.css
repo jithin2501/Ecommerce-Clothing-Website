@@ -182,39 +182,31 @@
   .policy-mobile-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 24px;
+    gap: 0; /* Removed gap */
+    margin-bottom: 20px;
     flex-shrink: 0;
   }
 
-  /* Show back button */
   .mobile-back-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #2D3E50;
-    cursor: pointer;
-    background: none;
-    border: none;
+    width: 0;
+    overflow: hidden;
     padding: 0;
-    margin-bottom: 0;
-    flex-shrink: 0;
+    margin: 0;
+    display: none;
   }
 
   .policy-content-header {
+    text-align: left;
     margin-bottom: 0 !important;
-  }
-
-  .mobile-back-btn span.back-chevron {
-    font-size: 20px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   .policy-content-header h1 {
     font-size: 1.15rem;
+    text-align: left;
+  }
+
+  .policy-content-header p {
+    text-align: left;
   }
 
   .policy-card {

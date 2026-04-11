@@ -191,7 +191,12 @@ img { max-width: 100%; display: block; }
   .cdp-breadcrumb,
   .contact-breadcrumb,
   .catpage-breadcrumb,
-  .mo-breadcrumb { 
+  .mo-breadcrumb,
+  .od-breadcrumb,
+  .wr-breadcrumb,
+  .sh-breadcrumb,
+  .mr-breadcrumb,
+  .pi-breadcrumb { 
     display: none !important; 
   }
 }

@@ -469,33 +469,27 @@
   .ma-mobile-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0;
     margin-bottom: 24px;
   }
 
   .mobile-back-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #2D3E50;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0;
-    margin-bottom: 0;
-    flex-shrink: 0;
+    display: none;
   }
 
   .ma-header {
     margin-bottom: 0 !important;
+    text-align: left;
   }
 
-  .mobile-back-btn span.back-chevron {
-    font-size: 20px;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .ma-header h1 {
+    font-size: 1.15rem;
+    margin-bottom: 2px;
+    text-align: left;
+  }
+
+  .ma-header p {
+    text-align: left;
   }
 
   .ma-form-grid {
@@ -504,11 +498,6 @@
 
   .ma-field-full {
     grid-column: span 1;
-  }
-
-  .ma-header h1 {
-    font-size: 1.15rem;
-    margin-bottom: 2px;
   }
 }
 

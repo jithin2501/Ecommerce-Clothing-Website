@@ -600,9 +600,7 @@
   }
 
   .sh-hero .mobile-back-btn {
-    color: #fff;
-    /* White on blue background */
-    padding-left: 0;
+    display: none;
   }
 
   .sh-hero-title {

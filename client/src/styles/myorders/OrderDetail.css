@@ -20,11 +20,7 @@
   display: none; /* Hidden on Desktop */
 }
 
-@media (max-width: 900px) {
-  .od-breadcrumb {
-    display: block; /* Visible on Mobile/Tablet */
-  }
-}
+
 
 .od-breadcrumb span:nth-child(1) {
   cursor: pointer;

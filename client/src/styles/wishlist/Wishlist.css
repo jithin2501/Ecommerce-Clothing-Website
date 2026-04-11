@@ -278,24 +278,22 @@
   .wl-main-header {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 0;
     margin-bottom: 24px;
   }
 
   .mobile-only-back {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    color: #2D3E50;
+    display: none;
   }
 
   .wl-header-text h1 {
     font-size: 1.15rem;
     margin-bottom: 2px;
+    text-align: left;
+  }
+
+  .wl-header-text p {
+    text-align: left;
   }
 
   .wl-list {
