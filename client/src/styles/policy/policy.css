@@ -10,7 +10,7 @@
   padding: 40px 20px;
   font-family: 'Inter', sans-serif;
   color: #212121;
-  margin-top: 30px;
+  margin-top: 8px;
   margin-bottom: 30px;
 }
 
@@ -126,6 +126,7 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+
   /* Hide the sidebar on sub-section pages */
   .policy-page .sidebar {
     display: none !important;

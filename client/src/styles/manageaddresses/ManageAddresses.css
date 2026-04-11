@@ -10,7 +10,7 @@
   padding: 40px 20px;
   font-family: 'Inter', sans-serif;
   color: #212121;
-  margin-top: 30px;
+  margin-top: 8px;
   margin-bottom: 30px;
 }
 
@@ -33,9 +33,22 @@
 }
 
 /* Header */
-.ma-header { margin-bottom: 16px; }
-.ma-header h1 { font-size: 18px; font-weight: 700; margin: 0 0 4px; color: #212121; }
-.ma-header p  { font-size: 13px; color: #878787; margin: 0; }
+.ma-header {
+  margin-bottom: 16px;
+}
+
+.ma-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: #212121;
+}
+
+.ma-header p {
+  font-size: 13px;
+  color: #878787;
+  margin: 0;
+}
 
 /* ===== ADD A NEW ADDRESS trigger ===== */
 .ma-add-trigger {
@@ -102,8 +115,15 @@
   font-family: 'Inter', sans-serif;
   transition: background 0.15s;
 }
-.ma-location-btn:hover { background: #dce8ff; }
-.ma-locating { opacity: 0.7; cursor: wait; }
+
+.ma-location-btn:hover {
+  background: #dce8ff;
+}
+
+.ma-locating {
+  opacity: 0.7;
+  cursor: wait;
+}
 
 /* Form Grid */
 .ma-form-grid {
@@ -118,7 +138,9 @@
   gap: 6px;
 }
 
-.ma-field-full { grid-column: span 2; }
+.ma-field-full {
+  grid-column: span 2;
+}
 
 .ma-field label {
   font-size: 11px;
@@ -145,12 +167,24 @@
 }
 
 .ma-field input::placeholder,
-.ma-field textarea::placeholder { color: #bbb; }
+.ma-field textarea::placeholder {
+  color: #bbb;
+}
+
 .ma-field input:focus,
 .ma-field select:focus,
-.ma-field textarea:focus { border-color: #2C3E50; }
-.ma-field textarea { resize: none; }
-.ma-field select { appearance: auto; cursor: pointer; }
+.ma-field textarea:focus {
+  border-color: #2C3E50;
+}
+
+.ma-field textarea {
+  resize: none;
+}
+
+.ma-field select {
+  appearance: auto;
+  cursor: pointer;
+}
 
 .ma-error {
   font-size: 11px;
@@ -159,31 +193,45 @@
 }
 
 /* Radio & Checkbox */
-.ma-radio-group { display: flex; gap: 24px; }
+.ma-radio-group {
+  display: flex;
+  gap: 24px;
+}
+
 .ma-radio {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 14px; cursor: pointer; color: #212121;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #212121;
   text-transform: uppercase;
   font-weight: 600;
 }
+
 .ma-radio input[type="radio"] {
   accent-color: #2C3E50;
-  width: 18px; height: 18px; cursor: pointer;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
 }
 
 /* Custom Circular Checkbox */
 .ma-checkbox-container {
   display: flex;
   align-items: center;
-  gap: 8px; /* Matched to .ma-radio */
+  gap: 8px;
+  /* Matched to .ma-radio */
   cursor: pointer;
   user-select: none;
-  margin-top: 5px; /* Minimal gap between the two rows */
+  margin-top: 5px;
+  /* Minimal gap between the two rows */
 }
 
 .ma-checkbox-wrapper {
   position: relative;
-  width: 18px; /* Reduced from 20px to match 17px radio buttons */
+  width: 18px;
+  /* Reduced from 20px to match 17px radio buttons */
   height: 18px;
   flex-shrink: 0;
 }
@@ -204,15 +252,16 @@
   width: 18px;
   background-color: #fff;
   border: 2px solid #e0e0e0;
-  border-radius: 50%; /* Makes it circular */
+  border-radius: 50%;
+  /* Makes it circular */
   transition: all 0.2s ease;
 }
 
-.ma-checkbox-wrapper:hover input ~ .ma-checkmark {
+.ma-checkbox-wrapper:hover input~.ma-checkmark {
   border-color: #2C3E50;
 }
 
-.ma-checkbox-wrapper input:checked ~ .ma-checkmark {
+.ma-checkbox-wrapper input:checked~.ma-checkmark {
   background-color: #2C3E50;
   border-color: #2C3E50;
 }
@@ -223,7 +272,7 @@
   display: none;
 }
 
-.ma-checkbox-wrapper input:checked ~ .ma-checkmark:after {
+.ma-checkbox-wrapper input:checked~.ma-checkmark:after {
   display: block;
 }
 
@@ -238,9 +287,11 @@
 }
 
 .ma-checkbox-text {
-  font-size: 14px; /* Matched to .ma-radio */
+  font-size: 14px;
+  /* Matched to .ma-radio */
   color: #212121;
-  font-weight: 600; /* Matched to .ma-radio */
+  font-weight: 600;
+  /* Matched to .ma-radio */
   text-transform: uppercase;
 }
 
@@ -266,7 +317,10 @@
   text-transform: uppercase;
   transition: background 0.2s;
 }
-.ma-btn-save:hover { background: #1a2d3d; }
+
+.ma-btn-save:hover {
+  background: #1a2d3d;
+}
 
 .ma-btn-cancel {
   background: none;
@@ -280,10 +334,15 @@
   letter-spacing: 0.05em;
   transition: color 0.15s;
 }
-.ma-btn-cancel:hover { color: #212121; }
+
+.ma-btn-cancel:hover {
+  color: #212121;
+}
 
 /* Saved Addresses */
-.ma-saved-section { margin-top: 8px; }
+.ma-saved-section {
+  margin-top: 8px;
+}
 
 .ma-saved-header {
   display: flex;
@@ -340,7 +399,10 @@
   padding: 0 4px;
   line-height: 1;
 }
-.ma-addr-menu:hover { color: #ff3f6c; }
+
+.ma-addr-menu:hover {
+  color: #ff3f6c;
+}
 
 .ma-addr-name {
   font-size: 14px;
@@ -363,9 +425,17 @@
 
 /* Responsive - tablet */
 @media (max-width: 900px) {
-  .ma-container { flex-direction: column; }
-  .ma-form-grid { grid-template-columns: 1fr; }
-  .ma-field-full { grid-column: span 1; }
+  .ma-container {
+    flex-direction: column;
+  }
+
+  .ma-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ma-field-full {
+    grid-column: span 1;
+  }
 }
 
 /* ── Mobile only: hide sidebar, show back button ── */
@@ -393,7 +463,7 @@
     padding: 20px 16px;
     background: #fff;
     border-radius: 14px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
   }
 
   .ma-mobile-header {
@@ -428,9 +498,18 @@
     justify-content: center;
   }
 
-  .ma-form-grid { grid-template-columns: 1fr; }
-  .ma-field-full { grid-column: span 1; }
-  .ma-header h1 { font-size: 1.15rem; margin-bottom: 2px; }
+  .ma-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ma-field-full {
+    grid-column: span 1;
+  }
+
+  .ma-header h1 {
+    font-size: 1.15rem;
+    margin-bottom: 2px;
+  }
 }
 
 
@@ -446,7 +525,7 @@
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   z-index: 100;
   min-width: 130px;
   overflow: hidden;
@@ -467,6 +546,14 @@
   transition: background 0.15s;
 }
 
-.ma-dropdown button:hover { background: #f5f5f5; }
-.ma-dropdown-delete { color: #ff3f6c !important; }
-.ma-dropdown-delete:hover { background: #fff5f7 !important; }
+.ma-dropdown button:hover {
+  background: #f5f5f5;
+}
+
+.ma-dropdown-delete {
+  color: #ff3f6c !important;
+}
+
+.ma-dropdown-delete:hover {
+  background: #fff5f7 !important;
+}
