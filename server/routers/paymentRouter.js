@@ -23,4 +23,7 @@ router.get('/track/:orderId', paymentCtrl.syncTrackingStatus);
 // NEW: Route to manually push a missing order to Shiprocket
 router.post('/manual-sync-sr/:orderId', paymentCtrl.manualSyncToShiprocket);
 
+// TEST/ADMIN: Manually update order status
+router.patch('/orders/:id/status', paymentCtrl.updateOrderStatus);
+
 module.exports = router;

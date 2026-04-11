@@ -336,10 +336,33 @@ function OrderDrawer({ order, onClose }) {
           </div>
         </div>
 
-        <div className="om-drawer-footer">
+        <div className="om-drawer-footer" style={{ display: 'flex', gap: '10px' }}>
           <button className="om-print-btn" onClick={handlePrint}>
             <Printer size={16} /> Print
           </button>
+          {order.trackingStatus?.toUpperCase() !== 'DELIVERED' && (
+            <button 
+              className="om-print-btn" 
+              style={{ background: '#22c55e', color: '#fff', border: 'none' }}
+              onClick={async () => {
+                if (!window.confirm('TEST: Mark this order as delivered?')) return;
+                try {
+                  const res = await fetch(`/api/payment/orders/${order._id}/status`, {
+                    method: 'PATCH',
+                    headers: authHeaders(),
+                    body: JSON.stringify({ trackingStatus: 'DELIVERED' })
+                  });
+                  const data = await res.json();
+                  if (data.success) {
+                    alert('Order marked as DELIVERED. You can now test reviews!');
+                    window.location.reload();
+                  }
+                } catch (err) { alert('Failed to update status'); }
+              }}
+            >
+              Mark as Delivered (Test)
+            </button>
+          )}
         </div>
       </aside>
     </div>
