@@ -88,6 +88,21 @@ export default function ProductReviews({ productId }) {
                 <p className="pr-date">{new Date(r.createdAt).toLocaleDateString()}</p>
               </div>
               <p className="pr-text">{r.message}</p>
+              
+              {(r.images?.length > 0 || r.video) && (
+                <div className="pr-media">
+                  {r.images?.map((img, i) => (
+                    <div key={i} className="pr-media-item">
+                      <img src={img} alt={`Review ${i}`} onClick={() => window.open(img, '_blank')} />
+                    </div>
+                  ))}
+                  {r.video && (
+                    <div className="pr-media-item">
+                      <video src={r.video} controls />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           ))
         )}

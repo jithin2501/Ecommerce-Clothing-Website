@@ -54,19 +54,51 @@ export default function WriteReview() {
   const item = location.state?.item || null;
   const initRating = location.state?.rating || 0;
 
-  const [rating, setRating] = useState(initRating);
+  const [rating, setRating]           = useState(initRating);
   const [description, setDescription] = useState('');
-  const [name, setName] = useState('');
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+  const [name, setName]               = useState('');
+  const [images, setImages]           = useState([]);      // Array of file objects
+  const [previews, setPreviews]       = useState([]);    // Array of base64/blob for previews
+  const [video, setVideo]             = useState(null);    // Single video file
+  const [vPreview, setVPreview]       = useState(null);
+  const [submitted, setSubmitted]     = useState(false);
+  const [error, setError]             = useState('');
 
   const handleFile = (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-    setFile(f);
-    setPreview(URL.createObjectURL(f));
+    const files = Array.from(e.target.files);
+    const newImages = [...images];
+    const newPreviews = [...previews];
+    let newVideo = video;
+    let newVPreview = vPreview;
+
+    files.forEach(f => {
+      if (f.type.startsWith('image/')) {
+        if (newImages.length < 4) {
+          newImages.push(f);
+          newPreviews.push(URL.createObjectURL(f));
+        }
+      } else if (f.type.startsWith('video/')) {
+        if (!newVideo) {
+          newVideo = f;
+          newVPreview = URL.createObjectURL(f);
+        }
+      }
+    });
+
+    setImages(newImages);
+    setPreviews(newPreviews);
+    setVideo(newVideo);
+    setVPreview(newVPreview);
+  };
+
+  const removeImage = (idx) => {
+    setImages(images.filter((_, i) => i !== idx));
+    setPreviews(previews.filter((_, i) => i !== idx));
+  };
+
+  const removeVideo = () => {
+    setVideo(null);
+    setVPreview(null);
   };
 
   const handleSubmit = async () => {
@@ -88,8 +120,13 @@ export default function WriteReview() {
     }
 
     setError('');
-    const userId = localStorage.getItem('sumathi_uid'); // Assume uid is stored or use Firebase
+    const userId = localStorage.getItem('sumathi_uid');
     
+    // Simulating file upload to get URLs (since no real storage is configured yet)
+    // In a real app, you'd upload to S3/Cloudinary and get real URLs back.
+    const imageURLs = previews; // Temporary: using current blobs/previews as URLs
+    const videoURL = vPreview;
+
     try {
       const response = await fetch('/api/reviews/submit', {
         method: 'POST',
@@ -98,16 +135,18 @@ export default function WriteReview() {
           name: name.trim(),
           rating: Number(rating),
           message: description.trim(),
-          productId: item.productId,
-          orderId: order.orderId,
-          uid: userId
+          productId: item?.productId,
+          orderId: order?.orderId,
+          uid: userId,
+          images: imageURLs,
+          video: videoURL
         })
       });
 
       const data = await response.json();
       if (data.success) {
         setSubmitted(true);
-        setTimeout(() => navigate('/account/orders'), 2000);
+        setTimeout(() => navigate('/account/orders'), 3000);
       } else {
         setError(data.message || 'Failed to submit review.');
       }
@@ -119,13 +158,13 @@ export default function WriteReview() {
   return (
     <div className="wr-page">
 
-      {/* Success overlay */}
+      {/* Success overlay - Floating Center */}
       {submitted && (
         <div className="wr-success-overlay">
           <div className="wr-success-box">
             <div className="wr-success-icon">✓</div>
             <h2 className="wr-success-title">Review Submitted!</h2>
-            <p className="wr-success-msg">Thank you for your feedback. Redirecting back to orders…</p>
+            <p className="wr-success-msg">Thank you for sharing your experience. Redirecting you back to orders...</p>
           </div>
         </div>
       )}
@@ -223,19 +262,28 @@ export default function WriteReview() {
             </div>
 
             <div className="wr-field">
-              <label className="wr-label">Add a photo or video</label>
-              <label className="wr-upload-box">
-                {preview ? (
-                  <img src={preview} alt="preview" className="wr-upload-preview" />
-                ) : (
-                  <>
-                    <span className="wr-upload-icon">📷</span>
-                    <span className="wr-upload-text">Upload Photo or Video</span>
-                  </>
+              <label className="wr-label">Add photos or a video (Optional)</label>
+              <div className="wr-media-grid">
+                {previews.map((p, idx) => (
+                  <div key={idx} className="wr-media-preview-box">
+                    <img src={p} alt="preview" />
+                    <button className="wr-media-remove" onClick={() => removeImage(idx)}>×</button>
+                  </div>
+                ))}
+                {vPreview && (
+                  <div className="wr-media-preview-box">
+                    <video src={vPreview} className="wr-media-video" />
+                    <button className="wr-media-remove" onClick={removeVideo}>×</button>
+                  </div>
                 )}
-                <input type="file" accept="image/*,video/*" onChange={handleFile} hidden />
-              </label>
-              <span className="wr-upload-hint">Accepted formats: JPG, PNG. Max size: 10MB</span>
+                {(previews.length < 4 || !vPreview) && (
+                  <label className="wr-upload-box-small">
+                    <span className="wr-upload-icon">+</span>
+                    <input type="file" accept="image/*,video/*" multiple onChange={handleFile} hidden />
+                  </label>
+                )}
+              </div>
+              <span className="wr-upload-hint">Upload up to 4 photos and 1 video. Accepted formats: JPG, PNG, MP4.</span>
             </div>
 
             {error && <div className="wr-error">{error}</div>}

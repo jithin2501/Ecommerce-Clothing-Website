@@ -5,7 +5,7 @@ const Product = require('../models/Product');
 // POST /api/reviews/submit — public
 const submitReview = async (req, res) => {
   try {
-    const { name, rating, message, productId, uid, orderId } = req.body;
+    const { name, rating, message, productId, uid, orderId, images, video } = req.body;
     if (!name || !rating || !message)
       return res.status(400).json({ success: false, message: 'Required fields missing.' });
     
@@ -19,6 +19,8 @@ const submitReview = async (req, res) => {
       productId: productId || null, 
       uid, 
       orderId,
+      images: images || [],
+      video: video || null,
       status: 'pending' // Default to pending until admin approval
     });
 
