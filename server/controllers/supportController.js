@@ -1,4 +1,5 @@
 const SupportIssue = require('../models/SupportIssue');
+const ClientUser = require('../models/ClientUser');
 const { PutObjectCommand } = require('@aws-sdk/client-s3');
 const { s3 } = require('../conf/s3');
 const BUCKET = process.env.AWS_S3_BUCKET;
@@ -50,18 +51,23 @@ const Order = require('../models/Order');
 exports.getAllIssues = async (req, res) => {
   try {
     const issues = await SupportIssue.find().sort({ createdAt: -1 }).lean();
-    
-    // Dynamically join order data for each issue
-    const enhancedIssues = await Promise.all(issues.map(async (issue) => {
-      // Look up order using displayId (which is what orderId stores in SupportIssue)
+
+    // Dynamically join order data AND client data for each issue
+    const joinedIssues = await Promise.all(issues.map(async (issue) => {
+      // 1. Fetch official CID from ClientUser
+      const clientDoc = await ClientUser.findOne({ uids: issue.userId }).lean();
+      
+      // 2. Fetch order data
       const orderData = await Order.findOne({ displayId: issue.orderId }).lean();
+      
       return {
         ...issue,
+        officialCustomerId: clientDoc?.customerId || issue.customerId || 'N/A',
         orderContext: orderData || null
       };
     }));
 
-    res.json({ success: true, data: enhancedIssues });
+    res.json({ success: true, data: joinedIssues });
   } catch (error) {
     console.error('getAllIssues error:', error);
     res.status(500).json({ success: false, message: 'Failed to fetch support issues' });

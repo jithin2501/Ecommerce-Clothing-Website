@@ -76,7 +76,7 @@ export default function SupportManagement() {
                 {issues.map(iss => (
                   <tr key={iss._id}>
                     <td className="bold" style={{ color: '#2D3E50', fontWeight: '700' }}>#{iss.orderId}</td>
-                    <td className="td-name">{iss.customerId || (typeof iss.userId === 'string' ? iss.userId.slice(-6).toUpperCase() : 'N/A')}</td>
+                    <td className="td-name">{iss.officialCustomerId || 'N/A'}</td>
                     <td className="td-msg">{iss.description.slice(0, 50)}...</td>
                     <td>
                       <span className={`support-status-badge status-${iss.status.toLowerCase().replace(' ', '-')}`}>
@@ -103,8 +103,8 @@ export default function SupportManagement() {
             <h3 className="modal-title">Issue Details: #{selected.orderId}</h3>
             <hr className="modal-divider" />
 
-            <div className="modal-fields">
-              <p><strong>Current Status:</strong>
+            <div className="modal-fields" style={{ marginBottom: '25px' }}>
+              <p style={{ marginBottom: '10px' }}><strong>Current Status:</strong>
                 <select
                   className="admin-select"
                   style={{ marginLeft: '10px', padding: '6px 12px', borderRadius: '8px', border: '1px solid #ddd', outline: 'none' }}
@@ -116,18 +116,18 @@ export default function SupportManagement() {
                   <option value="Resolved">Resolved</option>
                 </select>
               </p>
-              <p><strong>Customer ID:</strong> {selected.customerId || selected.userId}</p>
+              <p style={{ marginBottom: '10px' }}><strong>Customer ID:</strong> {selected.officialCustomerId}</p>
               <p><strong>Date Submitted:</strong> {new Date(selected.createdAt).toLocaleString('en-IN')}</p>
             </div>
 
-            <div className="modal-msg-section">
+            <div className="modal-msg-section" style={{ marginBottom: '25px' }}>
               <h4>Problem Description</h4>
               <div className="issue-description-well">{selected.description}</div>
             </div>
 
             {/* NEW: Product Context from the Order */}
             {selected.orderContext && (
-              <div className="modal-msg-section">
+              <div className="modal-msg-section" style={{ marginBottom: '25px' }}>
                 <h4>Ordered Products</h4>
                 <div className="order-context-list" style={{ background: '#f8fafc', padding: '15px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
                   {selected.orderContext.items?.map((it, idx) => (
