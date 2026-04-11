@@ -616,8 +616,7 @@ body.has-navbar {
 }
 
 body.collections-path {
-  padding-top: 30px;
-  /* TIGHTER GRID LIST */
+  padding-top: 130px;
 }
 
 body.cdp-path {
@@ -636,7 +635,7 @@ body.contact-path {
 
   body.collections-path,
   body.contact-path {
-    padding-top: 90px; 
+    padding-top: 120px; 
   }
 
   body.cdp-path {

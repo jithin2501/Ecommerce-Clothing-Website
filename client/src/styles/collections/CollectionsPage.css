@@ -30,10 +30,7 @@
   line-height: 1.6;
 }
 
-/* Spacer for fixed nav - medium gap */
-.nav-spacer {
-  height: 150px;
-}
+
 
 @media (max-width: 768px) {
   .collections-banner {
