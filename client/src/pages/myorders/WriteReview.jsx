@@ -63,6 +63,7 @@ export default function WriteReview() {
   const [vPreview, setVPreview]       = useState(null);
   const [submitted, setSubmitted]     = useState(false);
   const [error, setError]             = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFile = (e) => {
     const files = Array.from(e.target.files);
@@ -281,8 +282,8 @@ export default function WriteReview() {
 
             {error && <div className="wr-error">{error}</div>}
 
-            <button className="wr-submit-btn" onClick={handleSubmit}>
-              SUBMIT REVIEW
+            <button className="wr-submit-btn" onClick={handleSubmit} disabled={isSubmitting}>
+              {isSubmitting ? 'SUBMITTING...' : 'SUBMIT REVIEW'}
             </button>
             <p className="wr-terms">
               By submitting, you agree to our{" "}
