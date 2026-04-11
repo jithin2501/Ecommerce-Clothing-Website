@@ -263,7 +263,7 @@
 /* Delete Account */
 .delete-account {
   display: inline-block;
-  margin-top: 40px;
+  margin-top: 20px;
   background-color: var(--danger-red);
   color: white;
   font-size: 13px;
