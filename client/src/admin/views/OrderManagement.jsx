@@ -193,7 +193,6 @@ function OrderDrawer({ order, onClose }) {
   const printRef = useRef();
 
   const handlePrint = () => {
-    const printContent = printRef.current.innerHTML;
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
       <html>
@@ -269,11 +268,27 @@ function OrderDrawer({ order, onClose }) {
                 For any support, please contact us at sumathitrends.in@gmail.com
               </div>
            </div>
-           </div>
         </body>
       </html>
     `);
     printWindow.document.close();
+  };
+
+  const handleForceDelivered = async () => {
+    if (!window.confirm('Mark this order as DELIVERED manually for testing?')) return;
+    try {
+      const res = await fetch(`/api/payment/force-delivered/${order._id}`, {
+        method: 'POST',
+        headers: authHeaders()
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert('Order forced to DELIVERED status!');
+        window.location.reload(); // Refresh to update all views
+      }
+    } catch (err) {
+      console.error('Force Delivered Error:', err);
+    }
   };
 
   return (
@@ -340,6 +355,12 @@ function OrderDrawer({ order, onClose }) {
           <button className="om-print-btn" onClick={handlePrint}>
             <Printer size={16} /> Print
           </button>
+          
+          {order.trackingStatus !== 'DELIVERED' && (
+            <button className="om-force-delivered-btn" onClick={handleForceDelivered}>
+              Force Delivered
+            </button>
+          )}
         </div>
       </aside>
     </div>
