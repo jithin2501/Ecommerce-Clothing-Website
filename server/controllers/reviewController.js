@@ -3,6 +3,7 @@ const Review = require('../models/Review');
 const Product = require('../models/Product');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -28,7 +29,7 @@ const uploadToS3 = async (file, folder = 'reviews') => {
  * ── Helper: Update Product Aggregate Stats ──
  */
 const updateProductStats = async (productId) => {
-  if (!productId) return;
+  if (!productId || productId === 'null' || productId === 'undefined' || !mongoose.Types.ObjectId.isValid(productId)) return;
   const product = await Product.findById(productId);
   if (!product) return;
 

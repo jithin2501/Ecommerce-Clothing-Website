@@ -128,8 +128,8 @@ export default function WriteReview() {
     fd.append('name', name.trim());
     fd.append('rating', Number(rating));
     fd.append('message', description.trim());
-    fd.append('productId', item?.productId);
-    fd.append('orderId', order?.orderId);
+    if (item?.productId) fd.append('productId', item.productId);
+    if (order?.orderId) fd.append('orderId', order.orderId);
     fd.append('uid', userId || '');
 
     // Add files

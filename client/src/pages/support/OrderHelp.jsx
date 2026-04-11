@@ -10,7 +10,7 @@ export default function OrderHelp() {
   const location = useLocation();
   const order = location.state?.order || null;
 
-  const [activeNav, setActiveNav]       = useState('');
+  const [activeNav, setActiveNav] = useState('');
   const [activeSubNav, setActiveSubNav] = useState('support');
 
   return (
@@ -64,7 +64,7 @@ export default function OrderHelp() {
               <div className="sh-connect-box">
                 <h2 className="sh-still-title">Ways to connect for Order #{order?.displayId}</h2>
                 <div className="sh-channels sh-channels--two">
-                  <div className="sh-channel-card" onClick={() => navigate('/support/chat', { state: { order } })} style={{cursor:'pointer'}}>
+                  <div className="sh-channel-card" onClick={() => navigate('/support/chat', { state: { order } })} style={{ cursor: 'pointer' }}>
                     <div className="sh-channel-icon">
                       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -84,7 +84,8 @@ export default function OrderHelp() {
                     </div>
                     <div>
                       <div className="sh-channel-title">Email us</div>
-                      <div className="sh-channel-sub">Response within 24 business hours.</div>
+                      <div className="sh-channel-sub">
+                        sumathitrends.in@gmail.com</div>
                     </div>
                   </div>
                 </div>
