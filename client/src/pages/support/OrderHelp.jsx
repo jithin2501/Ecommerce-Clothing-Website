@@ -28,11 +28,6 @@ export default function OrderHelp() {
 
           {/* Header */}
           <div className="sh-hero sh-hero--compact">
-            <div className="sh-oh-breadcrumb">
-              <span className="sh-bc-link" onClick={() => navigate('/support')}>Support Hub</span>
-              <span className="sh-bc-sep">›</span>
-              <span className="sh-bc-current">Order Help</span>
-            </div>
             <div className="sh-mobile-header">
               <button className="mobile-back-btn" onClick={() => navigate('/support')}>
                 <span className="back-chevron">

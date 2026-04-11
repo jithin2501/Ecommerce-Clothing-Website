@@ -211,16 +211,6 @@ export default function ChatSupport() {
         />
 
         <main className="sh-main">
-
-
-          <div className="cs-breadcrumb">
-            <span className="cs-bc-link" onClick={() => navigate('/support')}>Support Hub</span>
-            <span className="cs-bc-sep">›</span>
-            <span className="cs-bc-link" onClick={() => navigate(-1)}>Order Help</span>
-            <span className="cs-bc-sep">›</span>
-            <span className="cs-bc-current">Chat</span>
-          </div>
-
           <div className="cs-chat-wrap">
 
             <div className="cs-chat-header">
