@@ -144,6 +144,7 @@ export default function PersonInformation() {
   };
 
   // Match main panel height to sidebar — desktop only
+  // Re-runs when dbUser loads so sidebar is fully rendered before measuring
   useEffect(() => {
     const el = sidebarRef.current;
     if (!el) return;
@@ -151,12 +152,13 @@ export default function PersonInformation() {
       if (window.innerWidth > 768) setMainHeight(el.offsetHeight);
       else setMainHeight(null);
     };
-    update();
+    // Small timeout to let sidebar finish painting after data load
+    const timer = setTimeout(update, 50);
     const ro = new ResizeObserver(update);
     ro.observe(el);
     window.addEventListener('resize', update);
-    return () => { ro.disconnect(); window.removeEventListener('resize', update); };
-  }, []);
+    return () => { clearTimeout(timer); ro.disconnect(); window.removeEventListener('resize', update); };
+  }, [dbUser]);
 
   if (loadingProfile) {
     return (
@@ -181,7 +183,7 @@ export default function PersonInformation() {
           />
         </div>
 
-        <main className="main-content" style={mainHeight ? { height: mainHeight + 'px', overflow: 'hidden' } : {}}>
+        <main className="main-content" style={mainHeight ? { height: mainHeight + 'px' } : {}}>
 
           {/* Combined Header with back button for phone view */}
           <div className="pi-mobile-header">
