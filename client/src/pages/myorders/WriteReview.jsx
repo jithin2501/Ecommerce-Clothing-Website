@@ -169,15 +169,7 @@ export default function WriteReview() {
         </div>
       )}
 
-      {/* Breadcrumb */}
-      <div className="wr-breadcrumb">
-        <span onClick={() => navigate('/')} className="wr-bc-link">Home</span>
-        <span className="wr-bc-sep">›</span>
-        <span onClick={() => navigate('/account/orders')} className="wr-bc-link">My Orders</span>
-        <span className="wr-bc-sep">›</span>
-        <span className="wr-bc-current">Write a Review</span>
-      </div>
-
+      {/* Header */}
       <div className="wr-header-center">
         <h1 className="wr-page-title">Write a Review</h1>
 

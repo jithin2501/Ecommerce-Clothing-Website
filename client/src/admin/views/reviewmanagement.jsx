@@ -146,7 +146,17 @@ export default function ReviewManagement() {
                   <td className="rm-date">{formatDate(r.createdAt)}</td>
                   <td className="rm-name">{r.name}</td>
                   <td className="rm-rating">{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</td>
-                  <td className="rm-message">{r.message}</td>
+                  <td className="rm-message">
+                    <p>{r.message}</p>
+                    {(r.images?.length > 0 || r.video) && (
+                      <div className="rm-media-mini-grid" style={{ display: 'flex', gap: '5px', marginTop: '5px' }}>
+                        {r.images?.map((img, i) => (
+                          <img key={i} src={img} alt="" style={{ width: '30px', height: '30px', objectFit: 'cover', borderRadius: '4px', border: '1px solid #ddd' }} />
+                        ))}
+                        {r.video && <div style={{ width: '30px', height: '30px', background: '#eee', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px' }}>📹</div>}
+                      </div>
+                    )}
+                  </td>
                   <td>
                     <span className={`rm-status-badge ${r.status}`}>
                       {r.status === 'approved' ? 'Approved' : 'Pending'}
