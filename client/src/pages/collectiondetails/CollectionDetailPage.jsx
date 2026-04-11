@@ -231,33 +231,6 @@ export default function CollectionDetailPage() {
 
   const product = detail.product;
 
-  const renderBreadcrumb = () => {
-    if (fromState.fromLabel) {
-      return (
-        <div className="cdp-breadcrumb">
-          <a href="/" onClick={handleBack}>Home</a>
-          <span className="cdp-sep">›</span>
-          {fromState.fromCart ? (
-            <a href="/cart" onClick={handleBack}>{fromState.fromLabel}</a>
-          ) : (
-            <a href="/" onClick={handleBack}>{fromState.fromLabel}</a>
-          )}
-          <span className="cdp-sep">›</span>
-          {product?.category && <><span>{product.category}</span><span className="cdp-sep">›</span></>}
-          <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
-        </div>
-      );
-    }
-    return (
-      <div className="cdp-breadcrumb">
-        <Link to="/" onClick={handleBack}>Home</Link>
-        <span className="cdp-sep">›</span>
-        <Link to="/collections" state={{}}>{fromState.fromLabel || 'Collections'}</Link>
-        <span className="cdp-sep">›</span>
-        <span className="cdp-crumb-active">{product?.name || 'Product'}</span>
-      </div>
-    );
-  };
 
   return (
     <div className="cdp-page">
@@ -268,7 +241,7 @@ export default function CollectionDetailPage() {
         url={window.location.href}
         image={activeImages?.[0] || "https://sumathitrends.com/images/logo.png"}
       />
-      {renderBreadcrumb()}
+
       <div className="cdp-main">
         <ProductGallery images={activeImages} onZoomChange={handleZoomChange} />
         <div className="cdp-right-col">

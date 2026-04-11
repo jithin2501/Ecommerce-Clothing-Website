@@ -56,13 +56,7 @@ export default function AgeGroupPage() {
       <AgeGroupBanner meta={meta} />
 
       <div className="section-inner">
-        <div className="page-breadcrumb">
-          <Link to="/" className="breadcrumb-link">Home</Link>
-          <span className="breadcrumb-sep"> › </span>
-          <Link to="/collections" className="breadcrumb-link">Collections</Link>
-          <span className="breadcrumb-sep"> › </span>
-          <span className="breadcrumb-current">{meta.label}</span>
-        </div>
+
 
         <div className="agp-layout">
           <FilterSidebar

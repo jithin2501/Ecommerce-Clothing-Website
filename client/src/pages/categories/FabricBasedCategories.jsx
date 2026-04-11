@@ -17,13 +17,7 @@ export default function FabricBasedCategories() {
 
   return (
     <div className="catpage-wrapper">
-      <nav className="catpage-breadcrumb">
-        <Link to="/" onClick={() => sessionStorage.setItem('goHome', '1')}>Home</Link>
-        <span className="catpage-breadcrumb-sep">›</span>
-        <Link to="/" onClick={() => sessionStorage.setItem('scrollTarget', 'collections')}>Category</Link>
-        <span className="catpage-breadcrumb-sep">›</span>
-        <span className="catpage-breadcrumb-current">Fabric-Based Categories</span>
-      </nav>
+
 
       <h1 className="catpage-title">Fabric-Based Categories</h1>
       <div className="catpage-divider" />

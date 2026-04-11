@@ -66,11 +66,7 @@ export default function ContactPage() {
         <div className="contact-inner">
 
           {/* ── Breadcrumb ── */}
-          <div className="contact-breadcrumb">
-            <Link to="/" className="breadcrumb-link">Home</Link>
-            <span className="breadcrumb-sep"> › </span>
-            <span className="breadcrumb-current">Contact</span>
-          </div>
+
 
           {/* ── Left ── */}
           <div className="contact-left">

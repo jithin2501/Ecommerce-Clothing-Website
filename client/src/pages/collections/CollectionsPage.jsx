@@ -69,26 +69,7 @@ export default function CollectionsPage() {
     <main className="collections-page">
       <div className="section-inner">
         {/* Breadcrumb - reduced gap */}
-        <div className="page-breadcrumb" style={{ marginTop: '0px' }}>
-          <Link to="/" className="breadcrumb-link">Home</Link>
-          <span className="breadcrumb-sep"> › </span>
-          
-          {(selectedCategories.length === 0 && selectedSubcategories.length === 0 && selectedAgeGroups.length === 0) ? (
-            <span className="breadcrumb-current">Collections</span>
-          ) : (
-            <>
-              <Link to="/collections" state={{}} className="breadcrumb-link">Collections</Link>
-              <span className="breadcrumb-sep"> › </span>
-              <span className="breadcrumb-current">
-                {selectedSubcategories.length > 0 
-                  ? selectedSubcategories[0] 
-                  : selectedCategories.length > 0 
-                    ? selectedCategories[0] 
-                    : selectedAgeGroups[0]}
-              </span>
-            </>
-          )}
-        </div>
+
 
         <div className="agp-layout" style={{ marginTop: '0px', marginBottom: '60px' }}>
           <FilterSidebar
