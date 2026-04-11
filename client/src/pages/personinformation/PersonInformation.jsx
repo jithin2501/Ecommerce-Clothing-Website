@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/personinformation/PersonInformation.css';
@@ -7,6 +7,8 @@ import { onAuthStateChanged, signOut, deleteUser as deleteFirebaseUser } from 'f
 
 export default function PersonInformation() {
   const navigate = useNavigate();
+  const sidebarRef = useRef(null);
+  const [mainHeight, setMainHeight] = useState(null);
 
   useEffect(() => { window.scrollTo({ top: 0, behavior: 'instant' }); }, []);
 
@@ -141,6 +143,21 @@ export default function PersonInformation() {
     }
   };
 
+  // Match main panel height to sidebar — desktop only
+  useEffect(() => {
+    const el = sidebarRef.current;
+    if (!el) return;
+    const update = () => {
+      if (window.innerWidth > 768) setMainHeight(el.offsetHeight);
+      else setMainHeight(null);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener('resize', update);
+    return () => { ro.disconnect(); window.removeEventListener('resize', update); };
+  }, []);
+
   if (loadingProfile) {
     return (
       <div className="account-loading-wrapper">
@@ -154,15 +171,17 @@ export default function PersonInformation() {
     <div className="pi-page">
       <div className="pi-container">
 
-        <Sidebar
-          activeNav={activeNav}
-          setActiveNav={setActiveNav}
-          activeSubNav={activeSubNav}
-          setActiveSubNav={setActiveSubNav}
-          user={dbUser}
-        />
+        <div ref={sidebarRef}>
+          <Sidebar
+            activeNav={activeNav}
+            setActiveNav={setActiveNav}
+            activeSubNav={activeSubNav}
+            setActiveSubNav={setActiveSubNav}
+            user={dbUser}
+          />
+        </div>
 
-        <main className="main-content">
+        <main className="main-content" style={mainHeight ? { height: mainHeight + 'px', overflow: 'hidden' } : {}}>
 
           {/* Combined Header with back button for phone view */}
           <div className="pi-mobile-header">
@@ -179,136 +198,140 @@ export default function PersonInformation() {
             </div>
           </div>
 
-          {/* Personal Info Card */}
-          <div className="form-card">
-            <div className="form-card-header">
-              <div className="card-title">
-                Name
+          <div className="pi-scrollable">
+
+            {/* Personal Info Card */}
+            <div className="form-card">
+              <div className="form-card-header">
+                <div className="card-title">
+                  Name
+                </div>
+                {!editingPersonal
+                  ? <span className="edit-btn" onClick={handleEditPersonal}>Edit</span>
+                  : <span className="edit-cancel" onClick={handleCancelPersonal}>Cancel</span>
+                }
               </div>
-              {!editingPersonal
-                ? <span className="edit-btn" onClick={handleEditPersonal}>Edit</span>
-                : <span className="edit-cancel" onClick={handleCancelPersonal}>Cancel</span>
-              }
+
+              <div className="form-grid">
+                <div className="input-group">
+                  <label>First Name</label>
+                  <input
+                    type="text"
+                    value={firstName}
+                    placeholder="e.g. Sumathi"
+                    onChange={e => setFirstName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
+                    readOnly={!editingPersonal}
+                    className={!editingPersonal ? 'input-readonly' : ''}
+                  />
+                </div>
+                <div className="input-group">
+                  <label>Last Name</label>
+                  <input
+                    type="text"
+                    value={lastName}
+                    placeholder="e.g. Raj"
+                    onChange={e => setLastName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
+                    readOnly={!editingPersonal}
+                    className={!editingPersonal ? 'input-readonly' : ''}
+                  />
+                </div>
+              </div>
+
+              <div className="gender-section">
+                <label>Your Gender</label>
+                <div className="radio-group">
+                  <label className="radio-option">
+                    <input type="radio" name="gender" value="male"
+                      checked={gender === 'male'}
+                      onChange={() => editingPersonal && setGender('male')}
+                      disabled={!editingPersonal}
+                    /> Male
+                  </label>
+                  <label className="radio-option">
+                    <input type="radio" name="gender" value="female"
+                      checked={gender === 'female'}
+                      onChange={() => editingPersonal && setGender('female')}
+                      disabled={!editingPersonal}
+                    /> Female
+                  </label>
+                </div>
+              </div>
+
+              {editingPersonal && (
+                <div className="save-btn-container">
+                  <button className="btn-save" onClick={handleSavePersonal} disabled={savingPersonal}>
+                    {savingPersonal ? 'SAVING...' : 'SAVE'}
+                  </button>
+                </div>
+              )}
             </div>
 
-            <div className="form-grid">
-              <div className="input-group">
-                <label>First Name</label>
-                <input
-                  type="text"
-                  value={firstName}
-                  placeholder="e.g. Sumathi"
-                  onChange={e => setFirstName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
-                  readOnly={!editingPersonal}
-                  className={!editingPersonal ? 'input-readonly' : ''}
-                />
+            {/* Email Card */}
+            <div className="form-card">
+              <div className="form-card-header">
+                <div className="card-title">
+                  Email Address
+                </div>
+                {!editingEmail
+                  ? <span className="edit-btn" onClick={handleEditEmail}>Edit</span>
+                  : <span className="edit-cancel" onClick={handleCancelEmail}>Cancel</span>
+                }
               </div>
-              <div className="input-group">
-                <label>Last Name</label>
-                <input
-                  type="text"
-                  value={lastName}
-                  placeholder="e.g. Raj"
-                  onChange={e => setLastName(e.target.value.replace(/[^a-zA-Z\s]/g, ''))}
-                  readOnly={!editingPersonal}
-                  className={!editingPersonal ? 'input-readonly' : ''}
-                />
+              <div className="form-grid">
+                <div className="input-group" style={{ gridColumn: 'span 2' }}>
+                  <input
+                    type="email"
+                    value={email}
+                    placeholder="email@example.com"
+                    onChange={e => setEmail(e.target.value)}
+                    readOnly={!editingEmail}
+                    className={!editingEmail ? 'input-readonly' : ''}
+                  />
+                </div>
               </div>
+              {editingEmail && (
+                <div className="save-btn-container">
+                  <button className="btn-save" onClick={handleSaveEmail} disabled={savingEmail}>
+                    {savingEmail ? 'SAVING...' : 'SAVE'}
+                  </button>
+                </div>
+              )}
             </div>
 
-            <div className="gender-section">
-              <label>Your Gender</label>
-              <div className="radio-group">
-                <label className="radio-option">
-                  <input type="radio" name="gender" value="male"
-                    checked={gender === 'male'}
-                    onChange={() => editingPersonal && setGender('male')}
-                    disabled={!editingPersonal}
-                  /> Male
-                </label>
-                <label className="radio-option">
-                  <input type="radio" name="gender" value="female"
-                    checked={gender === 'female'}
-                    onChange={() => editingPersonal && setGender('female')}
-                    disabled={!editingPersonal}
-                  /> Female
-                </label>
+            {/* Mobile Card */}
+            <div className="form-card">
+              <div className="form-card-header">
+                <div className="card-title">
+                  Mobile Number
+                </div>
+                {!editingMobile
+                  ? <span className="edit-btn" onClick={handleEditMobile}>Edit</span>
+                  : <span className="edit-cancel" onClick={handleCancelMobile}>Cancel</span>
+                }
               </div>
+              <div className="form-grid">
+                <div className="input-group" style={{ gridColumn: 'span 2' }}>
+                  <input
+                    type="tel"
+                    value={mobile}
+                    placeholder="Enter 10-digit mobile number"
+                    maxLength={10}
+                    onChange={e => setMobile(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
+                    readOnly={!editingMobile}
+                    className={!editingMobile ? 'input-readonly' : ''}
+                  />
+                </div>
+              </div>
+              {editingMobile && (
+                <div className="save-btn-container">
+                  <button className="btn-save" onClick={handleSaveMobile} disabled={savingMobile}>
+                    {savingMobile ? 'SAVING...' : 'SAVE'}
+                  </button>
+                </div>
+              )}
             </div>
 
-            {editingPersonal && (
-              <div className="save-btn-container">
-                <button className="btn-save" onClick={handleSavePersonal} disabled={savingPersonal}>
-                  {savingPersonal ? 'SAVING...' : 'SAVE'}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Email Card */}
-          <div className="form-card">
-            <div className="form-card-header">
-              <div className="card-title">
-                Email Address
-              </div>
-              {!editingEmail
-                ? <span className="edit-btn" onClick={handleEditEmail}>Edit</span>
-                : <span className="edit-cancel" onClick={handleCancelEmail}>Cancel</span>
-              }
-            </div>
-            <div className="form-grid">
-              <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                <input
-                  type="email"
-                  value={email}
-                  placeholder="email@example.com"
-                  onChange={e => setEmail(e.target.value)}
-                  readOnly={!editingEmail}
-                  className={!editingEmail ? 'input-readonly' : ''}
-                />
-              </div>
-            </div>
-            {editingEmail && (
-              <div className="save-btn-container">
-                <button className="btn-save" onClick={handleSaveEmail} disabled={savingEmail}>
-                  {savingEmail ? 'SAVING...' : 'SAVE'}
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Mobile Card */}
-          <div className="form-card">
-            <div className="form-card-header">
-              <div className="card-title">
-                Mobile Number
-              </div>
-              {!editingMobile
-                ? <span className="edit-btn" onClick={handleEditMobile}>Edit</span>
-                : <span className="edit-cancel" onClick={handleCancelMobile}>Cancel</span>
-              }
-            </div>
-            <div className="form-grid">
-              <div className="input-group" style={{ gridColumn: 'span 2' }}>
-                <input
-                  type="tel"
-                  value={mobile}
-                  placeholder="Enter 10-digit mobile number"
-                  maxLength={10}
-                  onChange={e => setMobile(e.target.value.replace(/[^0-9]/g, '').slice(0, 10))}
-                  readOnly={!editingMobile}
-                  className={!editingMobile ? 'input-readonly' : ''}
-                />
-              </div>
-            </div>
-            {editingMobile && (
-              <div className="save-btn-container">
-                <button className="btn-save" onClick={handleSaveMobile} disabled={savingMobile}>
-                  {savingMobile ? 'SAVING...' : 'SAVE'}
-                </button>
-              </div>
-            )}
-          </div>
+          </div>{/* end pi-scrollable */}
 
           <div className="delete-account-wrapper">
             <span className="delete-account" onClick={handleDeleteAccount} style={{ cursor: 'pointer' }}>Delete Account</span>
