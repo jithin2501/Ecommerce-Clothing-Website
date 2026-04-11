@@ -1,5 +1,5 @@
 const ClientUser = require('../models/ClientUser');
-const Review = require('../models/Review');
+const ProductReview = require('../models/ProductReview');
 
 /* ─────────────────────────────────────────────────────────────────
    HELPER — generate next CUST-XXXXX id
@@ -175,7 +175,7 @@ exports.deleteAccount = async (req, res) => {
     const result = await ClientUser.findOneAndDelete({ uids: uid });
     if (!result) return res.status(404).json({ error: 'User not found' });
 
-    await Review.deleteMany({ uid: { $in: result.uids } });
+    await ProductReview.deleteMany({ uid: { $in: result.uids } });
 
     console.log(`🗑️ Deleted customer ${result.customerId} (UIDs: ${result.uids.join(', ')})`);
     res.json({ success: true, message: 'Account deleted successfully' });

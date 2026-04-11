@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import '../../styles/homepage/Reviews.css';
 
-const API = '/api/reviews/approved';
+const API = '/api/qr-reviews/approved';
 
 export default function Reviews() {
   const [reviews, setReviews] = useState([]);
@@ -22,9 +22,7 @@ export default function Reviews() {
       .then(r => r.json())
       .then(data => {
         if (data.success && data.data.length > 0) {
-          // Filter out reviews that belong to specific products
-          const storeReviews = data.data.filter(rev => !rev.productId);
-          setReviews(storeReviews);
+          setReviews(data.data);
         }
       })
       .catch(() => { });
