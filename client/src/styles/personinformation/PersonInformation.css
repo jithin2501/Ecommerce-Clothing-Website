@@ -400,7 +400,11 @@
     margin-bottom: 8px;
   }
 
-  .form-grid {
-    margin-bottom: 0;
+  .mobile-br {
+    display: block;
   }
+}
+
+.mobile-br {
+  display: none;
 }

@@ -191,7 +191,7 @@ export default function PersonInformation() {
             </button>
             <div className="content-header">
               <h1>Personal Information</h1>
-              <p>Manage your personal information and security settings</p>
+              <p>Manage your personal information and <br className="mobile-br" />security settings</p>
             </div>
           </div>
 
