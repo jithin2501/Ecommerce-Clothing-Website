@@ -68,7 +68,12 @@
   }
 
   .support-table-container table {
-    min-width: 600px;
+    min-width: 800px;
+  }
+
+  .support-table-container th,
+  .support-table-container td {
+    white-space: nowrap !important;
   }
 
   .support-management-container h2 {

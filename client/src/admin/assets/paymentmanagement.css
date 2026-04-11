@@ -680,8 +680,21 @@
 
   .dash-analytic-card {
     padding: 1rem;
-    margin: 0 1rem;
+    margin: 0;
+    width: 100%;
     height: auto !important;
+    overflow: hidden;
+  }
+
+  /* Ensure inner chart area fits */
+  .dash-ac-chart-area {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 1rem;
+  }
+  
+  .ac-chart-canvas {
+    min-width: 500px; /* Allow chart to be wide enough to read */
   }
 
   .dash-ac-header {
@@ -693,6 +706,8 @@
   .ac-filter-group {
     width: 100%;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
   }
 
   .dash-ac-metrics {
@@ -705,22 +720,30 @@
     min-width: 120px;
   }
 
-  .dash-ac-chart-area {
-    margin-top: 1rem;
-  }
-
   .dash-mid-row {
     grid-template-columns: 1fr;
-    padding: 0 1rem;
+    padding: 0;
+    gap: 1rem;
   }
 
   .dash-table-card {
-    margin: 0 1rem;
+    margin: 0;
     padding: 1rem;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .dash-table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dash-table {
+    min-width: 1000px; /* Ensure all fields are visible */
   }
 
   .dash-main-title {
-    padding: 0 1rem;
+    padding: 1rem;
     font-size: 1.15rem;
   }
 }
@@ -728,6 +751,7 @@
 @media (max-width: 480px) {
   .dash-stats-grid {
     grid-template-columns: 1fr !important;
+    padding: 0 1rem;
   }
 
   .dash-ac-metrics {
@@ -749,5 +773,6 @@
   .dash-table th, .dash-table td {
     padding: 0.75rem 0.5rem;
     font-size: 0.8rem;
+    white-space: nowrap; /* Prevent field squashing */
   }
 }

@@ -507,19 +507,17 @@
     flex: 1;
   }
 
-  .om-content {
-    padding: 0 10px;
+  .om-table-wrap {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
   }
 
-  .om-table th:nth-child(4), 
-  .om-table td:nth-child(4),
-  .om-table th:nth-child(5),
-  .om-table td:nth-child(5) {
-    display: none; /* Hide Tracking and Date on small mobile */
+  .om-table {
+    min-width: 800px;
   }
 
   .om-client-cell span:last-child {
-    display: none; /* Hide email on mobile */
+    display: inline-block; /* Restore email visibility */
   }
 }
 
