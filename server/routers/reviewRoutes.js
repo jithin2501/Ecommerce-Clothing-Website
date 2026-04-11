@@ -1,6 +1,6 @@
 const express = require('express');
-const jwt     = require('jsonwebtoken');
-const router  = express.Router();
+const jwt = require('jsonwebtoken');
+const router = express.Router();
 
 const {
   submitReview, getProductReviews, getUserReviews, getApprovedReviews, getAllReviews,
@@ -26,15 +26,25 @@ const verifyAdmin = (req, res, next) => {
 };
 
 // ── Public ──
-router.post('/submit',             upload.array('attachments', 5), submitReview);
-router.get ('/product/:productId', getProductReviews);
-router.get ('/user/:uid',          getUserReviews);
-router.get ('/approved',           getApprovedReviews);
+// Handles both multipart/form-data (WriteReview with files) and
+// application/json (QR ReviewSubmit with no files)
+const submitMiddleware = (req, res, next) => {
+  const ct = req.headers['content-type'] || '';
+  if (ct.includes('multipart/form-data')) {
+    upload.array('attachments', 5)(req, res, next);
+  } else {
+    next(); // JSON body already parsed by express.json()
+  }
+};
+router.post('/submit', submitMiddleware, submitReview);
+router.get('/product/:productId', getProductReviews);
+router.get('/user/:uid', getUserReviews);
+router.get('/approved', getApprovedReviews);
 
 // ── Admin ──
-router.get   ('/admin',                verifyAdmin, getAllReviews);
-router.patch ('/admin/:id/approve',    verifyAdmin, approveReview);
-router.patch ('/admin/:id/unapprove',  verifyAdmin, unapproveReview);
-router.delete('/admin/:id',            verifyAdmin, deleteReview);
+router.get('/admin', verifyAdmin, getAllReviews);
+router.patch('/admin/:id/approve', verifyAdmin, approveReview);
+router.patch('/admin/:id/unapprove', verifyAdmin, unapproveReview);
+router.delete('/admin/:id', verifyAdmin, deleteReview);
 
 module.exports = router;

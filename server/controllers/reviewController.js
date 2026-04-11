@@ -1,28 +1,24 @@
 // ── controllers/reviewController.js ──
 const Review = require('../models/Review');
 const Product = require('../models/Product');
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
-const path = require('path');
 const mongoose = require('mongoose');
+const { PutObjectCommand } = require('@aws-sdk/client-s3');
+const { s3 } = require('../conf/s3');
 
-const s3 = new S3Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  },
-});
+const BUCKET = process.env.AWS_S3_BUCKET;
+const REGION = process.env.AWS_REGION;
 
-const uploadToS3 = async (file, folder = 'reviews') => {
-  const fileName = `${folder}/${Date.now()}-${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`;
-  const params = {
-    Bucket: process.env.AWS_BUCKET_NAME,
-    Key: fileName,
+const uploadReviewFile = async (file) => {
+  const ext = file.originalname.split('.').pop();
+  const key = `reviews/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  await s3.send(new PutObjectCommand({
+    Bucket: BUCKET,
+    Key: key,
     Body: file.buffer,
     ContentType: file.mimetype,
-  };
-  await s3.send(new PutObjectCommand(params));
-  return `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileName}`;
+    ContentDisposition: 'inline',
+  }));
+  return `https://s3.${REGION}.amazonaws.com/${BUCKET}/${key}`;
 };
 
 /**
@@ -72,7 +68,7 @@ const submitReview = async (req, res) => {
     if (req.files && req.files.length > 0) {
       for (const file of req.files) {
         try {
-          const url = await uploadToS3(file);
+          const url = await uploadReviewFile(file);
           if (file.mimetype.startsWith('video/')) {
             videoURL = url;
           } else {
