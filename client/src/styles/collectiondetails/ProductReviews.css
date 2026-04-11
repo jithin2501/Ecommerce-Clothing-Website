@@ -159,7 +159,8 @@
   flex-shrink: 0;
 }
 
-.pr-loading, .pr-empty {
+.pr-loading,
+.pr-empty {
   text-align: center;
   padding: 3rem;
   color: #999;
@@ -183,11 +184,12 @@
   background: #F8F6F2;
   cursor: pointer;
   transition: transform 0.2s ease;
+  position: relative;
 }
 
 .pr-media-item:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .pr-media-item img,
@@ -250,7 +252,7 @@
   max-width: 100%;
   max-height: 90vh;
   border-radius: 8px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .pr-lightbox-close {
@@ -281,5 +283,3 @@
   z-index: 2;
   pointer-events: none;
 }
-
-

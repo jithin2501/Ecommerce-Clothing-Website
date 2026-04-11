@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { auth } from '../../firebase';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../../styles/myorders/WriteReview.css';
 
@@ -54,15 +55,15 @@ export default function WriteReview() {
   const item = location.state?.item || null;
   const initRating = location.state?.rating || 0;
 
-  const [rating, setRating]           = useState(initRating);
+  const [rating, setRating] = useState(initRating);
   const [description, setDescription] = useState('');
-  const [name, setName]               = useState('');
-  const [images, setImages]           = useState([]);      // Array of file objects
-  const [previews, setPreviews]       = useState([]);    // Array of base64/blob for previews
-  const [video, setVideo]             = useState(null);    // Single video file
-  const [vPreview, setVPreview]       = useState(null);
-  const [submitted, setSubmitted]     = useState(false);
-  const [error, setError]             = useState('');
+  const [name, setName] = useState('');
+  const [images, setImages] = useState([]);      // Array of file objects
+  const [previews, setPreviews] = useState([]);    // Array of base64/blob for previews
+  const [video, setVideo] = useState(null);    // Single video file
+  const [vPreview, setVPreview] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleFile = (e) => {
@@ -122,8 +123,8 @@ export default function WriteReview() {
 
     setError('');
     setIsSubmitting(true);
-    const userId = localStorage.getItem('sumathi_uid');
-    
+    const userId = auth.currentUser?.uid || '';
+
     const fd = new FormData();
     fd.append('name', name.trim());
     fd.append('rating', Number(rating));
@@ -141,7 +142,7 @@ export default function WriteReview() {
         method: 'POST',
         body: fd
       });
-      
+
       const data = await response.json();
       if (data.success) {
         setSubmitted(true);

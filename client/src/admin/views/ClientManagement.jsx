@@ -34,6 +34,7 @@ const LoginBadge = ({ types }) => {
 ════════════════════════════════════ */
 function ClientDrawer({ client, onClose }) {
   const [tab, setTab] = useState('info');
+  const [lightbox, setLightbox] = useState(null); // { type: 'img'|'vid', url: string }
   if (!client) return null;
 
   const TABS = ['info', 'addresses', 'orders', 'reviews'];
@@ -140,29 +141,38 @@ function ClientDrawer({ client, onClose }) {
             client.reviews?.length
               ? client.reviews.map((r, i) => (
                 <div className="cm-order-card" key={i}>
-                   <div className="cm-order-head">
-                    <span className="cm-order-id" style={{color: '#E8A020'}}>{'★'.repeat(r.rating)}{'☆'.repeat(5-r.rating)}</span>
+                  <div className="cm-order-head">
+                    <span className="cm-order-id" style={{ color: '#E8A020' }}>{'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}</span>
                     <span className="cm-order-date">{new Date(r.createdAt).toLocaleDateString('en-IN')}</span>
                   </div>
-                  <div style={{fontSize: '13px', color: '#555', marginTop: '8px', lineHeight: '1.5'}}>
+                  <div style={{ fontSize: '13px', color: '#334155', marginTop: '8px', lineHeight: '1.6' }}>
                     {r.message}
                   </div>
                   {(r.images?.length > 0 || r.video) && (
-                    <div style={{display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap'}}>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' }}>
                       {r.images?.map((img, j) => (
-                        <img 
-                          key={j} 
-                          src={img} 
-                          alt="review" 
-                          onClick={() => window.open(img, '_blank')}
-                          style={{width: '50px', height: '50px', objectFit: 'cover', borderRadius: '6px', border: '1px solid #eee', cursor: 'pointer'}} 
-                        />
+                        <div
+                          key={j}
+                          onClick={() => setLightbox({ type: 'img', url: img })}
+                          style={{
+                            width: '56px', height: '56px', borderRadius: '8px',
+                            overflow: 'hidden', border: '1px solid #eee',
+                            cursor: 'pointer', flexShrink: 0,
+                          }}
+                        >
+                          <img src={img} alt="review" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
                       ))}
                       {r.video && (
-                        <div 
-                          onClick={() => window.open(r.video, '_blank')}
-                          style={{width: '50px', height: '50px', background: '#f5f5f5', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', cursor: 'pointer'}}
-                        >📹</div>
+                        <div
+                          onClick={() => setLightbox({ type: 'vid', url: r.video })}
+                          style={{
+                            width: '56px', height: '56px', background: '#1a1a2e',
+                            borderRadius: '8px', display: 'flex', alignItems: 'center',
+                            justifyContent: 'center', fontSize: '22px', cursor: 'pointer',
+                            border: '1px solid #eee', flexShrink: 0,
+                          }}
+                        >▶</div>
                       )}
                     </div>
                   )}
@@ -173,6 +183,44 @@ function ClientDrawer({ client, onClose }) {
 
         </div>
       </aside>
+
+      {/* Floating Lightbox */}
+      {lightbox && (
+        <div
+          onClick={() => setLightbox(null)}
+          style={{
+            position: 'fixed', inset: 0, zIndex: 99999,
+            background: 'rgba(0,0,0,0.92)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            padding: '20px',
+          }}
+        >
+          <div onClick={e => e.stopPropagation()} style={{ position: 'relative', maxWidth: '90vw', maxHeight: '90vh' }}>
+            <button
+              onClick={() => setLightbox(null)}
+              style={{
+                position: 'absolute', top: '-36px', right: '-8px',
+                background: 'none', border: 'none', color: '#fff',
+                fontSize: '28px', cursor: 'pointer', lineHeight: 1,
+              }}
+            >✕</button>
+            {lightbox.type === 'img' ? (
+              <img
+                src={lightbox.url}
+                alt="Review media"
+                style={{ maxWidth: '90vw', maxHeight: '85vh', borderRadius: '10px', display: 'block', boxShadow: '0 10px 40px rgba(0,0,0,0.5)' }}
+              />
+            ) : (
+              <video
+                src={lightbox.url}
+                controls
+                autoPlay
+                style={{ maxWidth: '90vw', maxHeight: '85vh', borderRadius: '10px', display: 'block', boxShadow: '0 10px 40px rgba(0,0,0,0.5)' }}
+              />
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

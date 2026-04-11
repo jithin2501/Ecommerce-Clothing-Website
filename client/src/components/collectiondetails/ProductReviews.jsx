@@ -37,7 +37,7 @@ export default function ProductReviews({ productId }) {
   if (loading) return <div className="pr-loading">Loading reviews...</div>;
 
   const totalReviews = reviews.length;
-  const avgRating = totalReviews > 0 
+  const avgRating = totalReviews > 0
     ? (reviews.reduce((acc, r) => acc + r.rating, 0) / totalReviews).toFixed(1)
     : 0;
 
@@ -93,7 +93,7 @@ export default function ProductReviews({ productId }) {
                   <p className="pr-date">{new Date(r.createdAt).toLocaleDateString()}</p>
                 </div>
                 <p className="pr-text">{r.message}</p>
-                
+
                 {(r.images?.length > 0 || r.video) && (
                   <div className="pr-media">
                     {r.images?.map((img, i) => (
@@ -114,8 +114,8 @@ export default function ProductReviews({ productId }) {
 
             {totalReviews > 2 && (
               <div className="pr-view-more-container">
-                <button 
-                  className="pr-view-more-btn" 
+                <button
+                  className="pr-view-more-btn"
                   onClick={() => setIsExpanded(!isExpanded)}
                 >
                   {isExpanded ? 'Show less' : 'View more'}
