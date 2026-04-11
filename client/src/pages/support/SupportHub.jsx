@@ -30,7 +30,7 @@ export default function SupportHub() {
             const delivered = data.data
               .filter(o => o.trackingStatus?.toLowerCase() === 'delivered')
               .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            setOrders(delivered.slice(0, 5)); // Show 5 most recent
+            setOrders(delivered); // Show all delivered orders
           }
         } catch (err) {
           console.error("SupportHub: Failed to fetch orders", err);
@@ -42,6 +42,16 @@ export default function SupportHub() {
     });
     return () => unsub();
   }, []);
+
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    const found = orders.find(o => o.displayId === search.trim());
+    if (found) {
+      navigate('/support/order-help', { state: { order: found } });
+    } else {
+      alert("Order not found or not yet delivered.");
+    }
+  };
 
   return (
     <div className="sh-page">
@@ -75,17 +85,18 @@ export default function SupportHub() {
                 placeholder="Search order using order ID"
                 value={search}
                 onChange={e => setSearch(e.target.value)}
+                onKeyPress={e => e.key === 'Enter' && handleSearch()}
               />
-              <button className="sh-search-btn">Search</button>
+              <button className="sh-search-btn" onClick={handleSearch}>Search</button>
             </div>
           </div>
 
           <div className="sh-body">
 
             {/* Recent Orders */}
-            <section className="sh-section">
+            <section className="sh-section" style={{ flex: 1 }}>
               <h2 className="sh-section-title">Help with recent orders</h2>
-              <div className="sh-orders-scroll-container">
+              <div className="sh-orders-scroll-container" style={{ maxHeight: '480px' }}>
                 <div className="sh-orders-list">
                   {loading ? (
                     <p style={{ textAlign: 'center', padding: '20px', color: '#888' }}>Loading orders...</p>
@@ -99,11 +110,7 @@ export default function SupportHub() {
                       const displayTitle = extraCount > 0 ? `${itemName} + ${extraCount} more` : itemName;
 
                       return (
-                        <div 
-                          key={order._id} 
-                          className={`sh-order-card ${selectedOrderId === order.displayId ? 'sh-order-selected' : ''}`}
-                          onClick={() => setSelectedOrderId(order.displayId)}
-                        >
+                        <div key={order._id} className="sh-order-card">
                           <img
                             src={firstItem?.image || firstItem?.img || firstItem?.photo || '/logo.png'}
                             alt={itemName}
@@ -118,9 +125,9 @@ export default function SupportHub() {
                           </div>
                           <button
                             className="sh-need-help-btn"
-                            onClick={(e) => { e.stopPropagation(); setSelectedOrderId(order.displayId); }}
+                            onClick={() => navigate('/support/order-help', { state: { order } })}
                           >
-                            {selectedOrderId === order.displayId ? 'Selected' : 'Need help?'}
+                            Need help?
                           </button>
                         </div>
                       );
@@ -129,30 +136,6 @@ export default function SupportHub() {
                 </div>
               </div>
             </section>
-
-            {/* Ways to Connect — Only shown when an order is selected */}
-            {selectedOrderId && (
-              <section className="sh-section" style={{ marginTop: '40px' }}>
-                <h2 className="sh-section-title">Ways to connect for Order #{selectedOrderId}</h2>
-                <div className="sh-connect-grid">
-                  <div className="sh-connect-card" onClick={() => navigate('/support/chat', { state: { orderId: selectedOrderId } })}>
-                    <div className="sh-connect-icon">💬</div>
-                    <div className="sh-connect-info">
-                      <div className="sh-connect-label">Chat with us</div>
-                      <div className="sh-connect-sub">Get instant support for your queries.</div>
-                    </div>
-                  </div>
-                  <div className="sh-connect-card" onClick={() => window.location.href = `mailto:support@sumathitrends.com?subject=Help with Order ${selectedOrderId}`}>
-                    <div className="sh-connect-icon">✉️</div>
-                    <div className="sh-connect-info">
-                      <div className="sh-connect-label">Email us</div>
-                      <div className="sh-connect-sub">Response within 24 business hours.</div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            )}
-
           </div>
         </main>
       </div>

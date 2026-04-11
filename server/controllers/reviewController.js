@@ -1,6 +1,20 @@
-// ── controllers/reviewController.js ──
-const Review = require('../models/Review');
-const Product = require('../models/Product');
+const { PutObjectCommand } = require('@aws-sdk/client-s3');
+const { s3 } = require('../conf/s3');
+const BUCKET = process.env.AWS_S3_BUCKET;
+const REGION = process.env.AWS_REGION;
+
+const uploadReviewFile = async (file) => {
+  const ext = file.originalname.split('.').pop();
+  const key = `reviews/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  await s3.send(new PutObjectCommand({
+    Bucket: BUCKET,
+    Key: key,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+    ContentDisposition: 'inline',
+  }));
+  return `https://s3.${REGION}.amazonaws.com/${BUCKET}/${key}`;
+};
 
 // POST /api/reviews/submit — public
 const submitReview = async (req, res) => {
@@ -12,14 +26,23 @@ const submitReview = async (req, res) => {
     if (rating < 1 || rating > 5)
       return res.status(400).json({ success: false, message: 'Rating must be 1–5.' });
 
+    const mediaUrls = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const url = await uploadReviewFile(file);
+        mediaUrls.push(url);
+      }
+    }
+
     const review = await Review.create({ 
       name, 
       rating: Number(rating), 
       message, 
-      productId: productId || null, 
+      productId: (productId && productId !== 'null') ? productId : null, 
       uid, 
       orderId,
-      status: 'pending' // Default to pending until admin approval
+      status: 'pending', // Default to pending until admin approval
+      media: mediaUrls
     });
 
     res.json({ success: true, data: review });

@@ -19,8 +19,16 @@ const verifyAdmin = (req, res, next) => {
   }
 };
 
+const multer = require('multer');
+
+// ── Multer config for Review Media ──
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB max
+});
+
 // ── Public ──
-router.post('/submit',             submitReview);
+router.post('/submit',             upload.array('media', 3), submitReview);
 router.get ('/product/:productId', getProductReviews);
 router.get ('/user/:uid',          getUserReviews);
 router.get ('/approved',           getApprovedReviews);

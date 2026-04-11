@@ -66,9 +66,9 @@ export default function ChatSupport() {
     }
 
     // Normal intro flow
-    const orderMsg = order
+    const orderMsg = location.state?.initialMessage || (order
       ? `Hi, I need help with my order #${order.id} — ${order.name}`
-      : 'Hi, I need help with a recent order.';
+      : 'Hi, I need help with a recent order.');
 
     setTimeout(() => {
       setMessages([{ from: 'user', text: orderMsg, time: now() }]);

@@ -8,7 +8,8 @@ const reviewSchema = new mongoose.Schema(
     orderId:   { type: String }, // To reference the order it came from
     rating:    { type: Number, required: true, min: 1, max: 5 },
     message:   { type: String, required: true, trim: true },
-    status:    { type: String, enum: ['pending', 'approved'], default: 'approved' }, // auto-approve for now as requested per user vibe
+    status:    { type: String, enum: ['pending', 'approved'], default: 'pending' },
+    media:     [{ type: String }] // URLs to images/videos
   },
   { timestamps: true }
 );
