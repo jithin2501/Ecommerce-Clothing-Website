@@ -5,7 +5,8 @@ import '../../styles/collections/ProductGrid.css';
 
 const Stars = ({ rating, reviews }) => (
   <div className="pg-stars">
-    {'★'.repeat(Math.floor(rating))}{'☆'.repeat(5 - Math.floor(rating))}
+    <span className="pg-stars-filled">{'★'.repeat(Math.floor(rating))}</span>
+    <span className="pg-stars-empty">{'☆'.repeat(5 - Math.floor(rating))}</span>
     <span className="pg-reviews">({reviews})</span>
   </div>
 );

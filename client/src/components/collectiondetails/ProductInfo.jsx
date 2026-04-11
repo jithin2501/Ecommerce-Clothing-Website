@@ -33,7 +33,9 @@ export default function ProductInfo({
   auth = null,
   inventory = {},
   stock = 0,
-  onShare = () => {}
+  onShare = () => {},
+  stars = 0,
+  reviews = 0
 }) {
   const [selectedSize,  setSelectedSize]  = useState('');
   const [selectedColor, setSelectedColor] = useState(colors[0]?.name || '');
@@ -133,13 +135,18 @@ export default function ProductInfo({
     ? `₹${price.toLocaleString('en-IN')}`
     : price;
 
+  const ratingFloor = Math.floor(stars);
+
   return (
     <div className="pi-wrapper">
       <h1 className="pi-title">{name}</h1>
 
       <div className="pi-rating">
-        <span className="pi-stars">★★★★☆</span>
-        <span className="pi-reviews">(42 Reviews)</span>
+        <span className="pi-stars">
+          <span className="pi-stars-filled">{'★'.repeat(ratingFloor)}</span>
+          <span className="pi-stars-empty">{'☆'.repeat(5 - ratingFloor)}</span>
+        </span>
+        <span className="pi-reviews">({reviews} {reviews === 1 ? 'Review' : 'Reviews'})</span>
       </div>
 
       <p className="pi-price">{displayPrice}</p>

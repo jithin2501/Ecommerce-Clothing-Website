@@ -115,8 +115,12 @@
 
 .pg-stars {
   font-size: 0.72rem;
-  color: #F59E0B;
+  display: flex;
+  align-items: center;
 }
+
+.pg-stars-filled { color: #F59E0B; }
+.pg-stars-empty { color: #d1d5db; }
 
 .pg-reviews {
   font-size: 0.68rem;

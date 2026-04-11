@@ -273,6 +273,8 @@ export default function CollectionDetailPage() {
               inventory={product?.inventory || {}}
               stock={product?.stock ?? 0}
               onShare={() => setIsShareOpen(true)}
+              stars={product?.stars || 0}
+              reviews={product?.reviews || 0}
             />
             <ProductAccordion
               specifications={detail.specifications}

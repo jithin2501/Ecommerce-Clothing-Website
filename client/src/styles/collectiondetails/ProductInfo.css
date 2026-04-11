@@ -33,10 +33,14 @@
 }
 
 .pi-stars {
-  color: #E8A020;
   font-size: 1rem;
-  letter-spacing: 2px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
+
+.pi-stars-filled { color: #E8A020; }
+.pi-stars-empty { color: #d1d5db; }
 
 .pi-reviews {
   font-size: 0.8rem;
