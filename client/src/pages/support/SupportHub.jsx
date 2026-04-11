@@ -101,8 +101,7 @@ export default function SupportHub() {
                       return (
                         <div 
                           key={order._id} 
-                          className={`sh-order-card ${selectedOrderId === order.displayId ? 'sh-order-selected' : ''}`}
-                          onClick={() => setSelectedOrderId(order.displayId)}
+                          className="sh-order-card"
                         >
                           <img
                             src={firstItem?.image || firstItem?.img || firstItem?.photo || '/logo.png'}
@@ -118,9 +117,9 @@ export default function SupportHub() {
                           </div>
                           <button
                             className="sh-need-help-btn"
-                            onClick={(e) => { e.stopPropagation(); setSelectedOrderId(order.displayId); }}
+                            onClick={() => navigate('/support/order-help', { state: { order } })}
                           >
-                            {selectedOrderId === order.displayId ? 'Selected' : 'Need help?'}
+                            Need help?
                           </button>
                         </div>
                       );
@@ -129,29 +128,6 @@ export default function SupportHub() {
                 </div>
               </div>
             </section>
-
-            {/* Ways to Connect — Only shown when an order is selected */}
-            {selectedOrderId && (
-              <section className="sh-section" style={{ marginTop: '40px' }}>
-                <h2 className="sh-section-title">Ways to connect for Order #{selectedOrderId}</h2>
-                <div className="sh-connect-grid">
-                  <div className="sh-connect-card" onClick={() => navigate('/support/chat', { state: { orderId: selectedOrderId } })}>
-                    <div className="sh-connect-icon">💬</div>
-                    <div className="sh-connect-info">
-                      <div className="sh-connect-label">Chat with us</div>
-                      <div className="sh-connect-sub">Get instant support for your queries.</div>
-                    </div>
-                  </div>
-                  <div className="sh-connect-card" onClick={() => window.location.href = `mailto:support@sumathitrends.com?subject=Help with Order ${selectedOrderId}`}>
-                    <div className="sh-connect-icon">✉️</div>
-                    <div className="sh-connect-info">
-                      <div className="sh-connect-label">Email us</div>
-                      <div className="sh-connect-sub">Response within 24 business hours.</div>
-                    </div>
-                  </div>
-                </div>
-              </section>
-            )}
 
           </div>
         </main>

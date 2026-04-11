@@ -67,7 +67,7 @@ export default function ChatSupport() {
 
     // Normal intro flow
     const orderMsg = order
-      ? `Hi, I need help with my order #${order.id} — ${order.name}`
+      ? `Hi, I need help with a recent order. #${order.displayId}`
       : 'Hi, I need help with a recent order.';
 
     setTimeout(() => {
@@ -78,7 +78,7 @@ export default function ChatSupport() {
       setTyping(false);
       setMessages(prev => [...prev, {
         from: 'bot',
-        text: `Thanks for reaching out! I can see your order${order ? ` #${order.id} (${order.name})` : ''}. Could you please describe the issue you're facing?`,
+        text: `Thanks for reaching out! I can see your order${order ? ` #${order.displayId}` : ''}. Could you please describe the issue you're facing?`,
         time: now(),
       }]);
       setStep(STEP.WAIT_ISSUE);
@@ -98,16 +98,41 @@ export default function ChatSupport() {
     }, delay);
   }
 
-  function handleSend() {
+  async function handleSend() {
     const trimmed = input.trim();
     if (step === STEP.WAIT_MEDIA) {
       if (mediaFiles.length === 0) return;
+      
       const newMsg = { from: 'user', text: trimmed || '', mediaFiles: [...mediaFiles], time: now() };
       setMessages(prev => [...prev, newMsg]);
       setInput('');
+
+      // ✅ SUBMIT TO BACKEND
+      const formData = new FormData();
+      formData.append('userId', order?.userId || localStorage.getItem('sumathi_uid'));
+      formData.append('orderId', order?.displayId || 'N/A');
+      
+      // Combine all user messages (except initial greeting) into one description
+      const userDescs = messages
+        .filter(m => m.from === 'user' && m.text && !m.text.startsWith('Hi,'))
+        .map(m => m.text);
+      if (trimmed) userDescs.push(trimmed);
+      formData.append('description', userDescs.join('\n') || 'Chat Support Request');
+      
+      mediaFiles.forEach(mf => {
+        if (mf.file) formData.append('attachments', mf.file);
+      });
+
+      try {
+        await fetch('/api/support/submit', { method: 'POST', body: formData });
+      } catch (err) {
+        console.error("ChatSupport: Submit failed", err);
+      }
+
       setMediaFiles([]);
       const ta = document.querySelector('.cs-input');
       if (ta) ta.style.height = 'auto';
+      
       botReply(
         "We've received your details. Our support team will shortly call you to resolve this. Thank you for your patience! 😊",
         2000,
@@ -115,7 +140,6 @@ export default function ChatSupport() {
           setStep(STEP.DONE);
           setTimeout(() => {
             setShowEnded(true);
-            // ✅ Save the full ended conversation to sessionStorage
             setMessages(prev => {
               sessionStorage.setItem(sessionKey, JSON.stringify({ messages: prev }));
               return prev;
@@ -146,9 +170,9 @@ export default function ChatSupport() {
       files.forEach(f => {
         const isVideo = f.type.startsWith('video/');
         if (isVideo && videos.length + newItems.filter(x => x.type === 'video').length < 2) {
-          newItems.push({ url: URL.createObjectURL(f), type: 'video', name: f.name });
+          newItems.push({ file: f, url: URL.createObjectURL(f), type: 'video', name: f.name });
         } else if (!isVideo && images.length + newItems.filter(x => x.type === 'image').length < 4) {
-          newItems.push({ url: URL.createObjectURL(f), type: 'image', name: f.name });
+          newItems.push({ file: f, url: URL.createObjectURL(f), type: 'image', name: f.name });
         }
       });
       return [...prev, ...newItems];
