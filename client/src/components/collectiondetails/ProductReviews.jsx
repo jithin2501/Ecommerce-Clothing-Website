@@ -13,6 +13,7 @@ function Stars({ count }) {
 export default function ProductReviews({ productId }) {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     if (!productId) return;
@@ -43,6 +44,8 @@ export default function ProductReviews({ productId }) {
     const count = reviews.filter(r => r.rating === star).length;
     return { stars: star, count };
   });
+
+  const displayedReviews = isExpanded ? reviews : reviews.slice(0, 2);
 
   return (
     <section className="pr-wrapper">
@@ -75,36 +78,49 @@ export default function ProductReviews({ productId }) {
         {reviews.length === 0 ? (
           <p className="pr-empty">No reviews yet. Be the first to review!</p>
         ) : (
-          reviews.map(r => (
-            <div key={r._id} className="pr-card">
-              <div className="pr-card-header">
-                <div className="pr-avatar-placeholder">
-                  {r.name.charAt(0).toUpperCase()}
+          <>
+            {displayedReviews.map(r => (
+              <div key={r._id} className="pr-card">
+                <div className="pr-card-header">
+                  <div className="pr-avatar-placeholder">
+                    {r.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="pr-name">{r.name}</p>
+                    <Stars count={r.rating} />
+                  </div>
+                  <p className="pr-date">{new Date(r.createdAt).toLocaleDateString()}</p>
                 </div>
-                <div>
-                  <p className="pr-name">{r.name}</p>
-                  <Stars count={r.rating} />
-                </div>
-                <p className="pr-date">{new Date(r.createdAt).toLocaleDateString()}</p>
+                <p className="pr-text">{r.message}</p>
+                
+                {(r.images?.length > 0 || r.video) && (
+                  <div className="pr-media">
+                    {r.images?.map((img, i) => (
+                      <div key={i} className="pr-media-item">
+                        <img src={img} alt={`Review ${i}`} onClick={() => window.open(img, '_blank')} />
+                      </div>
+                    ))}
+                    {r.video && (
+                      <div className="pr-media-item">
+                        <video src={r.video} controls />
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-              <p className="pr-text">{r.message}</p>
-              
-              {(r.images?.length > 0 || r.video) && (
-                <div className="pr-media">
-                  {r.images?.map((img, i) => (
-                    <div key={i} className="pr-media-item">
-                      <img src={img} alt={`Review ${i}`} onClick={() => window.open(img, '_blank')} />
-                    </div>
-                  ))}
-                  {r.video && (
-                    <div className="pr-media-item">
-                      <video src={r.video} controls />
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
-          ))
+            ))}
+
+            {totalReviews > 2 && (
+              <div className="pr-view-more-container">
+                <button 
+                  className="pr-view-more-btn" 
+                  onClick={() => setIsExpanded(!isExpanded)}
+                >
+                  {isExpanded ? 'Show less' : 'View more'}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
