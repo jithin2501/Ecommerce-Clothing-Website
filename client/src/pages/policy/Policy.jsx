@@ -267,17 +267,14 @@ function RefundPolicyContent() {
 const POLICY_META = {
   privacy: {
     title: 'Privacy Policy',
-    subtitle: 'How we collect and protect your data',
     content: <PrivacyPolicyContent />,
   },
   terms: {
     title: 'Terms of Service',
-    subtitle: 'Rules and guidelines for using our website',
     content: <TermsConditionsContent />,
   },
   refund: {
     title: 'Refund & Cancellation Policy',
-    subtitle: 'Our policy on returns and order cancellations',
     content: <RefundPolicyContent />,
   },
 };
@@ -294,10 +291,12 @@ export default function Policy() {
   const [mainHeight, setMainHeight] = useState(null);
 
   const sidebarRef = useRef(null);
+  const cardRef = useRef(null);
 
   // Scroll to top instantly every time the policy type changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
+    if (cardRef.current) cardRef.current.scrollTop = 0;
   }, [type]);
 
   useEffect(() => {
@@ -345,10 +344,9 @@ export default function Policy() {
             </button>
             <div className="policy-content-header">
               <h1>{meta.title}</h1>
-              <p>{meta.subtitle}</p>
             </div>
           </div>
-          <div className="policy-card">{meta.content}</div>
+          <div className="policy-card" ref={cardRef}>{meta.content}</div>
         </main>
       </div>
     </div>
