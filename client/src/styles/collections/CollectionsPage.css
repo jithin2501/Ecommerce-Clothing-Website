@@ -32,7 +32,7 @@
 
 /* Spacer for fixed nav - medium gap */
 .nav-spacer {
-  height: 0px;
+  height: 100px;
 }
 
 @media (max-width: 768px) {

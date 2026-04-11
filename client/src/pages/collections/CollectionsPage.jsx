@@ -71,6 +71,8 @@ export default function CollectionsPage() {
         {/* Breadcrumb - reduced gap */}
 
 
+        <div className="nav-spacer" />
+
         <div className="agp-layout" style={{ marginTop: '0px', marginBottom: '60px' }}>
           <FilterSidebar
             selectedColors={selectedColors} setSelectedColors={setSelectedColors}
