@@ -485,35 +485,46 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
-    padding: 0 1rem 1rem;
+    padding: 1rem 20px;
+    margin-top: 0;
   }
 
   .om-header-tools {
     width: 100%;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
 
   .om-search-box {
     width: 100% !important;
+    box-sizing: border-box;
   }
 
   .om-date-filter {
     width: 100%;
-    justify-content: space-between;
   }
 
   .om-date-filter input {
-    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .om-content {
+    padding: 0 20px;
   }
 
   .om-table-wrap {
     overflow-x: auto !important;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
   }
 
   .om-table {
     min-width: 800px;
+  }
+
+  .om-id-cell, .om-client-cell, .om-amount {
+    white-space: nowrap !important;
   }
 
   .om-client-cell span:last-child {
@@ -528,6 +539,7 @@
   
   .om-id-cell {
     gap: 6px;
+    white-space: nowrap;
   }
 
   .om-row td {

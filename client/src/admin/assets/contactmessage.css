@@ -282,6 +282,10 @@
   .td-contact {
     white-space: nowrap;
   }
+
+  .contact-table td, .contact-table th {
+    white-space: nowrap !important;
+  }
 }
 
 
