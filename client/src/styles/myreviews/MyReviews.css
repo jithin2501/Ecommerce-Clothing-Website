@@ -96,14 +96,6 @@
   gap: 16px;
 }
 
-.mr-review-card {
-  padding: 16px;
-  border: 1px solid #f1f3f6;
-  border-radius: 12px;
-  background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
-}
-
 .mr-review-header {
   display: flex;
   justify-content: space-between;
@@ -136,6 +128,111 @@
   background: #f1f5f9;
   padding: 2px 8px;
   border-radius: 4px;
+}
+
+/* ── New Elements ── */
+.mr-review-card {
+  padding: 20px;
+  border: 1px solid #f1f3f6;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mr-review-product {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.mr-rev-prod-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #eee;
+  flex-shrink: 0;
+}
+
+.mr-rev-prod-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mr-rev-prod-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.3;
+}
+
+.mr-delete-btn {
+  background: #fff;
+  border: 1px solid #eee;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.mr-delete-btn:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.mr-review-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mr-review-media {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.mr-media-box {
+  width: 80px;
+  height: 80px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  background: #f8fafc;
+  cursor: pointer;
+  position: relative;
+}
+
+.mr-media-box img, .mr-media-box video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mr-video-play-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 18px;
+  opacity: 0.8;
 }
 
 /* ===== EMPTY STATE ===== */

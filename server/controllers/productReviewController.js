@@ -107,10 +107,31 @@ exports.getByProduct = async (req, res) => {
 // GET /api/product-reviews/user/:uid — public (used by MyReviews.jsx)
 exports.getByUser = async (req, res) => {
     try {
-        const reviews = await ProductReview.find({ uid: req.params.uid }).sort({ createdAt: -1 });
+        const reviews = await ProductReview.find({ uid: req.params.uid })
+            .populate('productId', 'name img')
+            .sort({ createdAt: -1 });
         res.json({ success: true, data: reviews });
     } catch (err) {
         res.status(500).json({ success: false });
+    }
+};
+
+// DELETE /api/product-reviews/:id — private (called by MyReviews.jsx)
+exports.deleteProductReview = async (req, res) => {
+    try {
+        const review = await ProductReview.findById(req.params.id);
+        if (!review) return res.status(404).json({ success: false, message: 'Review not found.' });
+
+        const productId = review.productId;
+        await ProductReview.findByIdAndDelete(req.params.id);
+
+        // Update product stats after deletion
+        await updateProductStats(productId);
+
+        res.json({ success: true, message: 'Review deleted successfully.' });
+    } catch (err) {
+        console.error('Delete product review error:', err);
+        res.status(500).json({ success: false, message: 'Server error.' });
     }
 };
 

@@ -2,10 +2,10 @@ import { Truck, ShieldCheck, Headphones, CreditCard } from 'lucide-react';
 import '../../styles/homepage/WhyUs.css';
 
 const items = [
-  { icon: Truck, title: 'Free Shipping', desc: 'On all orders over $100' },
-  { icon: ShieldCheck, title: 'Money Guarantee', desc: 'Within 30 days for exchange' },
-  { icon: Headphones, title: 'Online Support', desc: '24 hours a day, 7 days a week' },
-  { icon: CreditCard, title: 'Flexible Payment', desc: 'Pay with multiple credit cards' },
+  { icon: Truck, title: 'Free Shipping', desc: 'Free shipping for all orders' },
+  { icon: ShieldCheck, title: 'Quality Assurance', desc: 'Strict multi-level quality checks' },
+  { icon: Headphones, title: 'Online Support', desc: 'Expert assistance for your queries' },
+  { icon: CreditCard, title: 'Secure Payment', desc: '100% safe & encrypted payments' },
 ];
 
 export default function WhyUs() {

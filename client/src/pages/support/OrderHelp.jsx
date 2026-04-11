@@ -65,12 +65,8 @@ export default function OrderHelp() {
                 <h2 className="sh-still-title">Ways to connect for Order #{order?.displayId}</h2>
                 <div className="sh-channels sh-channels--two">
                   <div className="sh-channel-card" onClick={() => navigate('/support/chat', { state: { order } })} style={{ cursor: 'pointer' }}>
-                    <div className="sh-channel-icon sh-icon-chat">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                        <path d="M8 9h8"></path>
-                        <path d="M8 13h6"></path>
-                      </svg>
+                    <div className="sh-channel-icon">
+                      <img src="/images/support/chat.png" alt="Chat" />
                     </div>
                     <div>
                       <div className="sh-channel-title">Chat with us</div>
@@ -78,11 +74,8 @@ export default function OrderHelp() {
                     </div>
                   </div>
                   <div className="sh-channel-card" onClick={() => window.location.href = `mailto:sumathitrends.in@gmail.com?subject=Help with Order ${order?.displayId}`}>
-                    <div className="sh-channel-icon sh-icon-email">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                        <polyline points="22,6 12,13 2,6"></polyline>
-                      </svg>
+                    <div className="sh-channel-icon">
+                      <img src="/images/support/email.png" alt="Email" />
                     </div>
                     <div>
                       <div className="sh-channel-title">Email us</div>

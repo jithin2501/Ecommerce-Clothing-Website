@@ -41,7 +41,7 @@ export default function MyReviews() {
             });
 
             // Filter out items already reviewed (match by productId)
-            const reviewedProductIds = new Set(userReviews.map(r => r.productId));
+            const reviewedProductIds = new Set(userReviews.map(r => r.productId?._id || r.productId));
             const toReview = allItems.filter(item => !reviewedProductIds.has(item.productId));
 
             // Remove duplicates (same product in different orders/same order)
@@ -63,6 +63,23 @@ export default function MyReviews() {
     });
     return () => unsub();
   }, []);
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!window.confirm("Are you sure you want to delete this review? This action cannot be undone.")) return;
+    try {
+      const res = await fetch(`/api/product-reviews/${reviewId}`, { method: 'DELETE' });
+      const data = await res.json();
+      if (data.success) {
+        setReviews(prev => prev.filter(r => r._id !== reviewId));
+        // Also refresh pending reviews list
+        window.location.reload(); 
+      } else {
+        alert(data.message || "Failed to delete review");
+      }
+    } catch (err) {
+      console.error("Delete Review Error:", err);
+    }
+  };
 
   if (loading) {
     return (
@@ -119,14 +136,44 @@ export default function MyReviews() {
               <div className="mr-reviews-list">
                 {reviews.map(r => (
                   <div key={r._id} className="mr-review-card">
-                    <div className="mr-review-header">
-                      <div className="mr-stars">
-                        {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
+                    <div className="mr-review-product">
+                      <img src={r.productId?.img || '/images/logo/logo.png'} alt={r.productId?.name} className="mr-rev-prod-img" />
+                      <div className="mr-rev-prod-info">
+                        <span className="mr-rev-prod-name">{r.productId?.name || 'Product Details Not Available'}</span>
+                        <div className="mr-review-header">
+                          <div className="mr-stars">
+                            {'★'.repeat(r.rating)}{'☆'.repeat(5 - r.rating)}
+                          </div>
+                          <span className="mr-review-date">{new Date(r.createdAt).toLocaleDateString()}</span>
+                        </div>
                       </div>
-                      <span className="mr-review-date">{new Date(r.createdAt).toLocaleDateString()}</span>
+                      <button className="mr-delete-btn" title="Delete Review" onClick={() => handleDeleteReview(r._id)}>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="3 6 5 6 21 6"></polyline>
+                          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                      </button>
                     </div>
-                    <p className="mr-review-msg">{r.message}</p>
-                    {r.status === 'pending' && <span className="mr-review-status">Awaiting Approval</span>}
+
+                    <div className="mr-review-content">
+                      <p className="mr-review-msg">{r.message}</p>
+                      
+                      {((r.images && r.images.length > 0) || r.video) && (
+                        <div className="mr-review-media">
+                          {r.images?.map((url, idx) => (
+                            <div key={idx} className="mr-media-box">
+                              <img src={url} alt="Review attachment" onClick={() => window.open(url, '_blank')} />
+                            </div>
+                          ))}
+                          {r.video && (
+                            <div className="mr-media-box mr-video-box" onClick={() => window.open(r.video, '_blank')}>
+                              <video src={r.video} muted />
+                              <div className="mr-video-play-overlay">▶</div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 ))}
               </div>

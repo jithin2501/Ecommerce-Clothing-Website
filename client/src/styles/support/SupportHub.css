@@ -494,10 +494,15 @@
   justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
-.sh-icon-chat { color: #167a92; }
-.sh-icon-email { color: #c07a55; }
+.sh-channel-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+}
 
 .sh-channel-title {
   font-size: 14px;
