@@ -27,8 +27,8 @@ export default function ChatSupport() {
   const location = useLocation();
   const order    = location.state?.order || null;
 
-  // ✅ Session key unique per order
-  const sessionKey = `chat_ended_${order?.id || 'no-order'}`;
+  const userId = order?.userId || localStorage.getItem('sumathi_uid') || 'guest';
+  const sessionKey = `chat_history_${userId}_${order?.id || 'no-order'}`;
 
   const [activeNav,    setActiveNav]    = useState('');
   const [activeSubNav, setActiveSubNav] = useState('support');
@@ -53,37 +53,55 @@ export default function ChatSupport() {
     if (initiated.current) return;
     initiated.current = true;
 
-    // ✅ If this order's chat already ended, restore it immediately
-    const saved = sessionStorage.getItem(sessionKey);
+    // ✅ Restore chat history from localStorage
+    const saved = localStorage.getItem(sessionKey);
     if (saved) {
       try {
-        const { messages: savedMsgs } = JSON.parse(saved);
+        const { messages: savedMsgs, step: savedStep } = JSON.parse(saved);
         setMessages(savedMsgs);
-        setStep(STEP.DONE);
-        setShowEnded(true);
-        return;
+        setStep(savedStep || STEP.DONE);
+        setShowEnded(savedStep === STEP.DONE);
+        if (savedStep !== STEP.DONE && savedMsgs.length > 0) {
+            // If it wasn't done, we might want to resume or see where we left off
+            // For now, if messages exist, we don't run the intro again unless it's empty
+        } else if (savedStep === STEP.DONE) {
+            // Already ended, just show history
+            return;
+        }
+        if (savedMsgs.length > 0) return;
       } catch (_) {}
     }
 
-    // Normal intro flow
+    runIntroFlow([]);
+  }, []);
+
+  const runIntroFlow = (existingMessages = []) => {
     const orderMsg = order
       ? `Hi, I need help with a recent order. #${order.displayId}`
       : 'Hi, I need help with a recent order.';
 
     setTimeout(() => {
-      setMessages([{ from: 'user', text: orderMsg, time: now() }]);
+      const next = [...existingMessages, { from: 'user', text: orderMsg, time: now() }];
+      setMessages(next);
+      localStorage.setItem(sessionKey, JSON.stringify({ messages: next, step: STEP.INIT }));
     }, 400);
+
     setTimeout(() => setTyping(true), 1000);
+
     setTimeout(() => {
       setTyping(false);
-      setMessages(prev => [...prev, {
-        from: 'bot',
-        text: `Thanks for reaching out! I can see your order${order ? ` #${order.displayId}` : ''}. Could you please describe the issue you're facing?`,
-        time: now(),
-      }]);
+      setMessages(prev => {
+        const next = [...prev, {
+          from: 'bot',
+          text: `Thanks for reaching out! I can see your order${order ? ` #${order.displayId}` : ''}. Could you please describe the issue you're facing?`,
+          time: now(),
+        }];
+        localStorage.setItem(sessionKey, JSON.stringify({ messages: next, step: STEP.WAIT_ISSUE }));
+        return next;
+      });
       setStep(STEP.WAIT_ISSUE);
     }, 2600);
-  }, []);
+  };
 
   function now() {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -139,26 +157,42 @@ export default function ChatSupport() {
         () => {
           setStep(STEP.DONE);
           setTimeout(() => {
-            setShowEnded(true);
             setMessages(prev => {
-              sessionStorage.setItem(sessionKey, JSON.stringify({ messages: prev }));
-              return prev;
+              const next = [...prev, { type: 'system', text: '— Chat Ended —', time: now() }];
+              localStorage.setItem(sessionKey, JSON.stringify({ messages: next, step: STEP.DONE }));
+              return next;
             });
+            setShowEnded(true);
           }, 400);
         }
       );
     } else {
       if (!trimmed) return;
       const newMsg = { from: 'user', text: trimmed, time: now() };
-      setMessages(prev => [...prev, newMsg]);
+      setMessages(prev => {
+        const next = [...prev, newMsg];
+        localStorage.setItem(sessionKey, JSON.stringify({ messages: next, step: step }));
+        return next;
+      });
       setInput('');
       const ta = document.querySelector('.cs-input');
       if (ta) ta.style.height = 'auto';
       if (step === STEP.WAIT_ISSUE) {
-        botReply("Thank you for letting us know. Could you please share any photos or videos related to the issue? This will help us resolve it faster.");
-        setStep(STEP.WAIT_MEDIA);
+        botReply("Thank you for letting us know. Could you please share any photos or videos related to the issue?", 1800, () => {
+             setMessages(prev => {
+                localStorage.setItem(sessionKey, JSON.stringify({ messages: prev, step: STEP.WAIT_MEDIA }));
+                return prev;
+             });
+             setStep(STEP.WAIT_MEDIA);
+        });
       }
     }
+  }
+
+  function handleRestartChat() {
+    setShowEnded(false);
+    setStep(STEP.INIT);
+    runIntroFlow(messages);
   }
 
   function handleFiles(e) {
@@ -230,32 +264,43 @@ export default function ChatSupport() {
             </div>
 
             <div className="cs-messages">
-              {messages.map((msg, i) => (
-                <div key={i} className={`cs-msg cs-msg--${msg.from}`}>
-                  {msg.from === 'bot' && <div className="cs-avatar">ST</div>}
-                  <div className={`cs-bubble cs-bubble--${msg.from}`}>
-                    {msg.from === 'bot' && <div className="cs-sender">SUPPORT BOT</div>}
-                    {msg.text && <p>{msg.text}</p>}
-                    {msg.mediaFiles && msg.mediaFiles.length > 0 && (
-                      <div className="cs-media-grid">
-                        {msg.mediaFiles.map((mf, mi) => (
-                          mf.type === 'video'
-                            ? <video key={mi} src={mf.url} className="cs-media-preview" controls />
-                            : <img key={mi} src={mf.url} alt="attachment" className="cs-media-preview" />
-                        ))}
-                      </div>
-                    )}
-                    <div className="cs-time">{msg.time}</div>
+              {messages.map((msg, i) => {
+                if (msg.type === 'system') {
+                  return <div key={i} className="cs-ended-inline">{msg.text}</div>;
+                }
+                return (
+                  <div key={i} className={`cs-msg cs-msg--${msg.from}`}>
+                    {msg.from === 'bot' && <div className="cs-avatar">ST</div>}
+                    <div className={`cs-bubble cs-bubble--${msg.from}`}>
+                      {msg.from === 'bot' && <div className="cs-sender">SUPPORT BOT</div>}
+                      {msg.text && <p>{msg.text}</p>}
+                      {msg.mediaFiles && msg.mediaFiles.length > 0 && (
+                        <div className="cs-media-grid">
+                          {msg.mediaFiles.map((mf, mi) => (
+                            mf.type === 'video'
+                              ? <video key={mi} src={mf.url} className="cs-media-preview" controls />
+                              : <img key={mi} src={mf.url} alt="attachment" className="cs-media-preview" />
+                          ))}
+                        </div>
+                      )}
+                      <div className="cs-time">{msg.time}</div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
               {typing && <TypingIndicator />}
-              {showEnded && <div className="cs-ended-inline">— Chat Ended —</div>}
               <div ref={bottomRef} />
             </div>
 
             <div className="cs-input-area">
-              {step === STEP.DONE ? null : (
+              {step === STEP.DONE ? (
+                <div className="cs-restart-wrap">
+                  <button className="cs-restart-btn" onClick={handleRestartChat}>
+                    RESTART CHAT
+                  </button>
+                  <p className="cs-restart-note">Click above to start a new support request for this order.</p>
+                </div>
+              ) : (
                 <>
                   {mediaFiles.length > 0 && (
                     <div className="cs-media-thumbs">

@@ -474,3 +474,41 @@
     margin: 0 12px 12px;
   }
 }
+
+/* Restart Chat Styles */
+.cs-restart-wrap {
+  text-align: center;
+  padding: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.cs-restart-btn {
+  background: #1E2A38;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.cs-restart-btn:hover {
+  background: #2D3E50;
+  transform: translateY(-1px);
+}
+
+.cs-restart-btn:active {
+  transform: translateY(0);
+}
+
+.cs-restart-note {
+  font-size: 11px;
+  color: #999;
+  margin: 0;
+}
