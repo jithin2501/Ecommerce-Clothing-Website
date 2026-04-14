@@ -45,7 +45,11 @@ export default function OrderHelp() {
                   <img src={order.items?.[0]?.image || order.items?.[0]?.img || order.items?.[0]?.photo || '/logo.png'} alt="Product" className="sh-order-img" />
                   <div className="sh-order-info">
                     <div className="sh-order-label">ORDER #{order.displayId}</div>
-                    <div className="sh-order-id">{order.items?.[0]?.name || 'Product'}</div>
+                    <div className="sh-order-id">
+                      {order.items?.length > 1 
+                        ? `${order.items[0].name} + ${order.items.length - 1} more` 
+                        : (order.items?.[0]?.name || 'Product')}
+                    </div>
                     <div className="sh-order-status">
                       Status: <span className="sh-status-delivered">Delivered</span>
                     </div>

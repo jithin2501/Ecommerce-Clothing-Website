@@ -5,6 +5,7 @@ import '../../styles/support/ChatSupport.css';
 
 const STEP = {
   INIT: 'init',
+  WAIT_PRODUCT: 'wait_product', // Added for multi-item orders
   WAIT_ISSUE: 'wait_issue',
   WAIT_MEDIA: 'wait_media',
   DONE: 'done',
@@ -90,18 +91,45 @@ export default function ChatSupport() {
 
     setTimeout(() => {
       setTyping(false);
+      const isMulti = order && order.items && order.items.length > 1;
+
       setMessages(prev => {
         const next = [...prev, {
           from: 'bot',
-          text: `Thanks for reaching out! I can see your order${order ? ` #${order.displayId}` : ''}. Could you please describe the issue you're facing?`,
+          text: `Thanks for reaching out! I can see your order${order ? ` #${order.displayId}` : ''}. ${isMulti ? 'Which product are you facing an issue with?' : 'Could you please describe the issue you\'re facing?'}`,
+          type: isMulti ? 'product_selection' : 'text',
+          products: isMulti ? order.items : [],
           time: now(),
         }];
-        localStorage.setItem(sessionKey, JSON.stringify({ messages: next, step: STEP.WAIT_ISSUE }));
+        const nextStep = isMulti ? STEP.WAIT_PRODUCT : STEP.WAIT_ISSUE;
+        localStorage.setItem(sessionKey, JSON.stringify({ messages: next, step: nextStep }));
+        setStep(nextStep);
         return next;
       });
-      setStep(STEP.WAIT_ISSUE);
     }, 2600);
   };
+
+  function handleProductSelect(product) {
+    if (step !== STEP.WAIT_PRODUCT) return;
+
+    const userMsg = { from: 'user', text: `I have an issue with: ${product.name}`, time: now() };
+    const nextMsgs = [...messages, userMsg];
+    setMessages(nextMsgs);
+    setTyping(true);
+
+    setTimeout(() => {
+      setTyping(false);
+      const botMsg = { 
+        from: 'bot', 
+        text: `Got it. Please describe the issue with your ${product.name}.`, 
+        time: now() 
+      };
+      const finalMsgs = [...nextMsgs, botMsg];
+      setMessages(finalMsgs);
+      setStep(STEP.WAIT_ISSUE);
+      localStorage.setItem(sessionKey, JSON.stringify({ messages: finalMsgs, step: STEP.WAIT_ISSUE }));
+    }, 1200);
+  }
 
   function now() {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -274,6 +302,23 @@ export default function ChatSupport() {
                     <div className={`cs-bubble cs-bubble--${msg.from}`}>
                       {msg.from === 'bot' && <div className="cs-sender">SUPPORT BOT</div>}
                       {msg.text && <p>{msg.text}</p>}
+                      
+                      {/* Product Selection Component */}
+                      {msg.type === 'product_selection' && i === messages.length - 1 && step === STEP.WAIT_PRODUCT && (
+                        <div className="cs-product-selector">
+                          {msg.products.map((p, pidx) => (
+                            <div key={pidx} className="cs-product-option" onClick={() => handleProductSelect(p)}>
+                              <img src={p.img || p.photo || '/images/placeholder.png'} alt="" className="cs-p-opt-img" />
+                              <div className="cs-p-opt-info">
+                                <div className="cs-p-opt-name">{p.name}</div>
+                                <div className="cs-p-opt-size">{p.size ? `Size: ${p.size}` : ''}</div>
+                                <button className="cs-p-opt-select">Select Product</button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
                       {msg.mediaFiles && msg.mediaFiles.length > 0 && (
                         <div className="cs-media-grid">
                           {msg.mediaFiles.map((mf, mi) => (

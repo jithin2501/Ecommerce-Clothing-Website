@@ -59,31 +59,11 @@ export default function OrderManagement() {
         setOrders(prev => prev.map(o => o._id === orderId ? { 
           ...o, 
           trackingStatus: data.trackingStatus, 
-          trackingPayload: data 
+          trackingPayload: data // Store the full live payload for DetailedTracking
         } : o));
       }
     } catch (err) {
       console.error('Sync error:', err);
-    } finally {
-      setSyncingId(null);
-    }
-  };
-
-  const handleMarkDelivered = async (orderId) => {
-    if (!window.confirm('Mark this order as DELIVERED? This will enable chat & reviews for the customer.')) return;
-    setSyncingId(orderId);
-    try {
-      const res = await fetch(`/api/payment/mark-delivered/${orderId}`, { 
-        method: 'PUT',
-        headers: authHeaders() 
-      });
-      const data = await res.json();
-      if (data.success) {
-        alert('Order updated to DELIVERED!');
-        fetchOrders();
-      }
-    } catch (err) {
-      console.error('Mark delivered error:', err);
     } finally {
       setSyncingId(null);
     }
@@ -205,7 +185,6 @@ export default function OrderManagement() {
           order={orders.find(o => o._id === selectedOrder._id) || selectedOrder}
           onClose={() => setSelectedOrder(null)}
           onSync={() => handleSyncStatus(selectedOrder._id)}
-          onMarkDelivered={() => handleMarkDelivered(selectedOrder._id)}
           syncing={syncingId === selectedOrder._id}
         />
       )}
@@ -216,7 +195,7 @@ export default function OrderManagement() {
 /* ════════════════════════════════════
    ORDER DETAIL DRAWER (LIKE CLIENT MGMT)
    ════════════════════════════════════ */
-function OrderDrawer({ order, onClose, onSync, onMarkDelivered, syncing }) {
+function OrderDrawer({ order, onClose, onSync, syncing }) {
   const printRef = useRef();
 
   const handlePrint = () => {
@@ -320,15 +299,6 @@ function OrderDrawer({ order, onClose, onSync, onMarkDelivered, syncing }) {
               <RefreshCw size={14} />
             </button>
             <div className={`om-drawer-status ${order.trackingStatus?.toLowerCase()}`}>{order.trackingStatus}</div>
-            {order.trackingStatus !== 'DELIVERED' && (
-              <button 
-                className="om-mark-delivered-btn" 
-                onClick={onMarkDelivered}
-                disabled={syncing}
-              >
-                <CheckCircle size={14} /> Mark Delivered
-              </button>
-            )}
           </div>
         </div>
 
