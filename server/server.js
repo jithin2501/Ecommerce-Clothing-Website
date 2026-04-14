@@ -16,14 +16,12 @@ const clientManagementRoutes = require('./routers/clientManagementRoutes');
 const paymentRouter = require('./routers/paymentRouter');
 const supportRouter = require('./routers/supportRouter');
 const shiprocketRouter = require('./routers/shiprocketRouter');
-const startCronJobs = require('./cronJobs'); // ← ADDED
+const startCronJobs = require('./cronJobs');
 
 const app = express();
 
 connectDB().then(() => {
-  // Seed superadmin after DB connects
   seedSuperAdmin();
-  // Start cron jobs after DB is ready ← ADDED
   startCronJobs();
 });
 
@@ -42,7 +40,6 @@ app.use('/api/admin/clients', clientManagementRoutes);
 app.use('/api/payment', paymentRouter);
 app.use('/api/support', supportRouter);
 app.use('/api/shiprocket', shiprocketRouter);
-
 
 app.get('/', (req, res) => res.json({ message: 'Sumathi Trends API running.' }));
 
