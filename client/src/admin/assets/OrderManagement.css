@@ -448,10 +448,12 @@
   padding: 1.5rem 2rem;
   background: #f8fafc;
   border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 12px;
 }
 
 .om-print-btn {
-  width: 100%;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -469,6 +471,28 @@
 
 .om-print-btn:hover {
   background: #334155;
+  transform: translateY(-2px);
+}
+
+.om-deliver-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.om-deliver-btn:hover {
+  background: #059669;
   transform: translateY(-2px);
 }
 

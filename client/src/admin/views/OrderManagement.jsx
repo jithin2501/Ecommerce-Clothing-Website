@@ -92,6 +92,27 @@ export default function OrderManagement() {
     }
   };
 
+  const handleUpdateStatus = async (orderId, status) => {
+    if (!window.confirm(`Mark this order as ${status}?`)) return;
+    setSyncingId(orderId);
+    try {
+      const res = await fetch(`/api/payment/update-status/${orderId}`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify({ status })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert(`Order status updated to ${status}`);
+        fetchOrders();
+      }
+    } catch (err) {
+      console.error('Update status error:', err);
+    } finally {
+      setSyncingId(null);
+    }
+  };
+
   const filteredOrders = orders.filter(o => {
     const isSameDay = !selectedDate || o.createdAt?.split('T')[0] === selectedDate;
     const matchesSearch = o.displayId?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -185,6 +206,7 @@ export default function OrderManagement() {
           order={orders.find(o => o._id === selectedOrder._id) || selectedOrder}
           onClose={() => setSelectedOrder(null)}
           onSync={() => handleSyncStatus(selectedOrder._id)}
+          onUpdateStatus={(status) => handleUpdateStatus(selectedOrder._id, status)}
           syncing={syncingId === selectedOrder._id}
         />
       )}
@@ -290,24 +312,6 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
         <div className="om-drawer-head">
           <div className="om-drawer-id">ORDER #{order.displayId}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {order.trackingStatus !== 'DELIVERED' && (
-              <button 
-                className="om-test-btn" 
-                onClick={async () => {
-                  if (window.confirm('TEST: Mark this order as delivered?')) {
-                    const res = await fetch(`/api/payment/update-status/${order._id}`, {
-                      method: 'PUT',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ status: 'DELIVERED' })
-                    });
-                    if ((await res.json()).success) window.location.reload();
-                  }
-                }}
-                style={{ fontSize: '10px', background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer' }}
-              >
-                Mark Delivered (Test)
-              </button>
-            )}
             <button 
               className={`om-sync-btn ${syncing ? 'spinning' : ''}`} 
               onClick={onSync}
@@ -374,6 +378,16 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
           <button className="om-print-btn" onClick={handlePrint}>
             <Printer size={16} /> Print
           </button>
+          
+          {(order.trackingStatus || '').toUpperCase() !== 'DELIVERED' && (
+            <button 
+              className="om-deliver-btn" 
+              onClick={() => onUpdateStatus('DELIVERED')}
+              disabled={syncing}
+            >
+              <CheckCircle size={16} /> Mark as Delivered
+            </button>
+          )}
         </div>
       </aside>
     </div>
