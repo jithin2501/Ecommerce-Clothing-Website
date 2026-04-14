@@ -290,6 +290,24 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
         <div className="om-drawer-head">
           <div className="om-drawer-id">ORDER #{order.displayId}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            {order.trackingStatus !== 'DELIVERED' && (
+              <button 
+                className="om-test-btn" 
+                onClick={async () => {
+                  if (window.confirm('TEST: Mark this order as delivered?')) {
+                    const res = await fetch(`/api/payment/update-status/${order._id}`, {
+                      method: 'PUT',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ status: 'DELIVERED' })
+                    });
+                    if ((await res.json()).success) window.location.reload();
+                  }
+                }}
+                style={{ fontSize: '10px', background: '#f1f5f9', border: '1px solid #e2e8f0', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer' }}
+              >
+                Mark Delivered (Test)
+              </button>
+            )}
             <button 
               className={`om-sync-btn ${syncing ? 'spinning' : ''}`} 
               onClick={onSync}
