@@ -8,8 +8,6 @@ services:
     env_file: .env
     ports:
       - "5000:5000"
-    volumes:
-      - ./server/conf/serviceAccountKey.json:/usr/src/app/conf/serviceAccountKey.json:ro
 
   frontend:
     build: ./client

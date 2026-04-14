@@ -30,10 +30,7 @@ export default function MyOrders() {
       if (firebaseUser) {
         setUser(firebaseUser);
         try {
-          const token = await firebaseUser.getIdToken();
-          const res = await fetch(`/api/payment/user-orders/${firebaseUser.uid}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
+          const res = await fetch(`/api/payment/user-orders/${firebaseUser.uid}`);
           const data = await res.json();
           if (data.success) {
             setDbOrders(data.data);

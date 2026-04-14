@@ -248,10 +248,6 @@ exports.getUserOrders = async (req, res) => {
     const { userId } = req.params;
     if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
 
-    if (req.user.uid !== userId) {
-      return res.status(403).json({ success: false, error: 'Unauthorized access to this order history' });
-    }
-
     const orders = await Order.find({ userId, status: 'success' }).sort({ createdAt: -1 });
     res.json({ success: true, count: orders.length, data: orders });
   } catch (error) {

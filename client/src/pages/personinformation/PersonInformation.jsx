@@ -42,10 +42,7 @@ export default function PersonInformation() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const token = await user.getIdToken();
-          const res = await fetch(`/api/client-auth/profile/${user.uid}`, {
-            headers: { 'Authorization': `Bearer ${token}` }
-          });
+          const res = await fetch(`/api/client-auth/profile/${user.uid}`);
           const data = await res.json();
           if (data.success) {
             setDbUser(data.user);
@@ -71,13 +68,9 @@ export default function PersonInformation() {
   const updateProfileData = async (updates) => {
     if (!auth.currentUser) return;
     try {
-      const token = await auth.currentUser.getIdToken();
       await fetch(`/api/client-auth/profile/${auth.currentUser.uid}`, {
         method: 'PUT',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates)
       });
       setDbUser(prev => ({ ...prev, ...updates }));
