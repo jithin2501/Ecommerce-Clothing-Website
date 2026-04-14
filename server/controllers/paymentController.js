@@ -349,7 +349,8 @@ exports.syncTrackingStatus = async (req, res) => {
         trackingStatus: td.track_status,
         courier: td.courier_name || 'Logistic Partner',
         awb: td.awb_code || '',
-        activities: td.shipment_track_activities || []
+        // Sort activities by date descending (newest first)
+        activities: (td.shipment_track_activities || []).sort((a, b) => new Date(b.date) - new Date(a.date))
       };
 
       await order.save();

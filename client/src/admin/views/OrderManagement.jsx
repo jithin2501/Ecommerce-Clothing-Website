@@ -56,7 +56,11 @@ export default function OrderManagement() {
       const res = await fetch(`/api/payment/track/${orderId}`, { headers: authHeaders() });
       const data = await res.json();
       if (data.success) {
-        setOrders(prev => prev.map(o => o._id === orderId ? { ...o, trackingStatus: data.trackingStatus } : o));
+        setOrders(prev => prev.map(o => o._id === orderId ? { 
+          ...o, 
+          trackingStatus: data.trackingStatus, 
+          trackingPayload: data // Store the full live payload for DetailedTracking
+        } : o));
       }
     } catch (err) {
       console.error('Sync error:', err);
@@ -178,8 +182,10 @@ export default function OrderManagement() {
 
       {selectedOrder && (
         <OrderDrawer
-          order={selectedOrder}
+          order={orders.find(o => o._id === selectedOrder._id) || selectedOrder}
           onClose={() => setSelectedOrder(null)}
+          onSync={() => handleSyncStatus(selectedOrder._id)}
+          syncing={syncingId === selectedOrder._id}
         />
       )}
     </div>
@@ -189,7 +195,7 @@ export default function OrderManagement() {
 /* ════════════════════════════════════
    ORDER DETAIL DRAWER (LIKE CLIENT MGMT)
    ════════════════════════════════════ */
-function OrderDrawer({ order, onClose }) {
+function OrderDrawer({ order, onClose, onSync, syncing }) {
   const printRef = useRef();
 
   const handlePrint = () => {
@@ -283,7 +289,17 @@ function OrderDrawer({ order, onClose }) {
 
         <div className="om-drawer-head">
           <div className="om-drawer-id">ORDER #{order.displayId}</div>
-          <div className={`om-drawer-status ${order.trackingStatus?.toLowerCase()}`}>{order.trackingStatus}</div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <button 
+              className={`om-sync-btn ${syncing ? 'spinning' : ''}`} 
+              onClick={onSync}
+              disabled={syncing}
+              title="Sync with Shiprocket"
+            >
+              <RefreshCw size={14} />
+            </button>
+            <div className={`om-drawer-status ${order.trackingStatus?.toLowerCase()}`}>{order.trackingStatus}</div>
+          </div>
         </div>
 
         <div className="om-drawer-body" ref={printRef}>

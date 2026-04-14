@@ -118,8 +118,7 @@ export default function OrderDetail() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => { 
-    window.scrollTo({ top: 0, behavior: 'instant' }); 
-    if (order?._id && order.shiprocketShipmentId) {
+    if (order?._id) { // Trigger tracking for any order viewed
       const syncTracking = async () => {
         setTrackingLoading(true);
         try {
