@@ -121,10 +121,10 @@ export default function SupportHub() {
 
                           <div className="sh-order-card-footer">
                             <button
-                              className="sh-need-help-btn-wide"
+                              className="sh-need-help-btn"
                               onClick={() => navigate('/support/order-help', { state: { order } })}
                             >
-                              Need help with this order?
+                              Need help?
                             </button>
                           </div>
                         </div>

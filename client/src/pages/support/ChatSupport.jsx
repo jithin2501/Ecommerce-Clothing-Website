@@ -312,7 +312,6 @@ export default function ChatSupport() {
                               <div className="cs-p-opt-info">
                                 <div className="cs-p-opt-name">{p.name}</div>
                                 <div className="cs-p-opt-size">{p.size ? `Size: ${p.size}` : ''}</div>
-                                <button className="cs-p-opt-select">Select Product</button>
                               </div>
                             </div>
                           ))}

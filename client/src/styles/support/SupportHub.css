@@ -731,9 +731,9 @@
 }
 
 .sh-order-card-footer {
-  padding: 12px 20px 20px;
+  padding: 0 20px 16px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .sh-need-help-btn-wide {
