@@ -46,7 +46,10 @@ exports.getAllClients = async (req, res) => {
 
     // Attach order counts for each user
     const usersWithOrders = await Promise.all(users.map(async (u) => {
-      const orderCount = await Order.countDocuments({ userId: { $in: u.uids } });
+      const orderCount = await Order.countDocuments({ 
+        userId: { $in: u.uids }, 
+        status: 'success' 
+      });
       return { ...u, orderCount };
     }));
 
@@ -64,7 +67,10 @@ exports.getClientDetail = async (req, res) => {
     if (!user) return res.status(404).json({ error: 'Client not found' });
 
     // Fetch full order history from Order collection
-    const orders = await Order.find({ userId: { $in: user.uids } }).sort({ createdAt: -1 });
+    const orders = await Order.find({ 
+      userId: { $in: user.uids },
+      status: { $in: ['success', 'pending'] }
+    }).sort({ createdAt: -1 });
 
     // Fetch product reviews linked to this client's firebase UIDs
     const reviews = await ProductReview.find({
