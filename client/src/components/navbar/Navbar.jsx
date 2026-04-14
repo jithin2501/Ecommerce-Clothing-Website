@@ -169,6 +169,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await signOut(auth);
+    localStorage.removeItem('sumathi_selected_address');
     setShowDropdown(false);
     navigate('/');
   };

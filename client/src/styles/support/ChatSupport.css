@@ -313,14 +313,14 @@
   min-height: 40px;
   max-height: 120px;
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   transition: border-color 0.2s;
   background: #f9fafb;
-  scrollbar-width: thin;
-  scrollbar-color: #ddd transparent;
 }
-.cs-input::-webkit-scrollbar { width: 4px; }
-.cs-input::-webkit-scrollbar-track { background: transparent; }
-.cs-input::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+.cs-input::-webkit-scrollbar {
+  display: none;
+}
 .cs-input:focus { border-color: #2D3E50; background: #fff; }
 .cs-input:disabled { background: #f5f5f5; color: #aaa; }
 
