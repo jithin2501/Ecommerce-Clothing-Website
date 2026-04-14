@@ -88,34 +88,45 @@ export default function SupportHub() {
                     <p style={{ textAlign: 'center', padding: '20px', color: '#888' }}>No delivered orders found.</p>
                   ) : (
                     orders.map((order) => {
-                      const firstItem = order.items?.[0];
-                      const itemName = firstItem?.name || 'Order Item';
-                      const extraCount = (order.items?.length || 0) - 1;
-                      const displayTitle = extraCount > 0 ? `${itemName} + ${extraCount} more` : itemName;
-
                       return (
                         <div 
                           key={order._id} 
-                          className="sh-order-card"
+                          className="sh-order-card sh-order-card--multi"
                         >
-                          <img
-                            src={firstItem?.image || firstItem?.img || firstItem?.photo || '/logo.png'}
-                            alt={itemName}
-                            className="sh-order-img"
-                          />
-                          <div className="sh-order-info">
+                          <div className="sh-order-header-row">
                             <div className="sh-order-label">ORDER #{order.displayId}</div>
-                            <div className="sh-order-id">{displayTitle}</div>
                             <div className="sh-order-status">
                               Status: <span className="sh-status-delivered">Delivered</span>
                             </div>
                           </div>
-                          <button
-                            className="sh-need-help-btn"
-                            onClick={() => navigate('/support/order-help', { state: { order } })}
-                          >
-                            Need help?
-                          </button>
+
+                          <div className="sh-order-items-list">
+                            {order.items?.map((item, idx) => (
+                              <div key={idx} className="sh-order-item-row">
+                                <img
+                                  src={item.image || item.img || item.photo || '/logo.png'}
+                                  alt={item.name}
+                                  className="sh-order-img"
+                                />
+                                <div className="sh-order-info">
+                                  <div className="sh-order-id">{item.name}</div>
+                                  <div className="sh-order-item-meta">
+                                    {item.size ? `Size: ${item.size}` : ''} 
+                                    {item.qty > 1 ? ` | Qty: ${item.qty}` : ''}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="sh-order-card-footer">
+                            <button
+                              className="sh-need-help-btn-wide"
+                              onClick={() => navigate('/support/order-help', { state: { order } })}
+                            >
+                              Need help with this order?
+                            </button>
+                          </div>
                         </div>
                       );
                     })

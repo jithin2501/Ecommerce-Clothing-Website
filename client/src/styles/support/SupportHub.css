@@ -693,3 +693,63 @@
     gap: 12px;
   }
 }
+
+/* ── MULTI ITEM ORDER CARD ── */
+.sh-order-card--multi {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+}
+
+.sh-order-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: #f8fafc;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.sh-order-items-list {
+  padding: 12px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sh-order-item-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sh-order-item-meta {
+  font-size: 11px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+.sh-order-card-footer {
+  padding: 12px 20px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.sh-need-help-btn-wide {
+  width: 100%;
+  background: #2D3E50;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sh-need-help-btn-wide:hover {
+  background: #1e2a38;
+  transform: translateY(-1px);
+}
