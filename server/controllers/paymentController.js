@@ -322,3 +322,18 @@ exports.manualSyncToShiprocket = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+exports.markAsDelivered = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const order = await Order.findById(orderId);
+    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+
+    order.trackingStatus = 'DELIVERED';
+    await order.save();
+
+    res.json({ success: true, message: 'Order marked as DELIVERED' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};

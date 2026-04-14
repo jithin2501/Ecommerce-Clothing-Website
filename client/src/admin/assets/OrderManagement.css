@@ -184,6 +184,22 @@
   cursor: pointer;
 }
 
+.om-deliver-btn {
+  background: none;
+  border: none;
+  color: #10b981;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.om-deliver-btn:hover {
+  transform: scale(1.2);
+  color: #059669;
+}
+
 .om-sync-btn.spinning {
   animation: omSpin 1s linear infinite;
 }
