@@ -53,6 +53,7 @@ export default function ManageAddresses() {
   const [menuOpen, setMenuOpen] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [locating, setLocating] = useState(false);
+  const [validatingPin, setValidatingPin] = useState(false);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
@@ -108,17 +109,22 @@ export default function ManageAddresses() {
     const e = validate();
     if (Object.keys(e).length) { setErrors(e); return; }
 
-    // ── NEW: Shiprocket Pincode Check ──
+    setValidatingPin(true);
+    // ── STRICT: Shiprocket Pincode Check ──
     try {
       const pinRes = await fetch(`/api/shiprocket/check-pincode/${form.pincode}`);
       const pinData = await pinRes.json();
       if (!pinData.serviceable) {
-        alert(`Sorry, we cannot deliver to pincode ${form.pincode}. Our delivery partners do not currently service this area.`);
+        alert(`Verification Failed: Shiprocket does not currently service pincode ${form.pincode}. Please provide a different address to proceed.`);
+        setValidatingPin(false);
         return;
       }
     } catch (err) {
-      console.warn("Pincode check failed, proceeding anyway", err);
+      alert("Serviceability Check Error: We are currently unable to verify your pincode with Shiprocket. Please check your connection and try again.");
+      setValidatingPin(false);
+      return;
     }
+    setValidatingPin(false);
 
     const newAddrPart = {
       type: form.type.toUpperCase(),
@@ -489,8 +495,8 @@ export default function ManageAddresses() {
               </div>
 
               <div className="ma-form-actions">
-                <button className="ma-btn-save" onClick={handleSave}>
-                  {saved ? 'SAVED!' : editingId ? 'UPDATE ADDRESS' : 'SAVE ADDRESS'}
+                <button className="ma-btn-save" onClick={handleSave} disabled={validatingPin}>
+                  {validatingPin ? 'VERIFYING PINCODE...' : saved ? 'SAVED!' : editingId ? 'UPDATE ADDRESS' : 'SAVE ADDRESS'}
                 </button>
                 <button className="ma-btn-cancel" onClick={handleCancel}>CANCEL</button>
               </div>
