@@ -717,8 +717,9 @@
 
   .dash-mid-row {
     grid-template-columns: 1fr !important;
-    gap: 1rem;
+    gap: 1.5rem;
     padding: 0;
+    margin-bottom: 2.5rem; /* Added gap before transactions */
   }
 
   .dash-table-card {
@@ -732,34 +733,42 @@
   .dash-cc-header {
     flex-direction: column !important;
     align-items: flex-start !important;
-    gap: 1.25rem;
-    padding: 1rem !important;
+    gap: 1.5rem !important;
+    padding: 1.5rem 1rem !important;
   }
 
   .dash-cc-header h3 {
     width: 100%;
     margin-bottom: 0;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
   .dash-table-controls {
     flex-direction: column;
     width: 100%;
-    gap: 0.75rem !important;
-    align-items: flex-start !important;
+    gap: 1rem !important;
+    align-items: stretch !important; /* Force children to stretch to full width */
   }
 
   .dash-search-wrapper, .dash-date-nav {
     width: 100% !important;
+    display: flex !important;
+    box-sizing: border-box;
   }
 
   .dash-table-search {
     width: 100% !important;
+    max-width: none !important;
     box-sizing: border-box;
   }
 
+  .dash-date-nav {
+    justify-content: space-between;
+  }
+
   .dash-date-nav input {
-    width: 100%;
+    width: 100% !important;
+    text-align: center;
   }
 
   .dash-top-actions {
@@ -770,6 +779,13 @@
   .dash-tools {
     width: 100%;
     justify-content: space-between !important;
+  }
+
+  .dash-ac-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1.25rem !important;
+    margin-bottom: 1.5rem !important;
   }
 
   .ac-filter-group {
