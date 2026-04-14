@@ -100,32 +100,34 @@ export default function SupportHub() {
                             </div>
                           </div>
 
-                          <div className="sh-order-items-list">
-                            {order.items?.map((item, idx) => (
-                              <div key={idx} className="sh-order-item-row">
-                                <img
-                                  src={item.image || item.img || item.photo || '/logo.png'}
-                                  alt={item.name}
-                                  className="sh-order-img"
-                                />
-                                <div className="sh-order-info">
-                                  <div className="sh-order-id">{item.name}</div>
-                                  <div className="sh-order-item-meta">
-                                    {item.size ? `Size: ${item.size}` : ''} 
-                                    {item.qty > 1 ? ` | Qty: ${item.qty}` : ''}
+                          <div className="sh-order-body-row">
+                            <div className="sh-order-items-list">
+                              {order.items?.map((item, idx) => (
+                                <div key={idx} className="sh-order-item-row">
+                                  <img
+                                    src={item.image || item.img || item.photo || '/logo.png'}
+                                    alt={item.name}
+                                    className="sh-order-img"
+                                  />
+                                  <div className="sh-order-info">
+                                    <div className="sh-order-id">{item.name}</div>
+                                    <div className="sh-order-item-meta">
+                                      {item.size ? `Size: ${item.size}` : ''} 
+                                      {item.qty > 1 ? ` | Qty: ${item.qty}` : ''}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
-                          </div>
+                              ))}
+                            </div>
 
-                          <div className="sh-order-card-footer">
-                            <button
-                              className="sh-need-help-btn"
-                              onClick={() => navigate('/support/order-help', { state: { order } })}
-                            >
-                              Need help?
-                            </button>
+                            <div className="sh-order-actions-side">
+                              <button
+                                className="sh-need-help-btn"
+                                onClick={() => navigate('/support/order-help', { state: { order } })}
+                              >
+                                Need help?
+                              </button>
+                            </div>
                           </div>
                         </div>
                       );

@@ -711,11 +711,25 @@
   border-bottom: 1px solid #f1f5f9;
 }
 
-.sh-order-items-list {
+.sh-order-body-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 12px 20px;
+}
+
+.sh-order-items-list {
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.sh-order-actions-side {
+  padding-left: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .sh-order-item-row {
@@ -728,12 +742,6 @@
   font-size: 11px;
   color: #64748b;
   margin-top: 2px;
-}
-
-.sh-order-card-footer {
-  padding: 0 20px 16px;
-  display: flex;
-  justify-content: flex-end;
 }
 
 .sh-need-help-btn-wide {
