@@ -206,14 +206,15 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
         <head>
           <title>Order #${order.displayId}</title>
           <style>
-             @page { size: A4; margin: 10mm; }
-             body { font-family: 'Inter', sans-serif; margin: 0; padding: 0; color: #1e293b; font-size: 11px; }
-             .print-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; width: 100%; box-sizing: border-box; }
-             .p-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
+             @page { size: A4; margin: 0; }
+             body { font-family: 'Inter', sans-serif; margin: 0; padding: 15mm; color: #1e293b; font-size: 11px; }
+             .print-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px; width: 100%; box-sizing: border-box; background: #fff; }
+             .p-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px; }
              .p-id-grp { display: flex; flex-direction: column; }
              .p-id-lab { font-size: 9px; font-weight: 800; color: #64748b; text-transform: uppercase; }
              .p-id-val { font-size: 16px; font-weight: 800; margin-top: 2px; }
-             .p-paid { border: 2px solid #166534; color: #166534; padding: 3px 10px; border-radius: 4px; font-weight: 800; font-size: 11px; text-transform: uppercase; }
+             .p-paid-sect { text-align: right; display: flex; flex-direction: column; align-items: flex-end; }
+             .p-paid { border: 2px solid #166534; color: #166534; padding: 4px 12px; border-radius: 4px; font-weight: 800; font-size: 11px; text-transform: uppercase; display: inline-block; }
              .p-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
              .p-sect h4 { font-size: 10px; font-weight: 800; color: #94A3B8; text-transform: uppercase; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px; margin-bottom: 8px; }
              .p-info { font-size: 11px; line-height: 1.4; color: #334155; }
@@ -231,9 +232,9 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
                    <span class="p-id-lab">Digital Invoice</span>
                    <span class="p-id-val">#${order.displayId}</span>
                 </div>
-                <div style="text-align: right">
-                  <span class="p-paid">PAID IN FULL</span><br/>
-                  <small style="color: #64748b; font-size: 8px;">Date: ${new Date(order.createdAt).toLocaleDateString()}</small>
+                <div class="p-paid-sect">
+                  <span class="p-paid">PAID IN FULL</span>
+                  <span style="color: #64748b; font-size: 9px; font-weight: 600; margin-top: 8px; display: block;">Date: ${new Date(order.createdAt).toLocaleDateString()}</span>
                 </div>
               </div>
               <div class="p-grid">
