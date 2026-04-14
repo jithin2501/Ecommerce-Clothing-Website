@@ -1,6 +1,10 @@
 const express = require('express');
 const router  = express.Router();
 const paymentCtrl = require('../controllers/paymentController');
+const authMiddleware = require('../middleware/authMiddleware');
+
+const protect = authMiddleware.protect;
+const superAdminOnly = authMiddleware.superAdminOnly;
 
 // Route to create a Razorpay order
 router.post('/create-order', paymentCtrl.createOrder);
@@ -12,7 +16,7 @@ router.post('/verify-payment', paymentCtrl.verifyPayment);
 router.post('/calculate-summary', paymentCtrl.calculateSummary);
 
 // Route to fetch all orders (for Admin)
-router.get('/orders', paymentCtrl.getAllOrders);
+router.get('/orders', protect, superAdminOnly, paymentCtrl.getAllOrders);
 
 // Route to fetch orders for a specific user
 router.get('/user-orders/:userId', paymentCtrl.getUserOrders);
@@ -21,6 +25,6 @@ router.get('/user-orders/:userId', paymentCtrl.getUserOrders);
 router.get('/track/:orderId', paymentCtrl.syncTrackingStatus);
 
 // NEW: Route to manually push a missing order to Shiprocket
-router.post('/manual-sync-sr/:orderId', paymentCtrl.manualSyncToShiprocket);
+router.post('/manual-sync-sr/:orderId', protect, superAdminOnly, paymentCtrl.manualSyncToShiprocket);
 
 module.exports = router;
