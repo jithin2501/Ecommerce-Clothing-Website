@@ -8,7 +8,7 @@ export default function EmptyCart() {
         <img src="/images/EmptyCart/empty-cart.png" alt="Empty Cart" className="ec-img" />
         <h2 className="ec-title">Your shopping bag is empty</h2>
         <p className="ec-sub">It looks like you haven't added any items to your cart yet. Explore our latest collections for your little ones.</p>
-        <Link to="/collections" className="ec-btn">CONTINUE SHOPPING →</Link>
+        <Link to="/collections" className="ec-btn">CONTINUE SHOPPING</Link>
       </div>
     </div>
   );
