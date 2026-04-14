@@ -157,7 +157,7 @@ export default function OrderManagement() {
                   <td>
                     <div className="om-client-cell">
                       <span>{o.userName || 'Guest'}</span>
-                      <span className="om-client-sub">{o.userEmail || 'N/A'}</span>
+                      <span className="om-client-sub">{o.userEmail || o.user?.email || 'N/A'}</span>
                     </div>
                   </td>
                   <td><span className="om-amount">₹{o.amount.toLocaleString()}</span></td>
@@ -336,7 +336,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
             <h4 className="om-sect-title"><User size={16} /> Customer Info</h4>
             <div className="om-info-card">
               <p><strong>Name:</strong> {order.userName || 'Guest'}</p>
-              <p><strong>Email:</strong> {order.userEmail || 'N/A'}</p>
+              <p><strong>Email:</strong> {order.userEmail || order.user?.email || 'N/A'}</p>
             </div>
           </div>
 

@@ -78,12 +78,18 @@ exports.createOrder = async (req, res) => {
     let displayId = 'ST-';
     for (let i = 0; i < 6; i++) displayId += chars.charAt(Math.floor(Math.random() * chars.length));
 
+    let finalEmail = userEmail || shippingAddress?.email;
+    if (!finalEmail && userId && userId !== 'guest') {
+      const client = await ClientUser.findOne({ uids: userId }).lean();
+      if (client?.email) finalEmail = client.email;
+    }
+
     await Order.create({
       orderId: order.id,
       displayId,
       userId: userId || 'guest',
       userName: userName || shippingAddress?.name || shippingAddress?.fullName,
-      userEmail: userEmail || shippingAddress?.email,
+      userEmail: finalEmail,
       amount: finalCalculatedAmount,
       currency,
       items: validatedItems,
@@ -223,7 +229,8 @@ exports.getAllOrders = async (req, res) => {
         if (userDoc) {
           o.user = {
             id: userDoc.customerId || 'N/A', 
-            name: userDoc.name || 'Unknown'
+            name: userDoc.name || 'Unknown',
+            email: userDoc.email || 'N/A'
           };
         }
       }
