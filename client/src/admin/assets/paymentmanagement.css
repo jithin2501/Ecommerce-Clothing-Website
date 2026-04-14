@@ -630,6 +630,56 @@
   text-align: center;
 }
 
+/* ── Print Receipt Button ── */
+.inv-print-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 auto;
+}
+
+.inv-print-btn:hover {
+  background: #2D3E50;
+  color: white;
+  border-color: #2D3E50;
+  transform: translateY(-1px);
+}
+
+/* ── PRINT OVERRIDES ── */
+@media print {
+  /* Hide the entire dashboard UI */
+  .dash-container, 
+  .admin-sidebar, 
+  .admin-header,
+  .dash-main-title,
+  .dash-wrapper-box,
+  .dash-bottom-row-full,
+  .navbar,
+  .sidebar,
+  .footer {
+    display: none !important;
+  }
+
+  /* Ensure the invoice container is visible and clean */
+  .invoice-container {
+    display: block !important;
+    position: static !important;
+    visibility: visible !important;
+    left: 0 !important;
+    margin: 0 !important;
+    padding: 10mm !important;
+  }
+}
+
 @media (max-width: 1100px) {
   .dash-stats-grid {
     grid-template-columns: repeat(2, 1fr);

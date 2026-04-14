@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
-import { Search, Bell, Filter, Download, ArrowUpRight, ArrowDownRight, Calendar, MoreHorizontal } from 'lucide-react';
+import { Search, Bell, Filter, Download, ArrowUpRight, ArrowDownRight, Calendar, MoreHorizontal, Printer } from 'lucide-react';
 import '../assets/paymentmanagement.css';
+import OrderInvoice from '../../pages/myorders/OrderInvoice';
 
 const API = '/api/payment/orders';
 const authHeaders = () => ({
@@ -16,6 +16,14 @@ export default function PaymentManagement() {
   const [activeMetric, setActiveMetric] = useState('Revenue');
   const [allProducts, setAllProducts] = useState([]);
   const [clients, setClients] = useState([]);
+  const [printingOrder, setPrintingOrder] = useState(null);
+
+  const handlePrint = (order) => {
+    setPrintingOrder(order);
+    setTimeout(() => {
+      window.print();
+    }, 500);
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -369,9 +377,10 @@ export default function PaymentManagement() {
                   <th style={{ width: '15%' }}>Client Name</th>
                   <th style={{ width: '15%', textAlign: 'center' }}>ID</th>
                   <th style={{ width: '25%', textAlign: 'center' }}>Transaction ID</th>
-                  <th style={{ width: '15%', textAlign: 'center' }}>Amount</th>
-                  <th style={{ width: '15%', textAlign: 'center' }}>Payment Method</th>
-                  <th style={{ width: '15%', textAlign: 'center' }}>Status</th>
+                  <th style={{ width: '12%', textAlign: 'center' }}>Amount</th>
+                  <th style={{ width: '15%', textAlign: 'center' }}>Method</th>
+                  <th style={{ width: '10%', textAlign: 'center' }}>Status</th>
+                  <th style={{ width: '12%', textAlign: 'center' }}>Receipt</th>
                 </tr>
               </thead>
               <tbody>
@@ -383,6 +392,15 @@ export default function PaymentManagement() {
                     <td className="box-cell center-text">₹{o.amount?.toLocaleString('en-IN')}</td>
                     <td className="box-cell center-text" style={{ textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>{o.paymentMethod || 'Razorpay'}</td>
                     <td className="box-cell center-text"><span className={`status-badge ${o.status}`}>{o.status}</span></td>
+                    <td className="box-cell center-text">
+                      <button 
+                        className="inv-print-btn" 
+                        onClick={() => handlePrint(o)}
+                        title="Print Receipt"
+                      >
+                        <Printer size={14} /> <span>Print</span>
+                      </button>
+                    </td>
                   </tr>
                 ))}
                 {filteredTransactions.length === 0 && (
@@ -395,6 +413,7 @@ export default function PaymentManagement() {
           </div>
         </div>
       </div>
+      {printingOrder && <OrderInvoice order={printingOrder} />}
     </div>
   );
 }
