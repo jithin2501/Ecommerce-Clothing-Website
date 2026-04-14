@@ -2,7 +2,6 @@ const crypto = require('crypto');
 const razorpay = require('../conf/razorpay');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
-const ClientUser = require('../models/ClientUser');
 const shiprocketService = require('../services/shiprocket');
 
 const FREE_SHIPPING_THRESHOLD = 136;
