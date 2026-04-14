@@ -13,7 +13,7 @@ const BADGES = [
 ];
 
 const AGE_LABELS = {
-  'newborn': '0–6 Months', 'infant': '6–12 Months', 'toddler': '1–3 Years',
+  'newborn': '0–6 Months', 'infant': '6–12 Months', 'toddler': '1–3 Years', 
   'little-girls': '3–6 Years', 'kids': '6–9 Years', 'pre-teen': '9–12 Years'
 };
 
@@ -46,6 +46,7 @@ export default function ProductInfo({
   const [dynamicDelivery, setDynamicDelivery] = useState(null);
   const [isCheckingPin, setIsCheckingPin] = useState(false);
 
+  // Fetch real delivery date when address changes
   useEffect(() => {
     if (!selectedAddress?.pincode) {
       setDynamicDelivery(null);
@@ -86,7 +87,8 @@ export default function ProductInfo({
       onOpenSidebar();
       return false;
     }
-
+    
+    // Auth requirements for strict validation
     if (auth?.currentUser && userInfo) {
       const isGoogle = userInfo.loginType === 'google' || auth.currentUser.providerData[0]?.providerId === 'google.com';
       const isPhone  = userInfo.loginType === 'phone' || auth.currentUser.providerData[0]?.providerId === 'phone';
@@ -95,14 +97,14 @@ export default function ProductInfo({
         alert("Please complete your Personal Information (Phone number) in your account before adding to cart.");
         navigate('/account');
         return false;
-      }
-
+      } 
+      
       if (isPhone && !userInfo.fullName) {
         alert("Please complete your Personal Information (Name) in your account before adding to cart. No email is required.");
         navigate('/account');
         return false;
       }
-
+      
       if (!isGoogle && !isPhone && (!userInfo.fullName || !userInfo.phone)) {
         alert("Please complete your Personal Information in your account before adding to cart.");
         navigate('/account');
@@ -194,15 +196,15 @@ export default function ProductInfo({
           shirtColor={selectedColorHex}
           isAvailable={isAvailable}
         />
-        <button
-          className={`pi-icon-btn${isWishlisted(productId) ? ' active' : ''}`}
+        <button 
+          className={`pi-icon-btn${isWishlisted(productId) ? ' active' : ''}`} 
           onClick={() => toggleWishlist({ id: productId, name, price, img: galleryImg, category: 'Product' })}
           style={{ color: isWishlisted(productId) ? '#e11d48' : 'inherit' }}
         >
           <Heart size={18} fill={isWishlisted(productId) ? '#e11d48' : 'none'} stroke={isWishlisted(productId) ? '#e11d48' : 'currentColor'} />
         </button>
-        <button
-          className="pi-icon-btn"
+        <button 
+          className="pi-icon-btn" 
           onClick={onShare}
         >
           <Share2 size={18} />

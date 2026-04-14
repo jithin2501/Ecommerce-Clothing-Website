@@ -53,6 +53,7 @@ export default function ChatSupport() {
     if (initiated.current) return;
     initiated.current = true;
 
+    // ✅ Restore chat history from localStorage
     const saved = localStorage.getItem(sessionKey);
     if (saved) {
       try {
@@ -61,9 +62,10 @@ export default function ChatSupport() {
         setStep(savedStep || STEP.DONE);
         setShowEnded(savedStep === STEP.DONE);
         if (savedStep !== STEP.DONE && savedMsgs.length > 0) {
-
+            // If it wasn't done, we might want to resume or see where we left off
+            // For now, if messages exist, we don't run the intro again unless it's empty
         } else if (savedStep === STEP.DONE) {
-
+            // Already ended, just show history
             return;
         }
         if (savedMsgs.length > 0) return;
@@ -118,21 +120,23 @@ export default function ChatSupport() {
     const trimmed = input.trim();
     if (step === STEP.WAIT_MEDIA) {
       if (mediaFiles.length === 0) return;
-
+      
       const newMsg = { from: 'user', text: trimmed || '', mediaFiles: [...mediaFiles], time: now() };
       setMessages(prev => [...prev, newMsg]);
       setInput('');
 
+      // ✅ SUBMIT TO BACKEND
       const formData = new FormData();
       formData.append('userId', order?.userId || localStorage.getItem('sumathi_uid'));
       formData.append('orderId', order?.displayId || 'N/A');
-
+      
+      // Combine all user messages (except initial greeting) into one description
       const userDescs = messages
         .filter(m => m.from === 'user' && m.text && !m.text.startsWith('Hi,'))
         .map(m => m.text);
       if (trimmed) userDescs.push(trimmed);
       formData.append('description', userDescs.join('\n') || 'Chat Support Request');
-
+      
       mediaFiles.forEach(mf => {
         if (mf.file) formData.append('attachments', mf.file);
       });
@@ -146,7 +150,7 @@ export default function ChatSupport() {
       setMediaFiles([]);
       const ta = document.querySelector('.cs-input');
       if (ta) ta.style.height = 'auto';
-
+      
       botReply(
         "We've received your details. Our support team will shortly call you to resolve this. Thank you for your patience! 😊",
         2000,

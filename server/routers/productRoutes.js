@@ -1,7 +1,8 @@
 // ── routers/productRoutes.js ──
 const express  = require('express');
 const multer   = require('multer');
-const { protect } = require('../middleware/authMiddleware');
+const jwt      = require('jsonwebtoken');
+const router   = express.Router();
 
 const {
   getProducts, getFeaturedProducts, getAdminProducts,
@@ -17,6 +18,7 @@ const upload = multer({
   },
 });
 
+// Wraps multer so errors return JSON instead of an HTML crash page
 const uploadSingle = (req, res, next) => {
   upload.single('image')(req, res, (err) => {
     if (err) {
@@ -29,18 +31,29 @@ const uploadSingle = (req, res, next) => {
   });
 };
 
+const verifyAdmin = (req, res, next) => {
+  const auth = req.headers.authorization;
+  if (!auth?.startsWith('Bearer ')) return res.status(401).json({ success: false });
+  try {
+    req.user = jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET);
+    next();
+  } catch {
+    return res.status(401).json({ success: false, message: 'Invalid token' });
+  }
+};
+
 // ── Public ──
 router.get('/',         getProducts);
 router.get('/featured', getFeaturedProducts);
 
 // ── Admin ──
-router.get   ('/admin',     protect, getAdminProducts);
-router.post  ('/admin',     protect, uploadSingle, createProduct);
-router.patch ('/admin/:id', protect, (req, res, next) => {
+router.get   ('/admin',     verifyAdmin, getAdminProducts);
+router.post  ('/admin',     verifyAdmin, uploadSingle, createProduct);
+router.patch ('/admin/:id', verifyAdmin, (req, res, next) => {
   const ct = req.headers['content-type'] || '';
   if (ct.includes('application/json')) return next();
   uploadSingle(req, res, next);
 }, updateProduct);
-router.delete('/admin/:id', protect, deleteProduct);
+router.delete('/admin/:id', verifyAdmin, deleteProduct);
 
 module.exports = router;

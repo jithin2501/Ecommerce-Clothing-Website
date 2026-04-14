@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { auth, getAuthHeaders } from '../../firebase';
+import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myorders/MyOrders.css';
 
@@ -30,9 +30,7 @@ export default function MyOrders() {
       if (firebaseUser) {
         setUser(firebaseUser);
         try {
-          const res = await fetch(`/api/payment/user-orders/${firebaseUser.uid}`, {
-            headers: await getAuthHeaders()
-          });
+          const res = await fetch(`/api/payment/user-orders/${firebaseUser.uid}`);
           const data = await res.json();
           if (data.success) {
             setDbOrders(data.data);

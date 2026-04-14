@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { auth, getAuthHeaders } from '../firebase';
+import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
@@ -31,9 +31,7 @@ export function WishlistProvider({ children }) {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const res = await fetch(`/api/client-auth/profile/${user.uid}`, {
-            headers: await getAuthHeaders()
-          });
+          const res = await fetch(`/api/client-auth/profile/${user.uid}`);
           const data = await res.json();
           if (data.success && data.user) {
             const dbWishlist = (data.user.wishlist || []).map(item => ({
@@ -84,7 +82,7 @@ export function WishlistProvider({ children }) {
 
         await fetch('/api/client-auth/sync-wishlist', {
           method: 'POST',
-          headers: await getAuthHeaders(),
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ uid: user.uid, wishlist: syncData })
         });
       } catch (err) {

@@ -65,14 +65,3 @@ export const sendOtp = async (phoneNumber) => {
 
   return await signInWithPhoneNumber(auth, phoneNumber, verifier);
 };
-
-// ✅ Get Auth Headers for API calls
-export const getAuthHeaders = async () => {
-  const user = auth.currentUser;
-  if (!user) return { 'Content-Type': 'application/json' };
-  const token = await user.getIdToken(true);
-  return { 
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
-  };
-};

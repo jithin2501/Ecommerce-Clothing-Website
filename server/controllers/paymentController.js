@@ -14,7 +14,7 @@ const calculateOrderTotals = async (items, giftWrapping) => {
   for (const item of items) {
     const product = await Product.findById(item.productId);
     if (!product) throw new Error(`Product not found: ${item.name || item.productId}`);
-
+    
     if (product.stock < (item.qty || 1)) {
       throw new Error(`Sorry, only ${product.stock} units of "${product.name}" are available.`);
     }
@@ -41,16 +41,16 @@ exports.createOrder = async (req, res) => {
     return res.status(503).json({ success: false, error: 'Razorpay not configured' });
   }
   try {
-    const {
-      amount: clientAmount,
-      userId,
+    const { 
+      amount: clientAmount, 
+      userId, 
       userName,
       userEmail,
-      items,
+      items, 
       giftWrapping,
-      shippingAddress,
-      currency = 'INR',
-      receipt = `rcpt_${Date.now()}`
+      shippingAddress, 
+      currency = 'INR', 
+      receipt = `rcpt_${Date.now()}` 
     } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -67,7 +67,7 @@ exports.createOrder = async (req, res) => {
     const { total: finalCalculatedAmount, validatedItems } = totals;
 
     const options = {
-      amount: Math.round(finalCalculatedAmount * 100),
+      amount: Math.round(finalCalculatedAmount * 100), 
       currency,
       receipt,
     };
@@ -99,15 +99,10 @@ exports.createOrder = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Razorpay Create Order Error Detail:', {
-      message: error.message,
-      stack: error.stack,
-      body: req.body
-    });
-    res.status(500).json({
-      success: false,
+    res.status(500).json({ 
+      success: false, 
       error: 'Failed to create Razorpay order',
-      detail: error.message
+      detail: error.message 
     });
   }
 };
@@ -131,10 +126,10 @@ exports.verifyPayment = async (req, res) => {
     return res.status(503).json({ success: false, error: 'Razorpay not configured' });
   }
   try {
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature
+    const { 
+      razorpay_order_id, 
+      razorpay_payment_id, 
+      razorpay_signature 
     } = req.body;
 
     const sign = razorpay_order_id + '|' + razorpay_payment_id;
@@ -145,63 +140,50 @@ exports.verifyPayment = async (req, res) => {
       .digest('hex');
 
     if (razorpay_signature === expectedSignature) {
-
       let method = 'Unknown';
       try {
         const paymentDetails = await razorpay.payments.fetch(razorpay_payment_id);
-        method = paymentDetails.method;
-      } catch (err) {
-        console.error('⚠️ Could not fetch payment method detail from Razorpay:', err);
-      }
+        method = paymentDetails.method; 
+      } catch (err) { }
 
       const updatedOrder = await Order.findOneAndUpdate(
         { orderId: razorpay_order_id },
-        {
-          status: 'success',
+        { 
+          status: 'success', 
           paymentId: razorpay_payment_id,
-          paymentMethod: method
+          paymentMethod: method 
         },
-        { new: true }
+        { new: true } 
       );
 
       if (updatedOrder) {
-
         try {
           for (const item of updatedOrder.items) {
             if (item.productId && item.qty) {
               await Product.findByIdAndUpdate(item.productId, {
                 $inc: { stock: -Number(item.qty) }
               });
-
             }
           }
-        } catch (stockError) {
-          console.error('⚠️ Stock reduction error:', stockError);
-
-        }
+        } catch (stockError) { }
 
         const srResponse = await shiprocketService.createOrder(updatedOrder);
         if (srResponse.success) {
           updatedOrder.shiprocketOrderId = srResponse.shiprocketOrderId;
           updatedOrder.shiprocketShipmentId = srResponse.shiprocketShipmentId;
           updatedOrder.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
-
         } else {
-
           updatedOrder.shiprocketError = JSON.stringify(srResponse.error);
-
         }
         await updatedOrder.save();
       }
 
       return res.json({ success: true, message: 'Payment verified successfully and order pushed to Shiprocket' });
     } else {
-      console.error('⚠️ Razorpay Signature Mismatch');
       return res.status(400).json({ success: false, error: 'Invalid payment signature' });
     }
 
   } catch (error) {
-    console.error('❌ Razorpay Verify Payment Error:', error);
     res.status(500).json({ success: false, error: 'Failed to verify payment' });
   }
 };
@@ -211,15 +193,12 @@ const ClientUser = require('../models/ClientUser');
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 }).lean();
-
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
     const pendingAutoSync = orders.filter(o => o.status === 'success' && !o.shiprocketOrderId && o.createdAt > oneDayAgo);
 
     if (pendingAutoSync.length > 0) {
-
       for (const o of pendingAutoSync) {
         try {
-
           const srResponse = await shiprocketService.createOrder(o);
           if (srResponse.success) {
             const doc = await Order.findById(o._id);
@@ -227,7 +206,6 @@ exports.getAllOrders = async (req, res) => {
             doc.shiprocketShipmentId = srResponse.shiprocketShipmentId;
             doc.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
             await doc.save();
-
             const target = orders.find(orig => orig._id.toString() === o._id.toString());
             if (target) {
               target.shiprocketOrderId = srResponse.shiprocketOrderId;
@@ -235,9 +213,7 @@ exports.getAllOrders = async (req, res) => {
               target.trackingStatus = 'NEW';
             }
           }
-        } catch (err) {
-          console.error(`❌ Auto-sync failed for ${o.displayId}:`, err.message);
-        }
+        } catch (err) { }
       }
     }
 
@@ -246,7 +222,7 @@ exports.getAllOrders = async (req, res) => {
         const userDoc = await ClientUser.findOne({ uids: o.userId }).lean();
         if (userDoc) {
           o.user = {
-            id: userDoc.customerId || 'N/A',
+            id: userDoc.customerId || 'N/A', 
             name: userDoc.name || 'Unknown'
           };
         }
@@ -256,20 +232,18 @@ exports.getAllOrders = async (req, res) => {
 
     res.json({ success: true, count: joinedData.length, data: joinedData });
   } catch (error) {
-    console.error('❌ getAllOrders error:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch orders' });
   }
 };
 
 exports.getUserOrders = async (req, res) => {
   try {
-    const { uid } = req.params;
-    if (!uid) return res.status(400).json({ success: false, error: 'User ID is required' });
+    const { userId } = req.params;
+    if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
 
-    const orders = await Order.find({ userId: uid, status: 'success' }).sort({ createdAt: -1 });
+    const orders = await Order.find({ userId, status: 'success' }).sort({ createdAt: -1 });
     res.json({ success: true, count: orders.length, data: orders });
   } catch (error) {
-    console.error('❌ Get User Orders Error:', error);
     res.status(500).json({ success: false, error: 'Failed to fetch your orders' });
   }
 };
@@ -283,33 +257,26 @@ exports.syncTrackingStatus = async (req, res) => {
       return res.status(404).json({ success: false, error: 'Order not found' });
     }
 
-    if (order.userId !== 'guest' && req.firebaseUser && order.userId !== req.firebaseUser.uid) {
-      return res.status(403).json({ success: false, error: 'Unauthorized Access' });
-    }
-
     let tracking = { success: false };
 
     if (order.shiprocketShipmentId) {
-
       tracking = await shiprocketService.getTrackingDetails(order.shiprocketShipmentId);
     }
 
     if (!tracking.success || !tracking.data) {
-
       tracking = await shiprocketService.getTrackingByOrderId(order.displayId);
     }
 
     if (tracking.success && tracking.data) {
       const td = tracking.data;
-
+      
       order.trackingStatus = td.track_status || order.trackingStatus;
-
+      
       const results = {
         success: true,
         trackingStatus: td.track_status,
         courier: td.courier_name || 'Logistic Partner',
         awb: td.awb_code || '',
-
         activities: (td.shipment_track_activities || []).sort((a, b) => new Date(b.date) - new Date(a.date))
       };
 
@@ -319,7 +286,6 @@ exports.syncTrackingStatus = async (req, res) => {
 
     res.json({ success: false, message: 'Tracking info not yet available from Shiprocket' });
   } catch (error) {
-    console.error('❌ Sync Tracking Error:', error);
     res.status(500).json({ success: false, error: 'Server error' });
   }
 };
@@ -336,7 +302,7 @@ exports.manualSyncToShiprocket = async (req, res) => {
     if (srResponse.success) {
       order.shiprocketOrderId = srResponse.shiprocketOrderId;
       order.shiprocketShipmentId = srResponse.shiprocketShipmentId;
-      order.shiprocketError = null;
+      order.shiprocketError = null; 
       order.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
       await order.save();
       return res.json({ success: true, message: 'Successfully pushed to Shiprocket', srOrderId: srResponse.shiprocketOrderId });
@@ -346,7 +312,6 @@ exports.manualSyncToShiprocket = async (req, res) => {
       return res.status(400).json({ success: false, error: srResponse.error });
     }
   } catch (error) {
-    console.error('❌ Manual Sync Error:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 };

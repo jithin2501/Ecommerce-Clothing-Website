@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { auth } from '../../firebase';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { getAuthHeaders } from '../../firebase';
 import '../../styles/myorders/WriteReview.css';
 
 const FAQ = [
@@ -141,7 +140,6 @@ export default function WriteReview() {
     try {
       const response = await fetch('/api/product-reviews/submit', {
         method: 'POST',
-        headers: await getAuthHeaders(),
         body: fd
       });
 

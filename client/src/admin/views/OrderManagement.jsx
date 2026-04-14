@@ -13,7 +13,7 @@ export default function OrderManagement() {
   const [loading, setLoading] = useState(true);
   const [syncingId, setSyncingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDate, setSelectedDate] = useState('');
+  const [selectedDate, setSelectedDate] = useState(''); // Empty by default to show 'All'
   const [selectedOrder, setSelectedOrder] = useState(null);
 
   const fetchOrders = async () => {
@@ -32,11 +32,12 @@ export default function OrderManagement() {
 
   useEffect(() => {
     fetchOrders();
-
+    // Auto-refresh the order list from our DB every 30 seconds
     const interval = setInterval(fetchOrders, 30000);
     return () => clearInterval(interval);
   }, []);
 
+  // BACKGROUND SYNC: Automatically ask Shiprocket for updates every 60s for orders in progress
   useEffect(() => {
     if (orders.length === 0) return;
 
@@ -44,7 +45,7 @@ export default function OrderManagement() {
 
     const syncInterval = setInterval(() => {
       activeOrders.forEach(o => handleSyncStatus(o._id));
-    }, 60000);
+    }, 60000); // Check Shiprocket every 60 seconds
 
     return () => clearInterval(syncInterval);
   }, [orders]);
@@ -55,10 +56,10 @@ export default function OrderManagement() {
       const res = await fetch(`/api/payment/track/${orderId}`, { headers: authHeaders() });
       const data = await res.json();
       if (data.success) {
-        setOrders(prev => prev.map(o => o._id === orderId ? {
-          ...o,
-          trackingStatus: data.trackingStatus,
-          trackingPayload: data
+        setOrders(prev => prev.map(o => o._id === orderId ? { 
+          ...o, 
+          trackingStatus: data.trackingStatus, 
+          trackingPayload: data // Store the full live payload for DetailedTracking
         } : o));
       }
     } catch (err) {
@@ -72,14 +73,14 @@ export default function OrderManagement() {
     if (!window.confirm('Try pushing this order to Shiprocket now?')) return;
     setSyncingId(orderId);
     try {
-      const res = await fetch(`/api/payment/manual-sync-sr/${orderId}`, {
+      const res = await fetch(`/api/payment/manual-sync-sr/${orderId}`, { 
         method: 'POST',
-        headers: authHeaders()
+        headers: authHeaders() 
       });
       const data = await res.json();
       if (data.success) {
         alert('Order successfully pushed to Shiprocket!');
-        fetchOrders();
+        fetchOrders(); // Refresh table to show new status/link
       } else {
         alert('Shiprocket Error: ' + (data.error || 'Failed to sync'));
       }
@@ -101,7 +102,7 @@ export default function OrderManagement() {
 
   return (
     <div className="om-page">
-      {}
+      {/* Aligned Header */}
       <header className="om-header">
         <h1 className="om-title">Order Dashboard</h1>
         <div className="om-header-tools">
@@ -120,7 +121,7 @@ export default function OrderManagement() {
               onChange={(e) => setSelectedDate(e.target.value)}
             />
             {selectedDate && (
-              <button
+              <button 
                 onClick={() => setSelectedDate('')}
                 style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '11px', cursor: 'pointer', fontWeight: '600' }}
               >
@@ -191,6 +192,9 @@ export default function OrderManagement() {
   );
 }
 
+/* ════════════════════════════════════
+   ORDER DETAIL DRAWER (LIKE CLIENT MGMT)
+   ════════════════════════════════════ */
 function OrderDrawer({ order, onClose, onSync, syncing }) {
   const printRef = useRef();
 
@@ -286,8 +290,8 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
         <div className="om-drawer-head">
           <div className="om-drawer-id">ORDER #{order.displayId}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button
-              className={`om-sync-btn ${syncing ? 'spinning' : ''}`}
+            <button 
+              className={`om-sync-btn ${syncing ? 'spinning' : ''}`} 
               onClick={onSync}
               disabled={syncing}
               title="Sync with Shiprocket"
@@ -299,7 +303,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
         </div>
 
         <div className="om-drawer-body" ref={printRef}>
-          {}
+          {/* 1. Products Section */}
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><ShoppingBag size={16} /> Products ({order.items?.length})</h4>
             <div className="om-prod-list">
@@ -312,7 +316,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
             </div>
           </div>
 
-          {}
+          {/* 2. Address Section */}
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><MapPin size={16} /> Shipping Address</h4>
             <div className="om-info-card address">
@@ -327,7 +331,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
             </div>
           </div>
 
-          {}
+          {/* 3. Client Section */}
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><User size={16} /> Customer Info</h4>
             <div className="om-info-card">
@@ -336,7 +340,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
             </div>
           </div>
 
-          {}
+          {/* 4. Tracking Section (Last) */}
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><Truck size={16} /> Live Tracking</h4>
             <DetailedTracking status={order.trackingStatus} trackingData={order.trackingPayload} />

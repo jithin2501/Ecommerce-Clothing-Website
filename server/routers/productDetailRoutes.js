@@ -10,7 +10,6 @@ const {
   upsertProductDetail,
   deleteProductDetail,
 } = require('../controllers/productDetailController');
-const { protect } = require('../middleware/authMiddleware');
 
 // ── Multer: accept any image field (image_0…6 + colorImg_<color>_0…6) ──
 const storage = multer.memoryStorage();
@@ -44,16 +43,28 @@ const uploadGallery = (req, res, next) => {
   });
 };
 
+// ── Auth middleware (reuse same pattern as productRoutes) ──
+const verifyAdmin = (req, res, next) => {
+  const auth = req.headers.authorization;
+  if (!auth?.startsWith('Bearer ')) return res.status(401).json({ success: false });
+  try {
+    req.user = jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET);
+    next();
+  } catch {
+    return res.status(401).json({ success: false, message: 'Invalid token' });
+  }
+};
+
 // ── Public ──
 // GET /api/product-details/:productId
 router.get('/:productId', getProductDetail);
 
 // ── Admin ──
 // GET    /api/product-details/admin/:productId
-router.get('/admin/:productId',    protect, getAdminProductDetail);
+router.get('/admin/:productId',    verifyAdmin, getAdminProductDetail);
 // POST   /api/product-details/admin/:productId  (create or update)
-router.post('/admin/:productId',   protect, uploadGallery, upsertProductDetail);
+router.post('/admin/:productId',   verifyAdmin, uploadGallery, upsertProductDetail);
 // DELETE /api/product-details/admin/:productId
-router.delete('/admin/:productId', protect, deleteProductDetail);
+router.delete('/admin/:productId', verifyAdmin, deleteProductDetail);
 
 module.exports = router;

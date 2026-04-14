@@ -25,13 +25,9 @@ export default function Login() {
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
 
-      const token = await user.getIdToken();
       const res = await fetch('/api/client-auth/google', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           uid: user.uid,
           name: user.displayName,
@@ -128,13 +124,9 @@ export default function Login() {
       const result = await confirmationRef.current.confirm(otp);
       const user = result.user;
 
-      const token = await user.getIdToken();
       const res = await fetch('/api/client-auth/phone', {
         method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           uid: user.uid,
           phone: phone,
