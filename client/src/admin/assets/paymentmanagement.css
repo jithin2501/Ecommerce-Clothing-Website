@@ -17,6 +17,12 @@
   line-height: 1.2;
 }
 
+.dash-top-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.25rem;
+}
+
 /* ── Section Header ── */
 .dash-section-header {
   display: flex;
@@ -709,42 +715,69 @@
     min-width: 600px; /* Allow chart to be wide enough to read */
   }
 
-  .dash-ac-header {
+  .dash-table-card {
+    margin: 0 1rem;
+    padding: 1.5rem 1rem;
+    width: calc(100% - 2rem);
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
+  .dash-cc-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1.25rem;
+    padding: 1rem !important;
+  }
+
+  .dash-cc-header h3 {
+    width: 100%;
+    margin-bottom: 0;
+    font-size: 1.1rem;
+  }
+
+  .dash-table-controls {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
+    width: 100%;
+    gap: 0.75rem !important;
+    align-items: flex-start !important;
+  }
+
+  .dash-search-wrapper, .dash-date-nav {
+    width: 100% !important;
+  }
+
+  .dash-table-search {
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+
+  .dash-date-nav input {
+    width: 100%;
+  }
+
+  .dash-top-actions {
+    padding: 0 1rem;
+    justify-content: center;
+  }
+
+  .dash-tools {
+    width: 100%;
+    justify-content: space-between !important;
   }
 
   .ac-filter-group {
     width: 100%;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap: nowrap !important;
     gap: 10px;
   }
 
-  .dash-ac-metrics {
-    flex-wrap: wrap;
-    gap: 1.5rem 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .ac-metric-item {
-    min-width: 120px;
-  }
-
-  .dash-mid-row {
-    grid-template-columns: 1fr;
-    padding: 0;
-    gap: 1rem;
-    width: 100%;
-  }
-
-  .dash-table-card {
-    margin: 0 1rem;
-    padding: 1rem;
-    width: calc(100% - 2rem);
-    overflow: hidden;
-    box-sizing: border-box;
+  .ac-metric-select-dropdown {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.75rem;
+    padding: 0 0.5rem;
   }
 
   .dash-table-wrap {

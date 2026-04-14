@@ -203,7 +203,7 @@ export default function PaymentManagement() {
     <div className="dash-container">
       <h1 className="dash-main-title">Payment Dashboard</h1>
       <div className="dash-wrapper-box">
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.25rem' }}>
+      <div className="dash-top-actions">
           <div className="dash-tools">
             <button className="dash-tool-btn" onClick={exportTransactions}><Download size={14} /> Export</button>
             <div className="dash-year-select">
