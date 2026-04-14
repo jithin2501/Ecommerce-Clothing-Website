@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/manageaddresses/ManageAddresses.css';
-import { auth } from '../../firebase';
+import { auth, getAuthHeaders } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
 const INDIAN_STATES = [
@@ -51,7 +51,9 @@ export default function ManageAddresses() {
       if (user) {
         setUserUid(user.uid);
         try {
-          const res = await fetch(`/api/client-auth/addresses/${user.uid}`);
+          const res = await fetch(`/api/client-auth/addresses/${user.uid}`, {
+            headers: await getAuthHeaders()
+          });
           const data = await res.json();
           if (data.success) setAddresses_(data.addresses || []);
         } catch (err) {
@@ -134,7 +136,7 @@ export default function ManageAddresses() {
     if (userUid) {
       if (editingId !== null) {
         const res = await fetch(`/api/client-auth/addresses/${userUid}/${editingId}`, {
-          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          method: 'PUT', headers: await getAuthHeaders(),
           body: JSON.stringify(newAddrPart)
         });
         const data = await res.json();
@@ -159,7 +161,7 @@ export default function ManageAddresses() {
       } else {
         const payload = { ...newAddrPart, id: Date.now().toString() };
         const res = await fetch(`/api/client-auth/addresses/${userUid}`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          method: 'POST', headers: await getAuthHeaders(),
           body: JSON.stringify(payload)
         });
         const data = await res.json();
@@ -191,7 +193,9 @@ export default function ManageAddresses() {
 
     if (userUid && updatedAddresses.length > 0) {
       try {
-        const profileRes = await fetch(`/api/client-auth/profile/${userUid}`);
+        const profileRes = await fetch(`/api/client-auth/profile/${userUid}`, {
+          headers: await getAuthHeaders()
+        });
         const profileData = await profileRes.json();
 
         if (profileData.success) {
@@ -215,7 +219,7 @@ export default function ManageAddresses() {
           if (Object.keys(updates).length > 0) {
             await fetch(`/api/client-auth/profile/${userUid}`, {
               method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
+              headers: await getAuthHeaders(),
               body: JSON.stringify(updates)
             });
           }
@@ -270,7 +274,10 @@ export default function ManageAddresses() {
     }
 
     if (userUid) {
-      const res = await fetch(`/api/client-auth/addresses/${userUid}/${id}`, { method: 'DELETE' });
+      const res = await fetch(`/api/client-auth/addresses/${userUid}/${id}`, { 
+        method: 'DELETE',
+        headers: await getAuthHeaders()
+      });
       const data = await res.json();
       if (data.success) {
         updatedAddresses = data.addresses;

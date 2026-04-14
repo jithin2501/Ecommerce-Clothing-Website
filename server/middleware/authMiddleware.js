@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const admin = require('../conf/firebase-admin');
 
 const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -22,4 +23,29 @@ const superAdminOnly = (req, res, next) => {
   next();
 };
 
-module.exports = { protect, superAdminOnly };
+const verifyFirebaseToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, error: 'Authorization required (Bearer Token)' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.firebaseUser = decodedToken;
+    next();
+  } catch (error) {
+    console.error('Firebase verify error:', error.message);
+    return res.status(401).json({ success: false, error: 'Invalid or expired Firebase token' });
+  }
+};
+
+const ensureUidMatch = (req, res, next) => {
+  const targetUid = req.params.uid || req.body.uid;
+  if (targetUid && req.firebaseUser.uid !== targetUid) {
+    return res.status(403).json({ success: false, error: 'Unauthorized: Identity mismatch (Potential tampering).' });
+  }
+  next();
+};
+
+module.exports = { protect, superAdminOnly, verifyFirebaseToken, ensureUidMatch };

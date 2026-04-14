@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation, useParams } from 'react-router-dom';
-import { auth } from '../../firebase';
+import { auth, getAuthHeaders } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myorders/OrderDetail.css';
 import OrderInvoice from './OrderInvoice';
@@ -121,7 +121,9 @@ export default function OrderDetail() {
       const syncTracking = async () => {
         setTrackingLoading(true);
         try {
-          const res = await fetch(`/api/payment/track/${order._id}`);
+          const res = await fetch(`/api/payment/track/${order._id}`, {
+            headers: await getAuthHeaders()
+          });
           const data = await res.json();
           if (data.success) {
             setTrackingData(data);

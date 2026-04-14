@@ -17,6 +17,7 @@ const paymentRouter = require('./routers/paymentRouter');
 const supportRouter = require('./routers/supportRouter');
 const shiprocketRouter = require('./routers/shiprocketRouter');
 const startCronJobs = require('./cronJobs');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -25,6 +26,7 @@ connectDB().then(() => {
   startCronJobs();
 });
 
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 

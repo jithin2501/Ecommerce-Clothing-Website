@@ -263,10 +263,10 @@ exports.getAllOrders = async (req, res) => {
 
 exports.getUserOrders = async (req, res) => {
   try {
-    const { userId } = req.params;
-    if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
+    const { uid } = req.params;
+    if (!uid) return res.status(400).json({ success: false, error: 'User ID is required' });
 
-    const orders = await Order.find({ userId, status: 'success' }).sort({ createdAt: -1 });
+    const orders = await Order.find({ userId: uid, status: 'success' }).sort({ createdAt: -1 });
     res.json({ success: true, count: orders.length, data: orders });
   } catch (error) {
     console.error('❌ Get User Orders Error:', error);
@@ -281,6 +281,10 @@ exports.syncTrackingStatus = async (req, res) => {
 
     if (!order) {
       return res.status(404).json({ success: false, error: 'Order not found' });
+    }
+
+    if (order.userId !== 'guest' && req.firebaseUser && order.userId !== req.firebaseUser.uid) {
+      return res.status(403).json({ success: false, error: 'Unauthorized Access' });
     }
 
     let tracking = { success: false };

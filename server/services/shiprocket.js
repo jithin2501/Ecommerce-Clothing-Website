@@ -147,7 +147,7 @@ exports.checkServiceability = async (deliveryPincode) => {
 
     const pickupPincode = process.env.SHIPROCKET_PICKUP_PINCODE || '560092';
 
-    const codUrl = `https://apiv2.shiprocket.in/v1/external/courier/serviceability/?pickup_postcode=${pickupPincode}&delivery_postcode=${deliveryPincode}&weight=0.5&cod=1`;
+    const codUrl = `https://apiv2.shiprocket.in/v1/external/courier/serviceability?pickup_postcode=${pickupPincode}&delivery_postcode=${deliveryPincode}&cod=1&weight=0.5`;
 
     let res = await axios.get(codUrl, { headers: { 'Authorization': `Bearer ${token}` } });
     let data = res.data;
@@ -156,7 +156,7 @@ exports.checkServiceability = async (deliveryPincode) => {
 
     if (available.length === 0) {
 
-      const prepaidUrl = `https://apiv2.shiprocket.in/v1/external/courier/serviceability/?pickup_postcode=${pickupPincode}&delivery_postcode=${deliveryPincode}&weight=0.5&cod=0`;
+      const prepaidUrl = `https://apiv2.shiprocket.in/v1/external/courier/serviceability?pickup_postcode=${pickupPincode}&delivery_postcode=${deliveryPincode}&cod=0&weight=0.5`;
       res = await axios.get(prepaidUrl, { headers: { 'Authorization': `Bearer ${token}` } });
       data = res.data;
       available = data.data?.available_courier_companies || [];

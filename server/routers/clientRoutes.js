@@ -5,6 +5,10 @@
 const express    = require('express');
 const router     = express.Router();
 const clientCtrl = require('../controllers/clientController');
+const { verifyFirebaseToken, ensureUidMatch } = require('../middleware/authMiddleware');
+
+router.use(verifyFirebaseToken);
+router.use(ensureUidMatch);
 
 // Public client auth endpoints (called from Login.jsx)
 router.post('/google',        clientCtrl.googleLogin);
