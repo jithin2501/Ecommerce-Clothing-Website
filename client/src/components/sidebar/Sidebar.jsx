@@ -20,7 +20,10 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
     const unsub = onAuthStateChanged(auth, async (fbUser) => {
       if (fbUser) {
         try {
-          const res = await fetch(`/api/client-auth/profile/${fbUser.uid}`);
+          const token = await fbUser.getIdToken();
+          const res = await fetch(`/api/client-auth/profile/${fbUser.uid}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
           const data = await res.json();
           if (data.success) {
             setUserData(data.user);
