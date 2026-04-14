@@ -228,9 +228,9 @@ export default function CartPage() {
             total={total}
             user={auth.currentUser ? {
               uid: auth.currentUser.uid,
-              name: auth.currentUser.displayName || userInfo?.name,
-              email: auth.currentUser.email || userInfo?.email,
-              phone: auth.currentUser.phoneNumber || userInfo?.phone,
+              name: userInfo?.name || auth.currentUser.displayName,
+              email: userInfo?.email || auth.currentUser.email,
+              phone: userInfo?.phone || auth.currentUser.phoneNumber,
             } : null}
             cartItems={cartItems}
             selectedAddress={selectedAddress}

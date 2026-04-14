@@ -51,7 +51,7 @@ exports.createOrder = async (orderData) => {
       billing_pincode: String(orderData.shippingAddress.pincode || '560001'),
       billing_state: state,
       billing_country: 'India',
-      billing_email: orderData.userEmail || 'customer@gmail.com',
+      billing_email: orderData.userEmail || orderData.shippingAddress?.email || 'customer@gmail.com',
       billing_phone: String(orderData.shippingAddress.phone || orderData.shippingAddress.mobile || '9999999999'),
       shipping_is_billing: true,
       order_items: orderData.items.map(item => ({
