@@ -1,7 +1,6 @@
 const jwt        = require('jsonwebtoken');
 const AdminUser  = require('../models/adminUserModel');
 
-// ── Seed superadmin from .env if not exists
 const seedSuperAdmin = async () => {
   const exists = await AdminUser.findOne({ role: 'superadmin' });
   if (!exists) {
@@ -11,11 +10,10 @@ const seedSuperAdmin = async () => {
       role: 'superadmin',
       isActive: true,
     });
-    console.log('Superadmin seeded from .env');
+
   }
 };
 
-// ── POST /api/auth/login
 const login = async (req, res) => {
   try {
     const { username, password } = req.body;

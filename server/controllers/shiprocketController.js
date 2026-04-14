@@ -8,15 +8,14 @@ exports.checkPincode = async (req, res) => {
     }
 
     const result = await shiprocketService.checkServiceability(pincode);
-    
-    // Extract the delivery date range if available
+
     let estimatedDate = null;
     if (result.serviceable && result.data.available_courier_companies.length > 0) {
       const couriers = result.data.available_courier_companies.filter(c => c.etd);
-      
+
       if (couriers.length > 0) {
         const sorted = couriers.sort((a,b) => new Date(a.etd) - new Date(b.etd));
-        
+
         const earliest = new Date(sorted[0].etd);
         const latest = new Date(sorted[sorted.length - 1].etd);
 

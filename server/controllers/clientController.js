@@ -1,29 +1,20 @@
 const ClientUser = require('../models/ClientUser');
 const ProductReview = require('../models/ProductReview');
 
-/* ─────────────────────────────────────────────────────────────────
-   HELPER — generate next CUST-XXXXX id
-───────────────────────────────────────────────────────────────── */
 async function nextCustomerId() {
   const count = await ClientUser.countDocuments();
   return `CUST-${String(count + 1).padStart(5, '0')}`;
 }
 
-/* ─────────────────────────────────────────────────────────────────
-   Google Login / Register
-   Lookup is ONLY by Firebase UID — never by email.
-   A Google user and a Phone user with the same email stay separate.
-───────────────────────────────────────────────────────────────── */
 exports.googleLogin = async (req, res) => {
   try {
     const { uid, name, email, photo } = req.body;
     if (!uid) return res.status(400).json({ error: 'uid required' });
 
-    // Only match by UID — no cross-provider contact lookup
     let user = await ClientUser.findOne({ uids: uid });
 
     if (!user) {
-      // Brand-new Google customer
+
       const customerId = await nextCustomerId();
       user = await ClientUser.create({
         uids: [uid],
@@ -34,15 +25,15 @@ exports.googleLogin = async (req, res) => {
         photo: photo || '',
         lastSeen: new Date(),
       });
-      console.log('🆕 Created new Google customer:', customerId);
+
     } else {
-      // Returning Google customer — refresh profile fields
+
       if (name) user.name = name;
       if (email) user.email = email;
       if (photo) user.photo = photo;
       user.lastSeen = new Date();
       await user.save();
-      console.log('🔄 Updated returning Google customer:', user.customerId);
+
     }
 
     res.json({ success: true, user });
@@ -52,21 +43,15 @@ exports.googleLogin = async (req, res) => {
   }
 };
 
-/* ─────────────────────────────────────────────────────────────────
-   Phone (OTP) Login / Register
-   Lookup is ONLY by Firebase UID — never by phone number.
-   A Phone user and a Google user with the same number stay separate.
-───────────────────────────────────────────────────────────────── */
 exports.phoneLogin = async (req, res) => {
   try {
     const { uid, name, phone } = req.body;
     if (!uid) return res.status(400).json({ error: 'uid required' });
 
-    // Only match by UID — no cross-provider contact lookup
     let user = await ClientUser.findOne({ uids: uid });
 
     if (!user) {
-      // Brand-new Phone customer
+
       const customerId = await nextCustomerId();
       user = await ClientUser.create({
         uids: [uid],
@@ -76,14 +61,14 @@ exports.phoneLogin = async (req, res) => {
         phone: phone || '',
         lastSeen: new Date(),
       });
-      console.log('🆕 Created new Phone customer:', customerId);
+
     } else {
-      // Returning Phone customer — refresh profile fields
+
       if (name) user.name = name;
       if (phone) user.phone = phone;
       user.lastSeen = new Date();
       await user.save();
-      console.log('🔄 Updated returning Phone customer:', user.customerId);
+
     }
 
     res.json({ success: true, user });
@@ -93,9 +78,6 @@ exports.phoneLogin = async (req, res) => {
   }
 };
 
-/* ─────────────────────────────────────────────────────────────────
-   Sync Cart
-───────────────────────────────────────────────────────────────── */
 exports.syncCart = async (req, res) => {
   try {
     const { uid, cart } = req.body;
@@ -108,9 +90,6 @@ exports.syncCart = async (req, res) => {
   }
 };
 
-/* ─────────────────────────────────────────────────────────────────
-   Sync Wishlist
-───────────────────────────────────────────────────────────────── */
 exports.syncWishlist = async (req, res) => {
   try {
     const { uid, wishlist } = req.body;
@@ -123,9 +102,6 @@ exports.syncWishlist = async (req, res) => {
   }
 };
 
-/* ─────────────────────────────────────────────────────────────────
-   Get Profile
-───────────────────────────────────────────────────────────────── */
 exports.getProfile = async (req, res) => {
   try {
     const { uid } = req.params;
@@ -138,9 +114,6 @@ exports.getProfile = async (req, res) => {
   }
 };
 
-/* ─────────────────────────────────────────────────────────────────
-   Update Profile
-───────────────────────────────────────────────────────────────── */
 exports.updateProfile = async (req, res) => {
   try {
     const { uid } = req.params;
@@ -166,9 +139,6 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
-/* ─────────────────────────────────────────────────────────────────
-   Delete Account
-───────────────────────────────────────────────────────────────── */
 exports.deleteAccount = async (req, res) => {
   try {
     const { uid } = req.params;
@@ -177,7 +147,6 @@ exports.deleteAccount = async (req, res) => {
 
     await ProductReview.deleteMany({ uid: { $in: result.uids } });
 
-    console.log(`🗑️ Deleted customer ${result.customerId} (UIDs: ${result.uids.join(', ')})`);
     res.json({ success: true, message: 'Account deleted successfully' });
   } catch (err) {
     console.error('❌ deleteAccount error:', err);
@@ -185,9 +154,6 @@ exports.deleteAccount = async (req, res) => {
   }
 };
 
-/* ─────────────────────────────────────────────────────────────────
-   Address Management
-───────────────────────────────────────────────────────────────── */
 exports.getAddresses = async (req, res) => {
   try {
     const user = await ClientUser.findOne({ uids: req.params.uid });
@@ -208,7 +174,7 @@ exports.addAddress = async (req, res) => {
       user.addresses.forEach(a => { a.isDefault = false; });
     }
     user.addresses.push(req.body);
-    user.markModified('addresses'); // Force Mongoose to see the nested change
+    user.markModified('addresses');
     await user.save();
 
     res.json({ success: true, addresses: user.addresses });
@@ -232,7 +198,7 @@ exports.updateAddress = async (req, res) => {
     if (addrIndex === -1) return res.status(404).json({ error: 'Address not found' });
 
     user.addresses[addrIndex] = { ...user.addresses[addrIndex].toObject(), ...req.body };
-    user.markModified('addresses'); // Force Mongoose to see the nested change
+    user.markModified('addresses');
     await user.save();
 
     res.json({ success: true, addresses: user.addresses });
@@ -253,7 +219,6 @@ exports.deleteAddress = async (req, res) => {
 
     user.addresses = user.addresses.filter(a => String(a.id || a._id) !== String(addrId));
 
-    // If we deleted the default, and there are other addresses, make the first one the new default
     if (wasDefault && user.addresses.length > 0) {
       user.addresses[0].isDefault = true;
     }

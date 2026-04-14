@@ -11,7 +11,6 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
   const [serverTotals, setServerTotals] = useState({ subtotal, shipping, giftCost, total });
   const { clearCart } = useCart();
 
-  // Fetch official totals from backend to ensure synchronization
   useEffect(() => {
     const fetchTotals = async () => {
       if (cartItems.length === 0) return;
@@ -75,7 +74,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
     setLoading(true);
 
     try {
-      // 1. Create order on the backend
+
       const res = await fetch(`${API_BASE}/payment/create-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -89,7 +88,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
             productId: item.id,
             name: item.name,
             qty: item.qty,
-            // Price is handled by backend, but we send it for logging/UI fallback
+
             price: item.price,
             size: item.size,
             color: item.color,
@@ -106,13 +105,11 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         })
       });
       const data = await res.json();
-      console.log('📦 Create order response:', data);
 
       if (!data.success) {
         throw new Error(data.detail || data.error || 'Failed to create order');
       }
 
-      // 2. Load Razorpay script
       const isLoaded = await loadRazorpayScript();
       if (!isLoaded) {
         alert('Razorpay SDK failed to load. Are you online?');
@@ -120,7 +117,6 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         return;
       }
 
-      // 3. Open Razorpay checkout modal
       const razorpayKey = import.meta.env.VITE_RAZORPAY_KEY_ID;
       if (!razorpayKey) {
         alert('Payment configuration missing. Please contact support.');
@@ -134,10 +130,10 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         currency: data.currency,
         name: 'Sumathi Trends',
         description: 'Quality Clothing for Your Little Ones',
-        image: '/logo.png', // Replace with your actual logo path
+        image: '/logo.png',
         order_id: data.orderId,
         handler: async (response) => {
-          // 4. Verify payment on the backend
+
           const verifyRes = await fetch(`${API_BASE}/payment/verify-payment`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -154,8 +150,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
             clearCart();
             window.location.href = '/account/orders';
           } else {
-            // Failure logic: do nothing, Razorpay handles the error modal
-            // and the cartItems are still in the state (not cleared).
+
           }
         },
         prefill: {
@@ -167,7 +162,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
           address: `${selectedAddress.line1}, ${selectedAddress.city}`
         },
         theme: {
-          color: '#2C3E50' // Matches your website theme
+          color: '#2C3E50'
         }
       };
 

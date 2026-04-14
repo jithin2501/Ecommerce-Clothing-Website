@@ -44,20 +44,19 @@ export default function Navbar() {
 
   useEffect(() => {
     document.body.classList.add('has-navbar');
-    
-    // Add page-specific classes for tighter top spacing
+
     const pathParts = location.pathname.split('/');
     const isCollectionsList = location.pathname === '/collections';
     const isCategoryPage = pathParts.length === 3 && pathParts[1] === 'collections';
     const isProductDetail = pathParts.length > 3 && pathParts[1] === 'collections';
     const isContact = location.pathname === '/contact';
-    
+
     if (isCollectionsList || isCategoryPage) document.body.classList.add('collections-path');
     else document.body.classList.remove('collections-path');
 
     if (isProductDetail) document.body.classList.add('cdp-path');
     else document.body.classList.remove('cdp-path');
-    
+
     if (isContact) document.body.classList.add('contact-path');
     else document.body.classList.remove('contact-path');
 
@@ -185,7 +184,7 @@ export default function Navbar() {
     <nav className={`app-navbar ${navClass} ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       <div className="nav-inner">
 
-        {/* ── Logo ── */}
+        {}
         <Link to="/" className="logo-container" onClick={handleHome}>
           <div className="logo-img">
             <img src="/images/logo/logo.png" alt="Sumathi Trends" onError={(e) => { e.target.style.opacity = '0'; }} />
@@ -193,7 +192,7 @@ export default function Navbar() {
           <div className="logo-text">Sumathi<br />Trends</div>
         </Link>
 
-        {/* ── Desktop Nav Links ── */}
+        {}
         <ul className="nav-links">
           <li><a href="/" onClick={handleHome}>Home</a></li>
           <li><a href="#about" onClick={(e) => handleSection(e, 'about')}>About Us</a></li>
@@ -202,7 +201,7 @@ export default function Navbar() {
           <li><Link to="/contact">Contact</Link></li>
         </ul>
 
-        {/* ── Desktop Actions ── */}
+        {}
         <div className="nav-actions">
           {!loading && (
             user ? (
@@ -240,22 +239,22 @@ export default function Navbar() {
           </Link>
         </div>
 
-        {/* ── Hamburger Button — always inside nav-inner ── */}
+        {}
         <button className="hamburger-btn" onClick={toggleSidebar} aria-label="Open menu">
           <Menu size={26} />
         </button>
 
       </div>
 
-      {/* ── Overlay ── */}
+      {}
       {isSidebarOpen && (
         <div className="sidebar-overlay active" onClick={() => setIsSidebarOpen(false)} />
       )}
 
-      {/* ── Mobile Sidebar ── */}
+      {}
       <div className={`mobile-sidebar ${isSidebarOpen ? 'open' : ''}`}>
 
-        {/* Close Button */}
+        {}
         <div className="sidebar-header">
           <p className="sidebar-brand">Sumathi Trends</p>
           <button className="sidebar-close" onClick={() => setIsSidebarOpen(false)} aria-label="Close menu">
@@ -263,7 +262,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* Nav Links */}
+        {}
         <ul className="sidebar-links">
           <li><a href="/" onClick={(e) => { handleHome(e); setIsSidebarOpen(false); }}>Home</a></li>
           <li><a href="#about" onClick={(e) => handleSection(e, 'about')}>About Us</a></li>
@@ -272,10 +271,10 @@ export default function Navbar() {
           <li><Link to="/contact" onClick={() => setIsSidebarOpen(false)}>Contact</Link></li>
         </ul>
 
-        {/* Divider */}
+        {}
         <div className="sidebar-divider" />
 
-        {/* Auth + Cart */}
+        {}
         <div className="sidebar-actions">
           {!loading && (
             user ? (

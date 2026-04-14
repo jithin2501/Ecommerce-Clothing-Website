@@ -3,10 +3,6 @@ const axios = require('axios');
 let shiprocketToken = null;
 let tokenExpiry = null;
 
-/**
- * ── Authenticate with Shiprocket ──
- * Returns a valid JWT token
- */
 async function getShiprocketToken() {
   const email = process.env.SHIPROCKET_EMAIL;
   const password = process.env.SHIPROCKET_PASSWORD;
@@ -16,7 +12,6 @@ async function getShiprocketToken() {
     return { success: false, error: 'Credentials missing in .env' };
   }
 
-  // Reuse token if valid
   if (shiprocketToken && tokenExpiry && new Date() < tokenExpiry) {
     return { success: true, token: shiprocketToken };
   }
@@ -29,7 +24,7 @@ async function getShiprocketToken() {
 
     if (response.data && response.data.token) {
       shiprocketToken = response.data.token;
-      // Tokens are usually valid for 10 days, setting a safe 9-day buffer
+
       tokenExpiry = new Date(new Date().getTime() + 9 * 24 * 60 * 60 * 1000);
       return { success: true, token: shiprocketToken };
     }
@@ -40,10 +35,6 @@ async function getShiprocketToken() {
   }
 }
 
-/**
- * ── Create Shiprocket Order ──
- * Pushes standard order to Shiprocket
- */
 exports.createOrder = async (orderData) => {
   try {
     const auth = await getShiprocketToken();
@@ -75,12 +66,10 @@ exports.createOrder = async (orderData) => {
       payment_method: 'Prepaid',
       sub_total: orderData.amount,
       length: 10,
-      breadth: 10,   // ✅ Fixed: Shiprocket requires 'breadth' not 'width'
+      breadth: 10,
       height: 10,
       weight: 0.5
     };
-
-    console.log(`📦 Pushing order ${orderData.displayId} to Shiprocket...`);
 
     const response = await axios.post(
       'https://apiv2.shiprocket.in/v1/external/orders/create/adhoc',
@@ -93,9 +82,8 @@ exports.createOrder = async (orderData) => {
       }
     );
 
-    // Shiprocket returns status_code: 1 for success
     if (response.data.status_code === 1) {
-      console.log('✅ Shiprocket Order Created:', response.data.order_id);
+
       return {
         success: true,
         shiprocketOrderId: response.data.order_id,
@@ -121,17 +109,10 @@ exports.createOrder = async (orderData) => {
   }
 };
 
-/**
- * ── Generate Tracking Link ──
- */
 exports.generateTrackingLink = (shipmentId) => {
   return `https://shiprocket.co/tracking/${shipmentId}`;
 };
 
-/**
- * ── Fetch live tracking info using Order ID ──
- * Uses the store's Order ID (the displayId)
- */
 exports.getTrackingByOrderId = async (orderId) => {
   try {
     const auth = await getShiprocketToken();
@@ -143,12 +124,11 @@ exports.getTrackingByOrderId = async (orderId) => {
       { headers: { Authorization: `Bearer ${token}` } }
     );
 
-    // Shiprocket returns an object where the key is the order ID
     if (response.data && response.data[orderId]) {
-      return { 
-        success: true, 
+      return {
+        success: true,
         data: response.data[orderId].tracking_data,
-        isOrderLevel: true 
+        isOrderLevel: true
       };
     }
 
@@ -159,34 +139,28 @@ exports.getTrackingByOrderId = async (orderId) => {
   }
 };
 
-// Check if a pincode is serviceable (delivery possible)
 exports.checkServiceability = async (deliveryPincode) => {
   try {
     const auth = await getShiprocketToken();
     if (!auth.success) return { success: false, error: auth.error };
     const token = auth.token;
-    
-    const pickupPincode = process.env.SHIPROCKET_PICKUP_PINCODE || '560092'; 
-    
-    // Step 1: Check for COD couriers first
+
+    const pickupPincode = process.env.SHIPROCKET_PICKUP_PINCODE || '560092';
+
     const codUrl = `https://apiv2.shiprocket.in/v1/external/courier/serviceability/?pickup_postcode=${pickupPincode}&delivery_postcode=${deliveryPincode}&weight=0.5&cod=1`;
-    
-    console.log(`🔍 Checking Shiprocket COD Serviceability for ${deliveryPincode}...`);
+
     let res = await axios.get(codUrl, { headers: { 'Authorization': `Bearer ${token}` } });
     let data = res.data;
 
     let available = data.data?.available_courier_companies || [];
 
-    // Step 2: If no COD couriers, check for Prepaid
     if (available.length === 0) {
-      console.log(`ℹ️ No COD couriers found for ${deliveryPincode}. Checking Prepaid...`);
+
       const prepaidUrl = `https://apiv2.shiprocket.in/v1/external/courier/serviceability/?pickup_postcode=${pickupPincode}&delivery_postcode=${deliveryPincode}&weight=0.5&cod=0`;
       res = await axios.get(prepaidUrl, { headers: { 'Authorization': `Bearer ${token}` } });
       data = res.data;
       available = data.data?.available_courier_companies || [];
     }
-    
-    console.log(`📦 Shiprocket Status: ${data.status}. Couriers found: ${available.length}`);
 
     return {
       success: data.status === 200,
@@ -200,9 +174,6 @@ exports.checkServiceability = async (deliveryPincode) => {
   }
 };
 
-/**
- * ── Fetch live tracking info from Shiprocket (by Shipment ID) ──
- */
 exports.getTrackingDetails = async (shipmentId) => {
   try {
     const auth = await getShiprocketToken();

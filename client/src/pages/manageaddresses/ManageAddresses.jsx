@@ -20,15 +20,6 @@ const emptyForm = {
   address: '', city: '', state: '', landmark: '', altPhone: '', type: '', isDefault: false
 };
 
-/* ─────────────────────────────────────────────────────────────────
-   Broadcast helper — called after every address mutation so that
-   ProductInfo, AddressSidebar, and any cart page can react live.
-
-   Any component that cares listens for:
-     window.addEventListener('sumathi_addresses_changed', handler)
-   and should also listen for the native 'storage' event for
-   cross-tab sync.
-───────────────────────────────────────────────────────────────── */
 function broadcastAddressChange(updatedAddresses, deletedId = null) {
   window.dispatchEvent(
     new CustomEvent('sumathi_addresses_changed', {
@@ -110,7 +101,7 @@ export default function ManageAddresses() {
     if (Object.keys(e).length) { setErrors(e); return; }
 
     setValidatingPin(true);
-    // ── STRICT: Shiprocket Pincode Check ──
+
     try {
       const pinRes = await fetch(`/api/shiprocket/check-pincode/${form.pincode}`);
       const pinData = await pinRes.json();
@@ -151,7 +142,6 @@ export default function ManageAddresses() {
           updatedAddresses = data.addresses;
           setAddresses_(updatedAddresses);
 
-          // If this edited address is the active one, update it in localStorage too
           const KEYS_TO_SYNC = ['sumathi_active_address', 'sumathi_selected_address'];
           for (const k of KEYS_TO_SYNC) {
             try {
@@ -179,7 +169,7 @@ export default function ManageAddresses() {
         }
       }
     } else {
-      // Guest local storage fallback
+
       let curr = addresses;
       if (newAddrPart.isDefault) curr = curr.map(a => ({ ...a, isDefault: false }));
       if (editingId !== null) {
@@ -194,15 +184,11 @@ export default function ManageAddresses() {
 
     broadcastAddressChange(updatedAddresses);
 
-    // ── NEW: Force sync localStorage if a new default was set ──
     if (newAddrPart.isDefault) {
       const KEYS = ['sumathi_active_address', 'sumathi_selected_address'];
       KEYS.forEach(k => localStorage.removeItem(k));
     }
 
-    // ─────────────────────────────────────────────────────────────────
-    // AUTO-SYNC PERSONAL INFORMATION
-    // ─────────────────────────────────────────────────────────────────
     if (userUid && updatedAddresses.length > 0) {
       try {
         const profileRes = await fetch(`/api/client-auth/profile/${userUid}`);
@@ -213,14 +199,12 @@ export default function ManageAddresses() {
           const updates = {};
           const loginType = (u.loginTypes && u.loginTypes.length > 0) ? u.loginTypes[0] : '';
 
-          // 1. Phone Login -> Sync Name if missing
           if (loginType === 'phone') {
             if (!u.name || u.name.trim() === '') {
               updates.name = newAddrPart.fullName;
             }
           }
 
-          // 2. Google Login -> Sync Phone if missing
           if (loginType === 'google') {
             const currentPhone = (u.phone || '').trim();
             if (!currentPhone || currentPhone === '' || currentPhone === '+91') {
@@ -237,7 +221,7 @@ export default function ManageAddresses() {
           }
         }
       } catch (err) {
-        console.warn("Failed to auto-sync profile info:", err);
+
       }
     }
 
@@ -272,9 +256,6 @@ export default function ManageAddresses() {
   const handleDelete = async (id) => {
     let updatedAddresses = [];
 
-    // ── 1. Clear from localStorage if it was the active/selected delivery address ──
-    // Two keys are used across pages: product detail page uses 'sumathi_active_address',
-    // cart page uses 'sumathi_selected_address'. Clear both if they point to this address.
     const KEYS_TO_CHECK = ['sumathi_active_address', 'sumathi_selected_address'];
     for (const key of KEYS_TO_CHECK) {
       try {
@@ -288,7 +269,6 @@ export default function ManageAddresses() {
       } catch { }
     }
 
-    // ── 2. Delete from server or local guest storage ──
     if (userUid) {
       const res = await fetch(`/api/client-auth/addresses/${userUid}/${id}`, { method: 'DELETE' });
       const data = await res.json();
@@ -296,10 +276,6 @@ export default function ManageAddresses() {
         updatedAddresses = data.addresses;
         setAddresses_(updatedAddresses);
 
-        // If the deleted address was the default, also auto-promote the
-        // first remaining address as the new default (optional UX choice).
-        // We do NOT auto-select it as the active address — we intentionally
-        // leave selectedAddress blank so the user must pick a new one.
       }
     } else {
       const addressToDelete = addresses.find(x => x.id === id);
@@ -307,7 +283,6 @@ export default function ManageAddresses() {
 
       updatedAddresses = addresses.filter(x => x.id !== id);
 
-      // If deleted was default, make the next one default
       if (wasDefault && updatedAddresses.length > 0) {
         updatedAddresses[0].isDefault = true;
       }
@@ -316,7 +291,6 @@ export default function ManageAddresses() {
       try { localStorage.setItem('sumathi_addresses', JSON.stringify(updatedAddresses)); } catch { }
     }
 
-    // ── 3. Broadcast so ProductInfo / AddressSidebar / cart pages clear stale state ──
     broadcastAddressChange(updatedAddresses, id);
 
     setMenuOpen(null);
@@ -335,14 +309,13 @@ export default function ManageAddresses() {
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        // Simulated or real fetch of city/state from lat/long if needed, 
-        // but sticking to user's existing mock-fill for now
+
         setTimeout(() => {
           handleChange('city', 'Bengaluru');
           handleChange('state', 'Karnataka');
           handleChange('pincode', '560001');
           setLocating(false);
-        }, 1500); // 1.5s delay to show loading feel
+        }, 1500);
       },
       (err) => {
         console.error(err);
@@ -373,7 +346,7 @@ export default function ManageAddresses() {
             </div>
           </div>
 
-          {/* ADD A NEW ADDRESS trigger — always visible */}
+          {}
           {!showForm && (
             <div className="ma-add-trigger" onClick={() => setShowForm(true)}>
               <span className="ma-add-plus">+</span>
@@ -381,7 +354,7 @@ export default function ManageAddresses() {
             </div>
           )}
 
-          {/* Form — only shown when showForm is true */}
+          {}
           {showForm && (
             <div className="ma-form-section">
               <div className="ma-form-title-row">
@@ -503,7 +476,7 @@ export default function ManageAddresses() {
             </div>
           )}
 
-          {/* Saved Addresses — always visible below */}
+          {}
           {addresses.length > 0 && (
             <div className="ma-saved-section">
               <div className="ma-saved-header">

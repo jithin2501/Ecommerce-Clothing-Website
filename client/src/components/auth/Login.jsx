@@ -1,4 +1,4 @@
-// client/src/pages/login/Login.jsx
+
 
 import { useState, useRef } from 'react';
 import { signInWithPopup } from 'firebase/auth';
@@ -16,16 +16,14 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const confirmationRef = useRef(null);
 
-  /* ─── Google Sign-In ─── */
   const handleGoogleSignIn = async () => {
     setLoading(true);
     setMessage({ text: '', type: '' });
     console.group("🔵 Google Sign-In");
     try {
-      console.log("📤 Calling signInWithPopup...");
+
       const result = await signInWithPopup(auth, googleProvider);
       const user = result.user;
-      console.log("✅ Google sign-in success. UID:", user.uid, "| Email:", user.email);
 
       const res = await fetch('/api/client-auth/google', {
         method: 'POST',
@@ -38,17 +36,15 @@ export default function Login() {
           loginType: 'google',
         }),
       });
-      console.log("📡 Backend /api/client-auth/google response status:", res.status);
 
       navigate('/');
     } catch (err) {
-      // User simply closed the popup — not a real error
+
       if (
         err.code === 'auth/popup-closed-by-user' ||
         err.code === 'auth/cancelled-popup-request'
       ) {
-        console.warn("⚠️ User closed the sign-in popup.");
-        // Do nothing — no error message shown
+
       } else {
         console.error("❌ Google Sign-In FAILED:", err.code, err.message);
         setMessage({ text: 'Google Sign-In failed. Please try again.', type: 'error' });
@@ -59,12 +55,11 @@ export default function Login() {
     }
   };
 
-  /* ─── Send OTP ─── */
   const handleSendOtp = async () => {
     console.group("📱 handleSendOtp()");
 
     if (!/^\d{10}$/.test(phone)) {
-      console.warn("❌ Validation failed: phone is not 10 digits. Value:", phone);
+
       setMessage({ text: 'Enter a valid 10-digit phone number.', type: 'error' });
       console.groupEnd();
       return;
@@ -74,29 +69,12 @@ export default function Login() {
     setMessage({ text: '', type: '' });
 
     const phoneNumber = `+91${phone}`;
-    console.log("📞 Phone number to send OTP:", phoneNumber);
-
-    // ── Step 1: Check auth object ──
-    console.log("🔑 auth.app.options.projectId:", auth.app.options.projectId || "❌ MISSING");
-    console.log("🔑 auth.app.options.apiKey:", auth.app.options.apiKey
-      ? `${auth.app.options.apiKey.slice(0, 8)}...` : "❌ MISSING");
 
     try {
-      // ── Step 2: Setup reCAPTCHA ──
-      console.log("🔧 [STEP 1] Setting up reCAPTCHA...");
-      const verifier = setupRecaptcha('recaptcha-container');
-      console.log("✅ [STEP 1] reCAPTCHA verifier returned:", verifier ? "object" : "❌ null/undefined");
 
-      // ── Step 3: Call signInWithPhoneNumber ──
-      console.log("📤 [STEP 2] Calling signInWithPhoneNumber...");
-      console.log("   phoneNumber:", phoneNumber);
-      console.log("   verifier type:", typeof verifier);
-      console.log("   verifier.type:", verifier?.type);
+      const verifier = setupRecaptcha('recaptcha-container');
 
       const confirmation = await sendOtp(phoneNumber);
-      console.log("✅ [STEP 2] OTP sent! confirmationResult:", confirmation ? "received" : "❌ null");
-      console.log("   confirmation.verificationId:", confirmation?.verificationId
-        ? `${confirmation.verificationId.slice(0, 10)}...` : "❌ MISSING");
 
       confirmationRef.current = confirmation;
       setStep('otp');
@@ -128,12 +106,11 @@ export default function Login() {
     }
   };
 
-  /* ─── Verify OTP ─── */
   const handleVerifyOtp = async () => {
     console.group("🔑 handleVerifyOtp()");
 
     if (otp.length !== 6) {
-      console.warn("❌ OTP length invalid:", otp.length);
+
       setMessage({ text: 'Enter the 6-digit OTP.', type: 'error' });
       console.groupEnd();
       return;
@@ -141,14 +118,11 @@ export default function Login() {
 
     setLoading(true);
     setMessage({ text: '', type: '' });
-    console.log("🔢 OTP entered (length):", otp.length);
-    console.log("📋 confirmationRef.current:", confirmationRef.current ? "exists" : "❌ NULL — missing!");
 
     try {
-      console.log("📤 Calling confirmation.confirm(otp)...");
+
       const result = await confirmationRef.current.confirm(otp);
       const user = result.user;
-      console.log("✅ OTP verified! UID:", user.uid);
 
       const res = await fetch('/api/client-auth/phone', {
         method: 'POST',
@@ -159,7 +133,6 @@ export default function Login() {
           loginType: 'phone',
         }),
       });
-      console.log("📡 Backend /api/client-auth/phone response status:", res.status);
 
       navigate('/');
     } catch (err) {
@@ -184,7 +157,7 @@ export default function Login() {
 
       <div className="ul-container">
 
-        {/* ── Left: Image ── */}
+        {}
         <div className="ul-image-section">
           <button className="ul-back-btn" onClick={() => navigate('/')} title="Back to Home">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -199,7 +172,7 @@ export default function Login() {
           />
         </div>
 
-        {/* ── Right: Form ── */}
+        {}
         <div className="ul-form-section">
 
           {message.text && (
@@ -208,7 +181,7 @@ export default function Login() {
             </div>
           )}
 
-          {/* ── STEP: form ── */}
+          {}
           {step === 'form' && (
             <>
               <div className="ul-header">
@@ -264,7 +237,7 @@ export default function Login() {
             </>
           )}
 
-          {/* ── STEP: otp ── */}
+          {}
           {step === 'otp' && (
             <>
               <div className="ul-header">

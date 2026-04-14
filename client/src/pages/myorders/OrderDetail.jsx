@@ -5,10 +5,9 @@ import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myorders/OrderDetail.css';
 import OrderInvoice from './OrderInvoice';
 
-
 function SimplifiedTracker({ trackingData, orderDate, onSeeAll }) {
   const activities = trackingData?.activities || [];
-  
+
   const formatDateShort = (dateStr) => {
     if (!dateStr) return '';
     const d = new Date(dateStr);
@@ -117,8 +116,8 @@ export default function OrderDetail() {
   const [trackingLoading, setTrackingLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => { 
-    if (order?._id) { // Trigger tracking for any order viewed
+  useEffect(() => {
+    if (order?._id) {
       const syncTracking = async () => {
         setTrackingLoading(true);
         try {
@@ -181,14 +180,14 @@ export default function OrderDetail() {
                   {trackingLoading ? (
                     <div className="od-tracking-loading">Updating live tracking...</div>
                   ) : (
-                    <SimplifiedTracker 
-                      trackingData={trackingData} 
-                      orderDate={order.createdAt} 
+                    <SimplifiedTracker
+                      trackingData={trackingData}
+                      orderDate={order.createdAt}
                       onSeeAll={() => setIsModalOpen(true)}
                     />
                   )}
                 </div>
-                <TrackingModal 
+                <TrackingModal
                   isOpen={isModalOpen}
                   onClose={() => setIsModalOpen(false)}
                   trackingData={trackingData}
