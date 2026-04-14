@@ -60,7 +60,10 @@ export default function ManageAddresses() {
       if (user) {
         setUserUid(user.uid);
         try {
-          const res = await fetch(`/api/client-auth/addresses/${user.uid}`);
+          const token = await user.getIdToken();
+          const res = await fetch(`/api/client-auth/addresses/${user.uid}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
           const data = await res.json();
           if (data.success) setAddresses_(data.addresses || []);
         } catch (err) {
@@ -142,8 +145,12 @@ export default function ManageAddresses() {
 
     if (userUid) {
       if (editingId !== null) {
+        const token = await auth.currentUser.getIdToken();
         const res = await fetch(`/api/client-auth/addresses/${userUid}/${editingId}`, {
-          method: 'PUT', headers: { 'Content-Type': 'application/json' },
+          method: 'PUT', headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify(newAddrPart)
         });
         const data = await res.json();
@@ -168,8 +175,12 @@ export default function ManageAddresses() {
         }
       } else {
         const payload = { ...newAddrPart, id: Date.now().toString() };
+        const token = await auth.currentUser.getIdToken();
         const res = await fetch(`/api/client-auth/addresses/${userUid}`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          method: 'POST', headers: { 
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
           body: JSON.stringify(payload)
         });
         const data = await res.json();
@@ -201,11 +212,12 @@ export default function ManageAddresses() {
     }
 
     // ─────────────────────────────────────────────────────────────────
-    // AUTO-SYNC PERSONAL INFORMATION
-    // ─────────────────────────────────────────────────────────────────
     if (userUid && updatedAddresses.length > 0) {
       try {
-        const profileRes = await fetch(`/api/client-auth/profile/${userUid}`);
+        const token = await auth.currentUser.getIdToken();
+        const profileRes = await fetch(`/api/client-auth/profile/${userUid}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
         const profileData = await profileRes.json();
 
         if (profileData.success) {
@@ -229,9 +241,13 @@ export default function ManageAddresses() {
           }
 
           if (Object.keys(updates).length > 0) {
+            const token = await auth.currentUser.getIdToken();
             await fetch(`/api/client-auth/profile/${userUid}`, {
               method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
+              headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+              },
               body: JSON.stringify(updates)
             });
           }
@@ -290,7 +306,11 @@ export default function ManageAddresses() {
 
     // ── 2. Delete from server or local guest storage ──
     if (userUid) {
-      const res = await fetch(`/api/client-auth/addresses/${userUid}/${id}`, { method: 'DELETE' });
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetch(`/api/client-auth/addresses/${userUid}/${id}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       if (data.success) {
         updatedAddresses = data.addresses;

@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 
+const admin = require('../conf/firebase');
+
 const protect = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -22,4 +24,21 @@ const superAdminOnly = (req, res, next) => {
   next();
 };
 
-module.exports = { protect, superAdminOnly };
+const clientProtect = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ success: false, message: 'No login token provided.' });
+  }
+  const token = authHeader.split(' ')[1];
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(token);
+    req.user = decodedToken; // contains uid, email, etc.
+    next();
+  } catch (error) {
+    console.error('❌ Firebase token verification failed:', error.message);
+    return res.status(401).json({ success: false, message: 'Unauthorized. Please login again.' });
+  }
+};
+
+module.exports = { protect, superAdminOnly, clientProtect };

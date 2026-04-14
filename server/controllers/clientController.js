@@ -105,6 +105,9 @@ exports.syncWishlist = async (req, res) => {
 exports.getProfile = async (req, res) => {
   try {
     const { uid } = req.params;
+    if (req.user.uid !== uid) {
+      return res.status(403).json({ error: 'Unauthorized access to this profile' });
+    }
     const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true, user });
@@ -117,6 +120,9 @@ exports.getProfile = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const { uid } = req.params;
+    if (req.user.uid !== uid) {
+      return res.status(403).json({ error: 'Unauthorized access to this profile' });
+    }
     const { name, email, phone, gender } = req.body;
 
     const updates = { lastSeen: new Date() };
@@ -142,6 +148,9 @@ exports.updateProfile = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
   try {
     const { uid } = req.params;
+    if (req.user.uid !== uid) {
+      return res.status(403).json({ error: 'Unauthorized access to this account' });
+    }
     const result = await ClientUser.findOneAndDelete({ uids: uid });
     if (!result) return res.status(404).json({ error: 'User not found' });
 
@@ -156,7 +165,11 @@ exports.deleteAccount = async (req, res) => {
 
 exports.getAddresses = async (req, res) => {
   try {
-    const user = await ClientUser.findOne({ uids: req.params.uid });
+    const { uid } = req.params;
+    if (req.user.uid !== uid) {
+      return res.status(403).json({ error: 'Unauthorized access to these addresses' });
+    }
+    const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
     res.json({ success: true, addresses: user.addresses || [] });
   } catch (err) {
@@ -167,7 +180,11 @@ exports.getAddresses = async (req, res) => {
 
 exports.addAddress = async (req, res) => {
   try {
-    const user = await ClientUser.findOne({ uids: req.params.uid });
+    const { uid } = req.params;
+    if (req.user.uid !== uid) {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }
+    const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     if (req.body.isDefault) {
@@ -187,6 +204,9 @@ exports.addAddress = async (req, res) => {
 exports.updateAddress = async (req, res) => {
   try {
     const { uid, addrId } = req.params;
+    if (req.user.uid !== uid) {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }
     const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
 
@@ -211,6 +231,9 @@ exports.updateAddress = async (req, res) => {
 exports.deleteAddress = async (req, res) => {
   try {
     const { uid, addrId } = req.params;
+    if (req.user.uid !== uid) {
+      return res.status(403).json({ error: 'Unauthorized access' });
+    }
     const user = await ClientUser.findOne({ uids: uid });
     if (!user) return res.status(404).json({ error: 'User not found' });
 

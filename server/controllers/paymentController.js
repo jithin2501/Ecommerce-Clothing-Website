@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const razorpay = require('../conf/razorpay');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
+const ClientUser = require('../models/ClientUser');
 const shiprocketService = require('../services/shiprocket');
 
 const FREE_SHIPPING_THRESHOLD = 136;
@@ -247,6 +248,10 @@ exports.getUserOrders = async (req, res) => {
   try {
     const { userId } = req.params;
     if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
+
+    if (req.user.uid !== userId) {
+      return res.status(403).json({ success: false, error: 'Unauthorized access to this order history' });
+    }
 
     const orders = await Order.find({ userId, status: 'success' }).sort({ createdAt: -1 });
     res.json({ success: true, count: orders.length, data: orders });
