@@ -143,27 +143,24 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         description: 'Quality Clothing for Your Little Ones',
         image: '/logo.png',
         order_id: data.orderId,
-        handler: async (response) => {
-
-          const vHeaders = await getAuthHeaders();
-          const verifyRes = await fetch(`${API_BASE}/payment/verify-payment`, {
-            method: 'POST',
-            headers: vHeaders,
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature
-            })
+        handler: (response) => {
+          // 1. Fire and forget the verification in the background
+          getAuthHeaders().then(vHeaders => {
+            fetch(`${API_BASE}/payment/verify-payment`, {
+              method: 'POST',
+              headers: vHeaders,
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature
+              })
+            }).catch(err => console.error('Background verification error:', err));
           });
-          const verifyData = await verifyRes.json();
 
-          if (verifyData.success) {
-            if (onPaymentSuccess) onPaymentSuccess(true);
-            clearCart();
-            navigate('/account/orders');
-          } else {
-            alert('Payment verification failed. Please contact support.');
-          }
+          // 2. Redirect INSTANTLY
+          if (onPaymentSuccess) onPaymentSuccess(true);
+          clearCart();
+          navigate('/account/orders');
         },
         prefill: {
           name: user.name || '',
