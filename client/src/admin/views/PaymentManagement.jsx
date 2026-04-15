@@ -209,6 +209,7 @@ export default function PaymentManagement() {
   };
 
   return (
+    <>
     <div className="dash-container">
       <h1 className="dash-main-title">Payment Dashboard</h1>
       <div className="dash-wrapper-box">
@@ -414,7 +415,8 @@ export default function PaymentManagement() {
           </div>
         </div>
       </div>
-      {printingOrder && <OrderInvoice order={printingOrder} />}
     </div>
+    {printingOrder && <OrderInvoice order={printingOrder} />}
+    </>
   );
 }
