@@ -19,7 +19,6 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [serverTotals, setServerTotals] = useState({ subtotal, shipping, giftCost, total });
-  const [verifying, setVerifying] = useState(false);
   const { clearCart } = useCart();
 
   useEffect(() => {
@@ -198,21 +197,6 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
   return (
     <div className="os-wrapper">
-      {verifying && (
-        <div className="os-verifying-overlay">
-          <div className="os-verifying-content">
-            <div className="os-spinner-container">
-              <div className="os-main-spinner"></div>
-              <div className="os-inner-spinner"></div>
-            </div>
-            <h2>Processing Your Payment</h2>
-            <p>Do not close this window.</p>
-            <div className="os-loading-bar">
-              <div className="os-loading-progress"></div>
-            </div>
-          </div>
-        </div>
-      )}
       <h2 className="os-title">Order Summary</h2>
 
       <div className="os-rows">

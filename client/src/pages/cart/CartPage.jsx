@@ -27,6 +27,7 @@ export default function CartPage() {
   const [userInfo, setUserInfo] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isPaymentSuccess, setIsPaymentSuccess] = useState(false);
+  const [verifying, setVerifying] = useState(false);
 
   /* ── Save selection to localStorage and state ── */
   const handleSelectAddress = (addr) => {
@@ -235,6 +236,7 @@ export default function CartPage() {
             cartItems={cartItems}
             selectedAddress={selectedAddress}
             onPaymentSuccess={setIsPaymentSuccess}
+            setVerifying={setVerifying}
           />
         </div>
 
@@ -246,6 +248,22 @@ export default function CartPage() {
 
         <CartYouMightAlsoLike />
       </div>
+
+      {verifying && (
+        <div className="os-verifying-overlay">
+          <div className="os-verifying-content">
+            <div className="os-spinner-container">
+              <div className="os-main-spinner"></div>
+              <div className="os-inner-spinner"></div>
+            </div>
+            <h2>Processing Your Payment</h2>
+            <p>Do not close this window.</p>
+            <div className="os-loading-bar">
+              <div className="os-loading-progress"></div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
