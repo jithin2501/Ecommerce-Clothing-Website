@@ -8,26 +8,25 @@ const clientCtrl = require('../controllers/clientController');
 const { verifyFirebaseToken, requireOwnership } = require('../middleware/authMiddleware');
 
 // Public client auth endpoints (called from Login.jsx)
-// These remain public as they are used for registration/initial login handshake
 router.post('/google', clientCtrl.googleLogin);
 router.post('/phone',  clientCtrl.phoneLogin);
 
 // Protected routes - require valid Firebase token and ownership of the Targeted UID
-router.use(verifyFirebaseToken);
-router.use(requireOwnership);
+// We apply middlewares individually to ensure req.params.uid is correctly populated for requireOwnership
+const protected = [verifyFirebaseToken, requireOwnership];
 
-router.post('/sync-cart',     clientCtrl.syncCart);
-router.post('/sync-wishlist', clientCtrl.syncWishlist);
+router.post('/sync-cart',     ...protected, clientCtrl.syncCart);
+router.post('/sync-wishlist', ...protected, clientCtrl.syncWishlist);
 
 // Profile management endpoints
-router.get('/profile/:uid',   clientCtrl.getProfile);
-router.put('/profile/:uid',   clientCtrl.updateProfile);
-router.delete('/delete/:uid', clientCtrl.deleteAccount);
+router.get('/profile/:uid',   ...protected, clientCtrl.getProfile);
+router.put('/profile/:uid',   ...protected, clientCtrl.updateProfile);
+router.delete('/delete/:uid', ...protected, clientCtrl.deleteAccount);
 
 // Address management endpoints
-router.get('/addresses/:uid',          clientCtrl.getAddresses);
-router.post('/addresses/:uid',         clientCtrl.addAddress);
-router.put('/addresses/:uid/:addrId',  clientCtrl.updateAddress);
-router.delete('/addresses/:uid/:addrId', clientCtrl.deleteAddress);
+router.get('/addresses/:uid',          ...protected, clientCtrl.getAddresses);
+router.post('/addresses/:uid',         ...protected, clientCtrl.addAddress);
+router.put('/addresses/:uid/:addrId',  ...protected, clientCtrl.updateAddress);
+router.delete('/addresses/:uid/:addrId', ...protected, clientCtrl.deleteAddress);
 
 module.exports = router;
