@@ -16,18 +16,35 @@ const clientManagementRoutes = require('./routers/clientManagementRoutes');
 const paymentRouter = require('./routers/paymentRouter');
 const supportRouter = require('./routers/supportRouter');
 const shiprocketRouter = require('./routers/shiprocketRouter');
-const startCronJobs = require('./cronJobs'); // ← ADDED
+const startCronJobs = require('./cronJobs');
 
 const app = express();
 
 connectDB().then(() => {
-  // Seed superadmin after DB connects
   seedSuperAdmin();
-  // Start cron jobs after DB is ready ← ADDED
   startCronJobs();
 });
 
-app.use(cors());
+// ── CORS — only allow requests from our own frontend ──
+const allowedOrigins = [
+  process.env.CLIENT_URL,               // e.g. https://sumathitrends.com  (set in .env)
+  ...(process.env.NODE_ENV !== 'production'
+    ? ['http://localhost:3000', 'http://localhost:5173']  // Vite / CRA dev servers
+    : [])
+].filter(Boolean); // drop undefined if CLIENT_URL is not set yet
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow server-to-server requests (no origin header) and whitelisted origins
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`CORS blocked: ${origin}`));
+    }
+  },
+  credentials: true,  // needed for Authorization headers / cookies
+}));
+
 app.use(express.json());
 
 app.use('/api/auth', authRouter);
@@ -42,7 +59,6 @@ app.use('/api/admin/clients', clientManagementRoutes);
 app.use('/api/payment', paymentRouter);
 app.use('/api/support', supportRouter);
 app.use('/api/shiprocket', shiprocketRouter);
-
 
 app.get('/', (req, res) => res.json({ message: 'Sumathi Trends API running.' }));
 
