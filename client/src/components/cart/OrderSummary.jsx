@@ -206,7 +206,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
               <div className="os-inner-spinner"></div>
             </div>
             <h2>Processing Your Payment</h2>
-            <p>Please wait while we sync your order with Shiprocket and update your dashboard. Do not close this window.</p>
+            <p>Do not close this window.</p>
             <div className="os-loading-bar">
               <div className="os-loading-progress"></div>
             </div>

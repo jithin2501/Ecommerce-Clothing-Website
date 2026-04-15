@@ -137,6 +137,10 @@ export default function OrderDetail() {
     }
   }, [order]);
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [item]);
+
   if (!order || !item) {
     return (
       <div className="od-error">

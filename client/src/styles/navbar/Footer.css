@@ -3,6 +3,8 @@
   color: var(--footer-text-main, #ffffff);
   padding: 80px 5% 40px 5%;
   font-size: 14px;
+  position: relative;
+  z-index: 1000;
 }
 
 .footer-content {
