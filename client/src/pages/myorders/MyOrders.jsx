@@ -30,7 +30,10 @@ export default function MyOrders() {
       if (firebaseUser) {
         setUser(firebaseUser);
         try {
-          const res = await fetch(`/api/payment/user-orders/${firebaseUser.uid}`);
+          const token = await firebaseUser.getIdToken();
+          const res = await fetch(`/api/payment/user-orders/${firebaseUser.uid}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
           const data = await res.json();
           if (data.success) {
             setDbOrders(data.data);
@@ -62,8 +65,8 @@ export default function MyOrders() {
     if (!searchLower) return true;
 
     // Check if any item in the order matches search
-    const matchesItems = order.items?.some(item => 
-      item.name?.toLowerCase().includes(searchLower) || 
+    const matchesItems = order.items?.some(item =>
+      item.name?.toLowerCase().includes(searchLower) ||
       item.color?.toLowerCase().includes(searchLower)
     );
 
@@ -120,19 +123,19 @@ export default function MyOrders() {
             filtered.map(order => (
               <div key={order._id} className="mo-card">
                 {order.items?.map((item, idx) => (
-                  <div 
-                    key={`${order._id}-${idx}`} 
-                    className="mo-card-top" 
+                  <div
+                    key={`${order._id}-${idx}`}
+                    className="mo-card-top"
                     onClick={() => navigate(`/account/orders/${order.orderId}`, { state: { order, item } })}
-                    style={{ 
-                      borderBottom: idx < order.items.length - 1 ? '1px solid #f1f5f9' : 'none', 
-                      marginBottom: '10px', 
+                    style={{
+                      borderBottom: idx < order.items.length - 1 ? '1px solid #f1f5f9' : 'none',
+                      marginBottom: '10px',
                       paddingBottom: '10px',
                       cursor: 'pointer'
                     }}
                   >
                     <img src={item.img || item.photo} alt={item.name} className="mo-card-img" />
-                    
+
                     <div className="mo-card-info">
                       <div className="mo-card-name">{item.name}</div>
                       <div className="mo-card-meta">
@@ -143,9 +146,9 @@ export default function MyOrders() {
                     </div>
 
                     <div className="mo-card-status">
-                      <StatusBadge 
-                        status={order.status} 
-                        label={order.status === 'success' ? `Paid on ${new Date(order.createdAt).toLocaleDateString()}` : 'Payment Pending'} 
+                      <StatusBadge
+                        status={order.status}
+                        label={order.status === 'success' ? `Paid on ${new Date(order.createdAt).toLocaleDateString()}` : 'Payment Pending'}
                       />
                       <div className="mo-status-sub">Order ID: #{order.displayId}</div>
                       {order.trackingStatus?.toLowerCase() === 'delivered' && (

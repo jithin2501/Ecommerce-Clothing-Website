@@ -14,7 +14,7 @@ const calculateOrderTotals = async (items, giftWrapping) => {
   for (const item of items) {
     const product = await Product.findById(item.productId);
     if (!product) throw new Error(`Product not found: ${item.name || item.productId}`);
-    
+
     if (product.stock < (item.qty || 1)) {
       throw new Error(`Sorry, only ${product.stock} units of "${product.name}" are available.`);
     }
@@ -41,16 +41,16 @@ exports.createOrder = async (req, res) => {
     return res.status(503).json({ success: false, error: 'Razorpay not configured' });
   }
   try {
-    const { 
-      amount: clientAmount, 
-      userId, 
+    const {
+      amount: clientAmount,
+      userId,
       userName,
       userEmail,
-      items, 
+      items,
       giftWrapping,
-      shippingAddress, 
-      currency = 'INR', 
-      receipt = `rcpt_${Date.now()}` 
+      shippingAddress,
+      currency = 'INR',
+      receipt = `rcpt_${Date.now()}`
     } = req.body;
 
     if (!items || !Array.isArray(items) || items.length === 0) {
@@ -67,7 +67,7 @@ exports.createOrder = async (req, res) => {
     const { total: finalCalculatedAmount, validatedItems } = totals;
 
     const options = {
-      amount: Math.round(finalCalculatedAmount * 100), 
+      amount: Math.round(finalCalculatedAmount * 100),
       currency,
       receipt,
     };
@@ -99,16 +99,16 @@ exports.createOrder = async (req, res) => {
 
     res.json({
       success: true,
-      orderId:  order.id,
-      amount:   order.amount,
+      orderId: order.id,
+      amount: order.amount,
       currency: order.currency,
     });
 
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       error: 'Failed to create Razorpay order',
-      detail: error.message 
+      detail: error.message
     });
   }
 };
@@ -132,10 +132,10 @@ exports.verifyPayment = async (req, res) => {
     return res.status(503).json({ success: false, error: 'Razorpay not configured' });
   }
   try {
-    const { 
-      razorpay_order_id, 
-      razorpay_payment_id, 
-      razorpay_signature 
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature
     } = req.body;
 
     const sign = razorpay_order_id + '|' + razorpay_payment_id;
@@ -149,17 +149,17 @@ exports.verifyPayment = async (req, res) => {
       let method = 'Unknown';
       try {
         const paymentDetails = await razorpay.payments.fetch(razorpay_payment_id);
-        method = paymentDetails.method; 
+        method = paymentDetails.method;
       } catch (err) { }
 
       const updatedOrder = await Order.findOneAndUpdate(
         { orderId: razorpay_order_id },
-        { 
-          status: 'success', 
+        {
+          status: 'success',
           paymentId: razorpay_payment_id,
-          paymentMethod: method 
+          paymentMethod: method
         },
-        { new: true } 
+        { new: true }
       );
 
       if (updatedOrder) {
@@ -228,7 +228,7 @@ exports.getAllOrders = async (req, res) => {
         const userDoc = await ClientUser.findOne({ uids: o.userId }).lean();
         if (userDoc) {
           o.user = {
-            id: userDoc.customerId || 'N/A', 
+            id: userDoc.customerId || 'N/A',
             name: userDoc.name || 'Unknown',
             email: userDoc.email || 'N/A'
           };
@@ -245,10 +245,10 @@ exports.getAllOrders = async (req, res) => {
 
 exports.getUserOrders = async (req, res) => {
   try {
-    const { userId } = req.params;
-    if (!userId) return res.status(400).json({ success: false, error: 'User ID is required' });
+    const { uid } = req.params;
+    if (!uid) return res.status(400).json({ success: false, error: 'User UID is required' });
 
-    const orders = await Order.find({ userId, status: 'success' }).sort({ createdAt: -1 });
+    const orders = await Order.find({ userId: uid, status: 'success' }).sort({ createdAt: -1 });
     res.json({ success: true, count: orders.length, data: orders });
   } catch (error) {
     res.status(500).json({ success: false, error: 'Failed to fetch your orders' });
@@ -276,9 +276,9 @@ exports.syncTrackingStatus = async (req, res) => {
 
     if (tracking.success && tracking.data) {
       const td = tracking.data;
-      
+
       order.trackingStatus = td.track_status || order.trackingStatus;
-      
+
       const results = {
         success: true,
         trackingStatus: td.track_status,
@@ -309,7 +309,7 @@ exports.manualSyncToShiprocket = async (req, res) => {
     if (srResponse.success) {
       order.shiprocketOrderId = srResponse.shiprocketOrderId;
       order.shiprocketShipmentId = srResponse.shiprocketShipmentId;
-      order.shiprocketError = null; 
+      order.shiprocketError = null;
       order.trackingLink = shiprocketService.generateTrackingLink(srResponse.shiprocketShipmentId);
       await order.save();
       return res.json({ success: true, message: 'Successfully pushed to Shiprocket', srOrderId: srResponse.shiprocketOrderId });

@@ -3,7 +3,17 @@ import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import '../../styles/cart/OrderSummary.css';
 
+import { auth } from '../../firebase';
+
 const API_BASE = '/api';
+
+const getAuthHeaders = async () => {
+  const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  };
+};
 
 export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCost, total, user, cartItems, selectedAddress, onPaymentSuccess }) {
   const navigate = useNavigate();
@@ -15,9 +25,10 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
     const fetchTotals = async () => {
       if (cartItems.length === 0) return;
       try {
+        const headers = await getAuthHeaders();
         const res = await fetch(`${API_BASE}/payment/calculate-summary`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify({
             items: cartItems.map(i => ({ productId: i.id, qty: i.qty })),
             giftWrapping
@@ -74,10 +85,10 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
     setLoading(true);
 
     try {
-
+      const headers = await getAuthHeaders();
       const res = await fetch(`${API_BASE}/payment/create-order`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           amount: serverTotals.total,
           userId: user.uid,
@@ -134,9 +145,10 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         order_id: data.orderId,
         handler: async (response) => {
 
+          const vHeaders = await getAuthHeaders();
           const verifyRes = await fetch(`${API_BASE}/payment/verify-payment`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: vHeaders,
             body: JSON.stringify({
               razorpay_order_id: response.razorpay_order_id,
               razorpay_payment_id: response.razorpay_payment_id,
