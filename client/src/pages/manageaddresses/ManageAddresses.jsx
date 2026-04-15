@@ -331,23 +331,66 @@ export default function ManageAddresses() {
   };
 
   const handleLocation = () => {
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) {
+      alert('Geolocation is not supported by your browser.');
+      return;
+    }
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        // Simulated or real fetch of city/state from lat/long if needed, 
-        // but sticking to user's existing mock-fill for now
-        setTimeout(() => {
-          handleChange('city', 'Bengaluru');
-          handleChange('state', 'Karnataka');
-          handleChange('pincode', '560001');
+      async (pos) => {
+        const { latitude, longitude } = pos.coords;
+        try {
+          // Use OpenStreetMap Nominatim for reverse geocoding (free, no API key needed)
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`,
+            { headers: { 'Accept-Language': 'en' } }
+          );
+          const data = await res.json();
+          const addr = data.address || {};
+
+          // Extract pincode
+          const pincode = addr.postcode ? addr.postcode.replace(/\s/g, '').slice(0, 6) : '';
+
+          // Extract city — Nominatim uses different keys depending on area type
+          const city =
+            addr.city ||
+            addr.town ||
+            addr.village ||
+            addr.county ||
+            addr.state_district ||
+            '';
+
+          // Extract locality (neighbourhood / suburb)
+          const locality =
+            addr.neighbourhood ||
+            addr.suburb ||
+            addr.quarter ||
+            addr.residential ||
+            '';
+
+          // Extract state — map Nominatim state name to our INDIAN_STATES list
+          const rawState = addr.state || '';
+          const matchedState = INDIAN_STATES.find(
+            s => s.toLowerCase() === rawState.toLowerCase()
+          ) || rawState;
+
+          if (pincode) handleChange('pincode', pincode);
+          if (city) handleChange('city', city);
+          if (matchedState) handleChange('state', matchedState);
+          if (locality) handleChange('locality', locality);
+        } catch (err) {
+          console.error('Reverse geocoding failed:', err);
+          alert('Could not fetch location details. Please fill in the address manually.');
+        } finally {
           setLocating(false);
-        }, 1500); // 1.5s delay to show loading feel
+        }
       },
       (err) => {
-        console.error(err);
+        console.error('Geolocation error:', err);
+        alert('Unable to retrieve your location. Please check your browser permissions.');
         setLocating(false);
-      }
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
     );
   };
 
