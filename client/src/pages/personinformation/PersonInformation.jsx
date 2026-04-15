@@ -4,6 +4,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/personinformation/PersonInformation.css';
 import { auth } from '../../firebase';
 import { onAuthStateChanged, signOut, deleteUser as deleteFirebaseUser } from 'firebase/auth';
+import { authFetch } from '../../utils/authFetch';
 
 export default function PersonInformation() {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ export default function PersonInformation() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const res = await fetch(`/api/client-auth/profile/${user.uid}`);
+          const res = await authFetch(`/api/client-auth/profile/${user.uid}`);
           const data = await res.json();
           if (data.success) {
             setDbUser(data.user);
@@ -68,7 +69,7 @@ export default function PersonInformation() {
   const updateProfileData = async (updates) => {
     if (!auth.currentUser) return;
     try {
-      await fetch(`/api/client-auth/profile/${auth.currentUser.uid}`, {
+      await authFetch(`/api/client-auth/profile/${auth.currentUser.uid}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updates)
@@ -133,7 +134,7 @@ export default function PersonInformation() {
     if (window.confirm("Are you SURE you want to permanently delete your account? This action cannot be undone.")) {
       if (!auth.currentUser) return;
       try {
-        await fetch(`/api/client-auth/delete/${auth.currentUser.uid}`, { method: 'DELETE' });
+        await authFetch(`/api/client-auth/delete/${auth.currentUser.uid}`, { method: 'DELETE' });
         try { await deleteFirebaseUser(auth.currentUser); } catch (e) { console.warn("Firebase user deletion required recent login.", e); }
         await signOut(auth);
         navigate('/');

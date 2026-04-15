@@ -5,10 +5,17 @@
 const express    = require('express');
 const router     = express.Router();
 const clientCtrl = require('../controllers/clientController');
+const { verifyFirebaseToken, requireOwnership } = require('../middleware/authMiddleware');
 
 // Public client auth endpoints (called from Login.jsx)
-router.post('/google',        clientCtrl.googleLogin);
-router.post('/phone',         clientCtrl.phoneLogin);
+// These remain public as they are used for registration/initial login handshake
+router.post('/google', clientCtrl.googleLogin);
+router.post('/phone',  clientCtrl.phoneLogin);
+
+// Protected routes - require valid Firebase token and ownership of the Targeted UID
+router.use(verifyFirebaseToken);
+router.use(requireOwnership);
+
 router.post('/sync-cart',     clientCtrl.syncCart);
 router.post('/sync-wishlist', clientCtrl.syncWishlist);
 
