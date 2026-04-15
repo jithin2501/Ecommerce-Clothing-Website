@@ -10,24 +10,26 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
   const [userData, setUserData] = useState(user || null);
 
   useEffect(() => {
-    // If user is passed as prop, use it. 
-    // This allows instant updates from Parent (PersonInformation)
+    // 1. If user is passed as prop, use it and stop.
     if (user) {
       setUserData(user);
       return;
     }
 
-    // Otherwise, fetch independently (for pages like Wishlist/Addresses)
+    // 2. Otherwise, fetch independently (for pages like Wishlist/Addresses)
     const unsub = onAuthStateChanged(auth, async (fbUser) => {
       if (fbUser) {
-        try {
-          const res = await authFetch(`/api/client-auth/profile/${fbUser.uid}`);
-          const data = await res.json();
-          if (data.success) {
-            setUserData(data.user);
+        // ONLY fetch if we don't already have the data to stop loops
+        if (!userData) {
+          try {
+            const res = await authFetch(`/api/client-auth/profile/${fbUser.uid}`);
+            const data = await res.json();
+            if (data.success) {
+              setUserData(data.user);
+            }
+          } catch (err) {
+            console.error("Sidebar: Failed to fetch profile", err);
           }
-        } catch (err) {
-          console.error("Sidebar: Failed to fetch profile", err);
         }
       } else {
         setUserData(null);
@@ -35,7 +37,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
     });
 
     return () => unsub();
-  }, [user]);
+  }, [user, userData]); // Added userData dependency to allow conditional check
 
   const handleSubNav = (key, path) => {
     setActiveSubNav(key);

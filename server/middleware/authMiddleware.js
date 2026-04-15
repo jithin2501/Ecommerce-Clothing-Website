@@ -23,6 +23,8 @@ const superAdminOnly = (req, res, next) => {
   next();
 };
 
+
+
 const verifyFirebaseToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -58,3 +60,4 @@ module.exports = {
   verifyFirebaseToken,
   requireOwnership
 };
+
