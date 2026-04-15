@@ -159,10 +159,12 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
           if (verifyData.success) {
             if (onPaymentSuccess) onPaymentSuccess(true);
-            clearCart();
-            window.location.href = '/account/orders';
+            setTimeout(() => {
+              clearCart();
+              navigate('/account/orders');
+            }, 500);
           } else {
-
+            alert('Payment verification failed. Please contact support.');
           }
         },
         prefill: {
