@@ -1,30 +1,21 @@
 const express = require('express');
-const router  = express.Router();
+const router = express.Router();
 const paymentCtrl = require('../controllers/paymentController');
 const authMiddleware = require('../middleware/authMiddleware');
+const { paymentLimiter } = require('../middleware/rateLimiter');
 
 const protect = authMiddleware.protect;
 const superAdminOnly = authMiddleware.superAdminOnly;
 
-// Route to create a Razorpay order
-router.post('/create-order', paymentCtrl.createOrder);
+// Rate-limited: stops Razorpay quota abuse and fake order flooding
+router.post('/create-order', paymentLimiter, paymentCtrl.createOrder);
+router.post('/verify-payment', paymentLimiter, paymentCtrl.verifyPayment);
+router.post('/calculate-summary', paymentLimiter, paymentCtrl.calculateSummary);
 
-// Route to verify Razorpay payment signature
-router.post('/verify-payment', paymentCtrl.verifyPayment);
-
-// Route to calculate order summary server-side
-router.post('/calculate-summary', paymentCtrl.calculateSummary);
-
-// Route to fetch all orders (for Admin)
+// Admin-only — protected by JWT, no extra rate limit needed
 router.get('/orders', protect, superAdminOnly, paymentCtrl.getAllOrders);
-
-// Route to fetch orders for a specific user
 router.get('/user-orders/:userId', paymentCtrl.getUserOrders);
-
-// Route to sync tracking status with Shiprocket (Existing info)
 router.get('/track/:orderId', paymentCtrl.syncTrackingStatus);
-
-// NEW: Route to manually push a missing order to Shiprocket
 router.post('/manual-sync-sr/:orderId', protect, superAdminOnly, paymentCtrl.manualSyncToShiprocket);
 
 module.exports = router;

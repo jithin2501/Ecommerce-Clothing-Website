@@ -17,6 +17,7 @@ const paymentRouter = require('./routers/paymentRouter');
 const supportRouter = require('./routers/supportRouter');
 const shiprocketRouter = require('./routers/shiprocketRouter');
 const startCronJobs = require('./cronJobs');
+const { clientAuthLimiter, generalLimiter } = require('./middleware/rateLimiter');
 
 const app = express();
 
@@ -27,25 +28,32 @@ connectDB().then(() => {
 
 // ── CORS — only allow requests from our own frontend ──
 const allowedOrigins = [
-  process.env.CLIENT_URL,               // e.g. https://sumathitrends.com  (set in .env)
+  process.env.CLIENT_URL,
   ...(process.env.NODE_ENV !== 'production'
-    ? ['http://localhost:3000', 'http://localhost:5173']  // Vite / CRA dev servers
+    ? ['http://localhost:3000', 'http://localhost:5173']
     : [])
-].filter(Boolean); // drop undefined if CLIENT_URL is not set yet
+].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow server-to-server requests (no origin header) and whitelisted origins
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error(`CORS blocked: ${origin}`));
     }
   },
-  credentials: true,  // needed for Authorization headers / cookies
+  credentials: true,
 }));
 
 app.use(express.json());
+
+// ── Rate limiting ──
+// General fallback — covers all routes (200 req / 15 min per IP)
+app.use(generalLimiter);
+// Client OTP auth — tighter (10 req / 15 min); covers all /api/client-auth/* routes
+app.use('/api/client-auth', clientAuthLimiter);
+// Payment limiter applied per-route inside paymentRouter.js
+// Admin login limiter applied per-route inside authRouter.js
 
 app.use('/api/auth', authRouter);
 app.use('/api/contact', contactRouter);
