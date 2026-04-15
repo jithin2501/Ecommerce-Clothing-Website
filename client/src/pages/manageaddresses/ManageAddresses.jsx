@@ -340,9 +340,9 @@ export default function ManageAddresses() {
       async (pos) => {
         const { latitude, longitude } = pos.coords;
         try {
-          // Use OpenStreetMap Nominatim for reverse geocoding (free, no API key needed)
+          // Step 1: Reverse geocode using OpenStreetMap Nominatim (free, no API key)
           const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1`,
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json&addressdetails=1&zoom=18`,
             { headers: { 'Accept-Language': 'en' } }
           );
           const data = await res.json();
@@ -351,7 +351,7 @@ export default function ManageAddresses() {
           // Extract pincode
           const pincode = addr.postcode ? addr.postcode.replace(/\s/g, '').slice(0, 6) : '';
 
-          // Extract city — Nominatim uses different keys depending on area type
+          // Extract city
           const city =
             addr.city ||
             addr.town ||
@@ -360,24 +360,44 @@ export default function ManageAddresses() {
             addr.state_district ||
             '';
 
-          // Extract locality (neighbourhood / suburb)
+          // Extract locality — use postcode-level name first (most accurate for Indian addresses),
+          // then fall back to suburb, then neighbourhood (which can be a micro-area like "Maruthi Nagara")
           const locality =
-            addr.neighbourhood ||
             addr.suburb ||
+            addr.city_district ||
+            addr.town ||
+            addr.village ||
+            addr.neighbourhood ||
             addr.quarter ||
             addr.residential ||
             '';
 
-          // Extract state — map Nominatim state name to our INDIAN_STATES list
+          // Extract state — match against INDIAN_STATES list for correct dropdown value
           const rawState = addr.state || '';
           const matchedState = INDIAN_STATES.find(
             s => s.toLowerCase() === rawState.toLowerCase()
           ) || rawState;
 
+          // Fill the form fields
           if (pincode) handleChange('pincode', pincode);
           if (city) handleChange('city', city);
           if (matchedState) handleChange('state', matchedState);
           if (locality) handleChange('locality', locality);
+
+          // Step 2: Shiprocket serviceability check on the detected pincode
+          if (pincode && pincode.length === 6) {
+            try {
+              const pinRes = await fetch(`/api/shiprocket/check-pincode/${pincode}`);
+              const pinData = await pinRes.json();
+              if (!pinData.serviceable) {
+                alert(`Delivery Not Available: Shiprocket does not currently deliver to pincode ${pincode}. You can still save the address but delivery may not be possible.`);
+              }
+            } catch (pinErr) {
+              console.warn('Shiprocket serviceability check failed:', pinErr);
+              // Non-blocking — don't prevent form fill if this check fails
+            }
+          }
+
         } catch (err) {
           console.error('Reverse geocoding failed:', err);
           alert('Could not fetch location details. Please fill in the address manually.');
