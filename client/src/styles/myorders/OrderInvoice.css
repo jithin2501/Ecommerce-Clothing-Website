@@ -29,8 +29,9 @@
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
   }
-  /* Hide standard website components */
-  .od-page, .navbar, .footer, .sidebar, .main-header, .whatsapp-float {
+  /* Hide standard website and admin components */
+  .od-page, .navbar, .footer, .sidebar, .main-header, .whatsapp-float,
+  .admin-sidebar, .admin-mobile-header, .dash-container, .admin-main {
     display: none !important;
   }
 

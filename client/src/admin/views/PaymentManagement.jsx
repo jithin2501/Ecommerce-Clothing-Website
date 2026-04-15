@@ -376,12 +376,12 @@ export default function PaymentManagement() {
               <thead>
                 <tr>
                   <th style={{ width: '15%' }}>Client Name</th>
-                  <th style={{ width: '15%', textAlign: 'center' }}>ID</th>
+                  <th style={{ width: '11%', textAlign: 'center' }}>ID</th>
                   <th style={{ width: '25%', textAlign: 'center' }}>Transaction ID</th>
                   <th style={{ width: '12%', textAlign: 'center' }}>Amount</th>
-                  <th style={{ width: '15%', textAlign: 'center' }}>Method</th>
+                  <th style={{ width: '12%', textAlign: 'center' }}>Method</th>
                   <th style={{ width: '10%', textAlign: 'center' }}>Status</th>
-                  <th style={{ width: '12%', textAlign: 'center' }}>Receipt</th>
+                  <th style={{ width: '15%', textAlign: 'center' }}>Receipt</th>
                 </tr>
               </thead>
               <tbody>
@@ -397,9 +397,9 @@ export default function PaymentManagement() {
                       <button 
                         className="inv-print-btn" 
                         onClick={() => handlePrint(o)}
-                        title="Print Receipt"
+                        title="Download Invoice"
                       >
-                        <Printer size={14} /> <span>Print</span>
+                        <Printer size={13} /> <span>Download</span>
                       </button>
                     </td>
                   </tr>
