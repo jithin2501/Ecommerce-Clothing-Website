@@ -261,9 +261,15 @@ export default function ClientManagement() {
   const LIMIT = 20;
 
 
+  /* auth helper */
+  const authHeaders = () => ({
+    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
+    'Content-Type': 'application/json',
+  });
+
   /* fetch stats */
   const fetchStats = useCallback(() => {
-    fetch(`${API}/stats`)
+    fetch(`${API}/stats`, { headers: authHeaders() })
       .then(r => r.json())
       .then(d => d.success && setStats(d.stats))
       .catch(() => { });
@@ -275,7 +281,7 @@ export default function ClientManagement() {
   const fetchClients = useCallback(() => {
     setLoading(true);
     const params = new URLSearchParams({ loginType: filter, search, dateFilter, page, limit: LIMIT });
-    fetch(`${API}?${params}`)
+    fetch(`${API}?${params}`, { headers: authHeaders() })
       .then(r => r.json())
       .then(d => {
         if (d.success) { setClients(d.users); setTotal(d.total); }
@@ -289,7 +295,7 @@ export default function ClientManagement() {
   /* open detail drawer */
   const openClient = async (c) => {
     try {
-      const r = await fetch(`${API}/${c._id}`);
+      const r = await fetch(`${API}/${c._id}`, { headers: authHeaders() });
       const d = await r.json();
       setSelected(d.success ? d.user : c);
     } catch {
