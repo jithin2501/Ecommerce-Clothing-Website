@@ -15,7 +15,7 @@ const getAuthHeaders = async () => {
   };
 };
 
-export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCost, total, user, cartItems, selectedAddress, onPaymentSuccess }) {
+export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCost, total, user, cartItems, selectedAddress, onPaymentSuccess, setVerifying }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [serverTotals, setServerTotals] = useState({ subtotal, shipping, giftCost, total });
@@ -144,6 +144,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         image: '/logo.png',
         order_id: data.orderId,
         handler: async (response) => {
+          console.log('Payment received from Razorpay:', response);
           setVerifying(true);
           try {
             const vHeaders = await getAuthHeaders();
@@ -157,19 +158,23 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
               })
             });
             const verifyData = await verifyRes.json();
+            console.log('Server verification result:', verifyData);
 
             if (verifyData.success) {
               if (onPaymentSuccess) onPaymentSuccess(true);
               clearCart();
-              navigate('/account/orders');
+              // Navigate after a small delay to ensure cart state is settled
+              setTimeout(() => {
+                navigate('/account/orders');
+              }, 100);
             } else {
+              setVerifying(false);
               alert('Payment verification failed. Please contact support.');
             }
           } catch (err) {
             console.error('Verification failed:', err);
-            alert('Something went wrong during verification.');
-          } finally {
             setVerifying(false);
+            alert('Something went wrong during verification.');
           }
         },
         prefill: {
