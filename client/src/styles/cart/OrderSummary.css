@@ -1,4 +1,87 @@
-/* ── Status Overlay (NEW) ── */
+/* ── Verifying Overlay ── */
+.os-verifying-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: osFadeIn 0.3s ease;
+}
+
+.os-verifying-content {
+  text-align: center;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+.os-spinner-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 1.5rem;
+}
+
+.os-main-spinner {
+  width: 100%;
+  height: 100%;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid var(--accent-clay, #C17B5C);
+  border-radius: 50%;
+  animation: osSpin 1s linear infinite;
+}
+
+.os-inner-spinner {
+  position: absolute;
+  top: 15%; left: 15%;
+  width: 70%; height: 70%;
+  border: 4px solid transparent;
+  border-bottom: 4px solid #2C3E50;
+  border-radius: 50%;
+  animation: osSpin 0.7s linear infinite reverse;
+}
+
+.os-verifying-content h2 {
+  font-size: 1.5rem;
+  color: #2C3E50;
+  margin-bottom: 0.75rem;
+  font-weight: 800;
+}
+
+.os-verifying-content p {
+  font-size: 0.95rem;
+  color: #636e72;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.os-loading-bar {
+  width: 100%;
+  height: 6px;
+  background: #f1f2f6;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.os-loading-progress {
+  width: 40%;
+  height: 100%;
+  background: var(--accent-clay, #C17B5C);
+  border-radius: 3px;
+  animation: osLoadingMove 1.5s ease-in-out infinite;
+}
+
+@keyframes osSpin { to { transform: rotate(360deg); } }
+@keyframes osFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes osLoadingMove {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ── Status Overlay (Legacy/Other) ── */
 .os-status-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;

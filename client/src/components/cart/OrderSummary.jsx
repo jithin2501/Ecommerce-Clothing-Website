@@ -19,6 +19,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [serverTotals, setServerTotals] = useState({ subtotal, shipping, giftCost, total });
+  const [verifying, setVerifying] = useState(false);
   const { clearCart } = useCart();
 
   useEffect(() => {
@@ -143,10 +144,11 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
         description: 'Quality Clothing for Your Little Ones',
         image: '/logo.png',
         order_id: data.orderId,
-        handler: (response) => {
-          // 1. Fire and forget the verification in the background
-          getAuthHeaders().then(vHeaders => {
-            fetch(`${API_BASE}/payment/verify-payment`, {
+        handler: async (response) => {
+          setVerifying(true);
+          try {
+            const vHeaders = await getAuthHeaders();
+            const verifyRes = await fetch(`${API_BASE}/payment/verify-payment`, {
               method: 'POST',
               headers: vHeaders,
               body: JSON.stringify({
@@ -154,13 +156,22 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
                 razorpay_payment_id: response.razorpay_payment_id,
                 razorpay_signature: response.razorpay_signature
               })
-            }).catch(err => console.error('Background verification error:', err));
-          });
+            });
+            const verifyData = await verifyRes.json();
 
-          // 2. Redirect INSTANTLY
-          if (onPaymentSuccess) onPaymentSuccess(true);
-          clearCart();
-          navigate('/account/orders');
+            if (verifyData.success) {
+              if (onPaymentSuccess) onPaymentSuccess(true);
+              clearCart();
+              navigate('/account/orders');
+            } else {
+              alert('Payment verification failed. Please contact support.');
+            }
+          } catch (err) {
+            console.error('Verification failed:', err);
+            alert('Something went wrong during verification.');
+          } finally {
+            setVerifying(false);
+          }
         },
         prefill: {
           name: user.name || '',
@@ -187,6 +198,21 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
 
   return (
     <div className="os-wrapper">
+      {verifying && (
+        <div className="os-verifying-overlay">
+          <div className="os-verifying-content">
+            <div className="os-spinner-container">
+              <div className="os-main-spinner"></div>
+              <div className="os-inner-spinner"></div>
+            </div>
+            <h2>Processing Your Payment</h2>
+            <p>Please wait while we sync your order with Shiprocket and update your dashboard. Do not close this window.</p>
+            <div className="os-loading-bar">
+              <div className="os-loading-progress"></div>
+            </div>
+          </div>
+        </div>
+      )}
       <h2 className="os-title">Order Summary</h2>
 
       <div className="os-rows">
