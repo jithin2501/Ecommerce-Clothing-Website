@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import { authFetch } from '../utils/authFetch';
 
 const WishlistContext = createContext();
 
@@ -31,7 +32,7 @@ export function WishlistProvider({ children }) {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const res = await fetch(`/api/client-auth/profile/${user.uid}`);
+          const res = await authFetch(`/api/client-auth/profile/${user.uid}`);
           const data = await res.json();
           if (data.success && data.user) {
             const dbWishlist = (data.user.wishlist || []).map(item => ({
@@ -80,7 +81,7 @@ export function WishlistProvider({ children }) {
           category: item.category
         }));
 
-        await fetch('/api/client-auth/sync-wishlist', {
+        await authFetch('/api/client-auth/sync-wishlist', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ uid: user.uid, wishlist: syncData })

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { authFetch } from '../../utils/authFetch';
 import { Search } from 'lucide-react';
 import '../../styles/manageaddresses/ManageAddresses.css';
 
@@ -20,7 +21,7 @@ export default function AddressSidebar({ isOpen, onClose, onSelectAddress }) {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const res = await fetch(`/api/client-auth/addresses/${user.uid}`);
+          const res = await authFetch(`/api/client-auth/addresses/${user.uid}`);
           const data = await res.json();
           if (data.success) setAddresses(data.addresses || []);
         } catch { }

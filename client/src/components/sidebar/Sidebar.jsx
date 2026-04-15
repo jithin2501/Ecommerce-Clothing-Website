@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { authFetch } from '../../utils/authFetch';
 import '../../styles/sidebar/Sidebar.css';
 
 export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActiveSubNav, user }) {
@@ -20,7 +21,7 @@ export default function Sidebar({ activeNav, setActiveNav, activeSubNav, setActi
     const unsub = onAuthStateChanged(auth, async (fbUser) => {
       if (fbUser) {
         try {
-          const res = await fetch(`/api/client-auth/profile/${fbUser.uid}`);
+          const res = await authFetch(`/api/client-auth/profile/${fbUser.uid}`);
           const data = await res.json();
           if (data.success) {
             setUserData(data.user);

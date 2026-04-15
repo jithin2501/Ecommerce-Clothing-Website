@@ -33,36 +33,3 @@ const paymentLimiter = rateLimit({
 });
 
 module.exports = { generalLimiter, clientAuthLimiter, adminLoginLimiter, paymentLimiter };
-    windowMs: 15 * 60 * 1000,
-    max: 200,
-    message: { success: false, message: 'Too many requests. Please try again later.' },
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-
-const clientAuthLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 10,
-    message: { success: false, message: 'Too many auth attempts. Please try again later.' },
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-
-const adminLoginLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 5,
-    message: { success: false, message: 'Too many login attempts. Please try again after 15 minutes.' },
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-
-const paymentLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 50,
-    message: { success: false, message: 'Too many requests. Please try again later.' },
-    standardHeaders: true,
-    legacyHeaders: false,
-});
-
-module.exports = { generalLimiter, clientAuthLimiter, adminLoginLimiter, paymentLimiter };
-

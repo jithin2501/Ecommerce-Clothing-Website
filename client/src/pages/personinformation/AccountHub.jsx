@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { authFetch } from '../../utils/authFetch';
 import '../../styles/personinformation/AccountHub.css';
 
 export default function AccountHub() {
@@ -27,7 +28,7 @@ export default function AccountHub() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const res  = await fetch(`/api/client-auth/profile/${user.uid}`);
+          const res  = await authFetch(`/api/client-auth/profile/${user.uid}`);
           const data = await res.json();
           if (data.success) setDbUser(data.user);
         } catch (err) {

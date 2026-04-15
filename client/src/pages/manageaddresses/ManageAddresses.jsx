@@ -4,6 +4,7 @@ import Sidebar from '../../components/sidebar/Sidebar';
 import '../../styles/manageaddresses/ManageAddresses.css';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { authFetch } from '../../utils/authFetch';
 
 const INDIAN_STATES = [
   'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh',
@@ -60,7 +61,7 @@ export default function ManageAddresses() {
       if (user) {
         setUserUid(user.uid);
         try {
-          const res = await fetch(`/api/client-auth/addresses/${user.uid}`);
+          const res = await authFetch(`/api/client-auth/addresses/${user.uid}`);
           const data = await res.json();
           if (data.success) setAddresses_(data.addresses || []);
         } catch (err) {
@@ -142,7 +143,7 @@ export default function ManageAddresses() {
 
     if (userUid) {
       if (editingId !== null) {
-        const res = await fetch(`/api/client-auth/addresses/${userUid}/${editingId}`, {
+        const res = await authFetch(`/api/client-auth/addresses/${userUid}/${editingId}`, {
           method: 'PUT', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newAddrPart)
         });
@@ -168,7 +169,7 @@ export default function ManageAddresses() {
         }
       } else {
         const payload = { ...newAddrPart, id: Date.now().toString() };
-        const res = await fetch(`/api/client-auth/addresses/${userUid}`, {
+        const res = await authFetch(`/api/client-auth/addresses/${userUid}`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload)
         });
@@ -205,7 +206,7 @@ export default function ManageAddresses() {
     // ─────────────────────────────────────────────────────────────────
     if (userUid && updatedAddresses.length > 0) {
       try {
-        const profileRes = await fetch(`/api/client-auth/profile/${userUid}`);
+        const profileRes = await authFetch(`/api/client-auth/profile/${userUid}`);
         const profileData = await profileRes.json();
 
         if (profileData.success) {
@@ -229,7 +230,7 @@ export default function ManageAddresses() {
           }
 
           if (Object.keys(updates).length > 0) {
-            await fetch(`/api/client-auth/profile/${userUid}`, {
+            await authFetch(`/api/client-auth/profile/${userUid}`, {
               method: 'PUT',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(updates)
@@ -290,7 +291,7 @@ export default function ManageAddresses() {
 
     // ── 2. Delete from server or local guest storage ──
     if (userUid) {
-      const res = await fetch(`/api/client-auth/addresses/${userUid}/${id}`, { method: 'DELETE' });
+      const res = await authFetch(`/api/client-auth/addresses/${userUid}/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
         updatedAddresses = data.addresses;
