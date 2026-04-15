@@ -160,8 +160,7 @@ export default function OrderSummary({ subtotal, shipping, giftWrapping, giftCos
           if (verifyData.success) {
             if (onPaymentSuccess) onPaymentSuccess(true);
             clearCart();
-            localStorage.removeItem('sumathi_cart');
-            window.location.href = '/account/orders';
+            navigate('/account/orders');
           } else {
             alert('Payment verification failed. Please contact support.');
           }
