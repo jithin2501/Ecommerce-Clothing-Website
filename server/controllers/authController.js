@@ -1,5 +1,5 @@
-const jwt        = require('jsonwebtoken');
-const AdminUser  = require('../models/adminUserModel');
+const jwt = require('jsonwebtoken');
+const AdminUser = require('../models/adminUserModel');
 
 const seedSuperAdmin = async () => {
   const exists = await AdminUser.findOne({ role: 'superadmin' });
