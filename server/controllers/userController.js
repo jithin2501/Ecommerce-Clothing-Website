@@ -11,16 +11,31 @@ const getAllUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, permissions } = req.body;
     if (!username || !password)
       return res.status(400).json({ success: false, message: 'Username and password are required.' });
     const exists = await AdminUser.findOne({ username: username.toLowerCase() });
     if (exists)
       return res.status(400).json({ success: false, message: 'Username already exists.' });
-    const user = await AdminUser.create({ username: username.toLowerCase(), password, role: 'admin' });
+    
+    // Create with specific role and permissions
+    const user = await AdminUser.create({ 
+      username: username.toLowerCase(), 
+      password, 
+      role: 'admin',
+      permissions: permissions || [] 
+    });
+
     res.status(201).json({
-      success: true, message: 'Admin user created.',
-      data: { _id: user._id, username: user.username, role: user.role, isActive: user.isActive },
+      success: true, 
+      message: 'Admin user created.',
+      data: { 
+        _id: user._id, 
+        username: user.username, 
+        role: user.role, 
+        isActive: user.isActive,
+        permissions: user.permissions
+      },
     });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error.' });
@@ -49,6 +64,22 @@ const deleteUser = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Cannot delete superadmin.' });
     await AdminUser.findByIdAndDelete(req.params.id);
     res.status(200).json({ success: true, message: 'User deleted.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+};
+
+const updatePermissions = async (req, res) => {
+  try {
+    const { permissions } = req.body;
+    const user = await AdminUser.findById(req.params.id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+    if (user.role === 'superadmin')
+      return res.status(403).json({ success: false, message: 'Cannot modify superadmin permissions.' });
+    
+    user.permissions = permissions;
+    await user.save();
+    res.status(200).json({ success: true, permissions: user.permissions });
   } catch (err) {
     res.status(500).json({ success: false, message: 'Server error.' });
   }
@@ -93,4 +124,4 @@ const changeUsername = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, createUser, toggleUser, deleteUser, changePassword, changeUsername };
+module.exports = { getAllUsers, createUser, toggleUser, deleteUser, updatePermissions, changePassword, changeUsername };

@@ -19,6 +19,10 @@ const adminUserSchema = new mongoose.Schema(
       enum: ['superadmin', 'admin'],
       default: 'admin',
     },
+    permissions: {
+      type: [String],
+      default: [], // e.g., ['Product Management', 'Order Management']
+    },
     isActive: {
       type: Boolean,
       default: true,

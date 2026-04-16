@@ -9,6 +9,15 @@ const seedSuperAdmin = async () => {
       password: process.env.ADMIN_PASSWORD,
       role: 'superadmin',
       isActive: true,
+      permissions: [
+        'Contact Messages',
+        'Review Management',
+        'Product Management',
+        'Client Management',
+        'Payment Management',
+        'Order Management',
+        'Support Management'
+      ]
     });
   }
 };
@@ -49,7 +58,11 @@ const login = async (req, res) => {
       maxAge: 8 * 60 * 60 * 1000, // 8 hours
     });
 
-    res.status(200).json({ success: true, role: user.role });
+    res.status(200).json({ 
+      success: true, 
+      role: user.role,
+      permissions: user.permissions 
+    });
   } catch (err) {
     console.error('Login error:', err);
     res.status(500).json({ success: false, message: 'Server error.' });

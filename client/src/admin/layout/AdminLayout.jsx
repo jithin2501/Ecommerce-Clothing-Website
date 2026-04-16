@@ -6,23 +6,23 @@ import '../assets/AdminLayout.css';
 export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [role, setRole] = useState(null);
+  const [user, setUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch actual role from the server
-    const fetchRole = async () => {
+    // Fetch actual user data (role + permissions) from the server
+    const fetchMe = async () => {
       try {
         const res = await fetch('/api/auth/me', { credentials: 'include' });
         const data = await res.json();
         if (data.success) {
-          setRole(data.user.role);
+          setUser(data.user);
         }
       } catch (err) {
-        console.error("Failed to fetch role", err);
+        console.error("Failed to fetch user data", err);
       }
     };
-    fetchRole();
+    fetchMe();
   }, []);
 
   useEffect(() => {
@@ -51,6 +51,12 @@ export default function AdminLayout() {
     }
   };
 
+  const hasAccess = (pageName) => {
+    if (!user) return false;
+    if (user.role === 'superadmin') return true;
+    return user.permissions?.includes(pageName);
+  };
+
   return (
     <div className={`admin-wrapper ${isSidebarOpen ? 'sidebar-open' : ''}`}>
       <header className="admin-mobile-header">
@@ -67,16 +73,16 @@ export default function AdminLayout() {
       <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="admin-brand">Admin Dashboard</div>
         <nav className="admin-nav">
-          <NavLink to="/admin/contact"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Contact Messages</NavLink>
-          <NavLink to="/admin/reviews"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Review Management</NavLink>
-          <NavLink to="/admin/products" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Product Management</NavLink>
-          <NavLink to="/admin/clients" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Client Management</NavLink>
-          <NavLink to="/admin/payments" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Payment Management</NavLink>
-          <NavLink to="/admin/orders" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Order Management</NavLink>
-          <NavLink to="/admin/support" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Support Management</NavLink>
+          {hasAccess('Contact Messages') && <NavLink to="/admin/contact"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Contact Messages</NavLink>}
+          {hasAccess('Review Management') && <NavLink to="/admin/reviews"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Review Management</NavLink>}
+          {hasAccess('Product Management') && <NavLink to="/admin/products" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Product Management</NavLink>}
+          {hasAccess('Client Management') && <NavLink to="/admin/clients" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Client Management</NavLink>}
+          {hasAccess('Payment Management') && <NavLink to="/admin/payments" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Payment Management</NavLink>}
+          {hasAccess('Order Management') && <NavLink to="/admin/orders" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Order Management</NavLink>}
+          {hasAccess('Support Management') && <NavLink to="/admin/support" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Support Management</NavLink>}
           
-          {/* User Management only visible for Superadmin */}
-          {role === 'superadmin' && (
+          {/* User Management ONLY for Superadmin */}
+          {user?.role === 'superadmin' && (
             <NavLink to="/admin/users" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>User Management</NavLink>
           )}
 
