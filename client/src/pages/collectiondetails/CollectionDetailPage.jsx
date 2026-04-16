@@ -60,7 +60,6 @@ export default function CollectionDetailPage() {
     const handlePopState = () => {
       if (fromState.fromCart) {
         // Going back to cart — scroll to top of cart page is default browser behavior
-        // restoreCartScroll flag not needed since cart scrolls to top naturally
       } else if (fromState.fromProductPage) {
         // restorePdpSection already in sessionStorage
       } else {
@@ -89,17 +88,19 @@ export default function CollectionDetailPage() {
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
-      // 1. If logged in, fetch from DB to get the latest addresses and default
+      // 1. If logged in, fetch from DB using Firebase ID Token
       if (user) {
         try {
-          const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
+          const idToken = await user.getIdToken();
+          const res = await fetch(`${API}/client-auth/addresses/${user.uid}`, {
+            headers: {
+              'Authorization': `Bearer ${idToken}`
+            }
+          });
           const data = await res.json();
           if (data.success && data.addresses) {
             setUserInfo(data.user);
             
-            // Priority Check:
-            // A. Manual selection from localStorage (if it still exists in the list)
-            // B. Default address from DB
             const savedSelection = localStorage.getItem('sumathi_selected_address');
             let manualAddr = null;
             if (savedSelection) {
@@ -126,7 +127,7 @@ export default function CollectionDetailPage() {
         }
       }
 
-      // 2. Fallback for guests or if DB fetch failed
+      // 2. Fallback for guests
       const savedSelection = localStorage.getItem('sumathi_selected_address');
       if (savedSelection) {
         try {
@@ -201,18 +202,7 @@ export default function CollectionDetailPage() {
 
   const handleBack = (e) => {
     e.preventDefault();
-    if (fromState.fromCart) {
-      // Navigate back to cart — browser back restores cart scroll position naturally
-      navigate(-1);
-    } else if (fromState.fromProductPage) {
-      // restorePdpSection already in sessionStorage
-      navigate(-1);
-    } else if (fromState.restoreScroll) {
-      sessionStorage.setItem('restoreHomeScroll', '1');
-      navigate(-1);
-    } else {
-      navigate(-1);
-    }
+    navigate(-1);
   };
 
   if (loading) return (
@@ -230,7 +220,6 @@ export default function CollectionDetailPage() {
   );
 
   const product = detail.product;
-
 
   return (
     <div className="cdp-page">
