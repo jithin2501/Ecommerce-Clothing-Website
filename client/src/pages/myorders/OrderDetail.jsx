@@ -139,6 +139,7 @@ export default function OrderDetail() {
   }, [orderId]);
 
   useEffect(() => { 
+    let intervalId;
     if (order?._id) { 
       const syncTracking = async () => {
         setTrackingLoading(true);
@@ -154,9 +155,18 @@ export default function OrderDetail() {
           setTrackingLoading(false);
         }
       };
+      
       syncTracking();
+
+      // Poll every 60s if not delivered
+      if (order.trackingStatus?.toUpperCase() !== 'DELIVERED') {
+        intervalId = setInterval(syncTracking, 60000);
+      }
     }
-  }, [order]);
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [order?._id]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
