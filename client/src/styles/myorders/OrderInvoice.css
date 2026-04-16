@@ -20,41 +20,57 @@
     margin: 10mm;
   }
 
+  /* Do NOT hide the parent containers like admin-main or dash-container entirely, 
+     as that hides the invoice too. Instead, hide THEIR CONTENTS. */
+  .od-page, .navbar, .footer, .sidebar, .main-header, .whatsapp-float,
+  .admin-sidebar, .admin-mobile-header {
+    display: none !important;
+  }
+
+  /* Specifically hide the dashboard UI inside PaymentManagement */
+  .dash-container {
+    display: none !important;
+  }
+
+  /* Ensure the wrapper and main area don't block the invoice */
+  .admin-wrapper, .admin-main {
+    display: block !important;
+    visibility: visible !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
   html, body {
     height: auto !important;
     overflow: visible !important;
     margin: 0 !important;
     padding: 0 !important;
     width: 100% !important;
+    background: white !important;
     print-color-adjust: exact;
     -webkit-print-color-adjust: exact;
-  }
-  /* Hide standard website and admin components */
-  .od-page, .navbar, .footer, .sidebar, .main-header, .whatsapp-float,
-  .admin-sidebar, .admin-mobile-header, .dash-container, .admin-main {
-    display: none !important;
   }
 
   /* Force the invoice to take over the screen */
   .invoice-container {
     display: block !important;
     visibility: visible !important;
-    position: static !important;
+    position: fixed !important; /* Fixed to top-left of page */
+    left: 0 !important;
+    top: 0 !important;
     width: 100% !important;
     height: auto !important;
     margin: 0 !important;
     padding: 10mm !important;
     background: white !important;
     box-shadow: none !important;
+    z-index: 99999 !important;
   }
 
   .invoice-container * {
     visibility: visible !important;
-  }
-  
-  body {
-    background: white !important;
-    margin: 0 !important;
   }
 }
 

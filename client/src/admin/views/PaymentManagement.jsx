@@ -22,6 +22,8 @@ export default function PaymentManagement() {
     setPrintingOrder(order);
     setTimeout(() => {
       window.print();
+      // Reset printing order after a short delay so it doesn't stay in the DOM
+      setTimeout(() => setPrintingOrder(null), 1000);
     }, 500);
   };
 
