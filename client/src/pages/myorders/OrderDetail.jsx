@@ -112,6 +112,7 @@ function StarRating({ value, onChange }) {
 export default function OrderDetail() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { orderId } = useParams();
   const { order: stateOrder, item } = location.state || {}; // Rename to stateOrder
   const [order, setOrder] = useState(stateOrder); // Local order state to handle refreshes
   const [rating, setRating] = useState(0);
@@ -119,12 +120,29 @@ export default function OrderDetail() {
   const [trackingLoading, setTrackingLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  useEffect(() => {
+    // 1. If we don't have an order (e.g. page refresh), fetch it from API
+    if (!order && orderId) {
+      const fetchOrder = async () => {
+        try {
+          const res = await authFetch(`/api/payment/orders/${orderId}`);
+          const data = await res.json();
+          if (data.success) {
+            setOrder(data.data);
+          }
+        } catch (err) {
+          console.error('Order fetch error:', err);
+        }
+      };
+      fetchOrder();
+    }
+  }, [orderId]);
+
   useEffect(() => { 
     if (order?._id) { 
       const syncTracking = async () => {
         setTrackingLoading(true);
         try {
-          // Use authFetch to include the Authorization header
           const res = await authFetch(`/api/payment/track/${order._id}`);
           const data = await res.json();
           if (data.success) {
@@ -144,7 +162,7 @@ export default function OrderDetail() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [item]);
 
-  if (!order || !item) {
+  if ((!order || !item) && !trackingLoading) {
     return (
       <div className="od-error">
         <p>Order details not found.</p>
@@ -153,8 +171,16 @@ export default function OrderDetail() {
     );
   }
 
-  const otherItems = order.items.filter(i => i.productId !== item.productId || i.size !== item.size);
-  const itemPrice = parseFloat(String(item.price).replace(/[₹$,]/g, '')) * item.qty;
+  // Fallback if loading and no data yet
+  const showLoadingPlaceholder = trackingLoading && !trackingData;
+
+  const orderItems = order?.items || [];
+  const activeItem = item || orderItems[0];
+
+  if (!activeItem) return null;
+
+  const otherItems = orderItems.filter(i => i.productId !== activeItem.productId || i.size !== activeItem.size);
+  const itemPrice = parseFloat(String(activeItem.price).replace(/[₹$,]/g, '')) * activeItem.qty;
 
   const handleDownloadInvoice = () => {
     window.print();
@@ -176,30 +202,33 @@ export default function OrderDetail() {
               <div className="od-card main-prod-card">
                 <div className="od-prod-header">
                   <div className="od-prod-main">
-                    <div className="od-header-id">Order ID: #{order.displayId}</div>
-                    <h1>{item.name}</h1>
-                    <p className="od-prod-meta">{item.color}, {item.size}</p>
+                    <div className="od-header-id">Order ID: #{order?.displayId}</div>
+                    <h1>{activeItem.name}</h1>
+                    <p className="od-prod-meta">{activeItem.color}, {activeItem.size}</p>
                     <p className="od-prod-seller">Seller: SUMATHI TRENDS</p>
                     <div className="od-prod-price">₹{itemPrice.toLocaleString()}</div>
                   </div>
-                  <img src={item.img || item.photo} alt={item.name} className="od-prod-img" />
+                  <img src={activeItem.img || activeItem.photo} alt={activeItem.name} className="od-prod-img" />
                 </div>
                 <div className="od-timeline-wrap">
-                  {trackingLoading ? (
+                  {showLoadingPlaceholder ? (
                     <div className="od-tracking-loading">Updating live tracking...</div>
                   ) : (
                     <SimplifiedTracker 
                       trackingData={trackingData} 
-                      orderDate={order.createdAt} 
+                      orderDate={order?.createdAt} 
                       onSeeAll={() => setIsModalOpen(true)}
                     />
+                  )}
+                  {trackingLoading && trackingData && (
+                    <div className="od-mini-updating">Updating...</div>
                   )}
                 </div>
                 <TrackingModal 
                   isOpen={isModalOpen}
                   onClose={() => setIsModalOpen(false)}
                   trackingData={trackingData}
-                  orderDate={order.createdAt}
+                  orderDate={order?.createdAt}
                 />
                 {order.trackingStatus?.toLowerCase() === 'delivered' && (
                   <div className="od-chat-section">

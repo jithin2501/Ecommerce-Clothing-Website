@@ -91,28 +91,6 @@ export default function OrderManagement() {
     }
   };
 
-  const handleManualStatusUpdate = async (orderId, status) => {
-    if (!window.confirm(`Mark this order as ${status}?`)) return;
-    setSyncingId(orderId);
-    try {
-      const res = await fetch(`/api/payment/status/${orderId}`, {
-        method: 'PUT',
-        headers: authHeaders(),
-        body: JSON.stringify({ status })
-      });
-      const data = await res.json();
-      if (data.success) {
-        setOrders(prev => prev.map(o => o._id === orderId ? { ...o, trackingStatus: status.toUpperCase() } : o));
-      } else {
-        alert('Error: ' + data.error);
-      }
-    } catch (err) {
-      console.error('Update error:', err);
-    } finally {
-      setSyncingId(null);
-    }
-  };
-
   const filteredOrders = orders.filter(o => {
     const isSameDay = !selectedDate || o.createdAt?.split('T')[0] === selectedDate;
     const matchesSearch = o.displayId?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -206,7 +184,6 @@ export default function OrderManagement() {
           order={orders.find(o => o._id === selectedOrder._id) || selectedOrder}
           onClose={() => setSelectedOrder(null)}
           onSync={() => handleSyncStatus(selectedOrder._id)}
-          onStatusUpdate={handleManualStatusUpdate}
           syncing={syncingId === selectedOrder._id}
         />
       )}
@@ -217,7 +194,7 @@ export default function OrderManagement() {
 /* ════════════════════════════════════
    ORDER DETAIL DRAWER (LIKE CLIENT MGMT)
    ════════════════════════════════════ */
-function OrderDrawer({ order, onClose, onSync, onStatusUpdate, syncing }) {
+function OrderDrawer({ order, onClose, onSync, syncing }) {
   const printRef = useRef();
 
   const handlePrint = () => {
@@ -312,29 +289,7 @@ function OrderDrawer({ order, onClose, onSync, onStatusUpdate, syncing }) {
 
         <div className="om-drawer-head">
           <div className="om-drawer-id">ORDER #{order.displayId}</div>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            {order.trackingStatus !== 'DELIVERED' && (
-              <button 
-                className="om-deliver-btn"
-                onClick={() => onStatusUpdate(order._id, 'DELIVERED')}
-                title="Mark as Delivered"
-                style={{
-                  background: '#10b981',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  padding: '4px 8px',
-                  fontSize: '11px',
-                  fontWeight: '700',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-              >
-                <CheckCircle size={12} /> DELIVER
-              </button>
-            )}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <button 
               className={`om-sync-btn ${syncing ? 'spinning' : ''}`} 
               onClick={onSync}

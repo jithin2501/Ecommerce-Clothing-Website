@@ -206,6 +206,31 @@
   to { transform: translateY(0); opacity: 1; }
 }
 
+.od-tracking-loading {
+  padding: 3rem 0 1rem;
+  text-align: center;
+  color: #757575;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-style: italic;
+  letter-spacing: 0.5px;
+}
+
+.od-mini-updating {
+  font-size: 0.75rem;
+  color: #9CA3AF;
+  text-align: center;
+  margin-top: 5px;
+  font-style: italic;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
 .od-modal-header {
   padding: 15px 20px;
   border-bottom: 1px solid #F0F0F0;

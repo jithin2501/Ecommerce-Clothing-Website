@@ -323,23 +323,27 @@ exports.manualSyncToShiprocket = async (req, res) => {
   }
 };
 
-exports.updateTrackingStatus = async (req, res) => {
+exports.getOrderById = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { status } = req.body; // e.g. 'DELIVERED'
+    let order;
+    
+    // 1. Try finding by MongoDB ID
+    if (orderId.match(/^[0-9a-fA-F]{24}$/)) {
+      order = await Order.findById(orderId);
+    }
+    
+    // 2. Try by Display ID (e.g. ST-XXXXX)
+    if (!order) {
+      order = await Order.findOne({ displayId: orderId });
+    }
 
-    if (!status) return res.status(400).json({ success: false, error: 'Status is required' });
+    if (!order) {
+      return res.status(404).json({ success: false, error: 'Order not found' });
+    }
 
-    const order = await Order.findByIdAndUpdate(
-      orderId, 
-      { trackingStatus: status.toUpperCase() }, 
-      { new: true }
-    );
-
-    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
-
-    res.json({ success: true, message: `Status updated to ${status}`, data: order });
+    res.json({ success: true, data: order });
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    res.status(500).json({ success: false, error: 'Failed to fetch order details' });
   }
 };
