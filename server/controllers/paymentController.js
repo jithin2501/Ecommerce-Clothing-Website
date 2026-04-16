@@ -4,7 +4,7 @@ const Order = require('../models/Order');
 const Product = require('../models/Product');
 const shiprocketService = require('../services/shiprocket');
 
-const FREE_SHIPPING_THRESHOLD = 136;
+const FREE_SHIPPING_THRESHOLD = 0; // Everything is Free Shipping now!
 const GIFT_WRAP_COST = 6;
 
 const calculateOrderTotals = async (items, giftWrapping) => {
@@ -29,7 +29,7 @@ const calculateOrderTotals = async (items, giftWrapping) => {
     });
   }
 
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
+  const shipping = 0; // Forced to zero per user request
   const giftCost = giftWrapping ? GIFT_WRAP_COST : 0;
   const total = subtotal + shipping + giftCost;
 

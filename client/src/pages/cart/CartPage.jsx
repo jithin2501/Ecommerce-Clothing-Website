@@ -13,7 +13,7 @@ import '../../styles/cart/CartPage.css';
 
 const API = '/api';
 
-const FREE_SHIPPING_THRESHOLD = 136;
+const FREE_SHIPPING_THRESHOLD = 0; // Everything is Free Shipping!
 const GIFT_WRAP_COST = 6;
 
 // Keys used to persist the selected delivery address
@@ -175,7 +175,7 @@ export default function CartPage() {
 
   if (cartItems.length === 0 && !isPaymentSuccess) return <EmptyCart />;
 
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 10;
+  const shipping = 0; // Forced to zero per user request
   const giftCost = giftWrapping ? GIFT_WRAP_COST : 0;
   const total = subtotal + shipping + giftCost;
 
