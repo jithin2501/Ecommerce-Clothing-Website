@@ -13,12 +13,30 @@ router.get('/admin', protect, async (req, res) => {
   }
 });
 
-// Public - for the main store
+// Public - for the main store homepage and categories
 router.get('/', async (req, res) => {
   try {
-    const products = await Product.find().sort({ createdAt: -1 });
+    const { featuredIn, category, ageGroup } = req.query;
+    
+    // Build query object
+    let query = { isActive: true }; // Public should only see active products
+    
+    if (featuredIn) {
+      query.featuredIn = featuredIn;
+    }
+    
+    if (category) {
+      query.category = category;
+    }
+    
+    if (ageGroup) {
+      query.ageGroup = ageGroup;
+    }
+
+    const products = await Product.find(query).sort({ createdAt: -1 });
     res.json({ success: true, data: products });
   } catch (err) {
+    console.error('Public products fetch error:', err);
     res.status(500).json({ success: false, message: 'Server error.' });
   }
 });
