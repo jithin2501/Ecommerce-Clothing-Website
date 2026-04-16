@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken');
 const admin = require('../conf/firebase');
 
 const protect = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const token = req.cookies.adminToken || (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') ? req.headers.authorization.split(' ')[1] : null);
+
+  if (!token) {
     return res.status(401).json({ success: false, message: 'No token provided.' });
   }
-  const token = authHeader.split(' ')[1];
+
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.admin = decoded;
@@ -57,11 +58,11 @@ const requireOwnership = (req, res, next) => {
 
 // Allows access if EITHER a valid Admin JWT OR a valid Firebase token is present
 const anyAuth = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const token = req.cookies.adminToken || (req.headers.authorization && req.headers.authorization.startsWith('Bearer ') ? req.headers.authorization.split(' ')[1] : null);
+
+  if (!token) {
     return res.status(401).json({ success: false, message: 'No token provided.' });
   }
-  const token = authHeader.split(' ')[1];
 
   // Try Admin JWT first
   try {

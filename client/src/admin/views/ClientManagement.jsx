@@ -31,7 +31,7 @@ const LoginBadge = ({ types }) => {
 
 /* ════════════════════════════════════
    CLIENT DETAIL DRAWER
-════════════════════════════════════ */
+   ════════════════════════════════════ */
 function ClientDrawer({ client, onClose }) {
   const [tab, setTab] = useState('info');
   const [lightbox, setLightbox] = useState(null); // { type: 'img'|'vid', url: string }
@@ -235,7 +235,7 @@ const EmptyState = ({ text }) => <div className="cm-empty">{text}</div>;
 
 /* ════════════════════════════════════
    STAT CARD
-════════════════════════════════════ */
+   ════════════════════════════════════ */
 function StatCard({ label, value, color }) {
   return (
     <div className={`cm-stat-card cm-stat-${color}`}>
@@ -247,7 +247,7 @@ function StatCard({ label, value, color }) {
 
 /* ════════════════════════════════════
    MAIN PAGE
-════════════════════════════════════ */
+   ════════════════════════════════════ */
 export default function ClientManagement() {
   const [stats, setStats] = useState(null);
   const [clients, setClients] = useState([]);
@@ -263,13 +263,15 @@ export default function ClientManagement() {
 
   /* auth helper */
   const authHeaders = () => ({
-    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`,
     'Content-Type': 'application/json',
   });
 
   /* fetch stats */
   const fetchStats = useCallback(() => {
-    fetch(`${API}/stats`, { headers: authHeaders() })
+    fetch(`${API}/stats`, { 
+      headers: authHeaders(),
+      credentials: 'include'
+    })
       .then(r => r.json())
       .then(d => d.success && setStats(d.stats))
       .catch(() => { });
@@ -281,7 +283,10 @@ export default function ClientManagement() {
   const fetchClients = useCallback(() => {
     setLoading(true);
     const params = new URLSearchParams({ loginType: filter, search, dateFilter, page, limit: LIMIT });
-    fetch(`${API}?${params}`, { headers: authHeaders() })
+    fetch(`${API}?${params}`, { 
+      headers: authHeaders(),
+      credentials: 'include'
+    })
       .then(r => r.json())
       .then(d => {
         if (d.success) { setClients(d.users); setTotal(d.total); }
@@ -295,7 +300,10 @@ export default function ClientManagement() {
   /* open detail drawer */
   const openClient = async (c) => {
     try {
-      const r = await fetch(`${API}/${c._id}`, { headers: authHeaders() });
+      const r = await fetch(`${API}/${c._id}`, { 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const d = await r.json();
       setSelected(d.success ? d.user : c);
     } catch {

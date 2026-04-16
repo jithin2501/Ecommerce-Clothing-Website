@@ -5,7 +5,6 @@ import '../assets/usermanagement.css';
 const API = '/api/users';
 const authHeaders = () => ({
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
 });
 
 export default function UserManagement() {
@@ -18,7 +17,10 @@ export default function UserManagement() {
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch(API, { headers: authHeaders() });
+      const res = await fetch(API, { 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) {
         // Sort: superadmin always first
@@ -52,7 +54,12 @@ export default function UserManagement() {
     }
 
     try {
-      const res = await fetch(API, { method: 'POST', headers: authHeaders(), body: JSON.stringify(form) });
+      const res = await fetch(API, { 
+        method: 'POST', 
+        headers: authHeaders(), 
+        credentials: 'include',
+        body: JSON.stringify(form) 
+      });
       const data = await res.json();
       if (data.success) {
         setUsers(u => {
@@ -67,7 +74,11 @@ export default function UserManagement() {
 
   const handleToggle = async (id) => {
     try {
-      const res = await fetch(`${API}/${id}/toggle`, { method: 'PATCH', headers: authHeaders() });
+      const res = await fetch(`${API}/${id}/toggle`, { 
+        method: 'PATCH', 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) setUsers(u => u.map(x => x._id === id ? { ...x, isActive: data.isActive } : x));
     } catch { flash('Server error.', 'error'); }
@@ -76,7 +87,11 @@ export default function UserManagement() {
   const handleDelete = async (id, username) => {
     if (!window.confirm(`Delete user "${username}"?`)) return;
     try {
-      const res = await fetch(`${API}/${id}`, { method: 'DELETE', headers: authHeaders() });
+      const res = await fetch(`${API}/${id}`, { 
+        method: 'DELETE', 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) { setUsers(u => u.filter(x => x._id !== id)); flash('User deleted.'); }
     } catch { flash('Server error.', 'error'); }

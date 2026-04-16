@@ -7,7 +7,6 @@ const REVIEW_URL = `${window.location.origin}/review`;
 
 const authHeaders = () => ({
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
 });
 
 export default function ReviewManagement() {
@@ -19,7 +18,10 @@ export default function ReviewManagement() {
 
   const fetchReviews = async () => {
     try {
-      const res = await fetch(`${API}/admin`, { headers: authHeaders() });
+      const res = await fetch(`${API}/admin`, { 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) setReviews(data.data);
     } catch { flash('Failed to load reviews.', 'error'); }
@@ -35,7 +37,11 @@ export default function ReviewManagement() {
 
   const handleApprove = async (id) => {
     try {
-      const res = await fetch(`${API}/admin/${id}/approve`, { method: 'PATCH', headers: authHeaders() });
+      const res = await fetch(`${API}/admin/${id}/approve`, { 
+        method: 'PATCH', 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) setReviews(r => r.map(x => x._id === id ? { ...x, status: 'approved' } : x));
     } catch { flash('Server error.', 'error'); }
@@ -43,7 +49,11 @@ export default function ReviewManagement() {
 
   const handleUnapprove = async (id) => {
     try {
-      const res = await fetch(`${API}/admin/${id}/unapprove`, { method: 'PATCH', headers: authHeaders() });
+      const res = await fetch(`${API}/admin/${id}/unapprove`, { 
+        method: 'PATCH', 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) setReviews(r => r.map(x => x._id === id ? { ...x, status: 'pending' } : x));
     } catch { flash('Server error.', 'error'); }
@@ -52,7 +62,11 @@ export default function ReviewManagement() {
   const handleDelete = async (id) => {
     if (!window.confirm('Permanently delete this review?')) return;
     try {
-      const res = await fetch(`${API}/admin/${id}`, { method: 'DELETE', headers: authHeaders() });
+      const res = await fetch(`${API}/admin/${id}`, { 
+        method: 'DELETE', 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) setReviews(r => r.filter(x => x._id !== id));
     } catch { flash('Server error.', 'error'); }

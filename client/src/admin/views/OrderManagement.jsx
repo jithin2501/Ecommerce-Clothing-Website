@@ -5,7 +5,6 @@ import '../assets/OrderManagement.css';
 const API = '/api/payment/orders';
 const authHeaders = () => ({
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
 });
 
 export default function OrderManagement() {

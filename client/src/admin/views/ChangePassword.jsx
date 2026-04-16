@@ -5,7 +5,6 @@ import '../assets/changepassword.css';
 const API = '/api/users';
 const authHeaders = () => ({
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
 });
 
 export default function ChangePassword() {
@@ -24,6 +23,7 @@ export default function ChangePassword() {
     try {
       const res  = await fetch(`${API}/change-password`, {
         method: 'PATCH', headers: authHeaders(),
+        credentials: 'include',
         body: JSON.stringify({ currentPassword: form.currentPassword, newPassword: form.newPassword }),
       });
       const data = await res.json();

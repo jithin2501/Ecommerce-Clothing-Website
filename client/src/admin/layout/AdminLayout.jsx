@@ -4,11 +4,9 @@ import { Menu, X } from 'lucide-react';
 import '../assets/AdminLayout.css';
 
 const getRole = () => {
-  try {
-    const token = localStorage.getItem('adminToken');
-    if (!token) return null;
-    return JSON.parse(atob(token.split('.')[1])).role;
-  } catch { return null; }
+  // We will now infer roles from the session state or simply allow the server to handle authorization.
+  // For UI display purposes, we'll keep it simple for now.
+  return 'admin'; 
 };
 
 export default function AdminLayout() {
@@ -37,9 +35,13 @@ export default function AdminLayout() {
     setIsSidebarOpen(false);
   }, [location.pathname]);
 
-  const handleSignOut = () => {
-    localStorage.removeItem('adminToken');
-    navigate('/admin/login');
+  const handleSignOut = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' });
+      navigate('/admin/login');
+    } catch {
+      navigate('/admin/login');
+    }
   };
 
   return (

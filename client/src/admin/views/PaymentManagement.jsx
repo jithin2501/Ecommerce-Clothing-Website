@@ -6,7 +6,6 @@ import OrderInvoice from '../../pages/myorders/OrderInvoice';
 const API = '/api/payment/orders';
 const authHeaders = () => ({
   'Content-Type': 'application/json',
-  Authorization: `Bearer ${localStorage.getItem('adminToken')}`,
 });
 
 export default function PaymentManagement() {

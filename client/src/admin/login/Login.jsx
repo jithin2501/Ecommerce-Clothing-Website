@@ -76,11 +76,12 @@ export default function Login() {
       const res  = await fetch('/api/auth/login', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body:    JSON.stringify(form),
       });
       const data = await res.json();
       if (data.success) {
-        localStorage.setItem('adminToken', data.token);
+        // We no longer manually store tokens. The server sets a secure cookie.
         navigate('/admin/contact');
       } else {
         setError(data.message || 'Invalid credentials.');

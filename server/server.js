@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./conf/db');
 
 const contactRouter = require('./routers/contactRouter');
@@ -58,6 +59,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use(cookieParser());
 
 // ── Rate limiting ──
 // General fallback — covers all routes (200 req / 15 min per IP)
