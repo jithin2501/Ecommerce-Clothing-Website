@@ -396,13 +396,17 @@ export default function PaymentManagement() {
                     <td className="box-cell center-text" style={{ textTransform: 'uppercase', fontSize: '0.75rem', fontWeight: 700, color: '#64748b' }}>{o.paymentMethod || 'Razorpay'}</td>
                     <td className="box-cell center-text"><span className={`status-badge ${o.status}`}>{o.status}</span></td>
                     <td className="box-cell center-text">
-                      <button 
-                        className="inv-print-btn" 
-                        onClick={() => handlePrint(o)}
-                        title="Download Invoice"
-                      >
-                        <Printer size={13} /> <span>Download</span>
-                      </button>
+                      {o.status === 'success' ? (
+                        <button 
+                          className="inv-print-btn" 
+                          onClick={() => handlePrint(o)}
+                          title="Download Invoice"
+                        >
+                          <Printer size={13} /> <span>Download</span>
+                        </button>
+                      ) : (
+                        <span className="inv-pending-text">-</span>
+                      )}
                     </td>
                   </tr>
                 ))}
