@@ -24,14 +24,19 @@ const { clientAuthLimiter, generalLimiter } = require('./middleware/rateLimiter'
 const app = express();
 
 // ── Security Headers ──
+// Relaxed CSP to allow Razorpay payment gateway to function correctly
 app.use(helmet({
   contentSecurityPolicy: {
     useDefaults: true,
     directives: {
       "img-src": ["'self'", "data:", "https://sumathi-trends.s3.ap-south-1.amazonaws.com", "https://lh3.googleusercontent.com"],
+      "script-src": ["'self'", "'unsafe-inline'", "https://checkout.razorpay.com"],
+      "frame-src": ["'self'", "https://api.razorpay.com", "https://checkout.razorpay.com"],
+      "connect-src": ["'self'", "https://api.razorpay.com", "https://lumberjack-cx.razorpay.com"],
       "upgrade-insecure-requests": null,
     },
   },
+  crossOriginEmbedderPolicy: false,
 }));
 
 connectDB().then(() => {
