@@ -3,7 +3,7 @@ const router = express.Router();
 const Product = require('../models/Product');
 const { protect } = require('../middleware/authMiddleware');
 
-// Public
+// Public - for the main store
 router.get('/', async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
@@ -23,7 +23,17 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Admin - Now uses central secure cookie protection
+// Admin - Fetching the full list for management (Fixing the 500 error)
+router.get('/admin', protect, async (req, res) => {
+  try {
+    const products = await Product.find().sort({ createdAt: -1 });
+    res.json({ success: true, data: products });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+});
+
+// Admin - Create, Update, Delete
 router.post('/', protect, async (req, res) => {
   try {
     const product = await Product.create(req.body);

@@ -185,7 +185,7 @@ export default function PaymentManagement() {
   };
 
   const [transSearch, setTransSearch] = useState('');
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(''); // Default to empty to show all recent
 
   const filteredTransactions = orders.filter(o => {
     // 1. Search filter
@@ -194,9 +194,9 @@ export default function PaymentManagement() {
       o.paymentId?.toLowerCase().includes(transSearch.toLowerCase()) ||
       o.orderId?.toLowerCase().includes(transSearch.toLowerCase());
 
-    // 2. Daily filter
+    // 2. Daily filter - only apply if a date is selected
     const oDate = new Date(o.createdAt).toISOString().split('T')[0];
-    const dateMatch = oDate === selectedDate;
+    const dateMatch = !selectedDate || oDate === selectedDate;
 
     return searchMatch && dateMatch;
   });
