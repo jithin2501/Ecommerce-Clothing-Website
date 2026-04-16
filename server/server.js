@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 const connectDB = require('./conf/db');
 
 const contactRouter = require('./routers/contactRouter');
@@ -20,6 +21,17 @@ const startCronJobs = require('./cronJobs');
 const { clientAuthLimiter, generalLimiter } = require('./middleware/rateLimiter');
 
 const app = express();
+
+// ── Security Headers ──
+app.use(helmet({
+  contentSecurityPolicy: {
+    useDefaults: true,
+    directives: {
+      "img-src": ["'self'", "data:", "https://sumathi-trends.s3.ap-south-1.amazonaws.com", "https://lh3.googleusercontent.com"],
+      "upgrade-insecure-requests": null,
+    },
+  },
+}));
 
 connectDB().then(() => {
   seedSuperAdmin();
