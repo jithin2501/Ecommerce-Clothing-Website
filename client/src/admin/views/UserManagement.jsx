@@ -23,7 +23,12 @@ export default function UserManagement() {
   const [form, setForm] = useState({ username: '', password: '', permissions: [] });
   const [msg, setMsg] = useState({ text: '', type: '' });
   const [showPassword, setShowPassword] = useState(false);
-  const [editingPerms, setEditingPerms] = useState(null); // ID of user being edited
+  
+  // Modal State
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [modalPerms, setModalPerms] = useState([]);
+
   const navigate = useNavigate();
 
   const fetchUsers = async () => {
@@ -50,15 +55,6 @@ export default function UserManagement() {
   const flash = (text, type = 'success') => {
     setMsg({ text, type });
     setTimeout(() => setMsg({ text: '', type: '' }), 5000);
-  };
-
-  const togglePermissionInForm = (perm) => {
-    setForm(f => {
-      const updated = f.permissions.includes(perm)
-        ? f.permissions.filter(p => p !== perm)
-        : [...f.permissions, perm];
-      return { ...f, permissions: updated };
-    });
   };
 
   const handleCreate = async (e) => {
@@ -102,18 +98,31 @@ export default function UserManagement() {
     } catch { flash('Server error.', 'error'); }
   };
 
-  const handleUpdatePermissions = async (userId, perms) => {
+  const openPermissionModal = (user) => {
+    setSelectedUser(user);
+    setModalPerms(user.permissions || []);
+    setModalOpen(true);
+  };
+
+  const toggleModalPermission = (perm) => {
+    setModalPerms(prev => 
+      prev.includes(perm) ? prev.filter(p => p !== perm) : [...prev, perm]
+    );
+  };
+
+  const handleSavePermissions = async () => {
+    if (!selectedUser) return;
     try {
-      const res = await fetch(`${API}/${userId}/permissions`, {
+      const res = await fetch(`${API}/${selectedUser._id}/permissions`, {
         method: 'PATCH',
         headers: authHeaders(),
         credentials: 'include',
-        body: JSON.stringify({ permissions: perms })
+        body: JSON.stringify({ permissions: modalPerms })
       });
       const data = await res.json();
       if (data.success) {
-        setUsers(u => u.map(x => x._id === userId ? { ...x, permissions: perms } : x));
-        setEditingPerms(null);
+        setUsers(u => u.map(x => x._id === selectedUser._id ? { ...x, permissions: modalPerms } : x));
+        setModalOpen(false);
         flash('Permissions updated successfully.');
       } else { flash(data.message, 'error'); }
     } catch { flash('Server error.', 'error'); }
@@ -132,13 +141,22 @@ export default function UserManagement() {
     } catch { flash('Server error.', 'error'); }
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    return {
+        date: date.toLocaleDateString('en-GB'),
+        time: date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+    };
+  };
+
   return (
     <div className="um-page">
       <h1 className="um-title">User Management</h1>
 
       <div className="um-card">
         <h3 className="um-card-title">Create New Admin User</h3>
-        <p className="um-card-sub">Set credentials and page permissions for new team members.</p>
+        <p className="um-card-sub">Set credentials for new team members.</p>
         
         {msg.text && <div className={`um-msg ${msg.type === 'error' ? 'um-msg-error' : 'um-msg-success'}`}>{msg.text}</div>}
         
@@ -165,23 +183,6 @@ export default function UserManagement() {
               </div>
             </div>
           </div>
-
-          <div className="um-perms-section">
-            <label className="um-perms-title">Assign Page Access:</label>
-            <div className="um-perms-grid">
-              {PAGE_OPTIONS.map(opt => (
-                <label key={opt} className="um-perm-checkbox">
-                  <input 
-                    type="checkbox" 
-                    checked={form.permissions.includes(opt)} 
-                    onChange={() => togglePermissionInForm(opt)} 
-                  />
-                  <span>{opt}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
           <button type="submit" className="um-create-btn">Create Admin Account</button>
         </form>
       </div>
@@ -192,86 +193,115 @@ export default function UserManagement() {
           <table className="um-table">
             <thead>
               <tr>
-                <th style={{ width: '20%' }}>USERNAME</th>
-                <th style={{ width: '15%' }}>ROLE</th>
-                <th style={{ width: '45%' }}>PERMISSIONS</th>
-                <th style={{ width: '20%' }}>ACTION</th>
+                <th style={{ width: '25%' }}>Admin User</th>
+                <th style={{ width: '15%' }}>Role</th>
+                <th style={{ width: '25%' }}>Last Login</th>
+                <th style={{ width: '35%' }}>Action</th>
               </tr>
             </thead>
             <tbody>
-              {users.map((u) => (
-                <tr key={u._id}>
-                  <td className="um-username">{u.username}</td>
-                  <td><span className={`um-role-badge ${u.role}`}>{u.role}</span></td>
-                  <td>
-                    {u.role === 'superadmin' ? (
-                      <span className="um-all-access">Full Catalog Access</span>
-                    ) : editingPerms === u._id ? (
-                      <div className="um-edit-perms-box">
-                        <div className="um-perms-inline-grid">
-                          {PAGE_OPTIONS.map(opt => (
-                            <label key={opt} className="um-perm-mini">
-                              <input 
-                                type="checkbox" 
-                                checked={u.permissions?.includes(opt)} 
-                                onChange={(e) => {
-                                  const checked = e.target.checked;
-                                  const current = u.permissions || [];
-                                  const updated = checked 
-                                    ? [...current, opt]
-                                    : current.filter(p => p !== opt);
-                                  setUsers(prev => prev.map(x => x._id === u._id ? { ...x, permissions: updated } : x));
-                                }}
-                              />
-                              {opt}
-                            </label>
-                          ))}
-                        </div>
-                        <div className="um-edit-actions">
-                          <button className="um-save-mini" onClick={() => handleUpdatePermissions(u._id, u.permissions)}>Save</button>
-                          <button className="um-cancel-mini" onClick={() => { fetchUsers(); setEditingPerms(null); }}>Cancel</button>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="um-perms-display">
-                        {(u.permissions && u.permissions.length > 0) ? (
-                          <div className="um-perm-tags">
-                            {u.permissions.map(p => <span key={p} className="um-perm-tag">{p}</span>)}
-                            <button className="um-edit-perms-btn" onClick={() => setEditingPerms(u._id)}>Edit</button>
-                          </div>
+              {users.map((u) => {
+                const login = formatDate(u.lastLogin);
+                return (
+                  <tr key={u._id}>
+                    <td><div className="um-username">{u.username}</div></td>
+                    <td><span className={`um-role-badge ${u.role}`}>{u.role}</span></td>
+                    <td>
+                        {login ? (
+                            <div className="um-last-login">
+                                <span className="um-login-date">{login.date}</span>
+                                <span className="um-login-time">{login.time}</span>
+                            </div>
                         ) : (
-                          <span className="um-no-access">No pages assigned <button className="um-edit-perms-btn" onClick={() => setEditingPerms(u._id)}>Assign</button></span>
+                            <span className="um-login-never">Never logged in</span>
+                        )}
+                    </td>
+                    <td>
+                      <div className="um-actions">
+                        {u.role !== 'superadmin' && (
+                            <button className="um-access-btn" onClick={() => openPermissionModal(u)}>
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                </svg>
+                                Assign Page Access
+                            </button>
+                        )}
+                        
+                        {u.role === 'superadmin' ? (
+                          <>
+                            <button className="um-img-btn" onClick={() => navigate('/admin/change-username')} title="Change Username">
+                              <img src="/images/usermanagement/Username.png" alt="Change Username" />
+                            </button>
+                            <button className="um-img-btn" onClick={() => navigate('/admin/change-password')} title="Change Password">
+                              <img src="/images/usermanagement/Password.png" alt="Change Password" />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button className="um-img-btn" onClick={() => handleToggleActive(u._id)} title={u.isActive ? 'Deactivate' : 'Activate'}>
+                              <img src={u.isActive ? '/images/usermanagement/Activate.png' : '/images/usermanagement/Deactivate.png'} alt={u.isActive ? 'Deactivate' : 'Activate'} />
+                            </button>
+                            <button className="um-img-btn" onClick={() => handleDelete(u._id, u.username)} title="Delete">
+                              <img src="/images/usermanagement/Delete.png" alt="Delete" />
+                            </button>
+                          </>
                         )}
                       </div>
-                    )}
-                  </td>
-                  <td className="um-actions">
-                    {u.role === 'superadmin' ? (
-                      <div className="um-super-actions">
-                        <button className="um-img-btn" onClick={() => navigate('/admin/change-username')} title="Change Username">
-                          <img src="/images/usermanagement/Username.png" alt="Change Username" />
-                        </button>
-                        <button className="um-img-btn" onClick={() => navigate('/admin/change-password')} title="Change Password">
-                          <img src="/images/usermanagement/Password.png" alt="Change Password" />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="um-admin-actions">
-                        <button className="um-img-btn" onClick={() => handleToggleActive(u._id)} title={u.isActive ? 'Deactivate' : 'Activate'}>
-                          <img src={u.isActive ? '/images/usermanagement/Activate.png' : '/images/usermanagement/Deactivate.png'} alt={u.isActive ? 'Deactivate' : 'Activate'} />
-                        </button>
-                        <button className="um-img-btn" onClick={() => handleDelete(u._id, u.username)} title="Delete">
-                          <img src="/images/usermanagement/Delete.png" alt="Delete" />
-                        </button>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}
       </div>
+
+      {/* PERMISSION MODAL */}
+      {modalOpen && (
+        <div className="um-modal-overlay" onClick={() => setModalOpen(false)}>
+          <div className="um-modal-box" onClick={e => e.stopPropagation()}>
+            <div className="um-modal-header">
+                <div>
+                    <h3 className="um-modal-title">Edit Page Access</h3>
+                    <div className="um-modal-subtitle">User: <strong>{selectedUser?.username}</strong></div>
+                </div>
+                <button className="um-modal-close" onClick={() => setModalOpen(false)}>&times;</button>
+            </div>
+
+            <div className="um-modal-body">
+                <div className="um-modal-perms-grid">
+                    {PAGE_OPTIONS.map(opt => (
+                        <label key={opt} className="um-modal-checkbox">
+                            <input 
+                                type="checkbox" 
+                                checked={modalPerms.includes(opt)}
+                                onChange={() => toggleModalPermission(opt)}
+                            />
+                            <span>{opt}</span>
+                        </label>
+                    ))}
+                </div>
+
+                <div className="um-modal-summary">
+                    <span className="um-summary-label">Accessed Pages:</span>
+                    <div className="um-accessed-tags">
+                        {modalPerms.length === 0 ? (
+                            <span className="um-tag-empty">No pages assigned</span>
+                        ) : (
+                            modalPerms.map(p => <span key={p} className="um-accessed-tag">{p}</span>)
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <div className="um-modal-footer">
+                <button className="um-btn-cancel-modal" onClick={() => setModalOpen(false)}>Cancel</button>
+                <button className="um-btn-save-modal" onClick={handleSavePermissions}>Save Access</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

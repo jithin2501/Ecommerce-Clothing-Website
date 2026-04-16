@@ -42,7 +42,12 @@
 
 .um-form { display: flex; flex-direction: column; gap: 1rem; }
 
-.um-form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+.um-form-row {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.um-form-group { display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
 
 .um-form-group label {
   font-size: 0.84rem;
@@ -70,7 +75,7 @@
 
 .um-password-wrapper input {
   width: 100%;
-  padding-right: 3rem; /* Space for the toggle icon */
+  padding-right: 3rem; 
 }
 
 .um-password-toggle {
@@ -103,6 +108,7 @@
   cursor: pointer;
   font-family: 'Inter', sans-serif;
   transition: background 0.2s;
+  margin-top: 0.5rem;
 }
 .um-create-btn:hover { background: #15803d; }
 
@@ -133,22 +139,17 @@
 .um-table thead tr { border-bottom: 1.5px solid #e5e7eb; }
 
 .um-table th {
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 1.5rem;
   text-align: left;
   font-size: 0.72rem;
   font-weight: 700;
   color: #9ca3af;
   letter-spacing: 0.9px;
-}
-
-.um-table th:nth-child(2),
-.um-table th:nth-child(3),
-.um-table th:last-child {
-  text-align: center;
+  text-transform: uppercase;
 }
 
 .um-table td {
-  padding: 1rem 1.5rem;
+  padding: 1.2rem 1.5rem;
   border-bottom: 1.5px solid #f0f0f0;
   color: #374151;
   vertical-align: middle;
@@ -157,116 +158,238 @@
 .um-table tbody tr:last-child td { border-bottom: none; }
 .um-table tbody tr:hover { background: #fafafa; }
 
-.um-username { font-weight: 700; color: #1e2139; }
+.um-username { font-weight: 700; color: #1e2139; font-size: 0.9rem; }
 
 .um-role-badge {
   font-size: 0.72rem;
   font-weight: 700;
-  padding: 3px 12px;
+  padding: 4px 12px;
   border-radius: 20px;
   display: inline-block;
+  text-transform: uppercase;
+}
+.um-role-badge.superadmin { background: #E0E7FF; color: #3730A3; }
+.um-role-badge.admin      { background: #F3F4F6; color: #374151; }
+
+.um-last-login {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.um-login-date { font-weight: 600; color: #374151; }
+.um-login-time { font-size: 0.75rem; color: #9ca3af; }
+.um-login-never { font-style: italic; color: #d1d5db; }
+
+.um-actions { 
+    display: flex; 
+    gap: 0.8rem; 
+    align-items: center; 
+    justify-content: flex-start;
 }
 
-.um-table td:nth-child(2) { text-align: center; }
-.um-table td:nth-child(3) { text-align: center; }
-.um-role-badge.superadmin { background: #F1F3F6; color: #2D3E50; }
-.um-role-badge.admin      { background: #f3f4f6; color: #374151; }
-
-.um-lastlogin { color: #6b7280; font-size: 0.83rem; }
-
-.um-actions { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; justify-content: center; }
-
-.um-edit-btn {
-  border: none;
-  border-radius: 20px;
-  padding: 5px 14px;
-  font-size: 0.78rem;
-  font-weight: 600;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  transition: opacity 0.2s;
+.um-access-btn {
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
-.um-edit-btn.username { background: #2D3E50; color: #fff; }
-.um-edit-btn.username:hover { opacity: 0.85; }
-.um-edit-btn.password { background: #2D3E50; color: #fff; }
-.um-edit-btn.password:hover { opacity: 0.85; }
+.um-access-btn:hover { background: #4338ca; transform: translateY(-1px); }
 
 .um-img-btn {
-  background: none;
-  border: none;
+  background: white;
+  border: 1px solid #e5e7eb;
   cursor: pointer;
-  padding: 4px;
+  padding: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
-  transition: opacity 0.2s, background 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
 .um-img-btn:hover {
-  opacity: 0.75;
-  background: #f3f4f6;
+  background: #f9fafb;
+  border-color: #d1d5db;
 }
 
 .um-img-btn img {
-  width: 28px;
-  height: 28px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
-  display: block;
 }
 
-.um-protected { color: #d1d5db; font-size: 0.85rem; }
+/* ── MODAL / FLOATING BOX ── */
+.um-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.um-modal-box {
+    background: #fff;
+    width: 90%;
+    max-width: 450px;
+    border-radius: 16px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    padding: 1.75rem;
+    position: relative;
+    animation: um-modal-fade 0.2s ease-out;
+}
+
+@keyframes um-modal-fade {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.um-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.um-modal-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #1e2139;
+    margin: 0;
+}
+
+.um-modal-subtitle {
+    font-size: 0.85rem;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
+.um-modal-close {
+    background: #f3f4f6;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.um-modal-close:hover { background: #e5e7eb; color: #1e2139; }
+
+.um-modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.um-modal-perms-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.um-modal-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1.5px solid #f3f4f6;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.um-modal-checkbox:hover { border-color: #4f46e5; background: #f5f3ff; }
+.um-modal-checkbox input { width: 18px; height: 18px; accent-color: #4f46e5; }
+.um-modal-checkbox span { font-size: 0.88rem; font-weight: 500; color: #374151; }
+
+.um-modal-summary {
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.um-summary-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #9ca3af;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.um-accessed-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.um-tag-empty { font-size: 0.85rem; color: #d1d5db; font-style: italic; }
+
+.um-accessed-tag {
+    background: #4f46e5;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.3px;
+}
+
+.um-modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.um-btn-save-modal {
+    background: #4f46e5;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.um-btn-save-modal:hover { background: #4338ca; }
+
+.um-btn-cancel-modal {
+    background: #f3f4f6;
+    color: #4b5563;
+    border: none;
+    border-radius: 8px;
+    padding: 0.7rem 1.4rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.um-btn-cancel-modal:hover { background: #e5e7eb; }
 
 /* ── Mobile Responsive ── */
 @media (max-width: 600px) {
-  .um-page {
-    padding: 0.5rem 0.2rem;
-  }
-
-  .um-card {
-    padding: 1.5rem 1.2rem;
-  }
-
-  .um-create-btn {
-    width: 100%;
-    padding: 0.85rem;
-  }
-
-  /* Table Scroll */
-  .um-table-outer {
-    overflow-x: scroll !important;
-    -webkit-overflow-scrolling: touch;
-    border-radius: 8px;
-    display: block;
-    border: 1px solid #e5e7eb;
-  }
-
-  .um-table-outer::-webkit-scrollbar {
-    height: 8px;
-    display: block;
-  }
-  .um-table-outer::-webkit-scrollbar-track {
-    background: #f8fafc;
-  }
-  .um-table-outer::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-  }
-
-  .um-table {
-    min-width: 550px; /* Prevent squashing of names/times */
-  }
-
-  .um-table th, .um-table td {
-    padding: 0.8rem 1rem;
-    white-space: nowrap;
-  }
-
-  .um-lastlogin {
-    font-size: 0.75rem;
-  }
-
-  .um-actions {
-    min-width: 100px;
-  }
-}
+  .um-page { padding: 0.5rem; }
+  .um-form-row { flex-direction: column; gap: 1rem; }
+  .um-table-outer { overflow-x: auto; }
+  .um-modal-box { width: 95%; padding: 1.25rem; }
+}
