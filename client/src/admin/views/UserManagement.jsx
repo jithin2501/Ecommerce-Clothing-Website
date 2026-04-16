@@ -193,10 +193,11 @@ export default function UserManagement() {
           <table className="um-table">
             <thead>
               <tr>
-                <th style={{ width: '25%' }}>Admin User</th>
+                <th style={{ width: '20%' }}>Admin User</th>
                 <th style={{ width: '15%' }}>Role</th>
-                <th style={{ width: '25%' }}>Last Login</th>
-                <th style={{ width: '35%' }}>Action</th>
+                <th style={{ width: '20%' }}>Last Login</th>
+                <th style={{ width: '25%' }}>Page Access</th>
+                <th style={{ width: '20%' }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -217,16 +218,19 @@ export default function UserManagement() {
                         )}
                     </td>
                     <td>
-                      <div className="um-actions">
-                        {u.role !== 'superadmin' && (
+                        {u.role !== 'superadmin' ? (
                             <button className="um-access-btn" onClick={() => openPermissionModal(u)}>
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                                 </svg>
                                 Assign Page Access
                             </button>
+                        ) : (
+                            <span className="um-protected">Full Access</span>
                         )}
-                        
+                    </td>
+                    <td>
+                      <div className="um-actions">
                         {u.role === 'superadmin' ? (
                           <>
                             <button className="um-img-btn" onClick={() => navigate('/admin/change-username')} title="Change Username">
