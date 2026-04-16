@@ -29,10 +29,10 @@ export default function PaymentManagement() {
     async function fetchData() {
       try {
         const [ordersRes, statsRes, productsRes, clientsListRes] = await Promise.all([
-          fetch(API, { headers: authHeaders() }),
-          fetch('/api/admin/clients/stats', { headers: authHeaders() }),
-          fetch('/api/products/admin', { headers: authHeaders() }),
-          fetch('/api/admin/clients?limit=1000', { headers: authHeaders() })
+          fetch(API, { headers: authHeaders(), credentials: 'include' }),
+          fetch('/api/admin/clients/stats', { headers: authHeaders(), credentials: 'include' }),
+          fetch('/api/products/admin', { headers: authHeaders(), credentials: 'include' }),
+          fetch('/api/admin/clients?limit=1000', { headers: authHeaders(), credentials: 'include' })
         ]);
 
         const ordersData = await ordersRes.json();
@@ -406,7 +406,7 @@ export default function PaymentManagement() {
                 ))}
                 {filteredTransactions.length === 0 && (
                   <tr>
-                    <td colSpan="6" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8', fontStyle: 'italic' }}>No transactions found for this date.</td>
+                    <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8', fontStyle: 'italic' }}>No transactions found for this date.</td>
                   </tr>
                 )}
               </tbody>

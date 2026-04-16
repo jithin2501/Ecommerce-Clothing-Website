@@ -1,59 +1,54 @@
-// ── routers/productRoutes.js ──
-const express  = require('express');
-const multer   = require('multer');
-const jwt      = require('jsonwebtoken');
-const router   = express.Router();
+const express = require('express');
+const router = express.Router();
+const Product = require('../models/Product');
+const { protect } = require('../middleware/authMiddleware');
 
-const {
-  getProducts, getFeaturedProducts, getAdminProducts,
-  createProduct, updateProduct, deleteProduct,
-} = require('../controllers/productController');
-
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 20 * 1024 * 1024 },
-  fileFilter: (_, file, cb) => {
-    if (file.mimetype.startsWith('image/')) cb(null, true);
-    else cb(new Error('Only image files allowed'));
-  },
+// Public
+router.get('/', async (req, res) => {
+  try {
+    const products = await Product.find().sort({ createdAt: -1 });
+    res.json({ success: true, data: products });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
 });
 
-// Wraps multer so errors return JSON instead of an HTML crash page
-const uploadSingle = (req, res, next) => {
-  upload.single('image')(req, res, (err) => {
-    if (err) {
-      const msg = err.code === 'LIMIT_FILE_SIZE'
-        ? 'Image is too large. Maximum size is 20 MB.'
-        : err.message || 'File upload error.';
-      return res.status(400).json({ success: false, message: msg });
-    }
-    next();
-  });
-};
-
-const verifyAdmin = (req, res, next) => {
-  const auth = req.headers.authorization;
-  if (!auth?.startsWith('Bearer ')) return res.status(401).json({ success: false });
+router.get('/:id', async (req, res) => {
   try {
-    req.user = jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET);
-    next();
-  } catch {
-    return res.status(401).json({ success: false, message: 'Invalid token' });
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found.' });
+    res.json({ success: true, data: product });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
   }
-};
+});
 
-// ── Public ──
-router.get('/',         getProducts);
-router.get('/featured', getFeaturedProducts);
+// Admin - Now uses central secure cookie protection
+router.post('/', protect, async (req, res) => {
+  try {
+    const product = await Product.create(req.body);
+    res.status(201).json({ success: true, data: product });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+});
 
-// ── Admin ──
-router.get   ('/admin',     verifyAdmin, getAdminProducts);
-router.post  ('/admin',     verifyAdmin, uploadSingle, createProduct);
-router.patch ('/admin/:id', verifyAdmin, (req, res, next) => {
-  const ct = req.headers['content-type'] || '';
-  if (ct.includes('application/json')) return next();
-  uploadSingle(req, res, next);
-}, updateProduct);
-router.delete('/admin/:id', verifyAdmin, deleteProduct);
+router.put('/:id', protect, async (req, res) => {
+  try {
+    const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json({ success: true, data: product });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+});
+
+router.delete('/:id', protect, async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ success: true, message: 'Product deleted.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+});
 
 module.exports = router;

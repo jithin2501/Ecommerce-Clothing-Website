@@ -6,13 +6,14 @@ const {
   getContactById,
   deleteContact,
 } = require('../controllers/contactController');
+const { protect } = require('../middleware/authMiddleware');
 
 // Public route — frontend contact form submits here
 router.post('/', submitContact);
 
-// Admin routes
-router.get('/admin', getAllContacts);
-router.get('/admin/:id', getContactById);
-router.delete('/admin/:id', deleteContact);
+// Admin routes — NOW PROTECTED by secure cookies
+router.get('/admin', protect, getAllContacts);
+router.get('/admin/:id', protect, getContactById);
+router.delete('/admin/:id', protect, deleteContact);
 
 module.exports = router;

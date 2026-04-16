@@ -1,8 +1,8 @@
 // ── routers/productDetailRoutes.js ──
 const express = require('express');
 const multer  = require('multer');
-const jwt     = require('jsonwebtoken');
 const router  = express.Router();
+const { protect } = require('../middleware/authMiddleware');
 
 const {
   getProductDetail,
@@ -43,28 +43,16 @@ const uploadGallery = (req, res, next) => {
   });
 };
 
-// ── Auth middleware (reuse same pattern as productRoutes) ──
-const verifyAdmin = (req, res, next) => {
-  const auth = req.headers.authorization;
-  if (!auth?.startsWith('Bearer ')) return res.status(401).json({ success: false });
-  try {
-    req.user = jwt.verify(auth.split(' ')[1], process.env.JWT_SECRET);
-    next();
-  } catch {
-    return res.status(401).json({ success: false, message: 'Invalid token' });
-  }
-};
-
 // ── Public ──
 // GET /api/product-details/:productId
 router.get('/:productId', getProductDetail);
 
-// ── Admin ──
+// ── Admin - Now uses central secure cookie protection ──
 // GET    /api/product-details/admin/:productId
-router.get('/admin/:productId',    verifyAdmin, getAdminProductDetail);
+router.get('/admin/:productId',    protect, getAdminProductDetail);
 // POST   /api/product-details/admin/:productId  (create or update)
-router.post('/admin/:productId',   verifyAdmin, uploadGallery, upsertProductDetail);
+router.post('/admin/:productId',   protect, uploadGallery, upsertProductDetail);
 // DELETE /api/product-details/admin/:productId
-router.delete('/admin/:productId', verifyAdmin, deleteProductDetail);
+router.delete('/admin/:productId', protect, deleteProductDetail);
 
 module.exports = router;

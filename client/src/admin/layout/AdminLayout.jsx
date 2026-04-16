@@ -3,17 +3,27 @@ import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import '../assets/AdminLayout.css';
 
-const getRole = () => {
-  // We will now infer roles from the session state or simply allow the server to handle authorization.
-  // For UI display purposes, we'll keep it simple for now.
-  return 'admin'; 
-};
-
 export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const role = getRole();
+  const [role, setRole] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    // Fetch actual role from the server
+    const fetchRole = async () => {
+      try {
+        const res = await fetch('/api/auth/me', { credentials: 'include' });
+        const data = await res.json();
+        if (data.success) {
+          setRole(data.user.role);
+        }
+      } catch (err) {
+        console.error("Failed to fetch role", err);
+      }
+    };
+    fetchRole();
+  }, []);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -23,14 +33,11 @@ export default function AdminLayout() {
     return () => {
       document.body.style.overflow = '';
       document.body.style.height = '';
-      document.body.style.background = '';
-      document.body.style.backgroundImage = '';
       document.documentElement.style.overflow = '';
       document.documentElement.style.height = '';
     };
   }, []);
 
-  // Close sidebar on route change (mobile)
   useEffect(() => {
     setIsSidebarOpen(false);
   }, [location.pathname]);
@@ -46,21 +53,16 @@ export default function AdminLayout() {
 
   return (
     <div className={`admin-wrapper ${isSidebarOpen ? 'sidebar-open' : ''}`}>
-      {/* ── Mobile Top Bar ── */}
       <header className="admin-mobile-header">
         <button 
           className="admin-hamburger" 
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          aria-label="Toggle Menu"
         >
           {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </header>
 
-      {/* ── Mobile Overlay ── */}
-      {isSidebarOpen && (
-        <div className="admin-overlay" onClick={() => setIsSidebarOpen(false)} />
-      )}
+      {isSidebarOpen && <div className="admin-overlay" onClick={() => setIsSidebarOpen(false)} />}
 
       <aside className={`admin-sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="admin-brand">Admin Dashboard</div>
@@ -72,12 +74,13 @@ export default function AdminLayout() {
           <NavLink to="/admin/payments" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Payment Management</NavLink>
           <NavLink to="/admin/orders" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Order Management</NavLink>
           <NavLink to="/admin/support" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>Support Management</NavLink>
+          
+          {/* User Management only visible for Superadmin */}
           {role === 'superadmin' && (
-            <NavLink to="/admin/users"  className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>User Management</NavLink>
+            <NavLink to="/admin/users" className={({ isActive }) => 'admin-nav-link' + (isActive ? ' active' : '')}>User Management</NavLink>
           )}
-          <button className="admin-signout-inline" onClick={handleSignOut}>
-            Sign Out
-          </button>
+
+          <button className="admin-signout-inline" onClick={handleSignOut}>Sign Out</button>
         </nav>
         <button className="admin-signout" onClick={handleSignOut}>Sign Out</button>
       </aside>
