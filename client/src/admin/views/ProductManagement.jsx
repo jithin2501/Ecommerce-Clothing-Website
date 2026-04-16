@@ -170,6 +170,42 @@ export default function ProductManagement() {
   const [filterStock, setFilterStock] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const fileRef = useRef(null);
+  
+  const [isAutoCuration, setIsAutoCuration] = useState(() => {
+    return localStorage.getItem('pm_auto_curation') === 'true';
+  });
+
+  const handleAutoToggle = (e) => {
+    const val = e.target.checked;
+    setIsAutoCuration(val);
+    localStorage.setItem('pm_auto_curation', val);
+  };
+
+  const hashString = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      const char = str.charCodeAt(i);
+      hash = (hash << 5) - hash + char;
+      hash |= 0;
+    }
+    return hash;
+  };
+
+  const autoMap = (() => {
+    if (!isAutoCuration || !products || products.length === 0) return {};
+    const seed = new Date().toISOString().split('T')[0];
+    const sorted = [...products].sort((a, b) => hashString(a._id + seed) - hashString(b._id + seed));
+    const map = {};
+    const mark = (list, section) => list.forEach(p => {
+       if(!map[p._id]) map[p._id] = [];
+       map[p._id].push(section);
+    });
+    mark(sorted.slice(0, 4), 'youMightAlsoLike');
+    mark(sorted.slice(4, 8), 'cartAlsoLike');
+    mark(sorted.slice(8, 18), 'bestSelling');
+    mark(sorted.slice(18, 22), 'newArrivals');
+    return map;
+  })();
 
   const fetchProducts = async () => {
     try {
@@ -345,6 +381,15 @@ export default function ProductManagement() {
   });
 
   const FeatToggle = ({ id, section, featuredIn }) => {
+    if (isAutoCuration) {
+      const active = (autoMap[id] || []).includes(section);
+      return (
+        <span className={`pm-auto-badge ${active ? 'active' : ''}`}>
+          {active ? 'AUTO' : '—'}
+        </span>
+      );
+    }
+
     const active = (featuredIn || []).includes(section);
     const limit = SECTION_LIMITS[section];
     const currentCount = products.filter(p =>
@@ -468,6 +513,13 @@ export default function ProductManagement() {
         <div className="pm-section-header">
           <div className="pm-section-title-wrap">
             <h2 className="pm-section-title">Existing products ({displayed.length})</h2>
+            <div className="pm-auto-curation">
+              <span className="pm-auto-label">Auto Selection</span>
+              <label className="pm-toggle-switch">
+                <input type="checkbox" checked={isAutoCuration} onChange={handleAutoToggle} />
+                <span className="pm-toggle-slider"></span>
+              </label>
+            </div>
           </div>
 
           <div className="pm-section-controls">
