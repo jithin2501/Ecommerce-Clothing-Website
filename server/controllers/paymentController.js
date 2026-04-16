@@ -322,3 +322,24 @@ exports.manualSyncToShiprocket = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+exports.updateTrackingStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body; // e.g. 'DELIVERED'
+
+    if (!status) return res.status(400).json({ success: false, error: 'Status is required' });
+
+    const order = await Order.findByIdAndUpdate(
+      orderId, 
+      { trackingStatus: status.toUpperCase() }, 
+      { new: true }
+    );
+
+    if (!order) return res.status(404).json({ success: false, error: 'Order not found' });
+
+    res.json({ success: true, message: `Status updated to ${status}`, data: order });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};

@@ -26,5 +26,6 @@ router.get('/track/:orderId', anyAuth, paymentCtrl.syncTrackingStatus);
 
 // Admin manual sync (Allowed for all admins with permission)
 router.post('/manual-sync-sr/:orderId', protect, paymentCtrl.manualSyncToShiprocket);
+router.put('/status/:orderId', protect, paymentCtrl.updateTrackingStatus);
 
 module.exports = router;
