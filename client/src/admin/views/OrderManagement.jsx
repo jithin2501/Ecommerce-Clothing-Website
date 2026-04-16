@@ -17,7 +17,7 @@ export default function OrderManagement() {
 
   const fetchOrders = async () => {
     try {
-      const res = await fetch(API, { headers: authHeaders(), credentials: 'include' });
+      const res = await fetch(API, { headers: authHeaders() });
       const data = await res.json();
       if (data.success) {
         setOrders(data.data.filter(o => o.status === 'success'));
@@ -52,7 +52,7 @@ export default function OrderManagement() {
   const handleSyncStatus = async (orderId) => {
     setSyncingId(orderId);
     try {
-      const res = await fetch(`/api/payment/track/${orderId}`, { headers: authHeaders(), credentials: 'include' });
+      const res = await fetch(`/api/payment/track/${orderId}`, { headers: authHeaders() });
       const data = await res.json();
       if (data.success) {
         setOrders(prev => prev.map(o => o._id === orderId ? { 
@@ -74,8 +74,7 @@ export default function OrderManagement() {
     try {
       const res = await fetch(`/api/payment/manual-sync-sr/${orderId}`, { 
         method: 'POST',
-        headers: authHeaders(),
-        credentials: 'include'
+        headers: authHeaders() 
       });
       const data = await res.json();
       if (data.success) {

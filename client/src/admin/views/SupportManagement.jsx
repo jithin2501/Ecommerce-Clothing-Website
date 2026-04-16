@@ -14,7 +14,7 @@ export default function SupportManagement() {
 
   const fetchIssues = async () => {
     try {
-      const res = await fetch('/api/support/admin/issues', { credentials: 'include' });
+      const res = await fetch('/api/support/admin/issues');
       const data = await res.json();
       if (data.success) setIssues(data.data);
     } catch (err) {
@@ -29,7 +29,6 @@ export default function SupportManagement() {
       const res = await fetch(`/api/support/admin/issues/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
         body: JSON.stringify({ status })
       });
       const data = await res.json();
