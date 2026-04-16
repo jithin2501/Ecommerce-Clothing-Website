@@ -185,7 +185,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 2000;
   padding: 20px;
 }
 
@@ -199,6 +199,7 @@
   flex-direction: column;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   animation: modalIn 0.3s ease-out;
+  z-index: 2001;
 }
 
 @keyframes modalIn {
