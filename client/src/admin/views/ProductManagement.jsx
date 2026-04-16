@@ -169,43 +169,59 @@ export default function ProductManagement() {
   const [filterAge, setFilterAge] = useState('all');
   const [filterStock, setFilterStock] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAutoRotate, setIsAutoRotate] = useState(false);
   const fileRef = useRef(null);
-  
-  const [isAutoCuration, setIsAutoCuration] = useState(() => {
-    return localStorage.getItem('pm_auto_curation') === 'true';
-  });
 
-  const handleAutoToggle = (e) => {
-    const val = e.target.checked;
-    setIsAutoCuration(val);
-    localStorage.setItem('pm_auto_curation', val);
+  const fetchSettings = async () => {
+    try {
+      const res = await fetch(`${API}/settings/all`, { headers: authHeaders() });
+      const data = await res.json();
+      if (data.success) setIsAutoRotate(data.data.autoRotateProducts);
+    } catch (err) { console.error('Settings fetch error:', err); }
   };
 
-  const hashString = (str) => {
+  const handleAutoRotateToggle = async () => {
+    const newState = !isAutoRotate;
+    setIsAutoRotate(newState);
+    try {
+      await fetch(`${API}/settings/all`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        body: JSON.stringify({ autoRotate: newState })
+      });
+    } catch (err) {
+      console.error('Settings update error:', err);
+      setIsAutoRotate(!newState);
+    }
+  };
+
+  const stringHash = (str) => {
     let hash = 0;
+    if (str.length === 0) return hash;
     for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash |= 0;
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
     }
     return hash;
   };
 
-  const autoMap = (() => {
-    if (!isAutoCuration || !products || products.length === 0) return {};
-    const seed = new Date().toISOString().split('T')[0];
-    const sorted = [...products].sort((a, b) => hashString(a._id + seed) - hashString(b._id + seed));
-    const map = {};
-    const mark = (list, section) => list.forEach(p => {
-       if(!map[p._id]) map[p._id] = [];
-       map[p._id].push(section);
-    });
-    mark(sorted.slice(0, 4), 'youMightAlsoLike');
-    mark(sorted.slice(4, 8), 'cartAlsoLike');
-    mark(sorted.slice(8, 18), 'bestSelling');
-    mark(sorted.slice(18, 22), 'newArrivals');
-    return map;
-  })();
+  const getAutoFeatured = (pId, section) => {
+    if (!isAutoRotate) return false;
+    const dateStr = new Date().toISOString().split('T')[0];
+    const limit = SECTION_LIMITS[section] || 4;
+    
+    const sorted = [...products]
+        .filter(p => p.isActive)
+        .sort((a,b) => {
+            const hA = stringHash(a._id + dateStr + section);
+            const hB = stringHash(b._id + dateStr + section);
+            return hA - hB;
+        });
+    
+    const topIds = sorted.slice(0, limit).map(p => p._id);
+    return topIds.includes(pId);
+  };
 
   const fetchProducts = async () => {
     try {
@@ -219,7 +235,10 @@ export default function ProductManagement() {
     finally { setLoading(false); }
   };
 
-  useEffect(() => { fetchProducts(); }, []);
+  useEffect(() => { 
+    fetchProducts(); 
+    fetchSettings();
+  }, []);
 
   const handleImgChange = (e) => {
     const file = e.target.files[0];
@@ -381,27 +400,20 @@ export default function ProductManagement() {
   });
 
   const FeatToggle = ({ id, section, featuredIn }) => {
-    if (isAutoCuration) {
-      const active = (autoMap[id] || []).includes(section);
-      return (
-        <span className={`pm-auto-badge ${active ? 'active' : ''}`}>
-          {active ? 'AUTO' : '—'}
-        </span>
-      );
-    }
-
-    const active = (featuredIn || []).includes(section);
+    const isAuto = isAutoRotate;
+    const active = isAuto ? getAutoFeatured(id, section) : (featuredIn || []).includes(section);
+    
     const limit = SECTION_LIMITS[section];
     const currentCount = products.filter(p =>
       (p.featuredIn || []).includes(section)
     ).length;
-    const isDisabled = !active && currentCount >= limit;
+    const isDisabled = isAuto || (!active && currentCount >= limit);
 
     return (
       <button
         className={`pm-feat-circle${isDisabled ? ' pm-feat-disabled' : ''}`}
         onClick={() => !isDisabled && handleFeaturedToggle(id, section, active)}
-        title={isDisabled ? `Max ${limit} allowed` : ''}
+        title={isAuto ? 'Auto-Rotate ON' : (isDisabled ? `Max ${limit} allowed` : '')}
       >
         <img
           src={active ? '/images/ProductManagement/tick.png' : '/images/ProductManagement/cross.png'}
@@ -513,11 +525,11 @@ export default function ProductManagement() {
         <div className="pm-section-header">
           <div className="pm-section-title-wrap">
             <h2 className="pm-section-title">Existing products ({displayed.length})</h2>
-            <div className="pm-auto-curation">
-              <span className="pm-auto-label">Auto Selection</span>
-              <label className="pm-toggle-switch">
-                <input type="checkbox" checked={isAutoCuration} onChange={handleAutoToggle} />
-                <span className="pm-toggle-slider"></span>
+            <div className="pm-auto-toggle-wrap">
+              <span className="pm-auto-toggle-label">Auto Rotate</span>
+              <label className="pm-switch">
+                <input type="checkbox" checked={isAutoRotate} onChange={handleAutoRotateToggle} />
+                <span className="pm-slider"></span>
               </label>
             </div>
           </div>

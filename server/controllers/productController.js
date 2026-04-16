@@ -1,6 +1,18 @@
 
 const Product = require('../models/Product');
+const SiteSettings = require('../models/SiteSettings');
 const { uploadToS3, deleteFromS3 } = require('../conf/s3');
+
+const stringHash = (str) => {
+  let hash = 0;
+  if (str.length === 0) return hash;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return hash;
+};
 
 const getProducts = async (req, res) => {
   try {
@@ -22,9 +34,55 @@ const getFeaturedProducts = async (req, res) => {
     const { section } = req.query;
     if (!section) return res.status(400).json({ success: false, message: 'section is required.' });
 
+    const settings = await SiteSettings.findOne() || { autoRotateProducts: false };
+    
+    if (settings.autoRotateProducts) {
+      // Limit logic for auto-rotate
+      const LIMITS = { youMightAlsoLike: 4, cartAlsoLike: 4, bestSelling: 10, newArrivals: 4 };
+      const limit = LIMITS[section] || 4;
+
+      const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const products = await Product.find({ isActive: true }).lean();
+      
+      // Seeded random sort
+      const shuffled = products.sort((a, b) => {
+        const hashA = stringHash(a._id.toString() + dateStr + section);
+        const hashB = stringHash(b._id.toString() + dateStr + section);
+        return hashA - hashB;
+      });
+
+      return res.json({ success: true, data: shuffled.slice(0, limit) });
+    }
+
     const products = await Product.find({ isActive: true, featuredIn: section }).sort({ createdAt: -1 }).lean();
     res.json({ success: true, data: products });
-  } catch {
+  } catch (error) {
+    res.status(500).json({ success: false });
+  }
+};
+
+const getSettings = async (req, res) => {
+  try {
+    let settings = await SiteSettings.findOne();
+    if (!settings) settings = await SiteSettings.create({ autoRotateProducts: false });
+    res.json({ success: true, data: settings });
+  } catch (error) {
+    res.status(500).json({ success: false });
+  }
+};
+
+const updateSettings = async (req, res) => {
+  try {
+    const { autoRotate } = req.body;
+    let settings = await SiteSettings.findOne();
+    if (!settings) {
+      settings = await SiteSettings.create({ autoRotateProducts: autoRotate });
+    } else {
+      settings.autoRotateProducts = autoRotate;
+      await settings.save();
+    }
+    res.json({ success: true, data: settings });
+  } catch (error) {
     res.status(500).json({ success: false });
   }
 };
@@ -169,4 +227,13 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { getProducts, getFeaturedProducts, getAdminProducts, createProduct, updateProduct, deleteProduct };
+module.exports = { 
+  getProducts, 
+  getFeaturedProducts, 
+  getAdminProducts, 
+  createProduct, 
+  updateProduct, 
+  deleteProduct,
+  getSettings,
+  updateSettings
+};
