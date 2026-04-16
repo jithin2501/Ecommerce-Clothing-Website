@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import '../assets/productmanagement.css';
 
 const API = '/api/products';
-const authHeaders = () => ({ Authorization: `Bearer ${localStorage.getItem('adminToken')}` });
+const authHeaders = () => ({ 
+  'Content-Type': 'application/json' 
+});
 
 const AGE_GROUPS = [
   { value: 'newborn', label: '0–6 Months (Newborn)' },
@@ -154,7 +156,7 @@ function SearchableMultiSelect({ label, options, selected, onChange, placeholder
 }
 
 export default function ProductManagement() {
-  const navigate = useNavigate();                          // ← only addition
+  const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -171,7 +173,10 @@ export default function ProductManagement() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API}/admin`, { headers: authHeaders() });
+      const res = await fetch(`${API}/admin`, { 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) setProducts(data.data);
     } catch { setError('Failed to load products.'); }
@@ -185,12 +190,6 @@ export default function ProductManagement() {
     if (!file) return;
     setImgFile(file);
     setPreview(URL.createObjectURL(file));
-  };
-
-  const handleRemoveImage = () => {
-    setImgFile(null);
-    setPreview(null);
-    if (fileRef.current) fileRef.current.value = '';
   };
 
   const handleEdit = (p) => {
@@ -230,7 +229,6 @@ export default function ProductManagement() {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => {
         if (k === 'inventory') {
-          // Keep for legacy transition
           if (v && typeof v === 'object' && Object.keys(v).length > 0) {
             fd.append(k, JSON.stringify(v));
           }
@@ -247,9 +245,14 @@ export default function ProductManagement() {
       fd.append('age', ageLabels);
       if (imgFile) fd.append('image', imgFile);
 
-      const url = editId ? `${API}/admin/${editId}` : `${API}/admin`;
-      const method = editId ? 'PATCH' : 'POST';
-      const res = await fetch(url, { method, headers: authHeaders(), body: fd });
+      const url = editId ? `${API}/${editId}` : `${API}`;
+      const method = editId ? 'PUT' : 'POST';
+      // Multipart fetch doesn't need Content-Type header manually
+      const res = await fetch(url, { 
+        method, 
+        credentials: 'include',
+        body: fd 
+      });
       const data = await res.json();
 
       if (data.success) {
@@ -269,7 +272,11 @@ export default function ProductManagement() {
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete "${name}"? This will also remove the image from storage.`)) return;
     try {
-      const res = await fetch(`${API}/admin/${id}`, { method: 'DELETE', headers: authHeaders() });
+      const res = await fetch(`${API}/${id}`, { 
+        method: 'DELETE', 
+        headers: authHeaders(),
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) setProducts(p => p.filter(x => x._id !== id));
     } catch { setError('Server error.'); }
@@ -300,9 +307,10 @@ export default function ProductManagement() {
     );
 
     try {
-      const res = await fetch(`${API}/admin/${id}`, {
-        method: 'PATCH',
-        headers: { ...authHeaders(), 'Content-Type': 'application/json' },
+      const res = await fetch(`${API}/${id}`, {
+        method: 'PUT',
+        headers: authHeaders(),
+        credentials: 'include',
         body: JSON.stringify({ featuredIn: updated }),
       });
       const data = await res.json();
@@ -367,7 +375,7 @@ export default function ProductManagement() {
 
         {error && <div className="pm-error">{error}</div>}
 
-        <form className="pm-form" onSubmit={handleSubmit} encType="multipart/form-data">
+        <form className="pm-form" onSubmit={handleSubmit}>
           <div className="pm-form-grid">
 
             <div className="pm-img-col">
