@@ -41,7 +41,12 @@ export default function CartPage() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
-          const res = await fetch(`${API}/client-auth/addresses/${user.uid}`);
+          const idToken = await user.getIdToken();
+          const res = await fetch(`${API}/client-auth/addresses/${user.uid}`, {
+            headers: {
+              'Authorization': `Bearer ${idToken}`
+            }
+          });
           const data = await res.json();
           if (data.success && data.addresses) {
             setUserInfo(data.user);
@@ -68,7 +73,9 @@ export default function CartPage() {
             }
             return;
           }
-        } catch (e) {}
+        } catch (e) {
+          console.error("CartPage address sync error", e);
+        }
       }
 
       // Guest fallback

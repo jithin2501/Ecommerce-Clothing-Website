@@ -23,7 +23,12 @@ export default function SupportHub() {
     const unsub = onAuthStateChanged(auth, async (fbUser) => {
       if (fbUser) {
         try {
-          const res = await fetch(`${API}/payment/user-orders/${fbUser.uid}`);
+          const idToken = await fbUser.getIdToken();
+          const res = await fetch(`${API}/payment/user-orders/${fbUser.uid}`, {
+            headers: {
+              'Authorization': `Bearer ${idToken}`
+            }
+          });
           const data = await res.json();
           if (data.success) {
             // Filter only delivered orders and sort by date descending

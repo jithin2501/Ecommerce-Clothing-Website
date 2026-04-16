@@ -19,14 +19,17 @@ export default function MyReviews() {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
         try {
+          const idToken = await user.getIdToken();
+          const headers = { 'Authorization': `Bearer ${idToken}` };
+
           // 1. Fetch user reviews
-          const revRes = await fetch(`/api/product-reviews/user/${user.uid}`);
+          const revRes = await fetch(`/api/product-reviews/user/${user.uid}`, { headers });
           const revData = await revRes.json();
           const userReviews = revData.success ? revData.data : [];
           setReviews(userReviews);
 
           // 2. Fetch user orders to find things to review
-          const ordRes = await fetch(`/api/payment/user-orders/${user.uid}`);
+          const ordRes = await fetch(`/api/payment/user-orders/${user.uid}`, { headers });
           const ordData = await ordRes.json();
 
           if (ordData.success) {
@@ -67,7 +70,14 @@ export default function MyReviews() {
   const handleDeleteReview = async (reviewId) => {
     if (!window.confirm("Are you sure you want to delete this review? This action cannot be undone.")) return;
     try {
-      const res = await fetch(`/api/product-reviews/${reviewId}`, { method: 'DELETE' });
+      const user = auth.currentUser;
+      if (!user) return;
+      const idToken = await user.getIdToken();
+      
+      const res = await fetch(`/api/product-reviews/${reviewId}`, { 
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${idToken}` }
+      });
       const data = await res.json();
       if (data.success) {
         setReviews(prev => prev.filter(r => r._id !== reviewId));

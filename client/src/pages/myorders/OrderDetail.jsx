@@ -4,6 +4,7 @@ import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/myorders/OrderDetail.css';
 import OrderInvoice from './OrderInvoice';
+import { authFetch } from '../../utils/authFetch';
 
 
 function SimplifiedTracker({ trackingData, orderDate, onSeeAll }) {
@@ -111,18 +112,20 @@ function StarRating({ value, onChange }) {
 export default function OrderDetail() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { order, item } = location.state || {};
+  const { order: stateOrder, item } = location.state || {}; // Rename to stateOrder
+  const [order, setOrder] = useState(stateOrder); // Local order state to handle refreshes
   const [rating, setRating] = useState(0);
   const [trackingData, setTrackingData] = useState(null);
   const [trackingLoading, setTrackingLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => { 
-    if (order?._id) { // Trigger tracking for any order viewed
+    if (order?._id) { 
       const syncTracking = async () => {
         setTrackingLoading(true);
         try {
-          const res = await fetch(`/api/payment/track/${order._id}`);
+          // Use authFetch to include the Authorization header
+          const res = await authFetch(`/api/payment/track/${order._id}`);
           const data = await res.json();
           if (data.success) {
             setTrackingData(data);

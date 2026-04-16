@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { auth } from '../../firebase';
 import { useNavigate, useLocation } from 'react-router-dom';
 import '../../styles/myorders/WriteReview.css';
+import { authFetch } from '../../utils/authFetch';
 
 const FAQ = [
   {
@@ -138,7 +139,8 @@ export default function WriteReview() {
     if (video) fd.append('attachments', video);
 
     try {
-      const response = await fetch('/api/product-reviews/submit', {
+      // Use authFetch to include the Authorization header
+      const response = await authFetch('/api/product-reviews/submit', {
         method: 'POST',
         body: fd
       });
