@@ -13,13 +13,31 @@ router.get('/admin', protect, async (req, res) => {
   }
 });
 
-// Public - for the main store homepage and categories
+// Public - Featured sections for homepage (MUST BE ABOVE /:id)
+router.get('/featured', async (req, res) => {
+  try {
+    const { section } = req.query;
+    if (!section) return res.status(400).json({ success: false, message: 'Section name is required.' });
+    
+    // Find products that are active AND marked for this featured section
+    const products = await Product.find({ 
+      featuredIn: section,
+      isActive: true 
+    }).sort({ createdAt: -1 });
+    
+    res.json({ success: true, data: products });
+  } catch (err) {
+    console.error('Featured products fetch error:', err);
+    res.status(500).json({ success: false, message: 'Server error.' });
+  }
+});
+
+// Public - Main products list with optional filtering
 router.get('/', async (req, res) => {
   try {
     const { featuredIn, category, ageGroup } = req.query;
     
-    // Build query object
-    let query = { isActive: true }; // Public should only see active products
+    let query = { isActive: true };
     
     if (featuredIn) {
       query.featuredIn = featuredIn;
