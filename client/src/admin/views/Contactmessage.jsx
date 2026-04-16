@@ -10,7 +10,7 @@ export default function Contact() {
 
   const fetchAll = async () => {
     try {
-      const res = await fetch(`${API}/admin`);
+      const res = await fetch(`${API}/admin`, { credentials: 'include' });
       const data = await res.json();
       if (data.success) setContacts(data.data);
     } catch (err) {
@@ -24,7 +24,7 @@ export default function Contact() {
 
   const handleView = async (id) => {
     try {
-      const res = await fetch(`${API}/admin/${id}`);
+      const res = await fetch(`${API}/admin/${id}`, { credentials: 'include' });
       const data = await res.json();
       if (data.success) setSelected(data.data);
     } catch (err) {
@@ -35,7 +35,10 @@ export default function Contact() {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this message?')) return;
     try {
-      const res = await fetch(`${API}/admin/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${API}/admin/${id}`, { 
+        method: 'DELETE',
+        credentials: 'include'
+      });
       const data = await res.json();
       if (data.success) {
         setContacts(c => c.filter(x => x._id !== id));

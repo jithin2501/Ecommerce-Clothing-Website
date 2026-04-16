@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const cmCtrl = require('../controllers/clientManagementController');
 const { protect, superAdminOnly } = require('../middleware/authMiddleware');
-router.use(protect, superAdminOnly);
+router.use(protect);
 
 router.get('/stats', cmCtrl.getStats);           // GET  /api/admin/clients/stats
 router.post('/migrate', cmCtrl.migrateClients);  // POST /api/admin/clients/migrate

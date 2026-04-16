@@ -12,7 +12,7 @@ const upload = multer({
 router.post('/submit', upload.array('attachments', 5), supportCtrl.submitSupportIssue);
 
 // Admin routes
-router.get('/admin/issues', supportCtrl.getAllIssues);
-router.patch('/admin/issues/:id', supportCtrl.updateIssueStatus);
+router.get('/admin/issues', protect, supportCtrl.getAllIssues);
+router.patch('/admin/issues/:id', protect, supportCtrl.updateIssueStatus);
 
 module.exports = router;

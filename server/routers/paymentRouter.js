@@ -16,7 +16,7 @@ router.post('/verify-payment', verifyFirebaseToken, paymentLimiter, paymentCtrl.
 router.post('/calculate-summary', verifyFirebaseToken, paymentLimiter, paymentCtrl.calculateSummary);
 
 // Admin-only — protected by JWT
-router.get('/orders', protect, superAdminOnly, paymentCtrl.getAllOrders);
+router.get('/orders', protect, paymentCtrl.getAllOrders);
 
 // User-specific order history — Protected by Firebase Token + Ownership Check
 // Using :uid instead of :userId to automatically trigger requireOwnership logic
@@ -26,6 +26,6 @@ router.get('/user-orders/:uid', verifyFirebaseToken, requireOwnership, paymentCt
 router.get('/track/:orderId', anyAuth, paymentCtrl.syncTrackingStatus);
 
 // Admin manual sync
-router.post('/manual-sync-sr/:orderId', protect, superAdminOnly, paymentCtrl.manualSyncToShiprocket);
+router.post('/manual-sync-sr/:orderId', protect, paymentCtrl.manualSyncToShiprocket);
 
 module.exports = router;
