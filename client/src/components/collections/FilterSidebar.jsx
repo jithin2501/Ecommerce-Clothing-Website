@@ -47,7 +47,7 @@ const AGE_GROUPS = [
   { slug: 'pre-teen',     label: 'Pre-Teen (9-12Y)' },
 ];
 
-const MIN_PRICE = 500;
+const MIN_PRICE = 0;
 const MAX_PRICE = 3000;
 
 function Stars({ count }) {

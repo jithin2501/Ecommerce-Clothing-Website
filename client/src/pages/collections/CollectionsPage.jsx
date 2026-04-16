@@ -5,7 +5,7 @@ import ProductGrid from '../../components/collections/ProductGrid';
 import '../../styles/collections/CollectionsPage.css';
 
 const SORT_OPTIONS = ['Newest Arrivals', 'Price: Low to High', 'Price: High to Low', 'Best Rated'];
-const MIN_PRICE = 500;
+const MIN_PRICE = 0;
 const MAX_PRICE = 3000;
 
 export default function CollectionsPage() {
@@ -38,7 +38,7 @@ export default function CollectionsPage() {
   // This ensures "Clicking Collections" actually resets the view
   useEffect(() => {
     const { category: stCat, subcategory: stSub, ageGroup: stAge } = location.state || {};
-    
+
     setSelectedCategories(stCat ? [stCat] : []);
     setSelectedSubcategories(stSub ? [stSub] : []);
     setSelectedAgeGroups(stAge ? [stAge] : []);

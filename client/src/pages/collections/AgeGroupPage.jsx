@@ -16,7 +16,7 @@ const AGE_META = {
 
 const SORT_OPTIONS = ['Newest Arrivals', 'Price: Low to High', 'Price: High to Low', 'Best Rated'];
 
-const MIN_PRICE = 500;
+const MIN_PRICE = 0;
 const MAX_PRICE = 3000;
 
 export default function AgeGroupPage() {
