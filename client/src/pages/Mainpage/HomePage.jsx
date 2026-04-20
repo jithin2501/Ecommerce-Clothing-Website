@@ -13,8 +13,8 @@ const HomePage = () => {
     <>
       <SEO 
         title="Home"
-        description="Welcome to Sumathi Trends, your premium organic cotton and linen clothing store for children aged 0-12 in India."
-        keywords="kids clothing home, Sumathi Trends online store, buy kids clothes online India, best premium cloths for childrens in kodigehalli, hebbal"
+        description="Welcome to Sumathi Trends, your premium organic cotton and linen clothing store for children aged 0-12 in Bengaluru."
+        keywords="kids clothing home, Sumathi Trends online store, buy kids clothes online Bengaluru, best premium cloths for childrens in kodigehalli, hebbal"
         url="https://sumathitrends.com/"
       />
       <main>

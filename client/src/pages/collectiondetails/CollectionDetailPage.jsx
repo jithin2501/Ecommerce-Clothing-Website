@@ -225,7 +225,7 @@ export default function CollectionDetailPage() {
     <div className="cdp-page">
       <SEO 
         title={product?.name || 'Product Details'}
-        description={detail?.description || `Buy ${product?.name} online at Sumathi Trends. High-quality kids clothing in India.`}
+        description={detail?.description || `Buy ${product?.name} online at Sumathi Trends. High-quality kids clothing in Bengaluru.`}
         keywords={`${product?.category}, ${product?.name}, kids clothes online`}
         url={window.location.href}
         image={activeImages?.[0] || "https://sumathitrends.com/images/logo.png"}
