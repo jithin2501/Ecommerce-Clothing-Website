@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import SEO from '../../components/SEO';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
@@ -17,6 +18,12 @@ export default function FabricBasedCategories() {
 
   return (
     <div className="catpage-wrapper">
+      <SEO 
+        title="Fabric-Based Categories"
+        description="Choose kids clothing by material – from breathable cotton and organza to luxurious silk and winter-special velvet frocks."
+        keywords="cotton kids frocks, silk frocks, organza frocks, velvet frocks, satin kids wear, fabric based children clothing"
+        url="https://sumathitrends.com/collections/fabric-based-categories"
+      />
 
 
       <h1 className="catpage-title">Fabric-Based Categories</h1>

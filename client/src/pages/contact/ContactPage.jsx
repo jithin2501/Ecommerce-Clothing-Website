@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../../components/SEO';
 import '../../styles/contact/ContactPage.css';
 
 export default function ContactPage() {
@@ -58,7 +59,12 @@ export default function ContactPage() {
 
   return (
     <div className="contact-page">
-
+      <SEO 
+        title="Contact Us"
+        description="Get in touch with Sumathi Trends. We are here to help you with any questions about our kids clothing, sizing, or shipping. Visit our Bengaluru store."
+        keywords="contact Sumathi Trends, kids clothing store Bengaluru, customer support kids clothes, Bengaluru kids boutique contact"
+        url="https://sumathitrends.com/contact"
+      />
       <div className="nav-spacer" />
 
       {/* ── Body ── */}

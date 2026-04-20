@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import SEO from '../../components/SEO';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
@@ -21,6 +22,12 @@ export default function PartyWearCollection() {
 
   return (
     <div className="catpage-wrapper">
+      <SEO 
+        title="Party Wear Collection"
+        description="Premium party wear frocks for kids. From net and gown styles to sequin and princess frocks, find the perfect outfit for your child's next event."
+        keywords="party wear frocks, kids net frocks, gown style frocks, sequin frocks, princess dresses, designer party wear kids"
+        url="https://sumathitrends.com/collections/party-wear-collection"
+      />
 
 
       <h1 className="catpage-title">Party Wear Collection</h1>

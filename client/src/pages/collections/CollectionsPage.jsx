@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import FilterSidebar from '../../components/collections/FilterSidebar';
 import ProductGrid from '../../components/collections/ProductGrid';
+import SEO from '../../components/SEO';
 import '../../styles/collections/CollectionsPage.css';
 
 const SORT_OPTIONS = ['Newest Arrivals', 'Price: Low to High', 'Price: High to Low', 'Best Rated'];
@@ -67,6 +68,12 @@ export default function CollectionsPage() {
 
   return (
     <main className="collections-page">
+      <SEO 
+        title="Our Collections"
+        description="Explore our wide range of premium kids clothing, from daily wear frocks to designer party wear. Quality fashion for all ages 0-12."
+        keywords="kids collections, children frocks, designer kids wear, party wear for girls, ethnic wear kids, Sumathi Trends catalog"
+        url="https://sumathitrends.com/collections"
+      />
       <div className="section-inner">
         {/* Breadcrumb - reduced gap */}
 

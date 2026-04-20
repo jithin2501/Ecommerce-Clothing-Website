@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import SEO from '../../components/SEO';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
@@ -21,6 +22,12 @@ export default function OccasionDailyWearFrocks() {
 
   return (
     <div className="catpage-wrapper">
+      <SEO 
+        title="Occasion & Daily Wear Frocks"
+        description="Premium frocks for every occasion – from birthday parties and weddings to comfortable daily and summer wear. Shop our handpicked kids collection."
+        keywords="birthday party frocks, festive frocks, reception evening wear, daily wear frocks, summer frocks for kids, photoshoot special frocks"
+        url="https://sumathitrends.com/collections/occasion-daily-wear-frocks"
+      />
 
 
       <h1 className="catpage-title">Occasion &amp; Daily Wear Frocks</h1>

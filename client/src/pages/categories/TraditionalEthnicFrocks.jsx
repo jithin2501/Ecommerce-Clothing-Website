@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import SEO from '../../components/SEO';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
@@ -21,6 +22,12 @@ export default function TraditionalEthnicFrocks() {
 
   return (
     <div className="catpage-wrapper">
+      <SEO 
+        title="Traditional & Ethnic Frocks"
+        description="Beautiful traditional ethnic frocks including Pattu Pavadai, Banarasi silk, and Lehenga Choli styles. Authentic kids ethnic wear for all festivals."
+        keywords="kids ethnic wear, pattu pavadai, silk frocks, banarasi silk kids, lehenga choli girls, traditional indian kids wear"
+        url="https://sumathitrends.com/collections/traditional-ethnic-frocks"
+      />
 
 
       <h1 className="catpage-title">Traditional &amp; Ethnic Frocks</h1>

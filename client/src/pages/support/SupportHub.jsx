@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../../components/sidebar/Sidebar';
+import SEO from '../../components/SEO';
 import { auth } from '../../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import '../../styles/support/SupportHub.css';
@@ -50,6 +51,12 @@ export default function SupportHub() {
 
   return (
     <div className="sh-page">
+      <SEO 
+        title="Support Hub"
+        description="Welcome to Sumathi Trends Support Hub. Find help with your orders, track shipments, and get answers to your questions about our premium kids products."
+        keywords="Sumathi Trends support, kids clothing help, order tracking Bengaluru, children fashion assistance"
+        url="https://sumathitrends.com/support"
+      />
       <div className="sh-container">
 
         <Sidebar

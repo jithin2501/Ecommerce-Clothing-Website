@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import AgeGroupBanner from '../../components/collections/AgeGroupBanner';
 import FilterSidebar from '../../components/collections/FilterSidebar';
 import ProductGrid from '../../components/collections/ProductGrid';
+import SEO from '../../components/SEO';
 import '../../styles/collections/AgeGroupPage.css';
 
 const AGE_META = {
@@ -53,6 +54,12 @@ export default function AgeGroupPage() {
 
   return (
     <main className="agp-page">
+      <SEO 
+        title={`${meta.label} Clothing (${meta.range})`}
+        description={`Shop premium clothing for ${meta.label.toLowerCase()} aged ${meta.range}. Comfortable, stylish, and high-quality collection at Sumathi Trends.`}
+        keywords={`${meta.label.toLowerCase()} clothes, kids aged ${meta.range}, children fashion ${meta.label.toLowerCase()}, Sumathi Trends ${meta.label.toLowerCase()}`}
+        url={`https://sumathitrends.com/collections/${ageGroup}`}
+      />
       <AgeGroupBanner meta={meta} />
 
       <div className="section-inner">
