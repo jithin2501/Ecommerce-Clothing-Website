@@ -38,7 +38,7 @@ export default function Footer() {
               <div className="footer-logo-img">
                 <img
                   src="/images/logo/logo.png"
-                  alt="Sumathi Trends"
+                  alt="Sumathi Trends | Best Kids Clothes Bengaluru"
                   onError={(e) => { e.target.style.display = 'none'; }}
                 />
               </div>
@@ -105,16 +105,19 @@ export default function Footer() {
                   <span>+91 87928 88508</span>
                 </div>
               </li>
-              <li>
-                <div className="contact-item contact-item-center">
-                  <div className="contact-icon-circle">
-                    <img src="/images/icons/gmail.png" alt="Email" />
-                  </div>
-                  <span>
-                    <a href="mailto:sumathitrends.in@gmail.com">sumathitrends.in@gmail.com</a>
-                  </span>
-                </div>
-              </li>
+            </ul>
+          </div>
+
+          {/* Service Areas - Extreme Local SEO */}
+          <div className="footer-column footer-areas">
+            <h3>Areas Served</h3>
+            <ul className="footer-links area-list">
+              <li>Kids Clothes Sahakar Nagar</li>
+              <li>Designer Wear Hebbal</li>
+              <li>Ethnic Frocks Kodigehalli</li>
+              <li>Children's Boutique Yelahanka</li>
+              <li>Kids Fashion Jakkur</li>
+              <li>Baby Wear Sanjay Nagar</li>
             </ul>
           </div>
 

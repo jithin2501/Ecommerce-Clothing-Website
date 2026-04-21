@@ -9,11 +9,11 @@ const avatarUrls = [
 ];
 
 const PHRASES = [
-  'Premium Kids Fashion',
-  'Organic Cotton & Linen',
-  'Ages 0–12 Essentials',
+  'Best Kids Clothes in Sahakar Nagar',
+  'Premium Designer Kids Wear Bengaluru',
+  'Exclusive Birthday Party Frocks',
+  'Traditional Kids Ethnic Wear',
   'Loved by 2,400+ Parents',
-  'Adventure-Ready Styles',
 ];
 
 const TYPING_SPEED = 60;    // ms per character
@@ -79,11 +79,11 @@ export default function Hero() {
             </div>
 
             <h1 className="hero-title">
-              <span className="line-1">Modern Style</span>
+              <span className="line-1">Best Kids Clothes</span>
               <span className="line-2">
-                for <span className="accent-inline">Little</span>
+                in <span className="accent-inline">Bengaluru</span>
               </span>
-              <span className="accent">Legends</span>
+              <span className="accent">Sumathi Trends</span>
             </h1>
 
             <p className="hero-desc">
@@ -116,8 +116,11 @@ export default function Hero() {
           <div className="hero-visuals">
             <img
               src="/images/homepage/banner7.png"
-              alt="Model"
+              alt="Best Kids Clothes Collection Sumathi Trends Bengaluru"
               className="main-model"
+              fetchpriority="high"
+              loading="eager"
+              decoding="async"
               onError={(e) => {
                 e.target.src =
                   'https://images.unsplash.com/photo-1519234221711-37d353664d92?q=80&w=800&auto=format&fit=crop';

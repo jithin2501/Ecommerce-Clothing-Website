@@ -55,9 +55,9 @@ export default function AgeGroupPage() {
   return (
     <main className="agp-page">
       <SEO 
-        title={`${meta.label} Clothing (${meta.range})`}
-        description={`Shop premium clothing for ${meta.label.toLowerCase()} aged ${meta.range}. Comfortable, stylish, and high-quality collection at Sumathi Trends.`}
-        keywords={`${meta.label.toLowerCase()} clothes, kids aged ${meta.range}, children fashion ${meta.label.toLowerCase()}, Sumathi Trends ${meta.label.toLowerCase()}`}
+        title={`Best ${meta.label} Clothes (${meta.range}) | Premium Kids Wear Bengaluru`}
+        description={`Discover the finest collection of ${meta.label.toLowerCase()} clothes for ages ${meta.range}. Sumathi Trends offers high-quality, comfortable, and stylish fashion for your little ones in Bengaluru.`}
+        keywords={`${meta.label.toLowerCase()} clothes Bengaluru, branded kids wear ${meta.range}, best ${meta.label.toLowerCase()} fashion, organic cotton ${meta.label.toLowerCase()} outfits, Sumathi Trends kids collection`}
         url={`https://sumathitrends.com/collections/${ageGroup}`}
       />
       <AgeGroupBanner meta={meta} />

@@ -29,7 +29,7 @@ export default function About() {
           <div className="about-visuals">
             <img
               src="./about.png"
-              alt="About Sumathi Trends"
+              alt="Sumathi Trends - Premier Kids Clothing Store in Kodigehalli, Bengaluru"
               className="about-img"
               onError={(e) => {
                 e.target.src = 'images/homepage/about.png';
@@ -39,18 +39,18 @@ export default function About() {
 
           <div className="about-content">
             <h3 className="about-sub">
-              Crafted with Love,
-              <span className="accent-text">Worn with Pride.</span>
+              Best Kids Clothing Store,
+              <span className="accent-text">in Bengaluru.</span>
             </h3>
             <p className="about-desc">
               At Sumathi Trends, we believe every child deserves to feel
-              extraordinary. Founded in 2026, we blend timeless design with
+              extraordinary. As the leading **kids clothing store in Kodigehalli, Bengaluru**, we blend timeless design with
               premium materials to create clothing that grows with your little
               ones — from their first steps to their biggest milestones.
             </p>
             <p className="about-desc">
               Our collections are thoughtfully designed to balance playful
-              aesthetics with everyday comfort, ensuring your children can
+              aesthetics with everyday comfort. Whether you are looking for **designer frocks**, **ethnic wear**, or **daily kids cloths**, we ensure your children can
               move, explore, and express themselves freely.
             </p>
             <a href="#" className="btn-about">

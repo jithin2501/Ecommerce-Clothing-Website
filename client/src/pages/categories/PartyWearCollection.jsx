@@ -23,9 +23,9 @@ export default function PartyWearCollection() {
   return (
     <div className="catpage-wrapper">
       <SEO 
-        title="Party Wear Collection"
-        description="Premium party wear frocks for kids. From net and gown styles to sequin and princess frocks, find the perfect outfit for your child's next event."
-        keywords="party wear frocks, kids net frocks, gown style frocks, sequin frocks, princess dresses, designer party wear kids"
+        title="Premium Kids Party Wear | Designer Frocks & Gowns Bengaluru"
+        description="Discover the finest collection of kids party wear in Bengaluru. Shop designer net frocks, gown style dresses, and sequin glitter frocks for every celebration. Luxury kids fashion at Sumathi Trends."
+        keywords="kids party wear Bengaluru, designer net frocks, kids party gowns, princess frocks, sequin dresses for girls, luxury kids boutique, branded children's party wear"
         url="https://sumathitrends.com/collections/party-wear-collection"
       />
 

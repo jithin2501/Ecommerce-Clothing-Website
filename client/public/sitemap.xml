@@ -72,56 +72,38 @@
 
   <!-- Age Groups -->
   <url>
-    <loc>https://sumathitrends.com/collections/0-3-months</loc>
-    <lastmod>2026-04-20</lastmod>
+    <loc>https://sumathitrends.com/collections/newborn</loc>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://sumathitrends.com/collections/3-6-months</loc>
-    <lastmod>2026-04-20</lastmod>
+    <loc>https://sumathitrends.com/collections/infant</loc>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://sumathitrends.com/collections/6-12-months</loc>
-    <lastmod>2026-04-20</lastmod>
+    <loc>https://sumathitrends.com/collections/toddler</loc>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://sumathitrends.com/collections/1-2-years</loc>
-    <lastmod>2026-04-20</lastmod>
+    <loc>https://sumathitrends.com/collections/little-girls</loc>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://sumathitrends.com/collections/2-3-years</loc>
-    <lastmod>2026-04-20</lastmod>
+    <loc>https://sumathitrends.com/collections/kids</loc>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://sumathitrends.com/collections/3-4-years</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sumathitrends.com/collections/4-5-years</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sumathitrends.com/collections/5-6-years</loc>
-    <lastmod>2026-04-20</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://sumathitrends.com/collections/6-7-years</loc>
-    <lastmod>2026-04-20</lastmod>
+    <loc>https://sumathitrends.com/collections/pre-teen</loc>
+    <lastmod>2026-04-21</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
