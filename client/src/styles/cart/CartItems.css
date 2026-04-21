@@ -17,10 +17,10 @@
 .ci-img { 
   width: 80px; 
   height: 90px; 
-  object-fit: cover; 
-  object-position: top center; 
+  object-fit: contain; 
+  object-position: center; 
   border-radius: 10px; 
-  background: transparent;
+  background: #F5F5F2;
   border: 1px solid #E5E5E1; /* This remains for the individual product */
   flex-shrink: 0; 
 }
