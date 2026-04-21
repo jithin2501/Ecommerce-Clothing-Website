@@ -42,7 +42,8 @@
 .cyl-img-wrap img {
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
+  /* Removed transition transform (zoom) */
 }
 
 /* Removed the .cyl-card:hover .cyl-img-wrap img scale effect */
