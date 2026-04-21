@@ -31,6 +31,9 @@ export default function About() {
               src="./about.png"
               alt="Sumathi Trends - Premier Kids Clothing Store in Kodigehalli, Bengaluru"
               className="about-img"
+              width="600"
+              height="400"
+              loading="lazy"
               onError={(e) => {
                 e.target.src = 'images/homepage/about.png';
               }}
