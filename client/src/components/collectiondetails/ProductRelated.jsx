@@ -37,6 +37,16 @@ function RelatedCard({ item }) {
     <div className="prelat-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="prelat-img-wrap">
         <img src={item.img} alt={item.name} className="prelat-img" />
+        {item.stock <= 0 && (
+          <div className="prelat-sold-overlay" style={{
+            position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+            background: 'rgba(0,0,0,0.3)', color: 'white', display: 'flex',
+            alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '0.9rem',
+            borderRadius: '10px'
+          }}>
+            Sold
+          </div>
+        )}
         {item.age && <span className="prelat-age">AGE {item.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
         <button 
           className={`prelat-wish${active ? ' active' : ''}`}
@@ -54,8 +64,13 @@ function RelatedCard({ item }) {
         <p className="prelat-name">{item.name}</p>
       </div>
       {!added ? (
-        <button className="prelat-btn" onClick={(e) => { e.stopPropagation(); addToCart(item); setAdded(true); }}>
-          <CartIcon /> Quick Add
+        <button 
+          className="prelat-btn" 
+          onClick={(e) => { e.stopPropagation(); addToCart(item); setAdded(true); }}
+          disabled={item.stock <= 0}
+          style={item.stock <= 0 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
+        >
+          <CartIcon /> {item.stock <= 0 ? 'Out of Stock' : 'Quick Add'}
         </button>
       ) : (
         <button className="prelat-btn prelat-btn-cart" onClick={(e) => { e.stopPropagation(); navigate('/cart'); }}>

@@ -155,13 +155,33 @@ export default function ProductInfo({
         <p className="pi-label">SELECT SIZE</p>
         <div className="pi-sizes">
           {sizes.map(s => {
+            // Check if this specific size has stock in inventory
+            let hasSizeStock = true;
+            if (inventory && Object.keys(inventory).length > 0) {
+              const exactStock = inventory[s];
+              if (exactStock !== undefined) {
+                hasSizeStock = Number(exactStock) > 0;
+              } else {
+                const ns = s.toLowerCase().replace(/years?/g, 'y').replace(/months?/g, 'm').replace(/\s+/g, '');
+                const key = Object.keys(inventory).find(k => {
+                  const nk = k.toLowerCase().replace(/years?/g, 'y').replace(/months?/g, 'm').replace(/\s+/g, '');
+                  return ns === nk || ns.includes(nk) || nk.includes(ns);
+                });
+                if (key) {
+                  hasSizeStock = Number(inventory[key]) > 0;
+                }
+              }
+            }
+
+            const out = isOut || !hasSizeStock;
+
             return (
               <button
                 key={s}
-                className={`pi-size-btn${selectedSize === s ? ' active' : ''}${isOut ? ' out-of-stock' : ''}`}
+                className={`pi-size-btn${selectedSize === s ? ' active' : ''}${out ? ' out-of-stock' : ''}`}
                 onClick={() => setSelectedSize(s)}
-                disabled={isOut}
-                title={isOut ? 'Currently Unavailable' : ''}
+                disabled={out}
+                title={out ? 'Currently Unavailable' : ''}
               >
                 {s}
               </button>

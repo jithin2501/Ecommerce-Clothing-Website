@@ -56,6 +56,16 @@ export default function NewArrivals() {
             >
               <div className="na-img-wrap">
                 <img src={product.img} alt={product.name} />
+                {product.stock <= 0 && (
+                  <div className="na-sold-overlay" style={{
+                    position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+                    background: 'rgba(0,0,0,0.4)', color: 'white', display: 'flex',
+                    alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1rem',
+                    borderRadius: '12px'
+                  }}>
+                    Sold
+                  </div>
+                )}
                 {product.age && (
                   <span className="na-age">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>
                 )}

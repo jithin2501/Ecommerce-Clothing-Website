@@ -193,8 +193,11 @@ const updateProduct = async (req, res) => {
       try {
         const parsed = typeof inventory === 'string' ? JSON.parse(inventory) : inventory;
 
-        if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
-          product.inventory = parsed;
+        if (parsed && typeof parsed === 'object') {
+          product.inventory.clear();
+          Object.entries(parsed).forEach(([tk, tv]) => {
+            product.inventory.set(tk, Number(tv));
+          });
           product.markModified('inventory');
         }
       } catch (e) { }

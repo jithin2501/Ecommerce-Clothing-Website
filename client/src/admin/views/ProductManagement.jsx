@@ -292,7 +292,8 @@ export default function ProductManagement() {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => {
         if (k === 'inventory') {
-          if (v && typeof v === 'object' && Object.keys(v).length > 0) {
+          // Send inventory even if empty to ensure updates/clearing works
+          if (v && typeof v === 'object') {
             fd.append(k, JSON.stringify(v));
           }
         } else if (k === 'stock') {
