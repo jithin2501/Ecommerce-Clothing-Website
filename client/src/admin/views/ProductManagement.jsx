@@ -20,14 +20,6 @@ const AGE_LABELS = {
   'newborn': '0–6 Months', 'infant': '6–12 Months', 'toddler': '1–3 Years',
   'little-girls': '3–6 Years', 'kids': '6–9 Years', 'pre-teen': '9–12 Years'
 };
-const AGE_GROUP_UNITS = {
-  'newborn': ['0-3M', '3-6M'],
-  'infant': ['6-9M', '9-12M'],
-  'toddler': ['1Y', '2Y', '3Y'],
-  'little-girls': ['3Y', '4Y', '5Y', '6Y'],
-  'kids': ['6Y', '7Y', '8Y', '9Y'],
-  'pre-teen': ['9Y', '10Y', '11Y', '12Y']
-};
 const CATEGORIES = [
   'Occasion & Daily Wear Frocks',
   'Party Wear Collection',
@@ -292,8 +284,7 @@ export default function ProductManagement() {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => {
         if (k === 'inventory') {
-          // Send inventory even if empty to ensure updates/clearing works
-          if (v && typeof v === 'object') {
+          if (v && typeof v === 'object' && Object.keys(v).length > 0) {
             fd.append(k, JSON.stringify(v));
           }
         } else if (k === 'stock') {
@@ -486,49 +477,10 @@ export default function ProductManagement() {
                   label="Age Groups *"
                   options={AGE_GROUPS.map(ag => ({ value: ag.value, label: ag.label }))}
                   selected={form.ageGroup}
-                  onChange={(updated) => {
-                    const newInventory = { ...form.inventory };
-                    // Keep only selected units in inventory
-                    const allowedUnits = [...new Set(updated.flatMap(ag => AGE_GROUP_UNITS[ag] || []))];
-                    Object.keys(newInventory).forEach(u => {
-                      if (!allowedUnits.includes(u)) delete newInventory[u];
-                    });
-                    
-                    const nextState = { ...form, ageGroup: updated, inventory: newInventory };
-                    if (allowedUnits.length > 0) {
-                      nextState.stock = Object.values(newInventory).reduce((a, b) => Number(a) + Number(b), 0);
-                    }
-                    setForm(nextState);
-                  }}
+                  onChange={(updated) => setForm({ ...form, ageGroup: updated })}
                   placeholder="Choose age groups..."
                 />
               </div>
-
-              {/* --- Year/Month specific stock --- */}
-              {form.ageGroup.some(ag => AGE_GROUP_UNITS[ag]) && (
-                <div className="pm-inventory-section">
-                  <label className="pm-inventory-main-label">Specify Stock per Range (M=Months, Y=Years)</label>
-                  <div className="pm-inventory-grid">
-                    {[...new Set(form.ageGroup.flatMap(ag => AGE_GROUP_UNITS[ag] || []))].sort().map(unit => (
-                      <div key={unit} className="pm-inventory-item">
-                        <label className="pm-inventory-label">{unit}</label>
-                        <input
-                          type="number"
-                          placeholder="0"
-                          min="0"
-                          value={form.inventory[unit] || ''}
-                          onChange={(e) => {
-                            const val = parseInt(e.target.value) || 0;
-                            const newInventory = { ...form.inventory, [unit]: val };
-                            const total = Object.values(newInventory).reduce((a, b) => Number(a) + Number(b), 0);
-                            setForm({ ...form, inventory: newInventory, stock: total });
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               <SearchableMultiSelect
                 label="Sub Categories *"
@@ -545,14 +497,10 @@ export default function ProductManagement() {
                     type="number"
                     placeholder="e.g. 100"
                     min="0"
-                    className={`pm-premium-input ${form.ageGroup.some(ag => AGE_GROUP_UNITS[ag]) ? 'pm-readonly-input' : ''}`}
+                    className="pm-premium-input"
                     value={form.stock}
-                    readOnly={form.ageGroup.some(ag => AGE_GROUP_UNITS[ag])}
                     onChange={e => setForm(f => ({ ...f, stock: e.target.value }))}
                   />
-                  {form.ageGroup.some(ag => AGE_GROUP_UNITS[ag]) && (
-                    <span className="pm-input-hint">Calculated from breakdown above</span>
-                  )}
                 </div>
                 <div className="pm-group">
                   <label>Badge <span className="pm-optional">optional</span></label>
@@ -675,19 +623,8 @@ export default function ProductManagement() {
                             const sQty = Number(p.stock) || 0;
                             const status = sQty > 10 ? 'healthy' : sQty > 0 ? 'low' : 'out';
                             return (
-                              <div className="pm-stock-cell">
-                                <div className={`pm-stock-pill status-${status}`}>
-                                  {sQty > 0 ? `${sQty} In Stock` : 'Out of Stock'}
-                                </div>
-                                {p.inventory && Object.keys(p.inventory).length > 0 && (
-                                  <div className="pm-stock-breakdown">
-                                    {Object.entries(p.inventory).sort().map(([unit, qty]) => (
-                                      <span key={unit} className="pm-year-stock" title={unit}>
-                                        {unit}: {qty}
-                                      </span>
-                                    ))}
-                                  </div>
-                                )}
+                              <div className={`pm-stock-pill status-${status}`}>
+                                {sQty > 0 ? `${sQty} In Stock` : 'Out of Stock'}
                               </div>
                             );
                           })()}

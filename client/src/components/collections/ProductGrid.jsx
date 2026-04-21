@@ -235,7 +235,7 @@ export default function ProductGrid({
               <img src={product.img} alt={product.name} />
               {product.stock <= 0 && (
                 <div className="pg-out-overlay">
-                  <span>Sold</span>
+                  <span>Currently not available</span>
                 </div>
               )}
               {product.badge && (
