@@ -1075,4 +1075,63 @@ input:checked + .pm-slider:before {
   filter: grayscale(1);
   pointer-events: none;
 }
+
+.pm-inventory-main-label {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #1e2139;
+  margin-bottom: 0.8rem;
+}
+
+.pm-inventory-item input {
+  padding: 0.45rem 0.6rem !important;
+  font-size: 0.8rem !important;
+  width: 100%;
+}
+
+.pm-readonly-input {
+  background-color: #f8fafc !important;
+  cursor: not-allowed;
+  color: #64748b !important;
+  border-style: dashed !important;
+}
+
+.pm-input-hint {
+  font-size: 0.7rem;
+  color: #16a34a;
+  margin-top: 4px;
+  font-weight: 600;
+}
+
+.pm-stock-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+}
+
+.pm-stock-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.pm-year-stock {
+  font-size: 0.65rem;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* Ensure table cell allows vertical growth */
+.pm-table td.pm-stock {
+  vertical-align: top;
+  padding-top: 1rem;
+}
+
 
