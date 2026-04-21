@@ -224,40 +224,12 @@ export default function CollectionDetailPage() {
   return (
     <div className="cdp-page">
       <SEO 
-        title={`${product?.name} | Best Kids Fashion & Frocks Store Bengalulru`}
-        description={detail?.description?.substring(0, 160) || `Buy ${product?.name} online at Sumathi Trends. High-quality designer kids clothes and ethnic wear for boys and girls in Bengaluru.`}
-        keywords={`${product?.category}, ${product?.name}, kids clothes online Bengaluru, branded kids wear, premium children clothing, ${product?.name} price`}
+        title={product?.name || 'Product Details'}
+        description={detail?.description || `Buy ${product?.name} online at Sumathi Trends. High-quality kids clothing in Bengaluru.`}
+        keywords={`${product?.category}, ${product?.name}, kids clothes online`}
         url={window.location.href}
         image={activeImages?.[0] || "https://sumathitrends.com/images/logo.png"}
       />
-
-      {/* Product Schema for Extreme Search Visibility */}
-      <script type="application/ld+json">
-      {JSON.stringify({
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": product?.name,
-        "image": activeImages,
-        "description": detail?.description,
-        "brand": {
-          "@type": "Brand",
-          "name": "Sumathi Trends"
-        },
-        "offers": {
-          "@type": "Offer",
-          "url": window.location.href,
-          "priceCurrency": "INR",
-          "price": product?.price,
-          "availability": product?.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
-          "itemCondition": "https://schema.org/NewCondition"
-        },
-        "aggregateRating": {
-          "@type": "AggregateRating",
-          "ratingValue": product?.stars || 5.0,
-          "reviewCount": product?.reviews || 1
-        }
-      })}
-      </script>
 
       <div className="cdp-main">
         <ProductGallery images={activeImages} onZoomChange={handleZoomChange} />

@@ -29,9 +29,9 @@ export default function DesignerPremiumFrocks() {
   return (
     <div className="catpage-wrapper">
       <SEO 
-        title="Luxury Designer Kids Frocks | Custom Boutique Wear Bengaluru"
-        description="Shop the most exclusive boutique designer frocks in Bengaluru. From handwork embroidery to custom-made luxury collections, Sumathi Trends brings you the pinnacle of kids fashion."
-        keywords="designer kids frocks Bengaluru, custom made kids clothes, premium children boutique, handwork embroidery frocks, boutique kids wear Kodigehalli, luxury kids fashion trends"
+        title="Designer & Premium Frocks"
+        description="Exclusive boutique designer frocks and handwork embroidery collections. Discover custom-made luxury frocks at Sumathi Trends."
+        keywords="designer kids frocks, boutique frocks, embroidery frocks, custom made kids wear, luxury children clothing"
         url="https://sumathitrends.com/collections/designer-premium-frocks"
       />
 

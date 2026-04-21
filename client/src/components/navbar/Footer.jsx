@@ -38,7 +38,7 @@ export default function Footer() {
               <div className="footer-logo-img">
                 <img
                   src="/images/logo/logo.png"
-                  alt="Sumathi Trends | Best Kids Clothes Bengaluru"
+                  alt="Sumathi Trends"
                   onError={(e) => { e.target.style.display = 'none'; }}
                 />
               </div>

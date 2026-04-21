@@ -19,9 +19,9 @@ export default function FabricBasedCategories() {
   return (
     <div className="catpage-wrapper">
       <SEO 
-        title="Premium Quality Kids Clothes by Fabric | Organic Cotton & Silk"
-        description="Shop kids cloths by material at Sumathi Trends. From 100% organic cotton to premium silk and organza, we prioritize comfort and quality for your little ones in Bengaluru."
-        keywords="cotton kids clothes Bengaluru, organic kids wear, organza frocks, silk dresses for girls, velvet kids wear Bengaluru, luxury fabric children's clothing"
+        title="Fabric-Based Categories"
+        description="Choose kids clothing by material – from breathable cotton and organza to luxurious silk and winter-special velvet frocks."
+        keywords="cotton kids frocks, silk frocks, organza frocks, velvet frocks, satin kids wear, fabric based children clothing"
         url="https://sumathitrends.com/collections/fabric-based-categories"
       />
 

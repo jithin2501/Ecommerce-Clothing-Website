@@ -12,9 +12,9 @@ const HomePage = () => {
   return (
     <>
       <SEO 
-        title="Best Kids Clothes Store in Bengaluru | Premium Children's Fashion"
-        description="Shop the most exclusive collection of kids cloths in Bengaluru. From designer frocks to ethnic wear, Sumathi Trends offers premium handcrafted fashion for children aged 0-12. Visit our Kodigehalli boutique today!"
-        keywords="kids cloths Bengaluru, children's clothing store, designer frocks for girls, ethnic wear for boys, kids boutique Kodigehalli, premium kidswear Hebbal, branded kids clothing, baby clothes shopping, school party wear frocks"
+        title="Home"
+        description="Welcome to Sumathi Trends, your premium organic cotton and linen clothing store for children aged 0-12 in Bengaluru. Discover handpicked, high-quality kids fashion near you."
+        keywords="kids clothing, children fashion, Sumathi Trends, premium kids boutique Bengaluru, organic cotton baby wear, kids party wear Bengaluru, Kodigehalli kids store, Hebbal children clothing"
         url="https://sumathitrends.com/"
       />
       <main>

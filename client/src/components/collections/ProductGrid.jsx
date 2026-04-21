@@ -232,7 +232,7 @@ export default function ProductGrid({
             className="pg-card"
           >
             <div className={`pg-img-wrap ${product.stock <= 0 ? 'pg-out-of-stock' : ''}`}>
-              <img src={product.img} alt={`${product.name} - Kids Clothes Bengaluru`} />
+              <img src={product.img} alt={product.name} />
               {product.stock <= 0 && (
                 <div className="pg-out-overlay">
                   <span>Currently not available</span>
