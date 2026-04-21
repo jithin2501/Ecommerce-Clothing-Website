@@ -1,13 +1,12 @@
-import React, { Suspense, lazy } from 'react';
+import React from 'react';
 import Hero from '../../components/homepage/Hero';
 import About from '../../components/homepage/About';
 import Category from '../../components/homepage/Category';
+import BestSelling from '../../components/homepage/BestSelling';
+import NewArrivals from '../../components/homepage/NewArrivals';
+import WhyUs from '../../components/homepage/WhyUs';
+import Reviews from '../../components/homepage/Reviews';
 import SEO from '../../components/SEO';
-
-const BestSelling = lazy(() => import('../../components/homepage/BestSelling'));
-const NewArrivals = lazy(() => import('../../components/homepage/NewArrivals'));
-const WhyUs = lazy(() => import('../../components/homepage/WhyUs'));
-const Reviews = lazy(() => import('../../components/homepage/Reviews'));
 
 const HomePage = () => {
   return (
@@ -22,12 +21,10 @@ const HomePage = () => {
         <Hero />
         <About />
         <Category />
-        <Suspense fallback={<div className="section-loader" />}>
-          <BestSelling />
-          <NewArrivals />
-          <WhyUs />
-          <Reviews />
-        </Suspense>
+        <BestSelling />
+        <NewArrivals />
+        <WhyUs />
+        <Reviews />
       </main>
     </>
   );

@@ -118,8 +118,6 @@ export default function Hero() {
               src="/images/homepage/banner7.png"
               alt="Best Kids Clothes Collection Sumathi Trends Bengaluru"
               className="main-model"
-              width="800"
-              height="600"
               fetchpriority="high"
               loading="eager"
               decoding="async"
