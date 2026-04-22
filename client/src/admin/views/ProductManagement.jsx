@@ -266,6 +266,10 @@ export default function ProductManagement() {
 
   const handleEdit = (p) => {
     setEditId(p._id);
+    const inventory = p.inventory 
+      ? (p.inventory instanceof Map ? Object.fromEntries(p.inventory) : { ...p.inventory })
+      : {};
+
     setForm({
       name: p.name,
       category: Array.isArray(p.category) ? p.category : [p.category],
@@ -274,7 +278,7 @@ export default function ProductManagement() {
       oldPrice: p.oldPrice || '',
       ageGroup: Array.isArray(p.ageGroup) ? p.ageGroup : [p.ageGroup],
       badge: p.badge || '',
-      inventory: p.inventory && typeof p.inventory === 'object' ? { ...p.inventory } : {},
+      inventory: inventory,
       stock: p.stock != null ? p.stock : 0
     });
     setPreview(p.img);
@@ -715,18 +719,28 @@ export default function ProductManagement() {
                                 <div className={`pm-stock-pill status-${status}`}>
                                   {sQty > 0 ? `${sQty} In Stock` : 'Out of Stock'}
                                 </div>
-                                {p.inventory && Object.keys(p.inventory).length > 0 && (
-                                  <div className="pm-stock-breakdown">
-                                    {Object.entries(p.inventory)
-                                      .filter(([, q]) => q > 0)
-                                      .map(([age, qty]) => (
-                                        <div key={age} className="pm-stock-age-qty">
-                                          <span className="pm-saq-label">{age}:</span>
-                                          <span className="pm-saq-val">{qty}</span>
-                                        </div>
-                                      ))}
-                                  </div>
-                                )}
+                                {(() => {
+                                  const inv = p.inventory || {};
+                                  // Handle both Map and Object entries
+                                  const entries = (inv instanceof Map ? Array.from(inv.entries()) : Object.entries(inv))
+                                    .filter(([, q]) => Number(q) > 0);
+                                  
+                                  if (entries.length === 0) return null;
+                                  
+                                  return (
+                                    <div className="pm-stock-breakdown">
+                                      <div className="pm-breakdown-title">Breakdown:</div>
+                                      <div className="pm-stock-breakdown-items">
+                                        {entries.map(([age, qty]) => (
+                                          <div key={age} className="pm-stock-age-qty">
+                                            <span className="pm-saq-label">{age}:</span>
+                                            <span className="pm-saq-val">{qty}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  );
+                                })()}
                               </div>
                             );
                           })()}
