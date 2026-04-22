@@ -1,7 +1,8 @@
-
 const Product = require('../models/Product');
 const SiteSettings = require('../models/SiteSettings');
 const { uploadToS3, deleteFromS3 } = require('../conf/s3');
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 const stringHash = (str) => {
   let hash = 0;
@@ -14,6 +15,43 @@ const stringHash = (str) => {
   return hash;
 };
 
+const parseArrayField = (field) => {
+  if (!field) return [];
+  if (Array.isArray(field)) {
+    if (field.length === 1 && typeof field[0] === 'string' && field[0].startsWith('[')) {
+      try { return JSON.parse(field[0]); } catch (e) { }
+    }
+    return field;
+  }
+  if (typeof field === 'string' && field.trim().startsWith('[')) {
+    try {
+      const parsed = JSON.parse(field);
+      return Array.isArray(parsed) ? parsed : [parsed];
+    } catch (e) { }
+  }
+  return typeof field === 'string' && field.trim() ? [field.trim()] : (field ? [field] : []);
+};
+
+/**
+ * Converts a Mongoose Map (or lean plain-object) inventory into a clean
+ * { 'size': qty } plain object so the frontend always receives consistent data.
+ */
+const normaliseInventory = (product) => {
+  if (!product) return product;
+  if (product.inventory) {
+    if (product.inventory instanceof Map) {
+      product.inventory = Object.fromEntries(product.inventory);
+    } else if (typeof product.inventory === 'object') {
+      product.inventory = Object.fromEntries(
+        Object.entries(product.inventory).map(([k, v]) => [k, Number(v) || 0])
+      );
+    }
+  }
+  return product;
+};
+
+// ── Controllers ───────────────────────────────────────────────────────────────
+
 const getProducts = async (req, res) => {
   try {
     const filter = { isActive: true };
@@ -21,7 +59,6 @@ const getProducts = async (req, res) => {
       const groups = req.query.ageGroup.split(',');
       filter.ageGroup = { $in: groups };
     }
-
     const products = await Product.find(filter).sort({ createdAt: -1 }).lean();
     res.json({ success: true, data: products });
   } catch {
@@ -35,22 +72,17 @@ const getFeaturedProducts = async (req, res) => {
     if (!section) return res.status(400).json({ success: false, message: 'section is required.' });
 
     const settings = await SiteSettings.findOne() || { autoRotateProducts: false };
-    
+
     if (settings.autoRotateProducts) {
-      // Limit logic for auto-rotate
       const LIMITS = { youMightAlsoLike: 4, cartAlsoLike: 4, bestSelling: 10, newArrivals: 4 };
       const limit = LIMITS[section] || 4;
-
-      const dateStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+      const dateStr = new Date().toISOString().split('T')[0];
       const products = await Product.find({ isActive: true }).lean();
-      
-      // Seeded random sort
       const shuffled = products.sort((a, b) => {
         const hashA = stringHash(a._id.toString() + dateStr + section);
         const hashB = stringHash(b._id.toString() + dateStr + section);
         return hashA - hashB;
       });
-
       return res.json({ success: true, data: shuffled.slice(0, limit) });
     }
 
@@ -89,38 +121,17 @@ const updateSettings = async (req, res) => {
 
 const getAdminProducts = async (req, res) => {
   try {
-
     const products = await Product.find({}).sort({ createdAt: -1 }).lean();
-    res.json({ success: true, data: products });
+    res.json({ success: true, data: products.map(normaliseInventory) });
   } catch {
     res.status(500).json({ success: false });
   }
 };
 
-const parseArrayField = (field) => {
-  if (!field) return [];
-
-  if (Array.isArray(field)) {
-
-    if (field.length === 1 && typeof field[0] === 'string' && field[0].startsWith('[')) {
-      try { return JSON.parse(field[0]); } catch (e) { }
-    }
-    return field;
-  }
-
-  if (typeof field === 'string' && field.trim().startsWith('[')) {
-    try {
-      const parsed = JSON.parse(field);
-      return Array.isArray(parsed) ? parsed : [parsed];
-    } catch (e) { }
-  }
-
-  return typeof field === 'string' && field.trim() ? [field.trim()] : (field ? [field] : []);
-};
-
 const createProduct = async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ success: false, message: 'Image is required.' });
+
     let { name, category, subCategory, price, oldPrice, ageGroup, age, badge, sustainability, inventory, stock } = req.body;
 
     category = parseArrayField(category);
@@ -129,11 +140,14 @@ const createProduct = async (req, res) => {
 
     let parsedInventory = {};
     if (inventory) {
-      try { parsedInventory = typeof inventory === 'string' ? JSON.parse(inventory) : inventory; } catch (e) { }
+      try {
+        parsedInventory = typeof inventory === 'string' ? JSON.parse(inventory) : inventory;
+      } catch (e) { }
     }
 
     const parsedStock = stock !== undefined ? Number(stock) : 0;
     const imgUrl = await uploadToS3(req.file, ageGroup[0] || 'other');
+
     const product = await Product.create({
       name,
       category,
@@ -146,10 +160,10 @@ const createProduct = async (req, res) => {
       badge: badge || null,
       sustainability: sustainability === 'true',
       inventory: parsedInventory,
-      stock: parsedStock
+      stock: parsedStock,
     });
 
-    res.json({ success: true, data: product.toObject() });
+    res.json({ success: true, data: normaliseInventory(product.toObject()) });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -163,53 +177,43 @@ const updateProduct = async (req, res) => {
     let { name, category, subCategory, price, oldPrice, ageGroup, age, badge, sustainability, isActive, featuredIn, inventory, stock } = req.body;
 
     if (name) product.name = name;
-
-    if (category !== undefined) {
-      product.category = parseArrayField(category);
-    }
-    if (subCategory !== undefined) {
-      product.subCategory = parseArrayField(subCategory);
-    }
+    if (category !== undefined) product.category = parseArrayField(category);
+    if (subCategory !== undefined) product.subCategory = parseArrayField(subCategory);
     if (price) product.price = Number(price);
     if (oldPrice !== undefined) product.oldPrice = oldPrice ? Number(oldPrice) : null;
-
-    if (ageGroup !== undefined) {
-      product.ageGroup = parseArrayField(ageGroup);
-    }
+    if (ageGroup !== undefined) product.ageGroup = parseArrayField(ageGroup);
     if (age) product.age = age;
     if (badge !== undefined) product.badge = badge || null;
     if (sustainability !== undefined) product.sustainability = sustainability === 'true';
     if (isActive !== undefined) product.isActive = isActive === 'true';
-
     if (stock !== undefined && stock !== '') product.stock = Number(stock);
 
     if (featuredIn !== undefined) {
-      product.featuredIn = Array.isArray(featuredIn)
-        ? featuredIn
-        : JSON.parse(featuredIn);
+      product.featuredIn = Array.isArray(featuredIn) ? featuredIn : JSON.parse(featuredIn);
     }
 
+    // Always save inventory when provided — no length guard so 0-qty entries persist too
     if (inventory !== undefined) {
       try {
         const parsed = typeof inventory === 'string' ? JSON.parse(inventory) : inventory;
-
-        if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+        if (parsed && typeof parsed === 'object') {
           product.inventory = parsed;
           product.markModified('inventory');
         }
-      } catch (e) { }
+      } catch (e) {
+        console.error('inventory parse error:', e);
+      }
     }
 
     if (req.file) {
       await deleteFromS3(product.img);
-
       const parsedAgeGroup = ageGroup !== undefined ? parseArrayField(ageGroup) : product.ageGroup;
       product.img = await uploadToS3(req.file, parsedAgeGroup[0] || product.ageGroup[0] || 'other');
     }
 
     await product.save();
 
-    res.json({ success: true, data: product.toObject() });
+    res.json({ success: true, data: normaliseInventory(product.toObject()) });
   } catch (err) {
     console.error('updateProduct error:', err.message);
     res.status(500).json({ success: false, message: err.message });
@@ -227,13 +231,13 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = { 
-  getProducts, 
-  getFeaturedProducts, 
-  getAdminProducts, 
-  createProduct, 
-  updateProduct, 
+module.exports = {
+  getProducts,
+  getFeaturedProducts,
+  getAdminProducts,
+  createProduct,
+  updateProduct,
   deleteProduct,
   getSettings,
-  updateSettings
+  updateSettings,
 };

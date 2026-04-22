@@ -279,12 +279,29 @@ export default function ProductManagement() {
 
   const handleEdit = (p) => {
     setEditId(p._id);
-    // MongoDB Map comes back as a plain object; normalise it
-    const rawInv = p.inventory && typeof p.inventory === 'object' ? p.inventory : {};
-    // Filter to only keep keys that are numbers (quantities)
-    const normInv = Object.fromEntries(
-      Object.entries(rawInv).map(([k, v]) => [k, Number(v) || 0])
-    );
+    // MongoDB Map via .lean() can come back as a plain object OR a Map instance.
+    // Also handle the case where it's serialised as { '0': {...} } (nested).
+    let rawInv = {};
+    if (p.inventory) {
+      if (p.inventory instanceof Map) {
+        rawInv = Object.fromEntries(p.inventory);
+      } else if (typeof p.inventory === 'object') {
+        // Check it's a flat size→qty map (keys look like '1Y', '6M', etc.)
+        // not a MongoDB Map serialisation artefact
+        rawInv = p.inventory;
+      }
+    }
+    // Pre-populate ALL size keys for the product's age groups, defaulting missing ones to 0
+    const ageGrps = Array.isArray(p.ageGroup) ? p.ageGroup : [p.ageGroup];
+    const allSizes = getSizeKeys(ageGrps);
+    const normInv = {};
+    allSizes.forEach(size => {
+      normInv[size] = Number(rawInv[size]) || 0;
+    });
+    // Also keep any extra sizes already in rawInv that aren't in the size list
+    Object.entries(rawInv).forEach(([k, v]) => {
+      if (!(k in normInv)) normInv[k] = Number(v) || 0;
+    });
     setForm({
       name: p.name,
       category: Array.isArray(p.category) ? p.category : [p.category],
@@ -326,9 +343,8 @@ export default function ProductManagement() {
       const fd = new FormData();
       Object.entries({ ...form, stock: computedStock }).forEach(([k, v]) => {
         if (k === 'inventory') {
-          if (v && typeof v === 'object' && Object.keys(v).length > 0) {
-            fd.append(k, JSON.stringify(v));
-          }
+          // Always send inventory so the backend can persist per-size data
+          fd.append(k, JSON.stringify(v && typeof v === 'object' ? v : {}));
         } else if (k === 'stock') {
           fd.append(k, v);
         } else if (Array.isArray(v)) {
@@ -745,8 +761,22 @@ export default function ProductManagement() {
                           {(() => {
                             const sQty = Number(p.stock) || 0;
                             const status = sQty > 10 ? 'healthy' : sQty > 0 ? 'low' : 'out';
-                            const inv = p.inventory && typeof p.inventory === 'object' ? p.inventory : {};
-                            const invEntries = Object.entries(inv).filter(([, v]) => Number(v) > 0);
+                            // Robustly parse inventory regardless of how MongoDB serialised the Map
+                            let inv = {};
+                            if (p.inventory instanceof Map) {
+                              inv = Object.fromEntries(p.inventory);
+                            } else if (p.inventory && typeof p.inventory === 'object') {
+                              inv = p.inventory;
+                            }
+                            const invEntries = Object.entries(inv)
+                              .filter(([, v]) => Number(v) > 0)
+                              .sort(([a], [b]) => {
+                                // Sort by numeric part: '1Y' < '2Y', '6M' < '12M'
+                                const numA = parseInt(a) || 0;
+                                const numB = parseInt(b) || 0;
+                                if (numA !== numB) return numA - numB;
+                                return a.localeCompare(b);
+                              });
                             const isStockEx = expandedStock[p._id];
                             return (
                               <div className="pm-stock-wrap">
