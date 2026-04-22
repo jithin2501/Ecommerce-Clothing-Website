@@ -14,8 +14,8 @@ const productSchema = new mongoose.Schema(
       required: true 
     },
     age:         { type: String, required: true },
-    colors:      {
-      type: [{ name: String, hex: String, _id: false }],
+    colors: {
+      type: [{ name: String, hex: String, hexArray: [String], _id: false }],
       default: []
     },
     img:         { type: String, required: true },

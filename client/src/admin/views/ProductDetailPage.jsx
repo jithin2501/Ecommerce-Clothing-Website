@@ -9,7 +9,7 @@ const authHdrs = () => ({ Authorization: `Bearer ${localStorage.getItem('adminTo
 const MAX_GALLERY = 7;
 
 const EMPTY_SPEC  = { label: '', value: '' };
-const EMPTY_COLOR = { name: '', hex: '#F2C4B0' };
+const EMPTY_COLOR = { name: '', hex: '#F2C4B0', hexArray: ['#F2C4B0'] };
 
 const uuid = () => Math.random().toString(36).slice(2, 9);
 
@@ -61,7 +61,11 @@ export default function ProductDetailPage() {
           if (d.highlights?.length)       setHighlights(d.highlights.map(s => ({ ...s, id: uuid() })));
 
           if (d.colors?.length) {
-            const loadedColors = d.colors.map(c => ({ ...c, id: uuid() }));
+            const loadedColors = d.colors.map(c => ({ 
+              ...c, 
+              hexArray: c.hexArray && c.hexArray.length ? c.hexArray : [c.hex],
+              id: uuid() 
+            }));
             setColors(loadedColors);
             setActiveColorId(loadedColors[0].id);
 
@@ -101,6 +105,33 @@ export default function ProductDetailPage() {
   };
 
   const updateColor = (id, k, v) => setColors(c => c.map(x => x.id === id ? { ...x, [k]: v } : x));
+
+  const addHexToColor = (id) => {
+    setColors(curr => curr.map(c => {
+      if (c.id !== id) return c;
+      const arr = c.hexArray || [c.hex];
+      if (arr.length >= 4) return c; // Max 4 colors
+      return { ...c, hexArray: [...arr, '#ffffff'] };
+    }));
+  };
+
+  const removeHexFromColor = (id, index) => {
+    setColors(curr => curr.map(c => {
+      if (c.id !== id) return c;
+      const arr = (c.hexArray || [c.hex]).filter((_, i) => i !== index);
+      if (arr.length === 0) return c; 
+      return { ...c, hexArray: arr, hex: arr[0] };
+    }));
+  };
+
+  const updateHexInArray = (id, index, value) => {
+    setColors(curr => curr.map(c => {
+      if (c.id !== id) return c;
+      const arr = [...(c.hexArray || [c.hex])];
+      arr[index] = value;
+      return { ...c, hexArray: arr, hex: arr[0] };
+    }));
+  };
 
   /* ── Gallery helpers for active color ── */
   const activeGallery = colorGalleries[activeColorId] || [];
@@ -393,16 +424,44 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="pdp-field-group">
-              <label className="pdp-label">COLORS</label>
+              <label className="pdp-label">COLORS & PATTERNS</label>
+              <p className="pdp-section-hint">Combine multiple color tags for printed or multi-tone dresses.</p>
               <div className="pdp-colors-list">
                 {colors.map(c => (
-                  <div key={c.id} className="pdp-color-row">
-                    <input type="color" className="pdp-color-picker" value={c.hex} onChange={e => updateColor(c.id, 'hex', e.target.value)} />
-                    <input className="pdp-color-name-input" type="text" placeholder="Color name (e.g. blush)" value={c.name} onChange={e => updateColor(c.id, 'name', e.target.value)} />
-                    <button type="button" className="pdp-row-remove" onClick={() => removeColor(c.id)}>✕</button>
+                  <div key={c.id} className="pdp-color-row-wrapper">
+                    <div className="pdp-color-row">
+                      <div className="pdp-hex-group">
+                        {(c.hexArray || [c.hex]).map((h, idx) => (
+                          <div key={idx} className="pdp-hex-picker-wrap">
+                            <input 
+                              type="color" 
+                              className="pdp-color-picker" 
+                              value={h} 
+                              onChange={e => updateHexInArray(c.id, idx, e.target.value)} 
+                            />
+                            {(c.hexArray || [c.hex]).length > 1 && (
+                              <button type="button" className="pdp-hex-remove" onClick={() => removeHexFromColor(c.id, idx)}>×</button>
+                            )}
+                          </div>
+                        ))}
+                        {(c.hexArray || [c.hex]).length < 4 && (
+                          <button type="button" className="pdp-add-hex-btn" onClick={() => addHexToColor(c.id)} title="Add another color tag">
+                            +
+                          </button>
+                        )}
+                      </div>
+                      <input 
+                        className="pdp-color-name-input" 
+                        type="text" 
+                        placeholder="Variant name (e.g. Pink Floral)" 
+                        value={c.name} 
+                        onChange={e => updateColor(c.id, 'name', e.target.value)} 
+                      />
+                      <button type="button" className="pdp-row-remove" onClick={() => removeColor(c.id)}>✕</button>
+                    </div>
                   </div>
                 ))}
-                <button type="button" className="pdp-add-row-btn" onClick={addColor}>+ Add Color</button>
+                <button type="button" className="pdp-add-row-btn" onClick={addColor}>+ Add Color Variant</button>
               </div>
             </div>
 

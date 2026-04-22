@@ -19,8 +19,9 @@ const highlightSchema = new mongoose.Schema(
 
 const colorOptionSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    hex:  { type: String, required: true },
+    name:     { type: String, required: true },
+    hex:      { type: String, required: true },
+    hexArray: { type: [String], default: [] },
   },
   { _id: false }
 );
