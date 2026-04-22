@@ -688,7 +688,7 @@ export default function ProductManagement() {
                       </th>
                       <th>BEST (10)</th>
                       <th>NEW (4)</th>
-                      <th>STATUS</th>
+
                       <th>ACTION</th>
                     </tr>
                   </thead>
@@ -836,11 +836,7 @@ export default function ProductManagement() {
                             <FeatToggle id={p._id} section="newArrivals" featuredIn={p.featuredIn} />
                           </div>
                         </td>
-                        <td>
-                          <span className={`pm-status ${p.isActive ? 'active' : 'inactive'}`}>
-                            {p.isActive ? 'Active' : 'Hidden'}
-                          </span>
-                        </td>
+
                         <td>
                           <div className="pm-actions">
                             <button className="pm-edit-btn" onClick={() => handleEdit(p)}>
