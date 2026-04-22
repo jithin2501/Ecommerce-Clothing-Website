@@ -5,7 +5,8 @@
   align-items: center;
   box-sizing: border-box;
   position: relative;
-  scroll-margin-top: 70px; /* adjust to match your navbar height */
+  scroll-margin-top: 70px;
+  /* adjust to match your navbar height */
 }
 
 .about-top-label {
@@ -46,51 +47,43 @@
   justify-content: center;
   align-items: center;
   position: relative;
+  padding-bottom: 40px; /* Room for the oval */
 }
 
 .about-visuals::before {
   content: '';
   position: absolute;
-  width: 95%;
-  height: 95%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(192,127,94,0.75) 0%,
-    rgba(226,149,120,0.45) 40%,
-    rgba(192,127,94,0.15) 65%,
-    transparent 80%
-  );
+  width: 70%;
+  height: 75%;
+  background: radial-gradient(circle, 
+    rgba(192, 127, 94, 0.35) 0%, 
+    rgba(192, 127, 94, 0.15) 50%,
+    transparent 80%);
   border-radius: 50%;
   z-index: 1;
-  filter: blur(36px);
-  animation: glowPulse 3s ease-in-out infinite alternate;
+  filter: blur(35px);
+  animation: subtleGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes subtleGlow {
+  from { opacity: 0.6; transform: scale(0.95); }
+  to   { opacity: 1;   transform: scale(1.05); }
 }
 
 .about-visuals::after {
   content: '';
   position: absolute;
-  width: 110%;
-  height: 110%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(192,127,94,0.25) 0%,
-    transparent 65%
-  );
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 110%; /* Increased width */
+  height: 25px; /* Sleeker height */
+  background: radial-gradient(ellipse at center, 
+    rgba(192, 127, 94, 0.35) 0%, 
+    transparent 75%);
   border-radius: 50%;
   z-index: 1;
-  filter: blur(50px);
-  animation: glowPulse 3s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes glowPulse {
-  from {
-    opacity: 0.7;
-    transform: scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1.03);
-  }
+  filter: blur(12px);
 }
 
 .about-img {
@@ -101,9 +94,7 @@
   max-width: 480px;
   object-fit: contain;
   border-radius: 20px;
-  filter: drop-shadow(0 0 18px rgba(192,127,94,0.7))
-          drop-shadow(0 8px 40px rgba(192,127,94,0.55))
-          drop-shadow(0 20px 70px rgba(192,127,94,0.3));
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.15));
 }
 
 .about-content {
@@ -159,7 +150,7 @@
 
 .btn-about:hover {
   background: var(--accent-hover);
-  box-shadow: 0 12px 24px rgba(192,127,94,0.25);
+  box-shadow: 0 12px 24px rgba(192, 127, 94, 0.25);
 }
 
 @media (max-width: 1100px) {

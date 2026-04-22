@@ -32,7 +32,7 @@ export default function About() {
               alt="About Sumathi Trends"
               className="about-img"
               onError={(e) => {
-                e.target.src = 'images/homepage/about.png';
+                e.target.src = 'images/homepage/yopa.png';
               }}
             />
           </div>
