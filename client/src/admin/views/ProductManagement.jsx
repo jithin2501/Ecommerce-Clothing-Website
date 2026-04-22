@@ -171,6 +171,7 @@ export default function ProductManagement() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAutoRotate, setIsAutoRotate] = useState(false);
   const fileRef = useRef(null);
+  const formRef = useRef(null);
   const [expandedProductCats, setExpandedProductCats] = useState({});
 
   const toggleProductCats = (id) => {
@@ -270,7 +271,7 @@ export default function ProductManagement() {
     });
     setPreview(p.img);
     setImgFile(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
 
   const handleCancel = () => {
@@ -435,7 +436,7 @@ export default function ProductManagement() {
     <div className="pm-page">
       <h1 className="pm-title">Product management</h1>
 
-      <div className="pm-form-card">
+      <div className="pm-form-card" ref={formRef}>
         <h3 className="pm-form-title">{editId ? 'Edit Product' : 'Add New Product'}</h3>
 
         {error && <div className="pm-error">{error}</div>}
