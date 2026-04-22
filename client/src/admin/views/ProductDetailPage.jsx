@@ -20,6 +20,7 @@ export default function ProductDetailPage() {
   const navigate      = useNavigate();
 
   const [product, setProduct] = useState(null);
+  const pageRef = useRef(null);
 
   // colorGalleries: { [colorKey]: [ { id, file?, preview, url? }, ... ] }
   const [colorGalleries, setColorGalleries] = useState({});
@@ -214,7 +215,7 @@ export default function ProductDetailPage() {
       const data = await res.json();
       if (data.success) {
         setSuccess('Product details saved successfully!');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        pageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       } else {
         setError(data.message || 'Failed to save.');
       }
@@ -228,7 +229,7 @@ export default function ProductDetailPage() {
   if (loading) return <div className="pdp-loading">Loading…</div>;
 
   return (
-    <div className="pdp-page">
+    <div className="pdp-page" ref={pageRef}>
 
       {/* Header */}
       <div className="pdp-header">

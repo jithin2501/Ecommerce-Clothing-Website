@@ -6,6 +6,8 @@
   margin: 0 auto;
   padding: 2rem 2rem 4rem;
   font-family: inherit;
+  background: #ffffff;
+  min-height: 100%;
 }
 
 /* ── Header ── */
