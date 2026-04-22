@@ -114,9 +114,12 @@ export default function ProductGrid({
   if (selectedColors.length > 0) {
     const normalizedSelected = selectedColors.map(c => c.toLowerCase().trim());
     filtered = filtered.filter(p => 
-      p.colors && Array.isArray(p.colors) && p.colors.some(c => 
-        normalizedSelected.includes(c.name.toLowerCase().trim())
-      )
+      p.colors && Array.isArray(p.colors) && p.colors.some(c => {
+        const variantName = (c.name || '').toLowerCase();
+        // Split variant names like "Red & Blue" or "Pink / White" to check individual components
+        const parts = variantName.split(/[\/,&\-]+/).map(s => s.trim()).filter(Boolean);
+        return parts.some(part => normalizedSelected.includes(part)) || normalizedSelected.includes(variantName);
+      })
     );
   }
 
@@ -171,12 +174,23 @@ export default function ProductGrid({
     base.forEach(p => {
       if (p.colors && Array.isArray(p.colors)) {
         p.colors.forEach(c => {
-          if (c.name && c.hex) {
-            const normalizedName = c.name.toLowerCase().trim();
-            // We keep the first occurrence's display name and hex
-            if (!colorsMap.has(normalizedName)) {
-              colorsMap.set(normalizedName, { displayName: c.name.trim(), hex: c.hex });
-            }
+          if (c.name) {
+            const variantName = c.name.trim();
+            // Split combined names like "Red/Blue" into separate filters
+            const parts = variantName.split(/[\/,&\-]+/).map(s => s.trim()).filter(Boolean);
+            
+            parts.forEach((part, idx) => {
+              const normalizedPart = part.toLowerCase();
+              if (!colorsMap.has(normalizedPart)) {
+                // If variant has multiple hexes, try to match the index, otherwise use the first one
+                const hexArr = c.hexArray && c.hexArray.length ? c.hexArray : [c.hex];
+                const hex = hexArr[idx] || hexArr[0];
+                colorsMap.set(normalizedPart, { 
+                  displayName: part.charAt(0).toUpperCase() + part.slice(1), 
+                  hex 
+                });
+              }
+            });
           }
         });
       }
