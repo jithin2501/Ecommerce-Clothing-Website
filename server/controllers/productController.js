@@ -192,11 +192,12 @@ const updateProduct = async (req, res) => {
     if (inventory !== undefined) {
       try {
         const parsed = typeof inventory === 'string' ? JSON.parse(inventory) : inventory;
-        product.inventory = parsed || {};
-        product.markModified('inventory');
-      } catch (e) {
-        console.error('Inventory update error:', e);
-      }
+
+        if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+          product.inventory = parsed;
+          product.markModified('inventory');
+        }
+      } catch (e) { }
     }
 
     if (req.file) {
