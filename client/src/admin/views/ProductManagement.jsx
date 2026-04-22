@@ -171,6 +171,14 @@ export default function ProductManagement() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isAutoRotate, setIsAutoRotate] = useState(false);
   const fileRef = useRef(null);
+  const [expandedProductCats, setExpandedProductCats] = useState({});
+
+  const toggleProductCats = (id) => {
+    setExpandedProductCats(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   const fetchSettings = async () => {
     try {
@@ -600,11 +608,53 @@ export default function ProductManagement() {
                       <tr key={p._id}>
                         <td><img src={p.img} alt={p.name} className="pm-thumb" /></td>
                         <td>
-                          <div className="pm-name">{p.name}</div>
-                          <div className="pm-cat">{(Array.isArray(p.category) ? p.category : [p.category]).join(', ')}</div>
-                          {p.subCategory && <div className="pm-subcat" style={{ fontSize: '0.8rem', color: '#666', marginTop: '2px' }}>
-                            {(Array.isArray(p.subCategory) ? p.subCategory : [p.subCategory]).join(', ')}
-                          </div>}
+                          <div className="pm-name" title={p.name}>{p.name}</div>
+                          {(() => {
+                            const cats = Array.isArray(p.category) ? p.category : [p.category];
+                            const subcats = Array.isArray(p.subCategory) ? p.subCategory : (p.subCategory ? [p.subCategory] : []);
+                            const hasMore = cats.length > 1 || subcats.length > 1;
+                            const isEx = expandedProductCats[p._id];
+
+                            return (
+                              <div className="pm-cat-cell">
+                                <div className="pm-cat-row-main">
+                                  <div style={{ display: 'flex', flexDirection: 'column', flex: 1, minWidth: 0 }}>
+                                    <div className="pm-cat">{cats[0]}</div>
+                                    {subcats[0] && (
+                                      <div className="pm-cat" style={{ color: '#64748b', fontSize: '0.7rem' }}>
+                                        {subcats[0]}
+                                      </div>
+                                    )}
+                                  </div>
+                                  {hasMore && (
+                                    <button 
+                                      className={`pm-cat-chevron ${isEx ? 'expanded' : ''}`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleProductCats(p._id);
+                                      }}
+                                      title={isEx ? "Show less" : "Show all categories"}
+                                    >
+                                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                                      </svg>
+                                    </button>
+                                  )}
+                                </div>
+                                {isEx && hasMore && (
+                                  <div className="pm-cat-expanded-list">
+                                    {cats.map((c, i) => (
+                                      <div key={`c-${i}`} className="pm-cat-item">• {c}</div>
+                                    ))}
+                                    {subcats.length > 0 && <div className="pm-subcat-label">Sub Categories</div>}
+                                    {subcats.map((sc, i) => (
+                                      <div key={`sc-${i}`} className="pm-subcat-item">• {sc}</div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })()}
                         </td>
                         <td className="pm-age">
                           <div className="pm-age-grid">
