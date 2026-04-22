@@ -135,6 +135,36 @@ export default function ProductDetailPage() {
   const removeSize = (i)    => setSizes(s => s.filter((_, idx) => idx !== i));
   const updateSize = (i, v) => setSizes(s => s.map((x, idx) => idx === i ? v : x));
 
+  const syncSizesFromStock = () => {
+    if (!product?.inventory) {
+      setError('No inventory data found for this product. Save stock in Product Management first.');
+      return;
+    }
+    const inv = product.inventory instanceof Map ? Object.fromEntries(product.inventory) : product.inventory;
+    const stockSizes = Object.entries(inv)
+      .filter(([_, qty]) => Number(qty) > 0)
+      .map(([sz]) => sz)
+      .sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
+
+    if (stockSizes.length > 0) {
+      setSizes(stockSizes);
+    } else {
+      setError('All sizes are currently out of stock in inventory.');
+    }
+  };
+
+  // Auto-fill sizes from stock if currently empty on load
+  useEffect(() => {
+    if (product && sizes.length === 1 && sizes[0] === '' && product.inventory) {
+      const inv = product.inventory instanceof Map ? Object.fromEntries(product.inventory) : product.inventory;
+      const stockSizes = Object.entries(inv)
+        .filter(([_, qty]) => Number(qty) > 0)
+        .map(([sz]) => sz)
+        .sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
+      if (stockSizes.length > 0) setSizes(stockSizes);
+    }
+  }, [product, sizes]);
+
   /* ── Submit ── */
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -337,7 +367,17 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="pdp-field-group">
-              <label className="pdp-label">SIZES</label>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px' }}>
+                <label className="pdp-label" style={{ marginBottom: 0 }}>SIZES</label>
+                <button 
+                  type="button" 
+                  className="pdp-add-row-btn" 
+                  style={{ padding: '2px 8px', fontSize: '0.7rem' }}
+                  onClick={syncSizesFromStock}
+                >
+                  Sync from Stock
+                </button>
+              </div>
               <div className="pdp-sizes-list">
                 {sizes.map((s, i) => (
                   <div key={i} className="pdp-size-row">
@@ -345,7 +385,9 @@ export default function ProductDetailPage() {
                     <button type="button" className="pdp-row-remove" onClick={() => removeSize(i)}>✕</button>
                   </div>
                 ))}
-                <button type="button" className="pdp-add-row-btn" onClick={addSize}>+ Add Size</button>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button type="button" className="pdp-add-row-btn" onClick={addSize}>+ Add Size</button>
+                </div>
               </div>
             </div>
 
