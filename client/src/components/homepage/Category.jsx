@@ -4,27 +4,27 @@ import '../../styles/homepage/Category.css';
 const categories = [
   {
     label: 'OCCASION & DAILY\nWEAR FROCKS',
-    img: '/images/collections/newborn.avif',
+    img: '/images/Shopcategory/1776775593503_2714.png',
     path: '/collections/occasion-daily-wear-frocks',
   },
   {
     label: 'PARTY WEAR\nCOLLECTION',
-    img: '/images/collections/Kids.webp',
+    img: '/images/Shopcategory/1776776431599_6458.png',
     path: '/collections/party-wear-collection',
   },
   {
     label: 'TRADITIONAL & ETHNIC\nFROCKS',
-    img: '/images/collections/Kids.webp',
+    img: '/images/Shopcategory/1776840584537_4076.png',
     path: '/collections/traditional-ethnic-frocks',
   },
   {
     label: 'DESIGNER & PREMIUM\nFROCKS',
-    img: '/images/collections/Pre-Teen.webp',
+    img: '/images/Shopcategory/1776841373963_8759.png',
     path: '/collections/designer-premium-frocks',
   },
   {
     label: 'FABRIC-BASED\nCATEGORIES',
-    img: '/images/collections/Pre-Teen.webp',
+    img: '/images/Shopcategory/1776846610509_5753.png',
     path: '/collections/fabric-based-categories',
   },
 ];

@@ -4,16 +4,16 @@ import SEO from '../../components/SEO';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Birthday Party Frocks', img: '/images/collections/Kids.webp' },
-  { label: 'Wedding / Festive Frocks', img: '/images/collections/Little Girls.jpg' },
-  { label: 'Reception / Evening Wear', img: '/images/collections/Pre-Teen.webp' },
-  { label: 'Photoshoot Special Frocks', img: '/images/collections/Infant.webp' },
-  { label: 'Princess / Fancy Dress', img: '/images/collections/newborn.avif' },
-  { label: 'Casual Cotton Frocks', img: '/images/collections/Toddler.webp' },
-  { label: 'Playtime Frocks', img: '/images/collections/Kids.webp' },
-  { label: 'School Casual Frocks', img: '/images/collections/Little Girls.jpg' },
-  { label: 'Summer Wear Frocks', img: '/images/collections/Toddler.webp' },
-  { label: 'Comfortable Home Wear', img: '/images/collections/Infant.webp' },
+  { label: 'Birthday Party Frocks', img: '/images/OccasionDailyWearFrocks/1776776135077_3807.png' },
+  { label: 'Wedding / Festive Frocks', img: '/images/OccasionDailyWearFrocks/1776776302914_4917.png' },
+  { label: 'Reception / Evening Wear', img: '/images/OccasionDailyWearFrocks/1776776431599_6458.png' },
+  { label: 'Photoshoot Special Frocks', img: '/images/OccasionDailyWearFrocks/1776780536094_5132.png' },
+  { label: 'Princess / Fancy Dress', img: '/images/OccasionDailyWearFrocks/1776782149108_3022.png' },
+  { label: 'Casual Cotton Frocks', img: '/images/OccasionDailyWearFrocks/1776840584537_4076.png' },
+  { label: 'Playtime Frocks', img: '/images/OccasionDailyWearFrocks/1776841105993_3141.png' },
+  { label: 'School Casual Frocks', img: '/images/OccasionDailyWearFrocks/1776841373963_8759.png' },
+  { label: 'Summer Wear Frocks', img: '/images/OccasionDailyWearFrocks/1776842765654_8317.png' },
+  { label: 'Comfortable Home Wear', img: '/images/OccasionDailyWearFrocks/1776843068284_4169.png' },
 ];
 
 export default function OccasionDailyWearFrocks() {

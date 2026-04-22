@@ -6,19 +6,19 @@ import '../../styles/homepage/Category.css';
 const subcategories = [
   {
     label: 'Boutique Designer Frocks',
-    img: '/images/collections/Kids.webp'
+    img: '/images/DesignerPremiumFrocks/1776775607339_8482.png'
   },
   {
     label: 'Handwork / Embroidery Frocks',
-    img: '/images/collections/Little Girls.jpg'
+    img: '/images/DesignerPremiumFrocks/1776776431599_6458.png'
   },
   {
     label: 'Custom Made Frocks',
-    img: '/images/collections/Toddler.webp'
+    img: '/images/DesignerPremiumFrocks/1776782149108_3022.png'
   },
   {
     label: 'Luxury Collection',
-    img: '/images/collections/Pre-Teen.webp'
+    img: '/images/DesignerPremiumFrocks/1776840584537_4076.png'
   },
 ];
 

@@ -4,16 +4,16 @@ import SEO from '../../components/SEO';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Net Frocks', img: '/images/collections/Kids.webp' },
-  { label: 'Gown Style Frocks', img: '/images/collections/Pre-Teen.webp' },
-  { label: 'Layered / Frill Frocks', img: '/images/collections/Little Girls.jpg' },
-  { label: 'Sequin / Glitter Frocks', img: '/images/collections/Kids.webp' },
-  { label: 'Princess Frocks', img: '/images/collections/newborn.avif' },
-  { label: 'Satin / Silk Dress', img: '/images/collections/Infant.webp' },
-  { label: 'Velvet Frocks', img: '/images/collections/Toddler.webp' },
-  { label: 'Floral Embellished Frocks', img: '/images/collections/Little Girls.jpg' },
-  { label: 'Indo-Western Party Gowns', img: '/images/collections/Pre-Teen.webp' },
-  { label: 'High-Low Frocks', img: '/images/collections/Kids.webp' },
+  { label: 'Net Frocks', img: '/images/PartyWearCollection/1776775593503_2714.png' },
+  { label: 'Gown Style Frocks', img: '/images/PartyWearCollection/1776775833065_3851.png' },
+  { label: 'Layered / Frill Frocks', img: '/images/PartyWearCollection/1776776135077_3807.png' },
+  { label: 'Sequin / Glitter Frocks', img: '/images/PartyWearCollection/1776776302914_4917.png' },
+  { label: 'Princess Frocks', img: '/images/PartyWearCollection/1776776431599_6458.png' },
+  { label: 'Satin / Silk Dress', img: '/images/PartyWearCollection/1776782149108_3022.png' },
+  { label: 'Velvet Frocks', img: '/images/PartyWearCollection/1776841373963_8759.png' },
+  { label: 'Floral Embellished Frocks', img: '/images/PartyWearCollection/1776843068284_4169.png' },
+  { label: 'Indo-Western Party Gowns', img: '/images/PartyWearCollection/1776843299285_5674.png' },
+  { label: 'High-Low Frocks', img: '/images/PartyWearCollection/1776844222010_3728.png' },
 ];
 
 export default function PartyWearCollection() {

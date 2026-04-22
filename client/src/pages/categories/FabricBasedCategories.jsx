@@ -4,12 +4,12 @@ import SEO from '../../components/SEO';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Cotton Frocks', img: '/images/collections/Toddler.webp' },
-  { label: 'Net Frocks', img: '/images/collections/Kids.webp' },
-  { label: 'Satin Frocks', img: '/images/collections/Little Girls.jpg' },
-  { label: 'Silk Frocks', img: '/images/collections/Pre-Teen.webp' },
-  { label: 'Organza Frocks', img: '/images/collections/Infant.webp' },
-  { label: 'Velvet Frocks (Winter Special)', img: '/images/collections/newborn.avif' },
+  { label: 'Cotton Frocks', img: '/images/FabricBasedCategories/1776775593503_2714.png' },
+  { label: 'Net Frocks', img: '/images/FabricBasedCategories/1776775833065_3851.png' },
+  { label: 'Satin Frocks', img: '/images/FabricBasedCategories/1776843299285_5674.png' },
+  { label: 'Silk Frocks', img: '/images/FabricBasedCategories/1776844222010_3728.png' },
+  { label: 'Organza Frocks', img: '/images/FabricBasedCategories/1776846610510_8598.png' },
+  { label: 'Velvet Frocks (Winter Special)', img: '/images/FabricBasedCategories/1776846709968_2656.png' },
 ];
 
 export default function FabricBasedCategories() {

@@ -4,16 +4,16 @@ import SEO from '../../components/SEO';
 import '../../styles/homepage/Category.css';
 
 const subcategories = [
-  { label: 'Pattu Pavadai (Silk Frocks)', img: '/images/collections/Little Girls.jpg' },
-  { label: 'Banarasi Silk Frocks', img: '/images/collections/Pre-Teen.webp' },
-  { label: 'Lehenga Choli Frocks', img: '/images/collections/Kids.webp' },
-  { label: 'Anarkali Style Frocks', img: '/images/collections/Toddler.webp' },
-  { label: 'Cotton Ethnic Frocks', img: '/images/collections/Infant.webp' },
-  { label: 'Indo-Western Fusion Frocks', img: '/images/collections/Kids.webp' },
-  { label: 'Gota Patti / Zari Work Frocks', img: '/images/collections/Little Girls.jpg' },
-  { label: 'Kalamkari / Block Print Frocks', img: '/images/collections/Infant.webp' },
-  { label: 'Dhoti Style Frocks', img: '/images/collections/newborn.avif' },
-  { label: 'Half-Saree Style Frocks', img: '/images/collections/Pre-Teen.webp' },
+  { label: 'Pattu Pavadai (Silk Frocks)', img: '/images/TraditionalEthnicFrocks/1776775833065_3851.png' },
+  { label: 'Banarasi Silk Frocks', img: '/images/TraditionalEthnicFrocks/1776776102246_3413.png' },
+  { label: 'Lehenga Choli Frocks', img: '/images/TraditionalEthnicFrocks/1776776302914_4917.png' },
+  { label: 'Anarkali Style Frocks', img: '/images/TraditionalEthnicFrocks/1776776431599_6458.png' },
+  { label: 'Cotton Ethnic Frocks', img: '/images/TraditionalEthnicFrocks/1776782149108_3022.png' },
+  { label: 'Indo-Western Fusion Frocks', img: '/images/TraditionalEthnicFrocks/1776840584537_4076.png' },
+  { label: 'Gota Patti / Zari Work Frocks', img: '/images/TraditionalEthnicFrocks/1776841373963_8759.png' },
+  { label: 'Kalamkari / Block Print Frocks', img: '/images/TraditionalEthnicFrocks/1776843068284_4169.png' },
+  { label: 'Dhoti Style Frocks', img: '/images/TraditionalEthnicFrocks/1776844222010_3728.png' },
+  { label: 'Half-Saree Style Frocks', img: '/images/TraditionalEthnicFrocks/1776846709968_2656.png' },
 ];
 
 export default function TraditionalEthnicFrocks() {
