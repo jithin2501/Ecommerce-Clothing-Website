@@ -48,14 +48,8 @@ export default function Reviews() {
 
         <div className="rv2-layout">
           <div className="rv2-left">
-            <div className="rv2-blobs">
-              <div className="blob blob-1" />
-              <div className="blob blob-2" />
-              <div className="blob blob-3" />
-              <div className="blob blob-4" />
-            </div>
             <img
-              src="images/homepage/review.png"
+              src="images/homepage/newreview.png"
               alt="Happy children"
               className="rv2-img"
               onError={(e) => {
@@ -89,7 +83,6 @@ export default function Reviews() {
                 </div>
               </div>
             </div>
-
             {/* Dots navigation if multiple reviews */}
             {reviews.length > 1 && (
               <div className="rv2-dots">
