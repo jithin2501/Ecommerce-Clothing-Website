@@ -305,9 +305,7 @@ export default function ProductManagement() {
       const fd = new FormData();
       Object.entries(form).forEach(([k, v]) => {
         if (k === 'inventory') {
-          if (v && typeof v === 'object' && Object.keys(v).length > 0) {
-            fd.append(k, JSON.stringify(v));
-          }
+          fd.append(k, JSON.stringify(v || {}));
         } else if (k === 'stock') {
           fd.append(k, v);
         } else if (Array.isArray(v)) {
