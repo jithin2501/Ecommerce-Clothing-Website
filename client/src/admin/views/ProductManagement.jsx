@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import '../assets/productmanagement.css';
 
 const API = '/api/products';
-const authHeaders = () => ({ 
-  'Content-Type': 'application/json' 
+const authHeaders = () => ({
+  'Content-Type': 'application/json'
 });
 
 const AGE_GROUPS = [
@@ -19,6 +19,26 @@ const AGE_GROUPS = [
 const AGE_LABELS = {
   'newborn': '0–6 Months', 'infant': '6–12 Months', 'toddler': '1–3 Years',
   'little-girls': '3–6 Years', 'kids': '6–9 Years', 'pre-teen': '9–12 Years'
+};
+// Per-age-group individual size keys for inventory
+const AGE_GROUP_SIZES = {
+  'newborn': ['0M', '1M', '2M', '3M', '4M', '5M', '6M'],
+  'infant': ['6M', '7M', '8M', '9M', '10M', '11M', '12M'],
+  'toddler': ['1Y', '2Y', '3Y'],
+  'little-girls': ['3Y', '4Y', '5Y', '6Y'],
+  'kids': ['6Y', '7Y', '8Y', '9Y'],
+  'pre-teen': ['9Y', '10Y', '11Y', '12Y'],
+};
+// Compute all unique size keys for the selected age groups (in display order)
+const getSizeKeys = (ageGroups) => {
+  const seen = new Set();
+  const keys = [];
+  (ageGroups || []).forEach(ag => {
+    (AGE_GROUP_SIZES[ag] || []).forEach(k => {
+      if (!seen.has(k)) { seen.add(k); keys.push(k); }
+    });
+  });
+  return keys;
 };
 const CATEGORIES = [
   'Occasion & Daily Wear Frocks',
@@ -173,12 +193,13 @@ export default function ProductManagement() {
   const fileRef = useRef(null);
   const formRef = useRef(null);
   const [expandedProductCats, setExpandedProductCats] = useState({});
+  const [expandedStock, setExpandedStock] = useState({});
 
   const toggleProductCats = (id) => {
-    setExpandedProductCats(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+    setExpandedProductCats(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+  const toggleStock = (id) => {
+    setExpandedStock(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
   const fetchSettings = async () => {
@@ -208,9 +229,9 @@ export default function ProductManagement() {
     let hash = 0;
     if (str.length === 0) return hash;
     for (let i = 0; i < str.length; i++) {
-        const char = str.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
+      const char = str.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
     }
     return hash;
   };
@@ -219,22 +240,22 @@ export default function ProductManagement() {
     if (!isAutoRotate) return false;
     const dateStr = new Date().toISOString().split('T')[0];
     const limit = SECTION_LIMITS[section] || 4;
-    
+
     const sorted = [...products]
-        .filter(p => p.isActive)
-        .sort((a,b) => {
-            const hA = stringHash(a._id + dateStr + section);
-            const hB = stringHash(b._id + dateStr + section);
-            return hA - hB;
-        });
-    
+      .filter(p => p.isActive)
+      .sort((a, b) => {
+        const hA = stringHash(a._id + dateStr + section);
+        const hB = stringHash(b._id + dateStr + section);
+        return hA - hB;
+      });
+
     const topIds = sorted.slice(0, limit).map(p => p._id);
     return topIds.includes(pId);
   };
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${API}/admin`, { 
+      const res = await fetch(`${API}/admin`, {
         headers: authHeaders(),
         credentials: 'include'
       });
@@ -244,8 +265,8 @@ export default function ProductManagement() {
     finally { setLoading(false); }
   };
 
-  useEffect(() => { 
-    fetchProducts(); 
+  useEffect(() => {
+    fetchProducts();
     fetchSettings();
   }, []);
 
@@ -258,6 +279,12 @@ export default function ProductManagement() {
 
   const handleEdit = (p) => {
     setEditId(p._id);
+    // MongoDB Map comes back as a plain object; normalise it
+    const rawInv = p.inventory && typeof p.inventory === 'object' ? p.inventory : {};
+    // Filter to only keep keys that are numbers (quantities)
+    const normInv = Object.fromEntries(
+      Object.entries(rawInv).map(([k, v]) => [k, Number(v) || 0])
+    );
     setForm({
       name: p.name,
       category: Array.isArray(p.category) ? p.category : [p.category],
@@ -266,7 +293,7 @@ export default function ProductManagement() {
       oldPrice: p.oldPrice || '',
       ageGroup: Array.isArray(p.ageGroup) ? p.ageGroup : [p.ageGroup],
       badge: p.badge || '',
-      inventory: p.inventory && typeof p.inventory === 'object' ? { ...p.inventory } : {},
+      inventory: normInv,
       stock: p.stock != null ? p.stock : 0
     });
     setPreview(p.img);
@@ -290,8 +317,14 @@ export default function ProductManagement() {
 
     setSaving(true);
     try {
+      // Compute total stock from per-size inventory
+      const inventoryValues = Object.values(form.inventory || {});
+      const computedStock = inventoryValues.length > 0
+        ? inventoryValues.reduce((sum, n) => sum + (Number(n) || 0), 0)
+        : Number(form.stock) || 0;
+
       const fd = new FormData();
-      Object.entries(form).forEach(([k, v]) => {
+      Object.entries({ ...form, stock: computedStock }).forEach(([k, v]) => {
         if (k === 'inventory') {
           if (v && typeof v === 'object' && Object.keys(v).length > 0) {
             fd.append(k, JSON.stringify(v));
@@ -312,10 +345,10 @@ export default function ProductManagement() {
       const url = editId ? `${API}/${editId}` : `${API}`;
       const method = editId ? 'PUT' : 'POST';
       // Multipart fetch doesn't need Content-Type header manually
-      const res = await fetch(url, { 
-        method, 
+      const res = await fetch(url, {
+        method,
         credentials: 'include',
-        body: fd 
+        body: fd
       });
       const data = await res.json();
 
@@ -336,8 +369,8 @@ export default function ProductManagement() {
   const handleDelete = async (id, name) => {
     if (!window.confirm(`Delete "${name}"? This will also remove the image from storage.`)) return;
     try {
-      const res = await fetch(`${API}/${id}`, { 
-        method: 'DELETE', 
+      const res = await fetch(`${API}/${id}`, {
+        method: 'DELETE',
         headers: authHeaders(),
         credentials: 'include'
       });
@@ -411,7 +444,7 @@ export default function ProductManagement() {
   const FeatToggle = ({ id, section, featuredIn }) => {
     const isAuto = isAutoRotate;
     const active = isAuto ? getAutoFeatured(id, section) : (featuredIn || []).includes(section);
-    
+
     const limit = SECTION_LIMITS[section];
     const currentCount = products.filter(p =>
       (p.featuredIn || []).includes(section)
@@ -501,23 +534,62 @@ export default function ProductManagement() {
 
               <div className="pm-row">
                 <div className="pm-group">
-                  <label>Total Quantity (Stock) *</label>
-                  <input
-                    type="number"
-                    placeholder="e.g. 100"
-                    min="0"
-                    className="pm-premium-input"
-                    value={form.stock}
-                    onChange={e => setForm(f => ({ ...f, stock: e.target.value }))}
-                  />
-                </div>
-                <div className="pm-group">
                   <label>Badge <span className="pm-optional">optional</span></label>
                   <select value={form.badge} className="pm-premium-select" onChange={e => setForm(f => ({ ...f, badge: e.target.value }))}>
                     {BADGES.map(b => <option key={b} value={b}>{b || 'None'}</option>)}
                   </select>
                 </div>
+                <div className="pm-group">
+                  <label>
+                    Total Stock
+                    <span className="pm-stock-computed">
+                      {' '}= {Object.values(form.inventory || {}).reduce((s, n) => s + (Number(n) || 0), 0)} units
+                    </span>
+                  </label>
+                  <input
+                    type="number"
+                    className="pm-premium-input"
+                    value={Object.values(form.inventory || {}).reduce((s, n) => s + (Number(n) || 0), 0)}
+                    readOnly
+                    style={{ background: '#f8fafc', color: '#64748b', cursor: 'default' }}
+                    tabIndex={-1}
+                  />
+                </div>
               </div>
+
+              {/* Per-size inventory grid — appears when age groups are selected */}
+              {form.ageGroup.length > 0 && (() => {
+                const sizes = getSizeKeys(form.ageGroup);
+                return (
+                  <div className="pm-inventory-section">
+                    <div className="pm-inventory-header">
+                      <span className="pm-inventory-title">Stock by Size</span>
+                      <span className="pm-inventory-subtitle">Enter quantity for each size</span>
+                    </div>
+                    <div className="pm-inventory-grid">
+                      {sizes.map(size => (
+                        <div key={size} className="pm-inventory-item">
+                          <label className="pm-inventory-label">{size}</label>
+                          <input
+                            type="number"
+                            min="0"
+                            placeholder="0"
+                            className="pm-inventory-input"
+                            value={form.inventory?.[size] ?? ''}
+                            onChange={e => {
+                              const val = e.target.value === '' ? 0 : Number(e.target.value);
+                              setForm(f => ({
+                                ...f,
+                                inventory: { ...f.inventory, [size]: val }
+                              }));
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
 
@@ -628,7 +700,7 @@ export default function ProductManagement() {
                                     )}
                                   </div>
                                   {hasMore && (
-                                    <button 
+                                    <button
                                       className={`pm-cat-chevron ${isEx ? 'expanded' : ''}`}
                                       onClick={(e) => {
                                         e.stopPropagation();
@@ -673,9 +745,37 @@ export default function ProductManagement() {
                           {(() => {
                             const sQty = Number(p.stock) || 0;
                             const status = sQty > 10 ? 'healthy' : sQty > 0 ? 'low' : 'out';
+                            const inv = p.inventory && typeof p.inventory === 'object' ? p.inventory : {};
+                            const invEntries = Object.entries(inv).filter(([, v]) => Number(v) > 0);
+                            const isStockEx = expandedStock[p._id];
                             return (
-                              <div className={`pm-stock-pill status-${status}`}>
-                                {sQty > 0 ? `${sQty} In Stock` : 'Out of Stock'}
+                              <div className="pm-stock-wrap">
+                                <div className="pm-stock-row">
+                                  <div className={`pm-stock-pill status-${status}`}>
+                                    {sQty > 0 ? `${sQty} In Stock` : 'Out of Stock'}
+                                  </div>
+                                  {invEntries.length > 0 && (
+                                    <button
+                                      className={`pm-stock-chevron${isStockEx ? ' expanded' : ''}`}
+                                      onClick={e => { e.stopPropagation(); toggleStock(p._id); }}
+                                      title={isStockEx ? 'Hide breakdown' : 'Show per-size stock'}
+                                    >
+                                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                        <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                                      </svg>
+                                    </button>
+                                  )}
+                                </div>
+                                {isStockEx && invEntries.length > 0 && (
+                                  <div className="pm-stock-breakdown">
+                                    {invEntries.map(([size, qty]) => (
+                                      <div key={size} className="pm-stock-size-row">
+                                        <span className="pm-stock-size-label">{size}</span>
+                                        <span className="pm-stock-size-qty">{qty}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             );
                           })()}
