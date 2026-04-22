@@ -338,31 +338,43 @@
 }
 
 .pm-inventory-section {
-  margin-top: 1rem;
+  margin-top: 1.2rem;
   padding: 1.2rem;
   background: #f8fafc;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #e2e8f0;
+}
+
+.pm-inventory-title {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: #2D3E50;
+  margin-bottom: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .pm-inventory-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 1rem;
-  margin-top: 0.8rem;
 }
 
 .pm-inventory-item {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.3rem;
 }
 
 .pm-inventory-label {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: #64748b;
   font-weight: 700;
-  text-transform: uppercase;
+}
+
+.pm-inventory-item input {
+  padding: 0.5rem 0.7rem !important;
+  font-size: 0.8rem !important;
 }
 
 .pm-premium-input,
@@ -763,6 +775,40 @@
 .pm-stock {
   text-align: left !important;
   min-width: 120px;
+  padding: 0.9rem 0.7rem !important;
+}
+
+.pm-stock-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pm-stock-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
+
+.pm-stock-age-qty {
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  display: flex;
+  gap: 3px;
+  border: 1px solid #e2e8f0;
+}
+
+.pm-saq-label {
+  font-weight: 700;
+  color: #64748b;
+}
+
+.pm-saq-val {
+  font-weight: 800;
+  color: #1e2139;
 }
 
 .pm-stock-pill {

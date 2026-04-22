@@ -20,6 +20,14 @@ const AGE_LABELS = {
   'newborn': '0–6 Months', 'infant': '6–12 Months', 'toddler': '1–3 Years',
   'little-girls': '3–6 Years', 'kids': '6–9 Years', 'pre-teen': '9–12 Years'
 };
+const INDIVIDUAL_AGE_MAP = {
+  'newborn': ['0-6M'],
+  'infant': ['6-12M'],
+  'toddler': ['1Y', '2Y', '3Y'],
+  'little-girls': ['3Y', '4Y', '5Y', '6Y'],
+  'kids': ['6Y', '7Y', '8Y', '9Y'],
+  'pre-teen': ['9Y', '10Y', '11Y', '12Y']
+};
 const CATEGORIES = [
   'Occasion & Daily Wear Frocks',
   'Party Wear Collection',
@@ -501,23 +509,52 @@ export default function ProductManagement() {
 
               <div className="pm-row">
                 <div className="pm-group">
-                  <label>Total Quantity (Stock) *</label>
-                  <input
-                    type="number"
-                    placeholder="e.g. 100"
-                    min="0"
-                    className="pm-premium-input"
-                    value={form.stock}
-                    onChange={e => setForm(f => ({ ...f, stock: e.target.value }))}
-                  />
-                </div>
-                <div className="pm-group">
                   <label>Badge <span className="pm-optional">optional</span></label>
                   <select value={form.badge} className="pm-premium-select" onChange={e => setForm(f => ({ ...f, badge: e.target.value }))}>
                     {BADGES.map(b => <option key={b} value={b}>{b || 'None'}</option>)}
                   </select>
                 </div>
+                <div className="pm-group">
+                  <label>Total Stock (Auto Summary)</label>
+                  <input
+                    type="number"
+                    className="pm-premium-input"
+                    value={form.stock}
+                    readOnly
+                    style={{ background: '#f1f5f9', cursor: 'not-allowed' }}
+                  />
+                </div>
               </div>
+
+              {form.ageGroup.length > 0 && (
+                <div className="pm-inventory-section">
+                  <h4 className="pm-inventory-title">Individual Age Stock</h4>
+                  <div className="pm-inventory-grid">
+                    {[...new Set(form.ageGroup.flatMap(ag => INDIVIDUAL_AGE_MAP[ag] || []))]
+                      .sort((a,b) => {
+                        const getVal = (s) => parseInt(s) || 0;
+                        return getVal(a) - getVal(b);
+                      })
+                      .map(age => (
+                        <div key={age} className="pm-inventory-item">
+                          <label className="pm-inventory-label">{age}</label>
+                          <input
+                            type="number"
+                            min="0"
+                            placeholder="0"
+                            value={form.inventory[age] || ''}
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value) || 0;
+                              const newInv = { ...form.inventory, [age]: val };
+                              const total = Object.values(newInv).reduce((a, b) => a + b, 0);
+                              setForm(f => ({ ...f, inventory: newInv, stock: total }));
+                            }}
+                          />
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -674,8 +711,22 @@ export default function ProductManagement() {
                             const sQty = Number(p.stock) || 0;
                             const status = sQty > 10 ? 'healthy' : sQty > 0 ? 'low' : 'out';
                             return (
-                              <div className={`pm-stock-pill status-${status}`}>
-                                {sQty > 0 ? `${sQty} In Stock` : 'Out of Stock'}
+                              <div className="pm-stock-cell">
+                                <div className={`pm-stock-pill status-${status}`}>
+                                  {sQty > 0 ? `${sQty} In Stock` : 'Out of Stock'}
+                                </div>
+                                {p.inventory && Object.keys(p.inventory).length > 0 && (
+                                  <div className="pm-stock-breakdown">
+                                    {Object.entries(p.inventory)
+                                      .filter(([, q]) => q > 0)
+                                      .map(([age, qty]) => (
+                                        <div key={age} className="pm-stock-age-qty">
+                                          <span className="pm-saq-label">{age}:</span>
+                                          <span className="pm-saq-val">{qty}</span>
+                                        </div>
+                                      ))}
+                                  </div>
+                                )}
                               </div>
                             );
                           })()}
