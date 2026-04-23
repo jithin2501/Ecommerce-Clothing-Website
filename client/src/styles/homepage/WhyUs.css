@@ -151,6 +151,8 @@
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 12px 40px rgba(192, 127, 94, 0.3));
+  mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
 }
 
 /* ── Responsive ── */
