@@ -28,22 +28,6 @@ export default function WhyUs() {
               our commitment is to make your experience smooth, safe, and truly
               worthwhile for your little ones.
             </p>
-            
-            <div className="why-visuals">
-              <div className="why-blob" />
-              <div className="why-dot why-dot-1" />
-              <div className="why-dot why-dot-2" />
-              <div className="why-dot why-dot-3" />
-              <img
-                src="images/homepage/About1.png"
-                alt="Why Choose Sumathi Trends"
-                className="why-img"
-                onError={(e) => {
-                  e.target.src = 'images/homepage/yopa.png';
-                }}
-              />
-            </div>
-
             <div className="why-items">
               {items.map(({ icon: Icon, title, desc }) => (
                 <div key={title} className="why-item">
@@ -57,6 +41,21 @@ export default function WhyUs() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="why-visuals">
+            <div className="why-blob" />
+            <div className="why-dot why-dot-1" />
+            <div className="why-dot why-dot-2" />
+            <div className="why-dot why-dot-3" />
+            <img
+              src="./about.png"
+              alt="Why Choose Sumathi Trends"
+              className="why-img"
+              onError={(e) => {
+                e.target.src = 'images/homepage/yopa.png';
+              }}
+            />
           </div>
         </div>
       </div>

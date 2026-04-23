@@ -220,7 +220,7 @@
   }
 
   .hero-visuals {
-    margin-top: -1.5rem;
+    margin-top: 1.5rem;
   }
 
   .hero-tag {
@@ -229,5 +229,9 @@
 
   .trust-bar {
     justify-content: center;
+  }
+
+  .trust-text {
+    margin-left: 6px;
   }
 }
