@@ -4,7 +4,7 @@
 .hero-section {
   width: 100%;
   padding: 0 0 40px;
-  margin-top: -30px;
+  margin-top: -10px;
   display: flex;
   align-items: flex-start;
 
@@ -21,7 +21,7 @@
   display: grid;
   grid-template-columns: auto auto;
   justify-content: center;
-  gap: 80px;
+  gap: 30px;
   align-items: end;
   width: 100%;
 }
@@ -214,7 +214,7 @@
   position: relative;
   z-index: 5;
   width: 100%;
-  max-width: 450px;
+  max-width: 520px;
   height: auto;
   object-fit: contain;
   filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.08));
@@ -237,7 +237,7 @@
   }
 
   .hero-visuals {
-    margin-top: -30px;
+    margin-top: 0.25rem;
   }
 
   .hero-tag {

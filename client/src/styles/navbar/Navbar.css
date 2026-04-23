@@ -288,10 +288,13 @@ nav.sidebar-open {
 /* ── Sidebar Overlay ── */
 .sidebar-overlay {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px);
-  z-index: 2000;
+  z-index: 9998;
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
@@ -315,7 +318,7 @@ nav.sidebar-open {
   height: 100vh;
   height: 100dvh;
   background: #1e293b;
-  z-index: 2001;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
   box-shadow: -8px 0 32px rgba(0, 0, 0, 0.3);
@@ -612,7 +615,7 @@ nav.sidebar-open {
 
 /* Global Navbar Padding fix for desktop & mobile */
 body.has-navbar {
-  padding-top: 40px;
+  padding-top: 140px;
 }
 
 body.collections-path {

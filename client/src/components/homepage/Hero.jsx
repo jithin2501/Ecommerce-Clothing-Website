@@ -1,4 +1,5 @@
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import '../../styles/homepage/Hero.css';
 
@@ -91,10 +92,10 @@ export default function Hero() {
               Designed for comfort, style, and every little adventure from ages 0–12.
             </p>
 
-            <a href="#collections" className="btn-collection">
+            <Link to="/collections" className="btn-collection">
               View Collection
               <ArrowRight size={18} />
-            </a>
+            </Link>
 
             <div className="trust-bar">
               <div className="trust-avatars">
