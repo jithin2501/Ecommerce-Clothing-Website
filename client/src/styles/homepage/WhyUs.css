@@ -40,18 +40,25 @@
 
 /* ── Grid Layout ── */
 .why-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: stretch;
-  gap: 3rem;
+  width: 100%;
   padding: 0 8%;
 }
 
 /* ── Content ── */
 .why-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem 4rem;
+  align-items: center;
+}
+
+@media (max-width: 1100px) {
+  .why-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
 }
 
 .why-headline {
@@ -124,8 +131,16 @@
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  margin-left: 2rem;
-  margin-bottom: -10px;
+  grid-column: 2;
+  grid-row: 1 / span 3;
+}
+
+@media (max-width: 1100px) {
+  .why-visuals {
+    grid-column: auto;
+    grid-row: auto;
+    margin: 2.5rem 0;
+  }
 }
 
 .why-blob {
@@ -154,13 +169,16 @@
     gap: 2.5rem;
   }
 
+  .why-grid {
+    padding: 0 5%;
+  }
+
   .why-visuals {
     order: 2;
   }
 
   .why-content {
     order: 1;
-    text-align: center;
   }
 
 }
