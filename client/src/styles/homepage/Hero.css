@@ -3,9 +3,10 @@
 ========================================================= */
 .hero-section {
   width: 100%;
-  padding: 40px 0;
+  padding: 0 0 40px;
+  margin-top: -15px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
 
 }
 .hero-section .section-inner {
@@ -17,8 +18,10 @@
 
 .hero {
   display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  align-items: center;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  gap: 80px;
+  align-items: end;
   width: 100%;
 }
 
@@ -180,7 +183,7 @@
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-end;
 }
 
 /* Remove all pseudo-element orbs */
@@ -194,29 +197,10 @@
   position: relative;
   z-index: 5;
   width: 100%;
-  max-width: 780px;
+  max-width: 450px;
   height: auto;
   object-fit: contain;
-  filter:
-    drop-shadow(0 0 18px rgba(210, 140, 100, 0.75))
-    drop-shadow(0 0 45px rgba(210, 140, 100, 0.45))
-    drop-shadow(0 0 80px rgba(230, 160, 110, 0.25));
-  animation: imageGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes imageGlow {
-  from {
-    filter:
-      drop-shadow(0 0 15px rgba(210, 140, 100, 0.65))
-      drop-shadow(0 0 40px rgba(210, 140, 100, 0.35))
-      drop-shadow(0 0 70px rgba(230, 160, 110, 0.2));
-  }
-  to {
-    filter:
-      drop-shadow(0 0 22px rgba(210, 140, 100, 0.85))
-      drop-shadow(0 0 55px rgba(210, 140, 100, 0.55))
-      drop-shadow(0 0 100px rgba(230, 160, 110, 0.3));
-  }
+  filter: drop-shadow(0 20px 60px rgba(0, 0, 0, 0.08));
 }
 
 /* ── Responsive ── */
