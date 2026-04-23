@@ -127,19 +127,7 @@
 }
 
 .why-blob {
-  position: absolute;
-  width: 80%;
-  height: 80%;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(192,127,94,0.25) 0%,
-    rgba(226,149,120,0.12) 50%,
-    transparent 75%
-  );
-  border-radius: 50%;
-  filter: blur(30px);
-  animation: glowPulse 3.5s ease-in-out infinite alternate;
-  z-index: 1;
+  display: none;
 }
 
 .why-img {
@@ -150,9 +138,9 @@
   max-height: 500px;
   height: auto;
   object-fit: contain;
-  filter: drop-shadow(0 12px 40px rgba(192, 127, 94, 0.3));
-  mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+  filter: 
+    drop-shadow(0 10px 30px rgba(192, 127, 94, 0.35))
+    drop-shadow(0 0 50px rgba(192, 127, 94, 0.2));
 }
 
 /* ── Responsive ── */

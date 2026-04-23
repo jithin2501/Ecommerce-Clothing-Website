@@ -37,7 +37,7 @@
   width: 100%;
   display: grid;
   grid-template-columns: 1fr 1.1fr;
-  align-items: center;
+  align-items: stretch;
   gap: 4rem;
   padding: 0 8%;
 }
@@ -45,60 +45,19 @@
 .about-visuals {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   position: relative;
-}
-
-.about-visuals::before {
-  content: '';
-  position: absolute;
-  width: 90%;
-  height: 90%;
-  background: 
-    radial-gradient(circle at center, 
-      rgba(192, 127, 94, 0.6) 0%, 
-      rgba(192, 127, 94, 0.2) 40%, 
-      transparent 70%),
-    radial-gradient(circle at 30% 30%, 
-      rgba(255, 255, 255, 0.1) 0%, 
-      transparent 40%);
-  border-radius: 50%;
-  z-index: 1;
-  filter: blur(50px);
-  mix-blend-mode: screen;
-  animation: intenseGlow 5s ease-in-out infinite alternate;
-}
-
-.about-visuals::after {
-  content: '';
-  position: absolute;
-  width: 120%;
-  height: 120%;
-  background: radial-gradient(circle, 
-    rgba(192, 127, 94, 0.2) 0%, 
-    transparent 80%);
-  border-radius: 50%;
-  z-index: 0;
-  filter: blur(100px);
-  animation: intenseGlow 8s ease-in-out infinite alternate-reverse;
-}
-
-@keyframes intenseGlow {
-  from { opacity: 0.4; transform: scale(0.85) rotate(0deg); }
-  to   { opacity: 1;   transform: scale(1.15) rotate(5deg); }
 }
 
 .about-img {
   position: relative;
   z-index: 2;
   width: 100%;
-  height: auto;
+  height: 420px;
   max-width: 480px;
   object-fit: contain;
-  border-radius: 20px;
-  filter: 
-    drop-shadow(0 0 25px rgba(192, 127, 94, 0.4))
-    drop-shadow(0 15px 40px rgba(0, 0, 0, 0.2));
+  border-radius: 30px;
+  filter: none;
 }
 
 .about-content {

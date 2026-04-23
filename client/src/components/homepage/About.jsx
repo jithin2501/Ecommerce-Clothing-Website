@@ -28,12 +28,9 @@ export default function About() {
         <div className="about">
           <div className="about-visuals">
             <img
-              src="./about.png"
+              src="images/homepage/About1.png"
               alt="About Sumathi Trends"
               className="about-img"
-              onError={(e) => {
-                e.target.src = 'images/homepage/yopa.png';
-              }}
             />
           </div>
 
@@ -51,7 +48,7 @@ export default function About() {
             <p className="about-desc">
               Our collections are thoughtfully designed to balance playful
               aesthetics with everyday comfort, ensuring your children can
-              move, explore, and express themselves freely.
+              move, explore, and express themselves freely from their first steps to their biggest milestones.
             </p>
             <a href="#" className="btn-about">
               Learn More <ArrowRight size={16} />
