@@ -5,7 +5,7 @@
 
 .why-section {
   width: 100%;
-  padding: 5rem 0;   /* increased section gap */
+  padding: 5rem 0 0;   /* removed bottom gap */
   background: #fff;
   position: relative;
   overflow: hidden;
