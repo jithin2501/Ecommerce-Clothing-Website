@@ -635,7 +635,7 @@ body.contact-path {
 
   body.collections-path,
   body.contact-path {
-    padding-top: 120px; 
+    padding-top: 120px;
   }
 
   body.cdp-path {
@@ -653,5 +653,9 @@ body.contact-path {
   .nav-inner {
     max-width: 100%;
     overflow: hidden;
+  }
+
+  body.account-path {
+    padding-top: 80px;
   }
 }
