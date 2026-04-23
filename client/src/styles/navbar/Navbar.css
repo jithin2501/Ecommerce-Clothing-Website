@@ -625,7 +625,11 @@ body.cdp-path {
 }
 
 body.contact-path {
-  padding-top: 70px;
+  padding-top: 80px;
+}
+
+body.account-path {
+  padding-top: 80px;
 }
 
 @media (max-width: 1100px) {

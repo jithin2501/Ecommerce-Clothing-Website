@@ -97,17 +97,6 @@ export default function OrderManagement() {
     return matchesSearch && isSameDay;
   });
 
-  // Fetch tracking data immediately when an order is selected if it's not already loaded
-  useEffect(() => {
-    if (selectedOrder) {
-      const currentOrder = orders.find(o => o._id === selectedOrder._id);
-      // Only sync if we don't have activities yet or if we want to refresh
-      if (currentOrder && !currentOrder.trackingPayload) {
-        handleSyncStatus(selectedOrder._id);
-      }
-    }
-  }, [selectedOrder]);
-
   if (loading) return <div className="om-page"><div className="no-orders-msg">Loading Orders...</div></div>;
 
   return (
@@ -354,11 +343,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
           {/* 4. Tracking Section (Last) */}
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><Truck size={16} /> Live Tracking</h4>
-            <DetailedTracking 
-              status={order.trackingStatus} 
-              trackingData={order.trackingPayload} 
-              syncing={syncing}
-            />
+            <DetailedTracking status={order.trackingStatus} trackingData={order.trackingPayload} />
             {order.trackingLink && order.trackingPayload?.activities?.length > 0 && (
               <a href={order.trackingLink} target="_blank" rel="noopener noreferrer" className="om-track-link">
                 Tracking Page ↗
@@ -377,7 +362,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
   );
 }
 
-function DetailedTracking({ status, trackingData, syncing }) {
+function DetailedTracking({ status, trackingData }) {
   const activities = trackingData?.activities || [];
 
   const getDay = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
@@ -385,9 +370,7 @@ function DetailedTracking({ status, trackingData, syncing }) {
 
   return (
     <div className="om-detailed-tracking">
-      {syncing && activities.length === 0 ? (
-        <div className="om-tracking-pending">Fetching live updates from Shiprocket...</div>
-      ) : activities.length === 0 ? (
+      {activities.length === 0 ? (
         <div className="om-tracking-pending">No tracking scans yet</div>
       ) : (
         activities.map((a, i) => (
