@@ -147,8 +147,10 @@
   z-index: 2;
   width: 100%;
   max-width: 460px;
-  object-fit: cover;
-  filter: drop-shadow(0 12px 40px rgba(192,127,94,0.3));
+  max-height: 500px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 40px rgba(192, 127, 94, 0.3));
 }
 
 /* ── Responsive ── */
