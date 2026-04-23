@@ -8,7 +8,7 @@
   padding: 5rem 0 0;   /* removed bottom gap */
   background: #fff;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .why-section::before {
