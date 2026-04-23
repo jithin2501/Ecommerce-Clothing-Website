@@ -4,15 +4,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
 
 :root {
-  --charcoal: #2D3E50;
-  --accent-clay: #C07F5E;
-  --accent-hover: #A66B4D;
+  --charcoal: #1E293B;     /* Sleek Slate */
+  --accent-clay: #FFC1CC;   /* Pastel Pink */
+  --accent-hover: #E8AAB6;
   --slate-gray: #64748B;
   --light-bg: #FFFFFF;
   --cart-orange: #FF5C00;
-  --soft-glow: rgba(192, 127, 94, 0.15);
+  --soft-glow: rgba(255, 193, 204, 0.15);
   --side-pad: 16px;
-  --footer-bg: #2D3E50;
+  --footer-bg: #1E293B;     /* Sleek Slate */
   --footer-text-main: #ffffff;
   --footer-text-muted: #cbd5e1;
   --footer-border: rgba(255, 255, 255, 0.1);
