@@ -9,11 +9,12 @@
   align-items: flex-start;
 
 }
+
 .hero-section .section-inner {
   width: 100%;
-  max-width: 1200px;   
-  margin: 0 auto;      
-  padding: 0 20px;    
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .hero {
@@ -52,8 +53,17 @@
 }
 
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.4; transform: scale(0.7); }
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.4;
+    transform: scale(0.7);
+  }
 }
 
 /* ── JS-driven Typewriter ── */
@@ -75,8 +85,15 @@
 }
 
 @keyframes blink-cursor {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
 }
 
 /* ── Title ── */
@@ -163,7 +180,7 @@
   margin-right: -10px;
   background-size: cover;
   background-position: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .trust-text {
@@ -220,7 +237,7 @@
   }
 
   .hero-visuals {
-    margin-top: 1.5rem;
+    margin-top: 0.25rem;
   }
 
   .hero-tag {
