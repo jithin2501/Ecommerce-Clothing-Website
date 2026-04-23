@@ -612,7 +612,7 @@ nav.sidebar-open {
 
 /* Global Navbar Padding fix for desktop & mobile */
 body.has-navbar {
-  padding-top: 140px;
+  padding-top: 40px;
 }
 
 body.collections-path {
