@@ -43,18 +43,25 @@ export default function OrderManagement() {
     }
   }, [selectedOrder?._id]);
 
+  // Keep a ref to orders to avoid stale closures in the interval
+  const ordersRef = useRef(orders);
+  useEffect(() => {
+    ordersRef.current = orders;
+  }, [orders]);
+
   // BACKGROUND SYNC: Automatically ask Shiprocket for updates every 60s for orders in progress
   useEffect(() => {
-    if (orders.length === 0) return;
-
-    const activeOrders = orders.filter(o => o.shiprocketShipmentId && (o.trackingStatus || '').toUpperCase() !== 'DELIVERED');
-
     const syncInterval = setInterval(() => {
+      const activeOrders = ordersRef.current.filter(o => 
+        o.shiprocketShipmentId && 
+        (o.trackingStatus || '').toUpperCase() !== 'DELIVERED'
+      );
+      
       activeOrders.forEach(o => handleSyncStatus(o._id));
     }, 60000); // Check Shiprocket every 60 seconds
 
     return () => clearInterval(syncInterval);
-  }, [orders]);
+  }, []);
 
   const handleSyncStatus = async (orderId) => {
     setSyncingId(orderId);
