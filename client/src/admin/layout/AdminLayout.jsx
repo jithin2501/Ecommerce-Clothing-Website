@@ -3,28 +3,19 @@ import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import '../assets/AdminLayout.css';
 
-export default function AdminLayout() {
+export default function AdminLayout({ adminUser }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(adminUser || null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const mainRef = useRef(null);
 
   useEffect(() => {
-    // Fetch actual user data (role + permissions) from the server
-    const fetchMe = async () => {
-      try {
-        const res = await fetch('/api/auth/me', { credentials: 'include' });
-        const data = await res.json();
-        if (data.success) {
-          setUser(data.user);
-        }
-      } catch (err) {
-        console.error("Failed to fetch user data", err);
-      }
-    };
-    fetchMe();
-  }, []);
+    // Sync local user state if adminUser prop changes
+    if (adminUser) {
+      setUser(adminUser);
+    }
+  }, [adminUser]);
 
   useEffect(() => {
     document.body.style.overflow = 'hidden';

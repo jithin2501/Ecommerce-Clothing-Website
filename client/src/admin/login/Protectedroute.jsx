@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 
 const PERMISSION_MAP = {
@@ -68,5 +68,10 @@ export default function ProtectedRoute({ children }) {
     }
   }
 
-  return children;
+  return React.Children.map(children, child => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { adminUser: auth.user });
+    }
+    return child;
+  });
 }
