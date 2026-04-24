@@ -553,7 +553,7 @@
   .sh-page {
     padding: 0;
     min-height: auto;
-    margin-top: 20px;
+    margin-top: 8px;
     margin-bottom: 20px;
   }
 
@@ -564,7 +564,7 @@
 
   .sh-main {
     width: 94%;
-    margin: 0 auto;
+    margin: 16px auto;
     background: #fff;
     border-radius: 14px;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
