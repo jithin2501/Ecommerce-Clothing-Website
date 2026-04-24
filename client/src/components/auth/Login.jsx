@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, googleProvider, setupRecaptcha, sendOtp } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
+import SEO from '../SEO';
 import './Login.css';
 
 export default function Login() {
@@ -149,6 +150,10 @@ export default function Login() {
 
   return (
     <div className="ul-page">
+      <SEO 
+        title="Login" 
+        description="Login to your Sumathi Trends account to manage your orders, addresses, and wishlist."
+      />
 
       <div
         id="recaptcha-container"
