@@ -56,7 +56,7 @@ export default function Footer() {
                 <img src="/images/icons/instagram.png" alt="IG" />
               </a>
               <a href="https://wa.me/918792888508" className="social-icon" aria-label="WhatsApp">
-                <img src="/images/icons/social.png" alt="WA" />
+                <img src="/images/icons/whatsapp.png" alt="WA" />
               </a>
             </div>
           </div>
@@ -65,11 +65,11 @@ export default function Footer() {
           <div className="footer-column">
             <h3>Useful Links</h3>
             <ul className="footer-links">
-              <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('/'); window.scrollTo(0,0); }}>Home</a></li>
+              <li><a href="#" onClick={(e) => { e.preventDefault(); navigate('/'); window.scrollTo(0, 0); }}>Home</a></li>
               <li><a href="#about" onClick={(e) => { e.preventDefault(); navigate('/'); setTimeout(() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>About Us</a></li>
-              <li><Link to="/collections" onClick={() => window.scrollTo(0,0)}>Collections</Link></li>
+              <li><Link to="/collections" onClick={() => window.scrollTo(0, 0)}>Collections</Link></li>
               <li><a href="#reviews" onClick={(e) => { e.preventDefault(); navigate('/'); setTimeout(() => document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Reviews</a></li>
-              <li><Link to="/contact" onClick={() => window.scrollTo(0,0)}>Contact Us</Link></li>
+              <li><Link to="/contact" onClick={() => window.scrollTo(0, 0)}>Contact Us</Link></li>
             </ul>
           </div>
 
@@ -77,11 +77,11 @@ export default function Footer() {
           <div className="footer-column">
             <h3>Category</h3>
             <ul className="footer-links">
-              <li><Link to="/collections" state={{ category: 'Daily Wear Frocks' }} onClick={() => window.scrollTo(0,0)}>Daily Wear Frocks</Link></li>
-              <li><Link to="/collections" state={{ category: 'Party Wear Collection' }} onClick={() => window.scrollTo(0,0)}>Party Wear Collection</Link></li>
-              <li><Link to="/collections" state={{ category: 'Traditional & Ethnic Frocks' }} onClick={() => window.scrollTo(0,0)}>Traditional & Ethnic</Link></li>
-              <li><Link to="/collections" state={{ category: 'Designer & Premium Frocks' }} onClick={() => window.scrollTo(0,0)}>Designer & Premium</Link></li>
-              <li><Link to="/collections" state={{ category: 'Fabric-Based Categories' }} onClick={() => window.scrollTo(0,0)}>Fabric Based</Link></li>
+              <li><Link to="/collections" state={{ category: 'Daily Wear Frocks' }} onClick={() => window.scrollTo(0, 0)}>Daily Wear Frocks</Link></li>
+              <li><Link to="/collections" state={{ category: 'Party Wear Collection' }} onClick={() => window.scrollTo(0, 0)}>Party Wear Collection</Link></li>
+              <li><Link to="/collections" state={{ category: 'Traditional & Ethnic Frocks' }} onClick={() => window.scrollTo(0, 0)}>Traditional & Ethnic</Link></li>
+              <li><Link to="/collections" state={{ category: 'Designer & Premium Frocks' }} onClick={() => window.scrollTo(0, 0)}>Designer & Premium</Link></li>
+              <li><Link to="/collections" state={{ category: 'Fabric-Based Categories' }} onClick={() => window.scrollTo(0, 0)}>Fabric Based</Link></li>
             </ul>
           </div>
 
@@ -139,4 +139,4 @@ export default function Footer() {
       </footer>
     </>
   );
-}
+}
