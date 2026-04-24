@@ -437,22 +437,27 @@
   color: #64748b;
 }
 
-.om-track-link {
-  display: inline-block;
-  margin-top: 1rem;
-  font-size: 0.82rem;
-  color: #3b82f6;
-  font-weight: 700;
-  text-decoration: none;
-  padding: 8px 16px;
-  background: #eff6ff;
-  border-radius: 8px;
-  transition: all 0.2s;
+.om-tracking-pending {
   text-align: center;
+  padding: 3rem 1rem;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  font-weight: 500;
+  font-style: italic;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px dashed #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  animation: srPulse 2s infinite;
 }
 
-.om-track-link:hover {
-  background: #dbeafe;
+@keyframes srPulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
 }
 
 .om-drawer-footer {

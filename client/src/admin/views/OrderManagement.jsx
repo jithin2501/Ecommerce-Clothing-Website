@@ -346,12 +346,10 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
           {/* 4. Tracking Section (Last) */}
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><Truck size={16} /> Live Tracking</h4>
-            <ShiprocketActivityTracker trackingData={order.trackingPayload} />
-            {order.trackingLink && (
-              <a href={order.trackingLink} target="_blank" rel="noopener noreferrer" className="om-track-link">
-                Tracking Page ↗
-              </a>
-            )}
+            <ShiprocketActivityTracker 
+              trackingData={order.trackingPayload} 
+              isSyncing={syncing}
+            />
           </div>
         </div>
 
@@ -365,11 +363,15 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
   );
 }
 
-function ShiprocketActivityTracker({ trackingData }) {
+function ShiprocketActivityTracker({ trackingData, isSyncing }) {
   const activities = trackingData?.activities || [];
 
   if (activities.length === 0) {
-    return <div className="om-tracking-pending">No tracking scans yet</div>;
+    return (
+      <div className="om-tracking-pending">
+        {isSyncing ? 'Updating live tracking...' : 'No tracking scans yet'}
+      </div>
+    );
   }
 
   const getDay = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: '2-digit' });
