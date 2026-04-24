@@ -197,6 +197,13 @@ export default function OrderManagement() {
 function OrderDrawer({ order, onClose, onSync, syncing }) {
   const printRef = useRef();
 
+  // Automatically sync tracking data when the drawer opens if the order is not yet delivered
+  useEffect(() => {
+    if (order?._id && order.trackingStatus !== 'DELIVERED') {
+      onSync();
+    }
+  }, [order?._id]);
+
   const handlePrint = () => {
     const printContent = printRef.current.innerHTML;
     const printWindow = window.open('', '_blank');
