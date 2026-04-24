@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useNavigate } from 'react-router-dom';
+import { auth } from '../../firebase';
 import '../../styles/collectiondetails/ProductRelated.css';
 
 const API = '/api/products';
@@ -63,7 +64,11 @@ function RelatedCard({ item }) {
 
   const handleGoToCart = (e) => {
     e.stopPropagation();
-    navigate('/cart');
+    if (auth.currentUser) {
+      navigate('/cart');
+    } else {
+      navigate('/login');
+    }
   };
 
   return (

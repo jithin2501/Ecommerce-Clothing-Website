@@ -114,7 +114,14 @@ export default function AddressSidebar({ isOpen, onClose, onSelectAddress }) {
         <div style={{ padding: '20px 24px 10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h3 style={{ fontSize: '14px', margin: 0, fontWeight: '600', color: '#444' }}>SAVED ADDRESSES</h3>
           <button
-            onClick={() => { onClose(); navigate('/account/addresses'); }}
+            onClick={() => { 
+              onClose(); 
+              if (auth.currentUser) {
+                navigate('/account/addresses'); 
+              } else {
+                navigate('/login');
+              }
+            }}
             style={{
               background: 'none', border: 'none', color: '#c07a55', fontWeight: 'bold',
               fontSize: '13px', cursor: 'pointer', outline: 'none'
