@@ -358,82 +358,83 @@
   color: #64748b;
 }
 
-/* ── SIMPLIFIED ADMIN TRACKER ── */
-.admin-tracker {
+/* ── SHIPROCKET ACTIVITY TRACKER ── */
+.shiprocket-tracker {
   display: flex;
   flex-direction: column;
-  padding: 10px 5px;
+  padding: 10px 0;
 }
 
-.at-step {
+.sr-step {
   display: flex;
-  gap: 20px;
-  min-height: 50px;
+  gap: 16px;
+  min-height: 80px;
 }
 
-.at-dot-line {
+.sr-dot-line {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 14px;
+  width: 12px;
 }
 
-.at-dot {
-  width: 14px;
-  height: 14px;
-  background: #e2e8f0;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  margin-top: 4px;
-}
-
-.at-step.active .at-dot {
-  background: #dcfce7;
-}
-
-.at-dot-inner {
-  width: 6px;
-  height: 6px;
+.sr-dot {
+  width: 10px;
+  height: 10px;
   background: #10b981;
   border-radius: 50%;
+  margin-top: 5px;
+  z-index: 2;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
 }
 
-.at-line {
+.sr-line {
   flex: 1;
   width: 2px;
-  background: #e2e8f0;
-  min-height: 20px;
-}
-
-.at-line.active {
   background: #10b981;
 }
 
-.at-info {
+.sr-info {
   flex: 1;
-  padding-bottom: 20px;
+  padding-bottom: 25px;
+}
+
+.sr-label-row {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  margin-bottom: 4px;
 }
 
-.at-label {
-  font-size: 0.85rem;
+.sr-status {
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #94a3b8;
-}
-
-.at-step.active .at-label {
   color: #1e293b;
+  text-transform: capitalize;
 }
 
-.at-date {
-  font-size: 0.75rem;
+.sr-date {
+  font-size: 0.8rem;
   color: #64748b;
   font-weight: 500;
+}
+
+.sr-activity {
+  font-size: 0.85rem;
+  color: #334155;
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+.sr-meta {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.sr-meta span {
+  font-weight: 600;
+  color: #64748b;
 }
 
 .om-track-link {
@@ -443,10 +444,11 @@
   color: #3b82f6;
   font-weight: 700;
   text-decoration: none;
-  padding: 6px 12px;
+  padding: 8px 16px;
   background: #eff6ff;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: all 0.2s;
+  text-align: center;
 }
 
 .om-track-link:hover {

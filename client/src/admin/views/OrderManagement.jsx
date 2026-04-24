@@ -303,17 +303,6 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
 
         <div className="om-drawer-head">
           <div className="om-drawer-id">ORDER #{order.displayId}</div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <button 
-              className={`om-sync-btn ${syncing ? 'spinning' : ''}`} 
-              onClick={onSync}
-              disabled={syncing}
-              title="Sync with Shiprocket"
-            >
-              <RefreshCw size={14} />
-            </button>
-            <div className={`om-drawer-status ${String(order.trackingStatus || '').toLowerCase()}`}>{order.trackingStatus}</div>
-          </div>
         </div>
 
         <div className="om-drawer-body" ref={printRef}>
@@ -357,14 +346,10 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
           {/* 4. Tracking Section (Last) */}
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><Truck size={16} /> Live Tracking</h4>
-            <SimplifiedAdminTracker 
-              status={order.trackingStatus} 
-              orderDate={order.createdAt} 
-              trackingData={order.trackingPayload} 
-            />
-            {order.trackingLink && order.trackingPayload?.activities?.length > 0 && (
+            <ShiprocketActivityTracker trackingData={order.trackingPayload} />
+            {order.trackingLink && (
               <a href={order.trackingLink} target="_blank" rel="noopener noreferrer" className="om-track-link">
-                Full Tracking History ↗
+                Tracking Page ↗
               </a>
             )}
           </div>
@@ -380,53 +365,35 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
   );
 }
 
-function SimplifiedAdminTracker({ status, orderDate, trackingData }) {
+function ShiprocketActivityTracker({ trackingData }) {
   const activities = trackingData?.activities || [];
-  
-  // High-level steps mapping Shiprocket statuses
-  const steps = [
-    { key: 'ORDERED', label: 'Ordered', date: orderDate },
-    { key: 'SHIPPED', label: 'Shipped', date: null },
-    { key: 'TRANSIT', label: 'In Transit', date: null },
-    { key: 'DELIVERED', label: 'Delivered', date: null },
-  ];
 
-  // Map Shiprocket activity statuses to our high-level steps
-  activities.forEach(a => {
-    const s = String(a.status || '').toUpperCase();
-    if (s.includes('PICKED UP') || s.includes('SHIPPED') || s.includes('MANIFESTED')) {
-      if (!steps[1].date || new Date(a.date) < new Date(steps[1].date)) steps[1].date = a.date;
-    }
-    if (s.includes('TRANSIT') || s.includes('REACHED') || s.includes('OUT FOR DELIVERY')) {
-      if (!steps[2].date || new Date(a.date) < new Date(steps[2].date)) steps[2].date = a.date;
-    }
-    if (s.includes('DELIVERED')) {
-      steps[3].date = a.date;
-    }
-  });
+  if (activities.length === 0) {
+    return <div className="om-tracking-pending">No tracking scans yet</div>;
+  }
 
-  // Calculate the current active step index
-  let currentIdx = 0;
-  if (steps[3].date) currentIdx = 3;
-  else if (steps[2].date) currentIdx = 2;
-  else if (steps[1].date) currentIdx = 1;
-
-  const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+  const getDay = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short', year: '2-digit' });
+  const getTime = (dateStr) => new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }).toLowerCase();
 
   return (
-    <div className="admin-tracker">
-      {steps.map((step, i) => (
-        <div key={step.key} className={`at-step ${i <= currentIdx ? 'active' : ''}`}>
-           <div className="at-dot-line">
-              <div className="at-dot">
-                {i <= currentIdx && <div className="at-dot-inner" />}
-              </div>
-              {i < steps.length - 1 && <div className={`at-line ${i < currentIdx ? 'active' : ''}`} />}
-           </div>
-           <div className="at-info">
-              <div className="at-label">{step.label}</div>
-              <div className="at-date">{formatDate(step.date)}</div>
-           </div>
+    <div className="shiprocket-tracker">
+      {activities.map((a, i) => (
+        <div key={i} className="sr-step">
+          <div className="sr-dot-line">
+            <div className="sr-dot" />
+            {i < activities.length - 1 && <div className="sr-line" />}
+          </div>
+          <div className="sr-info">
+            <div className="sr-label-row">
+              <span className="sr-status">{a.status}</span>
+              <span className="sr-date">{getDay(a.date)}</span>
+            </div>
+            <p className="sr-activity">{a.activity}</p>
+            <p className="sr-meta">
+              {getDay(a.date)} - {getTime(a.date)}
+              {a.location && <span> · {a.location}</span>}
+            </p>
+          </div>
         </div>
       ))}
     </div>
