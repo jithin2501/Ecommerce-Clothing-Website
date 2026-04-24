@@ -182,8 +182,6 @@ export default function CartPage() {
   return (
     <div className="cp-page">
       <div className="cp-inner">
-
-
         <h1 className="cp-title">
           Your Shopping Bag
           <span className="cp-count">({cartItems.length} {cartItems.length === 1 ? 'Item' : 'Items'})</span>
