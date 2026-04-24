@@ -183,7 +183,6 @@ export default function CartPage() {
     <div className="cp-page">
       <div className="cp-inner">
 
-        <p className="cp-breadcrumb"><Link to="/">Home</Link> › Shopping Bag</p>
 
         <h1 className="cp-title">
           Your Shopping Bag

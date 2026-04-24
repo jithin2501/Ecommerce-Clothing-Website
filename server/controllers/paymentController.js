@@ -5,7 +5,7 @@ const Product = require('../models/Product');
 const shiprocketService = require('../services/shiprocket');
 
 const FREE_SHIPPING_THRESHOLD = 0; // Everything is Free Shipping now!
-const GIFT_WRAP_COST = 6;
+const GIFT_WRAP_COST = 50;
 
 const calculateOrderTotals = async (items, giftWrapping) => {
   let subtotal = 0;
