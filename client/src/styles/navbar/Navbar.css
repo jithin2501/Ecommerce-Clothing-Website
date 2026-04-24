@@ -644,9 +644,12 @@ body.cart-path {
     padding-top: 72px;
   }
 
-  body.collections-path,
-  body.contact-path {
+  body.collections-path {
     padding-top: 120px;
+  }
+
+  body.contact-path {
+    padding-top: 80px;
   }
 
   body.cdp-path {
