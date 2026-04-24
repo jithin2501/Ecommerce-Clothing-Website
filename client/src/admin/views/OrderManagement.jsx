@@ -36,6 +36,13 @@ export default function OrderManagement() {
     return () => clearInterval(interval);
   }, []);
 
+  // Auto-sync when an order is opened in the drawer
+  useEffect(() => {
+    if (selectedOrder && (selectedOrder.trackingStatus || '').toUpperCase() !== 'DELIVERED') {
+      handleSyncStatus(selectedOrder._id);
+    }
+  }, [selectedOrder?._id]);
+
   // BACKGROUND SYNC: Automatically ask Shiprocket for updates every 60s for orders in progress
   useEffect(() => {
     if (orders.length === 0) return;
@@ -196,13 +203,6 @@ export default function OrderManagement() {
    ════════════════════════════════════ */
 function OrderDrawer({ order, onClose, onSync, syncing }) {
   const printRef = useRef();
-
-  // Automatically sync tracking data when the drawer opens if the order is not yet delivered
-  useEffect(() => {
-    if (order?._id && order.trackingStatus !== 'DELIVERED') {
-      onSync();
-    }
-  }, [order?._id]);
 
   const handlePrint = () => {
     const printContent = printRef.current.innerHTML;
