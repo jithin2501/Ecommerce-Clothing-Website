@@ -190,17 +190,18 @@
   }
 
   .why-items {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+    grid-template-columns: 1fr !important;
+    gap: 2rem;
+    width: 100%;
+    justify-items: center;
   }
+
   .why-item {
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    text-align: left;
-    gap: 1.5rem;
-    max-width: 300px;
-    margin: 0 auto;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 0.8rem;
+    width: 100%;
   }
 
 }
