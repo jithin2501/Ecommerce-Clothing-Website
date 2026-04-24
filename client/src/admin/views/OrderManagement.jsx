@@ -350,10 +350,14 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
           {/* 4. Tracking Section (Last) */}
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><Truck size={16} /> Live Tracking</h4>
-            <DetailedTracking status={order.trackingStatus} trackingData={order.trackingPayload} />
+            <SimplifiedAdminTracker 
+              status={order.trackingStatus} 
+              orderDate={order.createdAt} 
+              trackingData={order.trackingPayload} 
+            />
             {order.trackingLink && order.trackingPayload?.activities?.length > 0 && (
               <a href={order.trackingLink} target="_blank" rel="noopener noreferrer" className="om-track-link">
-                Tracking Page ↗
+                Full Tracking History ↗
               </a>
             )}
           </div>
@@ -369,31 +373,55 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
   );
 }
 
-function DetailedTracking({ status, trackingData }) {
+function SimplifiedAdminTracker({ status, orderDate, trackingData }) {
   const activities = trackingData?.activities || [];
+  
+  // High-level steps mapping Shiprocket statuses
+  const steps = [
+    { key: 'ORDERED', label: 'Ordered', date: orderDate },
+    { key: 'SHIPPED', label: 'Shipped', date: null },
+    { key: 'TRANSIT', label: 'In Transit', date: null },
+    { key: 'DELIVERED', label: 'Delivered', date: null },
+  ];
 
-  const getDay = (dateStr) => new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' });
-  const getTime = (dateStr) => new Date(dateStr).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+  // Map Shiprocket activity statuses to our high-level steps
+  activities.forEach(a => {
+    const s = a.status?.toUpperCase() || '';
+    if (s.includes('PICKED UP') || s.includes('SHIPPED') || s.includes('MANIFESTED')) {
+      if (!steps[1].date || new Date(a.date) < new Date(steps[1].date)) steps[1].date = a.date;
+    }
+    if (s.includes('TRANSIT') || s.includes('REACHED') || s.includes('OUT FOR DELIVERY')) {
+      if (!steps[2].date || new Date(a.date) < new Date(steps[2].date)) steps[2].date = a.date;
+    }
+    if (s.includes('DELIVERED')) {
+      steps[3].date = a.date;
+    }
+  });
+
+  // Calculate the current active step index
+  let currentIdx = 0;
+  if (steps[3].date) currentIdx = 3;
+  else if (steps[2].date) currentIdx = 2;
+  else if (steps[1].date) currentIdx = 1;
+
+  const formatDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
 
   return (
-    <div className="om-detailed-tracking">
-      {activities.length === 0 ? (
-        <div className="om-tracking-pending">No tracking scans yet</div>
-      ) : (
-        activities.map((a, i) => (
-          <div key={i} className="om-t-step active">
-            <div className="om-t-dot-wrap">
-              <div className="om-t-dot" />
-              {i < activities.length - 1 && <div className="om-t-line" />}
-            </div>
-            <div className="om-t-info">
-              <div className="om-t-label">{a.status} <span className="om-t-date">{getDay(a.date)}</span></div>
-              <p className="om-t-msg">{a.activity}</p>
-              <p className="om-t-time">{getTime(a.date)} · {a.location || 'Hub'}</p>
-            </div>
-          </div>
-        ))
-      )}
+    <div className="admin-tracker">
+      {steps.map((step, i) => (
+        <div key={step.key} className={`at-step ${i <= currentIdx ? 'active' : ''}`}>
+           <div className="at-dot-line">
+              <div className="at-dot">
+                {i <= currentIdx && <div className="at-dot-inner" />}
+              </div>
+              {i < steps.length - 1 && <div className={`at-line ${i < currentIdx ? 'active' : ''}`} />}
+           </div>
+           <div className="at-info">
+              <div className="at-label">{step.label}</div>
+              <div className="at-date">{formatDate(step.date)}</div>
+           </div>
+        </div>
+      ))}
     </div>
   );
 }

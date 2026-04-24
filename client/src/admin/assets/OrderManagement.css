@@ -358,90 +358,99 @@
   color: #64748b;
 }
 
-/* ── DETAILED TRACKING (SIDEBAR) ── */
-.om-detailed-tracking {
+/* ── SIMPLIFIED ADMIN TRACKER ── */
+.admin-tracker {
   display: flex;
   flex-direction: column;
+  padding: 10px 5px;
 }
 
-.om-t-step {
+.at-step {
   display: flex;
-  gap: 16px;
-  min-height: 60px;
+  gap: 20px;
+  min-height: 50px;
 }
 
-.om-t-dot-wrap {
+.at-dot-line {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
-  width: 12px;
+  width: 14px;
 }
 
-.om-t-dot {
-  width: 10px;
-  height: 10px;
-  background: #10b981;
+.at-dot {
+  width: 14px;
+  height: 14px;
+  background: #e2e8f0;
   border-radius: 50%;
-  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 2;
+  margin-top: 4px;
 }
 
-.om-t-line {
-  flex: 1;
-  width: 2px;
+.at-step.active .at-dot {
   background: #dcfce7;
 }
 
-.om-t-info {
-  flex: 1;
-  padding-bottom: 24px;
+.at-dot-inner {
+  width: 6px;
+  height: 6px;
+  background: #10b981;
+  border-radius: 50%;
 }
 
-.om-t-label {
+.at-line {
+  flex: 1;
+  width: 2px;
+  background: #e2e8f0;
+  min-height: 20px;
+}
+
+.at-line.active {
+  background: #10b981;
+}
+
+.at-info {
+  flex: 1;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.at-label {
   font-size: 0.85rem;
   font-weight: 700;
+  color: #94a3b8;
+}
+
+.at-step.active .at-label {
   color: #1e293b;
-  margin-bottom: 4px;
 }
 
-.om-t-date {
-  font-weight: 400;
-  color: #64748b;
-  margin-left: 8px;
-  font-size: 0.8rem;
-}
-
-.om-t-msg {
-  font-size: 0.8rem;
-  color: #475569;
-  line-height: 1.4;
-  margin: 4px 0;
-}
-
-.om-t-time {
+.at-date {
   font-size: 0.75rem;
-  color: #94a3b8;
-}
-
-.om-tracking-pending {
-  text-align: center;
-  padding: 2rem 1rem;
-  color: #94a3b8;
-  font-size: 0.85rem;
-  font-style: italic;
-  background: #f8fafc;
-  border-radius: 12px;
-  border: 1px dashed #e2e8f0;
+  color: #64748b;
+  font-weight: 500;
 }
 
 .om-track-link {
   display: inline-block;
   margin-top: 1rem;
-  font-size: 0.85rem;
-  color: #2563eb;
-  font-weight: 600;
+  font-size: 0.82rem;
+  color: #3b82f6;
+  font-weight: 700;
   text-decoration: none;
+  padding: 6px 12px;
+  background: #eff6ff;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.om-track-link:hover {
+  background: #dbeafe;
 }
 
 .om-drawer-footer {
