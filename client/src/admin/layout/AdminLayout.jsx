@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import '../assets/AdminLayout.css';
@@ -8,6 +8,7 @@ export default function AdminLayout() {
   const location = useLocation();
   const [user, setUser] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const mainRef = useRef(null);
 
   useEffect(() => {
     // Fetch actual user data (role + permissions) from the server
@@ -39,6 +40,10 @@ export default function AdminLayout() {
   }, []);
 
   useEffect(() => {
+    // Scroll the main content area to top on route change
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0;
+    }
     setIsSidebarOpen(false);
   }, [location.pathname]);
 
@@ -91,7 +96,7 @@ export default function AdminLayout() {
         <button className="admin-signout" onClick={handleSignOut}>Sign Out</button>
       </aside>
 
-      <main className="admin-main">
+      <main className="admin-main" ref={mainRef}>
         <Outlet />
       </main>
     </div>
