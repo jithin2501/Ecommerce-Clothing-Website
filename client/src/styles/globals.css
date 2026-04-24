@@ -5,12 +5,12 @@
 
 :root {
   --charcoal: #1E293B;     /* Sleek Slate */
-  --accent-clay: #FFC1CC;   /* Pastel Pink */
-  --accent-hover: #E8AAB6;
+  --accent-clay: #E66782;   /* Deep Pastel Pink */
+  --accent-hover: #D15671;
   --slate-gray: #64748B;
   --light-bg: #FFFFFF;
   --cart-orange: #FF5C00;
-  --soft-glow: rgba(255, 193, 204, 0.15);
+  --soft-glow: rgba(230, 103, 130, 0.15);
   --side-pad: 16px;
   --footer-bg: #1E293B;     /* Sleek Slate */
   --footer-text-main: #ffffff;

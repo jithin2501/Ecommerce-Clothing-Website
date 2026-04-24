@@ -141,8 +141,8 @@
   height: auto;
   object-fit: contain;
   filter: 
-    drop-shadow(0 10px 30px rgba(255, 193, 204, 0.4))
-    drop-shadow(0 0 50px rgba(255, 193, 204, 0.25));
+    drop-shadow(0 10px 30px rgba(230, 103, 130, 0.4))
+    drop-shadow(0 0 50px rgba(230, 103, 130, 0.25));
 }
 
 /* ── Responsive ── */
