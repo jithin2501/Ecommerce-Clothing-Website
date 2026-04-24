@@ -38,7 +38,7 @@ export default function OrderManagement() {
 
   // Auto-sync when an order is opened in the drawer
   useEffect(() => {
-    if (selectedOrder && (selectedOrder.trackingStatus || '').toUpperCase() !== 'DELIVERED') {
+    if (selectedOrder && String(selectedOrder.trackingStatus || '').toUpperCase() !== 'DELIVERED') {
       handleSyncStatus(selectedOrder._id);
     }
   }, [selectedOrder?._id]);
@@ -54,7 +54,7 @@ export default function OrderManagement() {
     const syncInterval = setInterval(() => {
       const activeOrders = ordersRef.current.filter(o => 
         o.shiprocketShipmentId && 
-        (o.trackingStatus || '').toUpperCase() !== 'DELIVERED'
+        String(o.trackingStatus || '').toUpperCase() !== 'DELIVERED'
       );
       
       activeOrders.forEach(o => handleSyncStatus(o._id));
@@ -176,7 +176,7 @@ export default function OrderManagement() {
                   <td><span className="om-amount">₹{o.amount.toLocaleString()}</span></td>
                   <td>
                     <div className="om-tracking-cell">
-                      <span className={`om-tag ${(o.trackingStatus || '').toLowerCase()}`}>{o.trackingStatus || 'Pending'}</span>
+                      <span className={`om-tag ${String(o.trackingStatus || '').toLowerCase()}`}>{o.trackingStatus || 'Pending'}</span>
                     </div>
                   </td>
                   <td className="om-date-cell">{new Date(o.createdAt).toLocaleDateString()}</td>
@@ -312,7 +312,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
             >
               <RefreshCw size={14} />
             </button>
-            <div className={`om-drawer-status ${order.trackingStatus?.toLowerCase()}`}>{order.trackingStatus}</div>
+            <div className={`om-drawer-status ${String(order.trackingStatus || '').toLowerCase()}`}>{order.trackingStatus}</div>
           </div>
         </div>
 
@@ -393,7 +393,7 @@ function SimplifiedAdminTracker({ status, orderDate, trackingData }) {
 
   // Map Shiprocket activity statuses to our high-level steps
   activities.forEach(a => {
-    const s = a.status?.toUpperCase() || '';
+    const s = String(a.status || '').toUpperCase();
     if (s.includes('PICKED UP') || s.includes('SHIPPED') || s.includes('MANIFESTED')) {
       if (!steps[1].date || new Date(a.date) < new Date(steps[1].date)) steps[1].date = a.date;
     }
