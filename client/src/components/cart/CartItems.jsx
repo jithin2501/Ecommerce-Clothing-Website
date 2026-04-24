@@ -71,7 +71,7 @@ export default function CartItems({ items, onUpdateQty, onRemove, onGiftChange }
                 <path d="M12 22V7M12 7H7.5a2.5 2.5 0 010-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 000-5C13 2 12 7 12 7z"/>
               </svg>
               <span className="ci-gift-title">Add Gift Wrapping</span>
-              <span className="ci-gift-cost">(+₹6.00)</span>
+              <span className="ci-gift-cost">(+₹50.00)</span>
             </div>
             <p className="ci-gift-desc">Make it special with our premium gift box and a handwritten card.</p>
           </div>

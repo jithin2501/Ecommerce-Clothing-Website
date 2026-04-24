@@ -14,7 +14,7 @@ import '../../styles/cart/CartPage.css';
 const API = '/api';
 
 const FREE_SHIPPING_THRESHOLD = 0; // Everything is Free Shipping!
-const GIFT_WRAP_COST = 6;
+const GIFT_WRAP_COST = 50;
 
 // Keys used to persist the selected delivery address
 const ACTIVE_KEY = 'sumathi_active_address';   // set by product detail page
