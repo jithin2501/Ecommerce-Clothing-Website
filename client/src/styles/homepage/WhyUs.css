@@ -194,9 +194,13 @@
     gap: 1.5rem;
   }
   .why-item {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    text-align: center;
+    justify-content: center;
+    text-align: left;
+    gap: 1.5rem;
+    max-width: 300px;
+    margin: 0 auto;
   }
 
 }
