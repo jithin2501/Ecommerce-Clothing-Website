@@ -168,7 +168,7 @@
 }
 
 .pi-add-btn:hover {
-  background: #A8624A;
+  background: var(--accent-hover, #D15671);
 }
 
 .pi-icon-btn {

@@ -142,7 +142,7 @@
 }
 
 .cyl-go-cart:hover {
-  background: #a8624a !important;
+  background: var(--accent-hover, #D15671) !important;
 }
 
 @media (max-width: 860px) {

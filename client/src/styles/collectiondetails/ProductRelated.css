@@ -109,6 +109,6 @@
 }
 .prelat-btn:hover { background: var(--accent-clay, #C17B5C); }
 .prelat-btn-cart  { background: var(--accent-clay, #C17B5C) !important; }
-.prelat-btn-cart:hover { background: #a8624a !important; }
+.prelat-btn-cart:hover { background: var(--accent-hover, #D15671) !important; }
 
 @media (max-width: 900px) { .prelat-grid { grid-template-columns: repeat(2, 1fr); } }
