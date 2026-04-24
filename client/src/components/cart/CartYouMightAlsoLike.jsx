@@ -31,6 +31,42 @@ function AlsoLikeCard({ product }) {
     });
   };
 
+  const handleQuickAdd = (e) => {
+    e.stopPropagation();
+    
+    // Pick the first available size from inventory
+    const inventory = product.inventory || {};
+    const availableSize = Object.keys(inventory).find(size => inventory[size] > 0);
+    
+    // Pick the first color if available
+    const defaultColor = product.colors?.[0]?.name || 'Default';
+
+    if (!availableSize) {
+      alert("This item is currently out of stock.");
+      return;
+    }
+
+    addToCart({
+      id:    product._id,
+      name:  product.name,
+      price: typeof product.price === 'number' ? product.price : parseFloat(String(product.price).replace(/[₹$,]/g, '')),
+      size:  availableSize,
+      color: defaultColor,
+      img:   product.img,
+      stock: product.stock || inventory[availableSize] || 0,
+    });
+    
+    setAdded(true);
+  };
+
+  const handleGoToCart = (e) => {
+    e.stopPropagation();
+    // Already on cart page, just scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Also navigate just in case (to reset any sub-routes if they exist)
+    navigate('/cart');
+  };
+
   return (
     <div className="cyl-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="cyl-img-wrap">
@@ -40,17 +76,17 @@ function AlsoLikeCard({ product }) {
       </div>
       <div className="cyl-info">
         <div className="cyl-top-row">
-          <span className="cyl-category">{product.category}</span>
+          <span className="cyl-category">{product.category?.[0] || product.category}</span>
           <span className="cyl-price">{formatPrice(product.price)}</span>
         </div>
         <div className="cyl-name">{product.name}</div>
       </div>
       {!added ? (
-        <button className="cyl-add-btn" onClick={(e) => { e.stopPropagation(); addToCart(product); setAdded(true); }}>
+        <button className="cyl-add-btn" onClick={handleQuickAdd}>
           <CartIcon /> Quick Add
         </button>
       ) : (
-        <button className="cyl-add-btn cyl-go-cart" onClick={(e) => { e.stopPropagation(); navigate('/cart'); }}>
+        <button className="cyl-add-btn cyl-go-cart" onClick={handleGoToCart}>
           <CartIcon /> Go to Cart
         </button>
       )}

@@ -33,6 +33,39 @@ function RelatedCard({ item }) {
     });
   };
 
+  const handleQuickAdd = (e) => {
+    e.stopPropagation();
+    
+    // Pick first available size
+    const inventory = item.inventory || {};
+    const availableSize = Object.keys(inventory).find(size => inventory[size] > 0);
+    
+    // Pick first color if available
+    const defaultColor = item.colors?.[0]?.name || 'Default';
+
+    if (!availableSize) {
+      alert("This item is currently out of stock.");
+      return;
+    }
+
+    addToCart({
+      id:    item._id,
+      name:  item.name,
+      price: typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace(/[₹$,]/g, '')),
+      size:  availableSize,
+      color: defaultColor,
+      img:   item.img,
+      stock: item.stock || inventory[availableSize] || 0,
+    });
+    
+    setAdded(true);
+  };
+
+  const handleGoToCart = (e) => {
+    e.stopPropagation();
+    navigate('/cart');
+  };
+
   return (
     <div className="prelat-card" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
       <div className="prelat-img-wrap">
@@ -48,17 +81,17 @@ function RelatedCard({ item }) {
       </div>
       <div className="prelat-info">
         <div className="prelat-top-row">
-          <span className="prelat-category">{item.category}</span>
+          <span className="prelat-category">{item.category?.[0] || item.category}</span>
           <span className="prelat-price">{formatPrice(item.price)}</span>
         </div>
         <p className="prelat-name">{item.name}</p>
       </div>
       {!added ? (
-        <button className="prelat-btn" onClick={(e) => { e.stopPropagation(); addToCart(item); setAdded(true); }}>
+        <button className="prelat-btn" onClick={handleQuickAdd}>
           <CartIcon /> Quick Add
         </button>
       ) : (
-        <button className="prelat-btn prelat-btn-cart" onClick={(e) => { e.stopPropagation(); navigate('/cart'); }}>
+        <button className="prelat-btn prelat-btn-cart" onClick={handleGoToCart}>
           <CartIcon /> Go to Cart
         </button>
       )}
