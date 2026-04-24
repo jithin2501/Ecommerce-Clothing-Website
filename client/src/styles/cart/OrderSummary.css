@@ -164,9 +164,9 @@
   background: #fff; 
   border: 1px solid #eee; 
   border-radius: 12px; /* Matches address bar */
-  padding: 1.5rem; 
+  padding: 1.2rem 1.5rem 1.5rem; 
   position: sticky; 
-  top: 100px; 
+  top: 90px; 
 }
 .os-title { 
   font-size: 1rem; 
