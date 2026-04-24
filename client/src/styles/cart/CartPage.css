@@ -13,6 +13,15 @@
     color: #999; 
     margin-bottom: 0.75rem; 
 }
+
+@media (min-width: 1101px) {
+    .cp-breadcrumb {
+        display: none;
+    }
+    .cp-page {
+        padding-top: 0.5rem;
+    }
+}
 .cp-breadcrumb a { 
     color: #999; 
     text-decoration: none; 

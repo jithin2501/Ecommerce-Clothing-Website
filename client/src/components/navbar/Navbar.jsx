@@ -52,6 +52,7 @@ export default function Navbar() {
     const isProductDetail = pathParts.length > 3 && pathParts[1] === 'collections';
     const isContact = location.pathname === '/contact';
     const isAccount = location.pathname.startsWith('/account');
+    const isCart = location.pathname === '/cart';
     
     if (isCollectionsList || isCategoryPage) document.body.classList.add('collections-path');
     else document.body.classList.remove('collections-path');
@@ -65,12 +66,16 @@ export default function Navbar() {
     if (isAccount) document.body.classList.add('account-path');
     else document.body.classList.remove('account-path');
 
+    if (isCart) document.body.classList.add('cart-path');
+    else document.body.classList.remove('cart-path');
+
     return () => {
       document.body.classList.remove('has-navbar');
       document.body.classList.remove('collections-path');
       document.body.classList.remove('cdp-path');
       document.body.classList.remove('contact-path');
       document.body.classList.remove('account-path');
+      document.body.classList.remove('cart-path');
     };
   }, [location.pathname]);
 

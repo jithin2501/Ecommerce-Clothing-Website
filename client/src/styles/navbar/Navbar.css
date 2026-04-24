@@ -635,6 +635,10 @@ body.account-path {
   padding-top: 80px;
 }
 
+body.cart-path {
+  padding-top: 85px;
+}
+
 @media (max-width: 1100px) {
   body.has-navbar {
     padding-top: 72px;
