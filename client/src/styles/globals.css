@@ -4,28 +4,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700;900&display=swap');
 
 :root {
-  --charcoal: #1E293B;     /* Sleek Slate */
-  --accent-clay: #E66782;   /* Deep Pastel Pink */
+  --charcoal: #1E293B;
+  /* Sleek Slate */
+  --accent-clay: #E66782;
+  /* Deep Pastel Pink */
   --accent-hover: #D15671;
   --slate-gray: #64748B;
   --light-bg: #FFFFFF;
   --cart-orange: #FF5C00;
   --soft-glow: rgba(230, 103, 130, 0.15);
   --side-pad: 16px;
-  --footer-bg: #1E293B;     /* Sleek Slate */
+  --footer-bg: #1f2b48;
+  /* Midnight Navy */
   --footer-text-main: #ffffff;
   --footer-text-muted: #cbd5e1;
   --footer-border: rgba(255, 255, 255, 0.1);
 }
 
-*, *::before, *::after {
-  margin: 0; padding: 0;
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
 }
 
-html { 
-  scroll-behavior: smooth; 
+html {
+  scroll-behavior: smooth;
   height: 100%;
   overflow-x: hidden;
 }
@@ -45,7 +51,7 @@ body {
   flex-direction: column;
   min-height: 100vh;
   /* Use dynamic viewport height if supported to fix mobile white bar */
-  min-height: 100dvh; 
+  min-height: 100dvh;
 }
 
 /* Ensure any push to bottom works correctly */
@@ -54,18 +60,40 @@ footer {
 }
 
 
-a { text-decoration: none; color: inherit; }
-ul { list-style: none; }
-img { max-width: 100%; display: block; }
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
 
 @keyframes glowPulse {
-  from { opacity: 0.8; transform: scale(0.95); }
-  to   { opacity: 1;   transform: scale(1.06); }
+  from {
+    opacity: 0.8;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1.06);
+  }
 }
 
 @keyframes orbitSpin {
-  from { transform: rotateY(0deg); }
-  to   { transform: rotateY(360deg); }
+  from {
+    transform: rotateY(0deg);
+  }
+
+  to {
+    transform: rotateY(360deg);
+  }
 }
 
 .section-inner {
@@ -98,7 +126,9 @@ img { max-width: 100%; display: block; }
 }
 
 @keyframes accountSpinner {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ─────────────────────────────────────────────────────────
@@ -186,8 +216,8 @@ img { max-width: 100%; display: block; }
   }
 
   /* Hide all breadcrumbs on mobile */
-  .page-breadcrumb, 
-  .cp-breadcrumb, 
+  .page-breadcrumb,
+  .cp-breadcrumb,
   .cdp-breadcrumb,
   .contact-breadcrumb,
   .catpage-breadcrumb,
@@ -196,7 +226,7 @@ img { max-width: 100%; display: block; }
   .wr-breadcrumb,
   .sh-breadcrumb,
   .mr-breadcrumb,
-  .pi-breadcrumb { 
-    display: none !important; 
+  .pi-breadcrumb {
+    display: none !important;
   }
 }
