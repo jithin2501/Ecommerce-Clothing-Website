@@ -13,7 +13,9 @@ export default function OrderManagement() {
   const [syncingId, setSyncingId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDate, setSelectedDate] = useState(''); // Empty by default to show 'All'
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+
+  const selectedOrder = orders.find(o => o._id === selectedOrderId);
 
   const fetchOrders = async () => {
     try {
@@ -38,10 +40,10 @@ export default function OrderManagement() {
 
   // Auto-sync when an order is opened in the drawer
   useEffect(() => {
-    if (selectedOrder && String(selectedOrder.trackingStatus || '').toUpperCase() !== 'DELIVERED') {
-      handleSyncStatus(selectedOrder._id);
+    if (selectedOrderId && selectedOrder && String(selectedOrder.trackingStatus || '').toUpperCase() !== 'DELIVERED') {
+      handleSyncStatus(selectedOrderId);
     }
-  }, [selectedOrder?._id]);
+  }, [selectedOrderId]);
 
   // Keep a ref to orders to avoid stale closures in the interval
   const ordersRef = useRef(orders);
@@ -160,7 +162,7 @@ export default function OrderManagement() {
             </thead>
             <tbody>
               {filteredOrders.map(o => (
-                <tr key={o._id} className="om-row" onClick={() => setSelectedOrder(o)}>
+                <tr key={o._id} className="om-row" onClick={() => setSelectedOrderId(o._id)}>
                   <td>
                     <div className="om-id-cell">
                       <span className={`om-status-dot ${o.trackingStatus === 'DELIVERED' ? 'done' : 'active'}`} />
@@ -193,12 +195,12 @@ export default function OrderManagement() {
         </div>
       </div>
 
-      {selectedOrder && (
+      {selectedOrderId && selectedOrder && (
         <OrderDrawer
-          order={orders.find(o => o._id === selectedOrder._id) || selectedOrder}
-          onClose={() => setSelectedOrder(null)}
-          onSync={() => handleSyncStatus(selectedOrder._id)}
-          syncing={syncingId === selectedOrder._id}
+          order={selectedOrder}
+          onClose={() => setSelectedOrderId(null)}
+          onSync={() => handleSyncStatus(selectedOrderId)}
+          syncing={syncingId === selectedOrderId}
         />
       )}
     </div>
