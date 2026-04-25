@@ -735,8 +735,34 @@
 }
 
 @media (max-width: 580px) {
+  .pdp-page {
+    padding: 1rem 0.75rem 3rem;
+  }
+
+  .pdp-preview-grid {
+    padding: 1rem 0.75rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    gap: 1.5rem;
+  }
+
+  .pdp-main-slot {
+    height: 260px;
+  }
+
+  .pdp-thumb-slot {
+    width: 64px;
+    height: 64px;
+  }
+
+  .pdp-thumb-row {
+    justify-content: center;
+  }
+
+  /* Specifications / Manufacturer KV Grid */
   .pdp-kv-grid {
-    grid-template-columns: 1fr 34px; /* Space for the button on the right */
+    grid-template-columns: 1fr 34px;
     gap: 0.4rem;
     padding-bottom: 0.8rem;
     border-bottom: 1px dashed #EDE8E0;
@@ -749,8 +775,8 @@
   }
 
   .pdp-kv-grid .pdp-row-remove {
-    position: static; /* Remove absolute overlay */
-    grid-row: span 2; /* Span both inputs in the grid */
+    position: static;
+    grid-row: span 2;
     align-self: center;
     background: #FEF2F2;
     color: #C0392B;
@@ -759,26 +785,70 @@
 
   .pdp-kv-input {
     width: 100%;
-    grid-column: 1; /* Keep inputs in the left column */
+    grid-column: 1;
   }
 
-
-  .pdp-color-row, .pdp-size-row {
-    flex-wrap: wrap;
-    gap: 0.6rem;
+  /* Colors & Patterns */
+  .pdp-color-row {
+    flex-direction: column;
+    align-items: stretch;
+    background: #f8fafc;
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
+    gap: 0.75rem;
   }
 
   .pdp-color-name-input {
-    min-width: 150px;
+    width: 100%;
+    min-width: auto;
   }
 
-  .pdp-main-slot {
-    height: 260px;
+  .pdp-hex-group {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.6rem;
+    flex-wrap: wrap;
   }
 
-  .pdp-thumb-slot {
-    width: 64px;
-    height: 64px;
+  /* Inventory Section */
+  .pdp-inventory-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.25rem;
+  }
+
+  .pdp-variant-quick-edit {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .pdp-quick-field {
+    max-width: none;
+    width: 100%;
+  }
+
+  .pdp-inventory-grid {
+    grid-template-columns: repeat(auto-fill, minmax(65px, 1fr));
+    gap: 0.5rem;
+  }
+
+  .pdp-inventory-input {
+    padding: 0.4rem;
+    font-size: 0.75rem;
+  }
+
+  .pdp-inventory-group {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .pdp-inventory-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
