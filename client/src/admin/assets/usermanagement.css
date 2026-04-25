@@ -204,21 +204,21 @@
 .um-access-btn:hover { background: #4338ca; transform: translateY(-1px); }
 
 .um-img-btn {
-  background: white;
-  border: 1px solid #e5e7eb;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  padding: 6px;
+  padding: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 6px;
   transition: all 0.2s;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+  box-shadow: none;
 }
 
 .um-img-btn:hover {
-  background: #f9fafb;
-  border-color: #d1d5db;
+  background: rgba(0, 0, 0, 0.05);
+  transform: scale(1.1);
 }
 
 .um-img-btn img {
