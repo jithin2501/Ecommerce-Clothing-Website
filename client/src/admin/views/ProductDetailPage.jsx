@@ -9,7 +9,7 @@ const authHdrs = () => ({ Authorization: `Bearer ${localStorage.getItem('adminTo
 const MAX_GALLERY = 7;
 
 const EMPTY_SPEC  = { label: '', value: '' };
-const EMPTY_COLOR = { name: '', hex: '#F2C4B0', hexArray: ['#F2C4B0'], price: '' };
+const EMPTY_COLOR = { name: '', productName: '', hex: '#F2C4B0', hexArray: ['#F2C4B0'], price: '' };
 
 const uuid = () => Math.random().toString(36).slice(2, 9);
 
@@ -480,12 +480,12 @@ export default function ProductDetailPage() {
                   
                   <div className="pdp-variant-quick-edit">
                     <div className="pdp-quick-field">
-                      <label>Variant Name</label>
+                      <label>Product Name</label>
                       <input 
                         type="text" 
-                        value={colors.find(c => c.id === activeColorId)?.name || ''} 
-                        onChange={e => updateColor(activeColorId, 'name', e.target.value)}
-                        placeholder="e.g. Red Floral"
+                        value={colors.find(c => c.id === activeColorId)?.productName || ''} 
+                        onChange={e => updateColor(activeColorId, 'productName', e.target.value)}
+                        placeholder="Base name if empty"
                       />
                     </div>
                     <div className="pdp-quick-field">

@@ -123,12 +123,15 @@ export default function ProductInfo({
     const invKey = `${selectedColor}:${selectedSize}`;
     const specificStock = (inventory[invKey] !== undefined) ? Number(inventory[invKey]) : (Number(inventory[selectedSize]) || 0);
 
-    const variantPrice = colors.find(c => c.name === selectedColor)?.price;
+    const colorEntry = colors.find(c => c.name === selectedColor);
+    const variantPrice = colorEntry?.price;
     const finalPrice = (variantPrice != null && variantPrice !== '') ? Number(variantPrice) : (typeof price === 'number' ? price : parseFloat(String(price).replace(/[₹$,]/g, '')));
+    
+    const finalName = (colorEntry?.productName && colorEntry.productName.trim() !== '') ? colorEntry.productName : name;
 
     addToCart({
       id:    productId || 1,
-      name,
+      name:  finalName,
       price: finalPrice,
       size:  selectedSize,
       color: selectedColor,
@@ -137,8 +140,11 @@ export default function ProductInfo({
     });
   };
 
-  const variantPrice = colors.find(c => c.name === selectedColor)?.price;
+  const colorEntry = colors.find(c => c.name === selectedColor);
+  const variantPrice = colorEntry?.price;
   const currentPrice = (variantPrice != null && variantPrice !== '') ? Number(variantPrice) : price;
+
+  const currentName = (colorEntry?.productName && colorEntry.productName.trim() !== '') ? colorEntry.productName : name;
 
   const displayPrice = typeof currentPrice === 'number'
     ? `₹${currentPrice.toLocaleString('en-IN')}`
@@ -148,7 +154,7 @@ export default function ProductInfo({
 
   return (
     <div className="pi-wrapper">
-      <h1 className="pi-title">{name}</h1>
+      <h1 className="pi-title">{currentName}</h1>
 
       <div className="pi-rating">
         <span className="pi-stars">
