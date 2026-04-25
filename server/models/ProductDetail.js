@@ -19,9 +19,11 @@ const highlightSchema = new mongoose.Schema(
 
 const colorOptionSchema = new mongoose.Schema(
   {
-    name:     { type: String, required: true },
-    hex:      { type: String, required: true },
-    hexArray: { type: [String], default: [] },
+    name:        { type: String, required: true },
+    productName: { type: String, default: '' },
+    hex:         { type: String, required: true },
+    hexArray:    { type: [String], default: [] },
+    price:       { type: Number, default: null },
   },
   { _id: false }
 );
