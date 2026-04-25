@@ -412,10 +412,6 @@ export default function ProductDetailPage() {
               <div className="pdp-readonly-value">{product?.name || '—'}</div>
             </div>
 
-            <div className="pdp-field-group">
-              <label className="pdp-label">RATING</label>
-              <div className="pdp-stars-preview">★★★★☆ <span className="pdp-reviews-hint">(42 Reviews)</span></div>
-            </div>
 
             <div className="pdp-field-group">
               <label className="pdp-label">AVAILABLE SIZES</label>
