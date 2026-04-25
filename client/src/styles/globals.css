@@ -6,8 +6,8 @@
 :root {
   --charcoal: #1E293B;
   /* Sleek Slate */
-  --accent-clay: #E66782;
-  /* Deep Pastel Pink */
+  --accent-clay: #BE4761;
+  /* Darker pink for WCAG AA compliance (4.5:1 contrast) */
   --accent-hover: #D15671;
   --slate-gray: #64748B;
   --light-bg: #FFFFFF;
