@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useWishlist } from '../../context/WishlistContext';
 import '../../styles/collections/ProductGrid.css';
 
@@ -37,13 +37,17 @@ export default function ProductGrid({
 }) {
   const { toggleWishlist, isWishlisted } = useWishlist();
   const [apiProducts, setApiProducts] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const PAGE_SIZE = 15;
   const gridTopRef = useRef(null);
 
   // ── Reset page when filters change ──
   useEffect(() => {
-    setCurrentPage(1);
+    setSearchParams(prev => {
+      prev.set('page', '1');
+      return prev;
+    }, { replace: true });
   }, [
     selectedCategories, 
     selectedSubcategories, 
@@ -52,7 +56,8 @@ export default function ProductGrid({
     priceMin, 
     priceMax, 
     selectedRatings, 
-    sortBy
+    sortBy,
+    setSearchParams
   ]);
 
   useEffect(() => {
@@ -186,7 +191,7 @@ export default function ProductGrid({
                 const hexArr = c.hexArray && c.hexArray.length ? c.hexArray : [c.hex];
                 const hex = hexArr[idx] || hexArr[0];
                 colorsMap.set(normalizedPart, { 
-                  displayName: part.charAt(0).toUpperCase() + part.slice(1), 
+                   displayName: part.charAt(0).toUpperCase() + part.slice(1), 
                   hex 
                 });
               }
@@ -213,15 +218,15 @@ export default function ProductGrid({
 
   // ── Pagination Calculation ──
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
-  const paginatedItems = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const safeCurrentPage = Math.min(Math.max(currentPage, 1), totalPages || 1);
+  const paginatedItems = filtered.slice((safeCurrentPage - 1) * PAGE_SIZE, safeCurrentPage * PAGE_SIZE);
 
   const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
-    if (gridTopRef.current) {
-        const navHeight = document.querySelector('nav')?.getBoundingClientRect().height || 80;
-        const top = gridTopRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 20;
-        window.scrollTo({ top, behavior: 'instant' });
-    }
+    setSearchParams(prev => {
+      prev.set('page', String(newPage));
+      return prev;
+    });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const formatPrice = (price) => {
