@@ -239,42 +239,48 @@ export default function ProductGrid({
   return (
     <div className="pg-container" ref={gridTopRef}>
       <div className="pg-grid">
-        {paginatedItems.map((product) => (
-          <Link
-            key={product._id || product.id}
-            to={`/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}`}
-            className="pg-card"
-          >
-            <div className={`pg-img-wrap ${product.stock <= 0 ? 'pg-out-of-stock' : ''}`}>
-              <img src={product.img} alt={product.name} />
-              {product.stock <= 0 && (
-                <div className="pg-out-overlay">
-                  <span>Currently not available</span>
-                </div>
-              )}
-              {product.badge && (
-                <span className={getBadgeClass(product.badge)}>{product.badge}</span>
-              )}
-              {product.age && <span className="pg-age-badge">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
-              <button
-                className={`pg-wishlist ${isWishlisted(product._id || product.id) ? 'pg-wishlist--active' : ''}`}
-                aria-label="Wishlist"
-                onClick={(e) => { e.preventDefault(); toggleWishlist(product); }}
-              >
-                {isWishlisted(product._id || product.id) ? '♥' : '♡'}
-              </button>
-            </div>
-            <div className="pg-info">
-              <span className="pg-category">{(Array.isArray(product.category) ? product.category : [product.category])[0]}</span>
-              <div className="pg-name">{product.name}</div>
-              <Stars rating={product.stars || 0} reviews={product.reviews || 0} />
-              <div className="pg-price-row">
-                <span className="pg-price">{formatPrice(product.price)}</span>
-                {product.oldPrice && <span className="pg-old-price">{formatPrice(product.oldPrice)}</span>}
+        {paginatedItems.map((product) => {
+          const firstColor = product.colors?.[0];
+          const displayName = (firstColor?.productName && firstColor.productName.trim() !== '') ? firstColor.productName : product.name;
+          const displayPriceVal = (firstColor?.price != null && firstColor.price !== '') ? firstColor.price : product.price;
+
+          return (
+            <Link
+              key={product._id || product.id}
+              to={`/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}`}
+              className="pg-card"
+            >
+              <div className={`pg-img-wrap ${product.stock <= 0 ? 'pg-out-of-stock' : ''}`}>
+                <img src={product.img} alt={displayName} />
+                {product.stock <= 0 && (
+                  <div className="pg-out-overlay">
+                    <span>Currently not available</span>
+                  </div>
+                )}
+                {product.badge && (
+                  <span className={getBadgeClass(product.badge)}>{product.badge}</span>
+                )}
+                {product.age && <span className="pg-age-badge">AGE {product.age.replace(/Months?/ig, 'M').replace(/Years?/ig, 'Y')}</span>}
+                <button
+                  className={`pg-wishlist ${isWishlisted(product._id || product.id) ? 'pg-wishlist--active' : ''}`}
+                  aria-label="Wishlist"
+                  onClick={(e) => { e.preventDefault(); toggleWishlist(product); }}
+                >
+                  {isWishlisted(product._id || product.id) ? '♥' : '♡'}
+                </button>
               </div>
-            </div>
-          </Link>
-        ))}
+              <div className="pg-info">
+                <span className="pg-category">{(Array.isArray(product.category) ? product.category : [product.category])[0]}</span>
+                <div className="pg-name">{displayName}</div>
+                <Stars rating={product.stars || 0} reviews={product.reviews || 0} />
+                <div className="pg-price-row">
+                  <span className="pg-price">{formatPrice(displayPriceVal)}</span>
+                  {product.oldPrice && <span className="pg-old-price">{formatPrice(product.oldPrice)}</span>}
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
 
       {totalPages > 1 && (

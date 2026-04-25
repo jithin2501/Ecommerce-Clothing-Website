@@ -75,11 +75,20 @@ export default function NewArrivals() {
                 </button>
               </div>
               <div className="na-card-info">
-                <div className="na-top-row">
-                  <span className="na-category">{product.category}</span>
-                  <span className="na-card-price">₹{product.price}</span>
-                </div>
-                <div className="na-card-name">{product.name}</div>
+                {(() => {
+                  const firstColor = product.colors?.[0];
+                  const displayName = (firstColor?.productName && firstColor.productName.trim() !== '') ? firstColor.productName : product.name;
+                  const displayPrice = (firstColor?.price != null && firstColor.price !== '') ? firstColor.price : product.price;
+                  return (
+                    <>
+                      <div className="na-top-row">
+                        <span className="na-category">{product.category}</span>
+                        <span className="na-card-price">₹{displayPrice}</span>
+                      </div>
+                      <div className="na-card-name">{displayName}</div>
+                    </>
+                  );
+                })()}
               </div>
             </div>
           ))}

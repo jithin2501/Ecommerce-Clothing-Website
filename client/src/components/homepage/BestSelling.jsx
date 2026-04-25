@@ -67,8 +67,16 @@ export default function BestSelling() {
                 <div className="arr-card-overlay">
                   <div className="arr-hover-btn"><ArrowIcon /></div>
                   <div className="arr-hover-info">
-                    <span className="arr-hover-tag">{card.category}</span>
-                    <div className="arr-hover-name">{card.name}</div>
+                    {(() => {
+                      const firstColor = card.colors?.[0];
+                      const displayName = (firstColor?.productName && firstColor.productName.trim() !== '') ? firstColor.productName : card.name;
+                      return (
+                        <>
+                          <span className="arr-hover-tag">{card.category}</span>
+                          <div className="arr-hover-name">{displayName}</div>
+                        </>
+                      );
+                    })()}
                   </div>
                 </div>
               </div>
