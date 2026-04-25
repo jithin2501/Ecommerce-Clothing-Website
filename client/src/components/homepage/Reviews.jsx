@@ -52,6 +52,9 @@ export default function Reviews() {
               src="images/homepage/newreview.png"
               alt="Happy children"
               className="rv2-img"
+              width="400"
+              height="480"
+              loading="lazy"
               onError={(e) => {
                 e.target.src = 'https://images.unsplash.com/photo-1516627145497-ae6968895b74?q=80&w=800&auto=format&fit=crop';
               }}
