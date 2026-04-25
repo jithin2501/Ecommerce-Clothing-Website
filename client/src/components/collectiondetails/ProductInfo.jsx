@@ -120,6 +120,9 @@ export default function ProductInfo({
   };
 
   const handleAddToBag = () => {
+    const invKey = `${selectedColor}:${selectedSize}`;
+    const specificStock = (inventory[invKey] !== undefined) ? Number(inventory[invKey]) : (Number(inventory[selectedSize]) || 0);
+
     addToCart({
       id:    productId || 1,
       name,
@@ -127,7 +130,7 @@ export default function ProductInfo({
       size:  selectedSize,
       color: selectedColor,
       img:   galleryImg,
-      stock: stock,
+      stock: specificStock,
     });
   };
 
@@ -155,7 +158,8 @@ export default function ProductInfo({
         <p className="pi-label">SELECT SIZE</p>
         <div className="pi-sizes">
           {sizes.map(s => {
-            const sizeQty = Number(inventory[s]) || 0;
+            const invKey = `${selectedColor}:${s}`;
+            const sizeQty = (inventory[invKey] !== undefined) ? Number(inventory[invKey]) : (Number(inventory[s]) || 0);
             const isSizeOut = sizeQty <= 0;
             return (
               <button

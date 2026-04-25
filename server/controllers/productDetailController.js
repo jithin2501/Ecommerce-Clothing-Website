@@ -56,8 +56,12 @@ const upsertProductDetail = async (req, res) => {
     const specifications   = parse('specifications')   || [];
     const manufacturerInfo = parse('manufacturerInfo') || [];
     const highlights       = parse('highlights')       || [];
+    const inventory        = parse('inventory')        || {};
     const description      = req.body.description      || '';
     const deliveryDate     = req.body.deliveryDate      || '';
+
+    // Calculate total stock from inventory map
+    const stock = Object.values(inventory).reduce((acc, qty) => acc + (Number(qty) || 0), 0);
 
     // ── Handle per-color galleries ──
     // Client sends: colorGalleryExisting_<colorName> = JSON array of existing URLs
@@ -142,12 +146,14 @@ const upsertProductDetail = async (req, res) => {
         description,
         manufacturerInfo,
         highlights,
+        inventory,
+        stock,
       },
       { upsert: true, new: true, runValidators: true }
     );
 
-    // Sync colors back to Product model for fast filtering
-    await Product.findByIdAndUpdate(productId, { colors });
+    // Sync colors, inventory and stock back to Product model for fast filtering and inventory management
+    await Product.findByIdAndUpdate(productId, { colors, inventory, stock });
 
     res.json({ success: true, data: detail });
   } catch (err) {

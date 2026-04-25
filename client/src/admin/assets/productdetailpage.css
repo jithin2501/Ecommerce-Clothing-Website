@@ -431,6 +431,71 @@
   background: #FDF5F0;
 }
 
+/* Inventory Section (Per Color) */
+.pdp-inventory-group {
+  margin-top: 0.5rem;
+  padding: 1.25rem;
+  background: #F9F7F5;
+  border: 1px solid #E0D8D0;
+  border-radius: 12px;
+}
+
+.pdp-inventory-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 1rem;
+}
+
+.pdp-inventory-subtitle {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.pdp-inventory-subtitle strong {
+  color: #C17B5C;
+}
+
+.pdp-inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 0.75rem;
+}
+
+.pdp-inventory-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pdp-inventory-item-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: #888;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+.pdp-inventory-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1.5px solid #E0D8D0;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #2C2C2C;
+  text-align: center;
+  outline: none;
+  background: white;
+  transition: all 0.2s;
+}
+
+.pdp-inventory-input:focus {
+  border-color: #C17B5C;
+  box-shadow: 0 0 0 3px rgba(193, 123, 92, 0.1);
+}
+
 /* ── Row helpers ── */
 .pdp-row-remove {
   width: 30px;

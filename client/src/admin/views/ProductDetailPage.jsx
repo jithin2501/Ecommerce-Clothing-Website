@@ -32,6 +32,7 @@ export default function ProductDetailPage() {
   const [description,      setDescription]       = useState('');
   const [manufacturerInfo, setManufacturerInfo]  = useState([{ ...EMPTY_SPEC, id: uuid() }]);
   const [highlights,       setHighlights]        = useState([{ ...EMPTY_SPEC, id: uuid() }]);
+  const [inventory,        setInventory]         = useState({});
 
   const [saving,  setSaving]  = useState(false);
   const [error,   setError]   = useState('');
@@ -59,6 +60,10 @@ export default function ProductDetailPage() {
           if (d.specifications?.length)   setSpecifications(d.specifications.map(s => ({ ...s, id: uuid() })));
           if (d.manufacturerInfo?.length) setManufacturerInfo(d.manufacturerInfo.map(s => ({ ...s, id: uuid() })));
           if (d.highlights?.length)       setHighlights(d.highlights.map(s => ({ ...s, id: uuid() })));
+
+          if (d.inventory) {
+            setInventory(d.inventory instanceof Map ? Object.fromEntries(d.inventory) : d.inventory);
+          }
 
           if (d.colors?.length) {
             const loadedColors = d.colors.map(c => ({ 
@@ -104,7 +109,25 @@ export default function ProductDetailPage() {
     setActiveColorId(prev => prev === id ? (colors.find(c => c.id !== id)?.id || null) : prev);
   };
 
-  const updateColor = (id, k, v) => setColors(c => c.map(x => x.id === id ? { ...x, [k]: v } : x));
+  const updateColor = (id, k, v) => {
+    if (k === 'name') {
+      const oldName = colors.find(c => c.id === id)?.name || '';
+      if (oldName && oldName !== v) {
+        setInventory(prev => {
+          const next = { ...prev };
+          Object.keys(next).forEach(key => {
+            if (key.startsWith(`${oldName}:`)) {
+              const size = key.split(':')[1];
+              next[`${v}:${size}`] = next[key];
+              delete next[key];
+            }
+          });
+          return next;
+        });
+      }
+    }
+    setColors(c => c.map(x => x.id === id ? { ...x, [k]: v } : x));
+  };
 
   const addHexToColor = (id) => {
     setColors(curr => curr.map(c => {
@@ -220,6 +243,7 @@ export default function ProductDetailPage() {
       fd.append('description',      description);
       fd.append('manufacturerInfo', JSON.stringify(manufacturerInfo.map(({ id, ...r }) => r).filter(r => r.label)));
       fd.append('highlights',       JSON.stringify(highlights.map(({ id, ...r }) => r).filter(r => r.label)));
+      fd.append('inventory',        JSON.stringify(inventory));
 
       // Per-color gallery uploads
       colors.forEach(c => {
@@ -465,8 +489,39 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-
-
+            {/* Per-color Stock by Size — only if color is selected and sizes exist */}
+            {activeColorId && sizes.length > 0 && sizes[0] !== '' && (
+              <div className="pdp-field-group pdp-inventory-group">
+                <div className="pdp-inventory-header">
+                  <label className="pdp-label">Stock by Size</label>
+                  <span className="pdp-inventory-subtitle">
+                    Enter quantity for <strong>{colors.find(c => c.id === activeColorId)?.name || 'this color'}</strong>
+                  </span>
+                </div>
+                <div className="pdp-inventory-grid">
+                  {sizes.filter(Boolean).map((size, idx) => {
+                    const cName = colors.find(c => c.id === activeColorId)?.name || '';
+                    const invKey = `${cName}:${size}`;
+                    return (
+                      <div key={`${activeColorId}-${size}-${idx}`} className="pdp-inventory-item">
+                        <label className="pdp-inventory-item-label">{size}</label>
+                        <input
+                          type="number"
+                          min="0"
+                          placeholder="0"
+                          className="pdp-inventory-input"
+                          value={inventory[invKey] ?? ''}
+                          onChange={e => {
+                            const val = e.target.value === '' ? 0 : Number(e.target.value);
+                            setInventory(prev => ({ ...prev, [invKey]: val }));
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
