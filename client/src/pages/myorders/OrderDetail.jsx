@@ -234,12 +234,6 @@ export default function OrderDetail() {
                     <div className="od-mini-updating">Updating...</div>
                   )}
                 </div>
-                <TrackingModal 
-                  isOpen={isModalOpen}
-                  onClose={() => setIsModalOpen(false)}
-                  trackingData={trackingData}
-                  orderDate={order?.createdAt}
-                />
                 {order.trackingStatus?.toLowerCase() === 'delivered' && (
                   <div className="od-chat-section">
                     <button className="od-chat-btn" onClick={() => navigate('/support/chat', { state: { order } })}>
@@ -357,6 +351,12 @@ export default function OrderDetail() {
           </div>
         </div>
       </div>
+      <TrackingModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        trackingData={trackingData}
+        orderDate={order?.createdAt}
+      />
     </>
   );
 }
