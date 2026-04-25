@@ -220,7 +220,7 @@ export default function ProductGrid({
     if (gridTopRef.current) {
         const navHeight = document.querySelector('nav')?.getBoundingClientRect().height || 80;
         const top = gridTopRef.current.getBoundingClientRect().top + window.scrollY - navHeight - 20;
-        window.scrollTo({ top, behavior: 'smooth' });
+        window.scrollTo({ top, behavior: 'instant' });
     }
   };
 

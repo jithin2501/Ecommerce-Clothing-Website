@@ -171,29 +171,36 @@
 }
 
 .pg-pag-btn {
-  padding: 8px 18px;
-  border: 1.5px solid #111827;
-  background: white;
-  color: #111827;
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+  background: #1f2b48;
+  color: #ffffff;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.8px;
   cursor: pointer;
   transition: all 0.2s ease;
-  min-width: 110px;
+  min-width: 120px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
 
 .pg-pag-btn:hover:not(:disabled) {
-  background: #111827;
-  color: white;
+  background: #101726;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.pg-pag-btn:active:not(:disabled) {
+  transform: translateY(0);
 }
 
 .pg-pag-btn:disabled {
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: not-allowed;
-  border-color: #94a3b8;
-  color: #94a3b8;
+  background: #94a3b8;
+  color: #f1f5f9;
 }
 
 .pg-pag-info {
