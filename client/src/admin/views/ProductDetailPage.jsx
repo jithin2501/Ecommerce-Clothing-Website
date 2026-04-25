@@ -15,6 +15,26 @@ const uuid = () => Math.random().toString(36).slice(2, 9);
 
 const colorKey = (name) => name.toLowerCase().replace(/\s+/g, '_');
 
+const AGE_GROUP_SIZES = {
+  'newborn': ['0M', '1M', '2M', '3M', '4M', '5M', '6M'],
+  'infant': ['6M', '7M', '8M', '9M', '10M', '11M', '12M'],
+  'toddler': ['1Y', '2Y', '3Y'],
+  'little-girls': ['3Y', '4Y', '5Y', '6Y'],
+  'kids': ['6Y', '7Y', '8Y', '9Y'],
+  'pre-teen': ['9Y', '10Y', '11Y', '12Y'],
+};
+
+const getSizeKeys = (ageGroups) => {
+  const seen = new Set();
+  const keys = [];
+  (ageGroups || []).forEach(ag => {
+    (AGE_GROUP_SIZES[ag] || []).forEach(k => {
+      if (!seen.has(k)) { seen.add(k); keys.push(k); }
+    });
+  });
+  return keys;
+};
+
 export default function ProductDetailPage() {
   const { productId } = useParams();
   const navigate      = useNavigate();
@@ -186,39 +206,14 @@ export default function ProductDetailPage() {
   const mfr  = makeRowHelpers(setManufacturerInfo);
   const hl   = makeRowHelpers(setHighlights);
 
-  const addSize    = ()     => setSizes(s => [...s, '']);
-  const removeSize = (i)    => setSizes(s => s.filter((_, idx) => idx !== i));
-  const updateSize = (i, v) => setSizes(s => s.map((x, idx) => idx === i ? v : x));
 
-  const syncSizesFromStock = () => {
-    if (!product?.inventory) {
-      setError('No inventory data found for this product. Save stock in Product Management first.');
-      return;
-    }
-    const inv = product.inventory instanceof Map ? Object.fromEntries(product.inventory) : product.inventory;
-    const stockSizes = Object.entries(inv)
-      .filter(([_, qty]) => Number(qty) > 0)
-      .map(([sz]) => sz)
-      .sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
-
-    if (stockSizes.length > 0) {
-      setSizes(stockSizes);
-    } else {
-      setError('All sizes are currently out of stock in inventory.');
-    }
-  };
-
-  // Auto-fill sizes from stock if currently empty on load
+  // Auto-populate sizes based on product age group
   useEffect(() => {
-    if (product && sizes.length === 1 && sizes[0] === '' && product.inventory) {
-      const inv = product.inventory instanceof Map ? Object.fromEntries(product.inventory) : product.inventory;
-      const stockSizes = Object.entries(inv)
-        .filter(([_, qty]) => Number(qty) > 0)
-        .map(([sz]) => sz)
-        .sort((a, b) => (parseInt(a) || 0) - (parseInt(b) || 0));
-      if (stockSizes.length > 0) setSizes(stockSizes);
+    if (product?.ageGroup) {
+      const derivedSizes = getSizeKeys(product.ageGroup);
+      setSizes(derivedSizes);
     }
-  }, [product, sizes]);
+  }, [product?.ageGroup]);
 
   /* ── Submit ── */
   const handleSubmit = async (e) => {
@@ -423,26 +418,13 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="pdp-field-group">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '8px' }}>
-                <label className="pdp-label" style={{ marginBottom: 0 }}>SIZES</label>
-                <button 
-                  type="button" 
-                  className="pdp-add-row-btn" 
-                  style={{ padding: '2px 8px', fontSize: '0.7rem' }}
-                  onClick={syncSizesFromStock}
-                >
-                  Sync from Stock
-                </button>
-              </div>
+              <label className="pdp-label">AVAILABLE SIZES</label>
+              <p className="pdp-section-hint">Derived from Product Age Group: {product?.ageGroup?.join(', ') || 'None'}</p>
               <div className="pdp-sizes-list">
-                {sizes.map((s, i) => (
-                  <div key={i} className="pdp-size-row">
-                    <input className="pdp-size-input" type="text" placeholder="e.g. 4-5Y" value={s} onChange={e => updateSize(i, e.target.value)} />
-                    <button type="button" className="pdp-row-remove" onClick={() => removeSize(i)}>✕</button>
-                  </div>
-                ))}
-                <div style={{ display: 'flex', gap: '8px' }}>
-                  <button type="button" className="pdp-add-row-btn" onClick={addSize}>+ Add Size</button>
+                <div className="pdp-sizes-readonly-grid">
+                  {sizes.length > 0 ? sizes.map(s => (
+                    <span key={s} className="pdp-size-tag-readonly">{s}</span>
+                  )) : <span className="pdp-section-hint">No sizes available. Check age group.</span>}
                 </div>
               </div>
             </div>

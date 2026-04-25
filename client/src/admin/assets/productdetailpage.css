@@ -733,4 +733,23 @@
     width: 64px;
     height: 64px;
   }
-}
+}
+
+.pdp-sizes-readonly-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.pdp-size-tag-readonly {
+  background: #f1f5f9;
+  color: #475569;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  border: 1px solid #e2e8f0;
+  text-transform: uppercase;
+}
+

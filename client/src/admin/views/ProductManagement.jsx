@@ -182,7 +182,6 @@ export default function ProductManagement() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ ...EMPTY_FORM, colors: [] });
-  const [selectedColor, setSelectedColor] = useState('all');
   const [editId, setEditId] = useState(null);
   const [preview, setPreview] = useState(null);
   const [imgFile, setImgFile] = useState(null);
@@ -576,59 +575,6 @@ export default function ProductManagement() {
                 </div>
               </div>
 
-              {/* Per-size inventory grid — appears when age groups are selected */}
-              {form.ageGroup.length > 0 && (() => {
-                const sizes = getSizeKeys(form.ageGroup);
-                const hasColors = form.colors && form.colors.length > 0;
-                
-                return (
-                  <div className="pm-inventory-section">
-                    <div className="pm-inventory-header">
-                      <div style={{ flex: 1 }}>
-                        <span className="pm-inventory-title">Stock by Size</span>
-                        <span className="pm-inventory-subtitle">Enter quantity for each size</span>
-                      </div>
-                      {hasColors && (
-                        <div className="pm-color-selector">
-                          <label style={{ fontSize: '0.7rem', color: '#64748b', marginRight: '8px' }}>Color:</label>
-                          <select 
-                            value={selectedColor} 
-                            onChange={e => setSelectedColor(e.target.value)}
-                            style={{ padding: '2px 8px', fontSize: '0.75rem', borderRadius: '4px', border: '1px solid #e2e8f0' }}
-                          >
-                            <option value="all">Global / No Color</option>
-                            {form.colors.map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
-                          </select>
-                        </div>
-                      )}
-                    </div>
-                    <div className="pm-inventory-grid">
-                      {sizes.map(size => {
-                        const invKey = selectedColor === 'all' ? size : `${selectedColor}:${size}`;
-                        return (
-                          <div key={size} className="pm-inventory-item">
-                            <label className="pm-inventory-label">{size}</label>
-                            <input
-                              type="number"
-                              min="0"
-                              placeholder="0"
-                              className="pm-inventory-input"
-                              value={form.inventory?.[invKey] ?? ''}
-                              onChange={e => {
-                                const val = e.target.value === '' ? 0 : Number(e.target.value);
-                                setForm(f => ({
-                                  ...f,
-                                  inventory: { ...f.inventory, [invKey]: val }
-                                }));
-                              }}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                );
-              })()}
             </div>
           </div>
 
