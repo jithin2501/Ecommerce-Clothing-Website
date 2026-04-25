@@ -42,6 +42,17 @@ function SimplifiedTracker({ trackingData, orderDate, onSeeAll }) {
 }
 
 function TrackingModal({ isOpen, onClose, trackingData, orderDate }) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const activities = trackingData?.activities || [];
