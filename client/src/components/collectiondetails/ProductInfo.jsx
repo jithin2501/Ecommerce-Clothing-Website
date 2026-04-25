@@ -123,10 +123,13 @@ export default function ProductInfo({
     const invKey = `${selectedColor}:${selectedSize}`;
     const specificStock = (inventory[invKey] !== undefined) ? Number(inventory[invKey]) : (Number(inventory[selectedSize]) || 0);
 
+    const variantPrice = colors.find(c => c.name === selectedColor)?.price;
+    const finalPrice = (variantPrice != null && variantPrice !== '') ? Number(variantPrice) : (typeof price === 'number' ? price : parseFloat(String(price).replace(/[₹$,]/g, '')));
+
     addToCart({
       id:    productId || 1,
       name,
-      price: typeof price === 'number' ? price : parseFloat(String(price).replace(/[₹$,]/g, '')),
+      price: finalPrice,
       size:  selectedSize,
       color: selectedColor,
       img:   galleryImg,
@@ -134,9 +137,12 @@ export default function ProductInfo({
     });
   };
 
-  const displayPrice = typeof price === 'number'
-    ? `₹${price.toLocaleString('en-IN')}`
-    : price;
+  const variantPrice = colors.find(c => c.name === selectedColor)?.price;
+  const currentPrice = (variantPrice != null && variantPrice !== '') ? Number(variantPrice) : price;
+
+  const displayPrice = typeof currentPrice === 'number'
+    ? `₹${currentPrice.toLocaleString('en-IN')}`
+    : currentPrice;
 
   const ratingFloor = Math.floor(stars);
 

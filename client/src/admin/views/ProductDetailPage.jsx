@@ -9,7 +9,7 @@ const authHdrs = () => ({ Authorization: `Bearer ${localStorage.getItem('adminTo
 const MAX_GALLERY = 7;
 
 const EMPTY_SPEC  = { label: '', value: '' };
-const EMPTY_COLOR = { name: '', hex: '#F2C4B0', hexArray: ['#F2C4B0'] };
+const EMPTY_COLOR = { name: '', hex: '#F2C4B0', hexArray: ['#F2C4B0'], price: '' };
 
 const uuid = () => Math.random().toString(36).slice(2, 9);
 
@@ -471,10 +471,33 @@ export default function ProductDetailPage() {
             {activeColorId && sizes.length > 0 && sizes[0] !== '' && (
               <div className="pdp-field-group pdp-inventory-group">
                 <div className="pdp-inventory-header">
-                  <label className="pdp-label">Stock by Size</label>
-                  <span className="pdp-inventory-subtitle">
-                    Enter quantity for <strong>{colors.find(c => c.id === activeColorId)?.name || 'this color'}</strong>
-                  </span>
+                  <div className="pdp-inventory-header-left">
+                    <label className="pdp-label">Stock by Size</label>
+                    <span className="pdp-inventory-subtitle">
+                      Manage variant details and inventory
+                    </span>
+                  </div>
+                  
+                  <div className="pdp-variant-quick-edit">
+                    <div className="pdp-quick-field">
+                      <label>Variant Name</label>
+                      <input 
+                        type="text" 
+                        value={colors.find(c => c.id === activeColorId)?.name || ''} 
+                        onChange={e => updateColor(activeColorId, 'name', e.target.value)}
+                        placeholder="e.g. Red Floral"
+                      />
+                    </div>
+                    <div className="pdp-quick-field">
+                      <label>Variant Price (₹)</label>
+                      <input 
+                        type="number" 
+                        value={colors.find(c => c.id === activeColorId)?.price || ''} 
+                        onChange={e => updateColor(activeColorId, 'price', e.target.value)}
+                        placeholder="Base price if empty"
+                      />
+                    </div>
+                  </div>
                 </div>
                 <div className="pdp-inventory-grid">
                   {sizes.filter(Boolean).map((size, idx) => {
