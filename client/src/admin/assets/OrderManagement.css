@@ -167,6 +167,17 @@
   background: #f1f5f9;
 }
 
+.om-tracking-recent {
+  font-size: 0.68rem;
+  color: #64748b;
+  font-weight: 500;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: italic;
+}
+
 .om-tag.delivered {
   background: #dcfce7;
   color: #166534;

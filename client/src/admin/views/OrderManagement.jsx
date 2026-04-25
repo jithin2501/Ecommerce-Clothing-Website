@@ -74,7 +74,8 @@ export default function OrderManagement() {
         setOrders(prev => prev.map(o => o._id === orderId ? { 
           ...o, 
           trackingStatus: data.trackingStatus, 
-          trackingPayload: data // Store the full live payload for DetailedTracking
+          trackingActivities: data.activities,
+          trackingPayload: data // Store for drawer compatibility
         } : o));
       }
     } catch (err) {
@@ -179,6 +180,11 @@ export default function OrderManagement() {
                   <td>
                     <div className="om-tracking-cell">
                       <span className={`om-tag ${String(o.trackingStatus || '').toLowerCase()}`}>{o.trackingStatus || 'Pending'}</span>
+                      {(o.trackingActivities?.length > 0 || o.trackingPayload?.activities?.length > 0) && (
+                        <div className="om-tracking-recent">
+                          ({(o.trackingActivities || o.trackingPayload.activities).slice(0, 3).map(a => a.status).join(', ')})
+                        </div>
+                      )}
                     </div>
                   </td>
                   <td className="om-date-cell">{new Date(o.createdAt).toLocaleDateString()}</td>
