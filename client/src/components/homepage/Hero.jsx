@@ -119,8 +119,6 @@ export default function Hero() {
               src="/images/homepage/hero.png"
               alt="Model"
               className="main-model"
-              width="520"
-              height="600"
               onError={(e) => {
                 e.target.src =
                   'https://images.unsplash.com/photo-1519234221711-37d353664d92?q=80&w=800&auto=format&fit=crop';

@@ -52,9 +52,6 @@ export default function WhyUs() {
               src="./about.png"
               alt="Why Choose Sumathi Trends"
               className="why-img"
-              width="460"
-              height="500"
-              loading="lazy"
               onError={(e) => {
                 e.target.src = 'images/homepage/yopa.png';
               }}
