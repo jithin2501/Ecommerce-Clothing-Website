@@ -179,11 +179,12 @@ export default function OrderManagement() {
                   <td><span className="om-amount">₹{o.amount.toLocaleString()}</span></td>
                   <td>
                     <div className="om-tracking-cell">
-                      <span className={`om-tag ${String(o.trackingStatus || '').toLowerCase()}`}>{o.trackingStatus || 'Pending'}</span>
-                      {(o.trackingActivities?.length > 0 || o.trackingPayload?.activities?.length > 0) && (
+                      {(o.trackingActivities?.length > 0 || o.trackingPayload?.activities?.length > 0) ? (
                         <div className="om-tracking-recent">
                           ({(o.trackingActivities || o.trackingPayload.activities).slice(0, 3).map(a => a.status).join(', ')})
                         </div>
+                      ) : (
+                        <span className="om-tracking-recent">Pending</span>
                       )}
                     </div>
                   </td>
