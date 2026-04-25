@@ -5,9 +5,10 @@
 .sm-overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(5px);
-  z-index: 9999; /* HIGHEST Z-INDEX to cover Navbar and Magnifier */
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000000; /* HIGHER THAN NAVBAR (100000) */
   display: flex;
   align-items: center;
   justify-content: center;

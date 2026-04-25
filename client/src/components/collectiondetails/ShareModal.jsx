@@ -3,6 +3,17 @@ import { X, Copy, Mail, Twitter, Facebook, MessageCircle, Instagram } from 'luci
 import '../../styles/collectiondetails/ShareModal.css';
 
 export default function ShareModal({ isOpen, onClose, productUrl, productName }) {
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const encodedUrl = encodeURIComponent(productUrl);
