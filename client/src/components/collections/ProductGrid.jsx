@@ -41,13 +41,28 @@ export default function ProductGrid({
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const PAGE_SIZE = 15;
   const gridTopRef = useRef(null);
+  const lastFiltersRef = useRef();
 
   // ── Reset page when filters change ──
   useEffect(() => {
-    setSearchParams(prev => {
-      prev.set('page', '1');
-      return prev;
-    }, { replace: true });
+    const currentFilters = JSON.stringify({
+      selectedCategories, 
+      selectedSubcategories, 
+      selectedColors, 
+      selectedAgeGroups, 
+      priceMin, 
+      priceMax, 
+      selectedRatings, 
+      sortBy
+    });
+
+    if (lastFiltersRef.current && lastFiltersRef.current !== currentFilters) {
+      setSearchParams(prev => {
+        prev.set('page', '1');
+        return prev;
+      }, { replace: true });
+    }
+    lastFiltersRef.current = currentFilters;
   }, [
     selectedCategories, 
     selectedSubcategories, 
