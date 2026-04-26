@@ -187,6 +187,39 @@
   display: block;
 }
 
+/* Expired Blob Placeholder */
+.cs-media-placeholder {
+  margin-top: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 200px;
+}
+
+.cs-bubble--bot .cs-media-placeholder {
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+}
+
+.cs-placeholder-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.cs-placeholder-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.9;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Input area */
 .cs-input-area {
   border-top: 1px solid #f0f0f0;

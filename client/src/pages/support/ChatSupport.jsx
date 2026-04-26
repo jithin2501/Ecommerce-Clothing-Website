@@ -149,7 +149,17 @@ export default function ChatSupport() {
     if (step === STEP.WAIT_MEDIA) {
       if (mediaFiles.length === 0) return;
       
-      const newMsg = { from: 'user', text: trimmed || '', mediaFiles: [...mediaFiles], time: now() };
+      const newMsg = { 
+        from: 'user', 
+        text: trimmed || '', 
+        mediaFiles: mediaFiles.map(mf => ({
+          type: mf.type,
+          name: mf.name,
+          url: mf.url,
+          isBlob: mf.url.startsWith('blob:')
+        })), 
+        time: now() 
+      };
       setMessages(prev => [...prev, newMsg]);
       setInput('');
 
@@ -320,11 +330,24 @@ export default function ChatSupport() {
 
                       {msg.mediaFiles && msg.mediaFiles.length > 0 && (
                         <div className="cs-media-grid">
-                          {msg.mediaFiles.map((mf, mi) => (
-                            mf.type === 'video'
+                          {msg.mediaFiles.map((mf, mi) => {
+                            const isExpiredBlob = mf.isBlob && !mf.url.startsWith('blob:'); // This check is tricky since mf.url IS the blob string
+                            // Better check: If it's a blob and we are in a new session (not just created)
+                            // Actually, simply: all blobs in saved history are expired.
+                            
+                            if (mf.isBlob) {
+                              return (
+                                <div key={mi} className="cs-media-placeholder">
+                                  <div className="cs-placeholder-icon">{mf.type === 'video' ? '🎬' : '🖼️'}</div>
+                                  <div className="cs-placeholder-name">{mf.name || 'File Attached'}</div>
+                                </div>
+                              );
+                            }
+
+                            return mf.type === 'video'
                               ? <video key={mi} src={mf.url} className="cs-media-preview" controls />
-                              : <img key={mi} src={mf.url} alt="attachment" className="cs-media-preview" />
-                          ))}
+                              : <img key={mi} src={mf.url} alt="attachment" className="cs-media-preview" />;
+                          })}
                         </div>
                       )}
                       <div className="cs-time">{msg.time}</div>
