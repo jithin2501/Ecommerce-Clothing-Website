@@ -256,7 +256,7 @@ export default function OrderDetail() {
   }
 
   // Fallback if loading and no data yet
-  const showLoadingPlaceholder = trackingLoading && !trackingData;
+  const showLoadingPlaceholder = trackingLoading && !trackingData && !isDelivered;
 
   const orderItems = order?.items || [];
   const activeItem = item || orderItems[0];
@@ -299,7 +299,7 @@ export default function OrderDetail() {
                     <div className="od-tracking-loading">Updating live tracking...</div>
                   ) : (
                     <SimplifiedTracker 
-                      trackingData={trackingData} 
+                      trackingData={trackingData || { activities: order.trackingActivities || [] }} 
                       orderDate={order?.createdAt} 
                       onSeeAll={() => setIsModalOpen(true)}
                     />
@@ -428,7 +428,7 @@ export default function OrderDetail() {
       <TrackingModal 
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        trackingData={trackingData}
+        trackingData={trackingData || { activities: order.trackingActivities || [] }}
         orderDate={order?.createdAt}
       />
     </>

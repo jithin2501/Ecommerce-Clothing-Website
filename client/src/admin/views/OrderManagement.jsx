@@ -7,6 +7,29 @@ const authHeaders = () => ({
   'Content-Type': 'application/json',
 });
 
+// Status Mapping Helper for all components
+const formatStatus = (status) => {
+  if (!status) return '';
+  const s = status.toUpperCase();
+  const mapping = {
+    'PICKED_UP': 'Shipment Picked Up',
+    'IN_TRANSIT': 'In Transit',
+    'OUT_FOR_DELIVERY': 'Out for Delivery',
+    'OFD': 'Out for Delivery',
+    'DELIVERED': 'Delivered',
+    'DELIVERY_UPDATE': 'Delivered',
+    'RECEIVED_AT_DH': 'Reached Destination Hub',
+    'MH_RECEIVED': 'Reached Processing Center',
+    'SHIPPED': 'Shipped',
+    'LPD_GENERATED': 'Shipment Ready',
+    'CREATED': 'Order Created',
+    'EXPECTED': 'Scheduled for Delivery',
+    'UNDELIVERED_ATTEMPTED': 'Delivery Attempted',
+    'REPROMISE': 'Delivery Rescheduled'
+  };
+  return mapping[s] || status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+};
+
 export default function OrderManagement() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -179,13 +202,23 @@ export default function OrderManagement() {
                   <td><span className="om-amount">₹{o.amount.toLocaleString()}</span></td>
                   <td>
                     <div className="om-tracking-cell">
-                      {(o.trackingActivities?.length > 0 || o.trackingPayload?.activities?.length > 0) ? (
-                        <div className="om-tracking-recent">
-                          ({(o.trackingActivities || o.trackingPayload.activities).slice(0, 3).map(a => a.status).join(', ')})
-                        </div>
-                      ) : (
-                        <span className="om-tracking-recent">Pending</span>
-                      )}
+                      {(() => {
+                        const acts = o.trackingActivities || o.trackingPayload?.activities || [];
+                        const validActs = acts.filter(a => {
+                          const s = a.status?.toLowerCase() || '';
+                          return !s.includes('metadata') && !s.includes('tracking_id') && !s.includes('awb_code');
+                        });
+                        if (validActs.length > 0) {
+                          const latest = validActs[0];
+                          return (
+                            <div className={`om-tracking-latest ${latest.status?.toLowerCase().includes('delivered') ? 'delivered' : ''}`}>
+                              {formatStatus(latest.status)}
+                              <span className="om-tracking-loc"> · {latest.location || 'In Transit'}</span>
+                            </div>
+                          );
+                        }
+                        return <span className="om-tracking-recent">Order Confirmed</span>;
+                      })()}
                     </div>
                   </td>
                   <td className="om-date-cell">{new Date(o.createdAt).toLocaleDateString()}</td>
@@ -373,34 +406,12 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
 }
 
 function ShiprocketActivityTracker({ trackingData, isSyncing }) {
-  // 1. Status Mapping Helper
-  const formatStatus = (status) => {
-    if (!status) return '';
-    const s = status.toUpperCase();
-    const mapping = {
-      'PICKED_UP': 'Shipment Picked Up',
-      'IN_TRANSIT': 'In Transit',
-      'OUT_FOR_DELIVERY': 'Out for Delivery',
-      'OFD': 'Out for Delivery',
-      'DELIVERED': 'Delivered',
-      'DELIVERY_UPDATE': 'Delivered',
-      'RECEIVED_AT_DH': 'Reached Destination Hub',
-      'MH_RECEIVED': 'Reached Processing Center',
-      'SHIPPED': 'Shipped',
-      'LPD_GENERATED': 'Shipment Ready',
-      'CREATED': 'Order Created',
-      'EXPECTED': 'Scheduled for Delivery',
-      'UNDELIVERED_ATTEMPTED': 'Delivery Attempted',
-      'REPROMISE': 'Delivery Rescheduled'
-    };
-    return mapping[s] || status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
-
   // 2. Filter internal metadata
   const activities = (trackingData?.activities || []).filter(a => {
     const s = a.status?.toLowerCase() || '';
     return !s.includes('metadata') && !s.includes('tracking_id') && !s.includes('awb_code');
   });
+
 
   if (activities.length === 0) {
     return (

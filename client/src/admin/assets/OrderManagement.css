@@ -167,6 +167,26 @@
   background: #f1f5f9;
 }
 
+.om-tracking-latest {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.om-tracking-latest.delivered {
+  color: #10b981;
+}
+
+.om-tracking-loc {
+  font-size: 0.72rem;
+  color: #64748b;
+  font-weight: 400;
+  font-style: italic;
+}
+
 .om-tracking-recent {
   font-size: 0.68rem;
   color: #64748b;
