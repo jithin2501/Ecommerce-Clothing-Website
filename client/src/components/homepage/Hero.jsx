@@ -10,8 +10,8 @@ const avatarUrls = [
 ];
 
 const PHRASES = [
-  'Premium Kids Fashion',
-  'Organic Cotton & Linen',
+  'Best Kidswear Bangalore',
+  'Premium Kids Cloths',
   'Ages 0–12 Essentials',
   'Loved by 2,400+ Parents',
   'Adventure-Ready Styles',
@@ -79,13 +79,21 @@ export default function Hero() {
               <span className="typewriter-js">{displayed}<span className="cursor">|</span></span>
             </div>
 
-            <h1 className="hero-title">
+            {/* Hidden H1 for SEO ranking without affecting design */}
+            <h1 className="sr-only" style={{ 
+              position: 'absolute', width: '1px', height: '1px', padding: '0', 
+              margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', border: '0' 
+            }}>
+              Kidswear & Kids Cloths in Bangalore Karnataka | 0-12 Years
+            </h1>
+
+            <div className="hero-title">
               <span className="line-1">Modern Style</span>
               <span className="line-2">
                 for <span className="accent-inline">Little</span>
               </span>
               <span className="accent">Legends</span>
-            </h1>
+            </div>
 
             <p className="hero-desc">
               Discover the <strong>Best Kids Clothing in Kodigehalli & Bangalore</strong>. 
