@@ -8,7 +8,30 @@ import { authFetch } from '../../utils/authFetch';
 
 
 function SimplifiedTracker({ trackingData, orderDate, onSeeAll }) {
-  const activities = trackingData?.activities || [];
+  // Use same logic as modal
+  const formatStatus = (status) => {
+    if (!status) return '';
+    const s = status.toUpperCase();
+    const mapping = {
+      'PICKED_UP': 'Shipment Picked Up',
+      'IN_TRANSIT': 'In Transit',
+      'OUT_FOR_DELIVERY': 'Out for Delivery',
+      'OFD': 'Out for Delivery',
+      'DELIVERED': 'Delivered',
+      'DELIVERY_UPDATE': 'Delivered',
+      'RECEIVED_AT_DH': 'In Transit',
+      'MH_RECEIVED': 'In Transit',
+      'SHIPPED': 'Shipped',
+      'LPD_GENERATED': 'Shipment Ready',
+      'CREATED': 'Order Created'
+    };
+    return mapping[s] || status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
+  const activities = (trackingData?.activities || []).filter(a => {
+    const s = a.status?.toLowerCase() || '';
+    return !s.includes('metadata') && !s.includes('tracking_id') && !s.includes('awb_code');
+  });
   
   const formatDateShort = (dateStr) => {
     if (!dateStr) return '';
@@ -19,7 +42,7 @@ function SimplifiedTracker({ trackingData, orderDate, onSeeAll }) {
   let latestStep = { label: 'Processing', date: orderDate };
   if (activities.length > 0) {
     const last = activities[0];
-    latestStep = { label: last.status, date: last.date };
+    latestStep = { label: formatStatus(last.status), date: last.date };
   }
 
   return (
@@ -29,7 +52,7 @@ function SimplifiedTracker({ trackingData, orderDate, onSeeAll }) {
           <div className="s-dot-wrap"><div className="s-dot" /><div className="s-line" /></div>
           <div className="s-text">Order Confirmed, {formatDateShort(orderDate)}</div>
         </div>
-        <div className={`s-step ${latestStep.label !== 'Processing' ? 'completed' : ''}`}>
+        <div className={`s-step ${latestStep.label !== 'Processing' ? 'completed' : ''} ${latestStep.label === 'Delivered' ? 'delivered' : ''}`}>
           <div className="s-dot-wrap"><div className="s-dot" /></div>
           <div className="s-text">{latestStep.label}, {formatDateShort(latestStep.date)}</div>
         </div>
@@ -55,7 +78,35 @@ function TrackingModal({ isOpen, onClose, trackingData, orderDate }) {
 
   if (!isOpen) return null;
 
-  const activities = trackingData?.activities || [];
+  // 1. Status Mapping Helper
+  const formatStatus = (status) => {
+    if (!status) return '';
+    const s = status.toUpperCase();
+    const mapping = {
+      'PICKED_UP': 'Shipment Picked Up',
+      'IN_TRANSIT': 'In Transit',
+      'OUT_FOR_DELIVERY': 'Out for Delivery',
+      'OFD': 'Out for Delivery',
+      'DELIVERED': 'Delivered',
+      'DELIVERY_UPDATE': 'Delivered',
+      'RECEIVED_AT_DH': 'Reached Destination Hub',
+      'MH_RECEIVED': 'Reached Processing Center',
+      'SHIPPED': 'Shipped',
+      'LPD_GENERATED': 'Shipment Ready',
+      'CREATED': 'Order Created',
+      'EXPECTED': 'Scheduled for Delivery',
+      'UNDELIVERED_ATTEMPTED': 'Delivery Attempted',
+      'REPROMISE': 'Delivery Rescheduled'
+    };
+    return mapping[s] || status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
+  // 2. Filter internal metadata
+  const activities = (trackingData?.activities || []).filter(a => {
+    const s = a.status?.toLowerCase() || '';
+    return !s.includes('metadata') && !s.includes('tracking_id') && !s.includes('awb_code');
+  });
+
   const courier = trackingData?.courier || 'Logistic Partner';
   const awb = trackingData?.awb || '';
 
@@ -82,15 +133,15 @@ function TrackingModal({ isOpen, onClose, trackingData, orderDate }) {
               </div>
             )}
             {activities.map((a, i) => (
-              <div key={i} className="full-step active">
+              <div key={i} className={`full-step active ${a.status?.toLowerCase().includes('delivered') ? 'delivered-step' : ''}`}>
                 <div className="fs-dot-line">
                   <div className="fs-dot" />
                   {i < activities.length - 1 && <div className="fs-line" />}
                 </div>
                 <div className="fs-info">
-                  <div className="fs-label">{a.status} <span className="fs-date">{getDay(a.date)}</span></div>
+                  <div className="fs-label">{formatStatus(a.status)} <span className="fs-date">{getDay(a.date)}</span></div>
                   {i === 0 && awb && <p className="fs-courier">{courier} - {awb}</p>}
-                  <p className="fs-msg">{a.activity}</p>
+                  <p className="fs-msg">{a.activity || (a.status?.toLowerCase().includes('delivered') ? 'Order successfully delivered.' : '')}</p>
                   <p className="fs-time">{getDay(a.date)} - {getTime(a.date)}</p>
                   {a.location && <p className="fs-loc">{a.location}</p>}
                 </div>

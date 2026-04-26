@@ -145,6 +145,11 @@
   box-shadow: 0 0 0 4px rgba(56, 142, 60, 0.1);
 }
 
+.s-step.completed.delivered .s-dot {
+  background: #22C55E;
+  box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.2);
+}
+
 .s-line {
   flex: 1;
   width: 2px;
@@ -299,6 +304,16 @@
   z-index: 2;
   margin-top: 5px;
 }
+
+.delivered-step .fs-dot {
+  background: #22C55E;
+  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);
+}
+
+.delivered-step .fs-label {
+  color: #22C55E;
+}
+
 
 .fs-line {
   flex: 1;
