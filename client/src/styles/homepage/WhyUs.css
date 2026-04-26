@@ -11,17 +11,6 @@
   overflow: visible;
 }
 
-.why-section::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at 70% 50%,
-    rgba(192,127,94,0.05) 0%,
-    transparent 65%
-  );
-  pointer-events: none;
-}
 
 /* ── Section Title ── */
 .why-title-label {
