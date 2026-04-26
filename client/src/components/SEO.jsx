@@ -10,6 +10,7 @@ export default function SEO({
   const siteName = "Sumathi Trends";
   const defaultDesc = "Sumathi Trends is the best kids clothing store in Kodigehalli, Bangalore. Discover premium quality Occasion Wear, Party Wear, Traditional & Ethnic Wear, and Designer Frocks for your little ones.";
   const defaultKeywords = "Best kids clothing in Kodigehalli, Best kids clothing in Bangalore, Sumathi Trends, Kids Wear, Party Wear Frocks, Traditional Kids Wear, Designer Frocks Bangalore";
+  const defaultImage = "https://sumathitrends.com/images/logo/logo.png";
   
   const siteTitle = title ? `${title} | Sumathi Trends` : "Best Kids Clothing in Kodigehalli & Bangalore | Sumathi Trends";
   const currentUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
