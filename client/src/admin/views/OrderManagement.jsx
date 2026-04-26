@@ -25,7 +25,10 @@ const formatStatus = (status) => {
     'CREATED': 'Order Created',
     'EXPECTED': 'Scheduled for Delivery',
     'UNDELIVERED_ATTEMPTED': 'Delivery Attempted',
-    'REPROMISE': 'Delivery Rescheduled'
+    'REPROMISE': 'Delivery Rescheduled',
+    'EOD-135': 'Delivered',
+    'ST-114': 'Dispatched',
+    'X-DDD3FD': 'Out for Delivery'
   };
   return mapping[s] || status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 };

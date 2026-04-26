@@ -280,6 +280,18 @@ exports.syncTrackingStatus = async (req, res) => {
       order.trackingStatus = td.track_status || order.trackingStatus;
       order.trackingActivities = (td.shipment_track_activities || []).sort((a, b) => new Date(b.date) - new Date(a.date));
 
+      // Auto-detect delivery from activities if not already marked
+      if (order.trackingStatus?.toUpperCase() !== 'DELIVERED') {
+        const hasDeliveredActivity = order.trackingActivities.some(a => {
+          const s = a.status?.toLowerCase() || '';
+          const act = a.activity?.toLowerCase() || '';
+          return s.includes('delivered') || s.includes('delivery_update') || act.includes('delivered to consignee');
+        });
+        if (hasDeliveredActivity) {
+          order.trackingStatus = 'DELIVERED';
+        }
+      }
+
       const results = {
         success: true,
         trackingStatus: order.trackingStatus,
