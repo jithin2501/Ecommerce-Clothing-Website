@@ -88,8 +88,8 @@ export default function Hero() {
             </h1>
 
             <p className="hero-desc">
-              Crafted with love using premium organic cotton and linen.
-              Designed for comfort, style, and every little adventure from ages 0–12.
+              Discover the <strong>Best Kids Clothing in Kodigehalli & Bangalore</strong>. 
+              Crafted with love using premium fabrics, designed for comfort and style for every little adventure from ages 0–12.
             </p>
 
             <Link to="/collections" className="btn-collection">

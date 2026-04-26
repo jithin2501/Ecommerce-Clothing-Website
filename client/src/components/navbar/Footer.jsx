@@ -45,6 +45,7 @@ export default function Footer() {
               <div className="footer-logo-text">Sumathi Trends</div>
             </div>
             <p className="brand-description">
+              The best kids clothing store in Kodigehalli, Bangalore. 
               Elevating children's fashion through timeless design, premium
               materials, and exceptional craftsmanship since 2026.
             </p>

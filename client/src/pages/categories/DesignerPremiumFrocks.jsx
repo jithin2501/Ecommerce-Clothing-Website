@@ -30,8 +30,8 @@ export default function DesignerPremiumFrocks() {
     <div className="catpage-wrapper">
       <SEO 
         title="Designer & Premium Frocks"
-        description="Exclusive boutique designer frocks and handwork embroidery collections. Discover custom-made luxury frocks at Sumathi Trends."
-        keywords="designer kids frocks, boutique frocks, embroidery frocks, custom made kids wear, luxury children clothing"
+        description="Shop the best designer and premium kids frocks in Kodigehalli, Bangalore. Exclusive boutique collections and custom-made luxury frocks at Sumathi Trends."
+        keywords="designer kids frocks Bangalore, boutique frocks Kodigehalli, luxury kids wear, premium frocks Sumathi Trends"
         url="https://sumathitrends.com/collections/designer-premium-frocks"
       />
 

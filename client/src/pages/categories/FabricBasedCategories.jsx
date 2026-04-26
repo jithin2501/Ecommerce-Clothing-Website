@@ -19,9 +19,9 @@ export default function FabricBasedCategories() {
   return (
     <div className="catpage-wrapper">
       <SEO 
-        title="Fabric-Based Categories"
-        description="Choose kids clothing by material – from breathable cotton and organza to luxurious silk and winter-special velvet frocks."
-        keywords="cotton kids frocks, silk frocks, organza frocks, velvet frocks, satin kids wear, fabric based children clothing"
+        title="Fabric-Based Kids Categories"
+        description="Discover kids clothing by material in Kodigehalli, Bangalore. Sumathi Trends offers cotton, silk, organza, and velvet frocks for children."
+        keywords="cotton kids frocks Bangalore, silk frocks Kodigehalli, organza frocks, velvet kids wear, fabric based children clothing Sumathi Trends"
         url="https://sumathitrends.com/collections/fabric-based-categories"
       />
 

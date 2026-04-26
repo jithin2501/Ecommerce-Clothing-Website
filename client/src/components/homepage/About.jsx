@@ -40,9 +40,8 @@ export default function About() {
               <span className="accent-text">Worn with Pride.</span>
             </h3>
             <p className="about-desc">
-              At Sumathi Trends, we believe every child deserves to feel
-              extraordinary. Founded in 2026, we blend timeless design with
-              premium materials to create clothing that grows with your little
+              Sumathi Trends is recognized as the <strong>Best Kids Clothing store in Kodigehalli, Bangalore</strong>. 
+              Founded in 2026, we blend timeless design with premium materials to create clothing that grows with your little 
               ones — from their first steps to their biggest milestones.
             </p>
             <p className="about-desc">

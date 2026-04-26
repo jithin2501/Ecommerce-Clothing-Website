@@ -23,9 +23,9 @@ export default function OccasionDailyWearFrocks() {
   return (
     <div className="catpage-wrapper">
       <SEO 
-        title="Occasion & Daily Wear Frocks"
-        description="Premium frocks for every occasion – from birthday parties and weddings to comfortable daily and summer wear. Shop our handpicked kids collection."
-        keywords="birthday party frocks, festive frocks, reception evening wear, daily wear frocks, summer frocks for kids, photoshoot special frocks"
+        title="Occasion & Daily Wear Kids Frocks"
+        description="Best kids occasion and daily wear frocks in Kodigehalli, Bangalore. Sumathi Trends offers premium birthday party frocks, festive wear, and comfortable daily outfits."
+        keywords="Best kids clothing Kodigehalli, occasion wear frocks Bangalore, birthday party frocks, daily wear kids clothing Sumathi Trends"
         url="https://sumathitrends.com/collections/occasion-daily-wear-frocks"
       />
 

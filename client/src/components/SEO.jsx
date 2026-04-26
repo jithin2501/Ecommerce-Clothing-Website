@@ -8,11 +8,10 @@ export default function SEO({
   image 
 }) {
   const siteName = "Sumathi Trends";
-  const defaultDesc = "Shop premium organic cotton and linen clothing for kids aged 0-12. Modern style, comfort and quality at Sumathi Trends.";
-  const defaultImage = "https://sumathitrends.com/images/logo/logo.png";
-  const defaultKeywords = "Sumathi Trends, kids clothing Bengaluru, best kids cloth wares in Kodigehalli, birthday party frocks, children fashion, wedding festive frocks, reception evening wear, photoshoot special frocks, princess fancy dress, casual cotton frocks, playtime frocks, school casual frocks, summer wear frocks, comfortable home wear, net frocks, gown style frocks, layered frill frocks, sequin glitter frocks, designer party wear, boutique designer frocks, handwork embroidery frocks, custom made frocks, luxury collection, pattu silk frocks, lehenga style frocks, anarkali frocks, indo-western styles, festival special diwali navratri, cotton frocks, satin frocks, silk frocks, organza frocks, velvet frocks winter special, premium kids boutique bangalore, hebbal kids store";
+  const defaultDesc = "Sumathi Trends is the best kids clothing store in Kodigehalli, Bangalore. Discover premium quality Occasion Wear, Party Wear, Traditional & Ethnic Wear, and Designer Frocks for your little ones.";
+  const defaultKeywords = "Best kids clothing in Kodigehalli, Best kids clothing in Bangalore, Sumathi Trends, Kids Wear, Party Wear Frocks, Traditional Kids Wear, Designer Frocks Bangalore";
   
-  const siteTitle = title ? `${title} | ${siteName}` : siteName;
+  const siteTitle = title ? `${title} | Sumathi Trends` : "Best Kids Clothing in Kodigehalli & Bangalore | Sumathi Trends";
   const currentUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
 
   return (

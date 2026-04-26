@@ -1,6 +1,4 @@
 User-agent: *
-Disallow: /admin/
-Disallow: /admin-login/
 Allow: /
 
 Sitemap: https://sumathitrends.com/sitemap.xml
