@@ -29,7 +29,7 @@ export default function ChatSupport() {
   const order    = location.state?.order || null;
 
   const userId = order?.userId || localStorage.getItem('sumathi_uid') || 'guest';
-  const sessionKey = `chat_history_${userId}_${order?.id || 'no-order'}`;
+  const sessionKey = `chat_history_${userId}_${order?._id || order?.displayId || 'no-order'}`;
 
   const [activeNav,    setActiveNav]    = useState('');
   const [activeSubNav, setActiveSubNav] = useState('support');
