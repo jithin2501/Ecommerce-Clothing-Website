@@ -45,7 +45,16 @@ export default function OrderManagement() {
       const res = await fetch(API, { headers: authHeaders() });
       const data = await res.json();
       if (data.success) {
-        setOrders(data.data.filter(o => o.status === 'success'));
+        setOrders(prev => {
+          const newOrders = data.data.filter(o => o.status === 'success');
+          return newOrders.map(no => {
+            const existing = prev.find(p => p._id === no._id);
+            if (existing && existing.trackingPayload) {
+              return { ...no, trackingPayload: existing.trackingPayload, trackingActivities: existing.trackingActivities };
+            }
+            return no;
+          });
+        });
       }
     } catch (err) {
       console.error('Error fetching orders:', err);
@@ -79,7 +88,8 @@ export default function OrderManagement() {
     const syncInterval = setInterval(() => {
       const activeOrders = ordersRef.current.filter(o => 
         o.shiprocketShipmentId && 
-        String(o.trackingStatus || '').toUpperCase() !== 'DELIVERED'
+        o.trackingStatus?.toUpperCase() !== 'DELIVERED' &&
+        o.trackingStatus?.toUpperCase() !== 'CANCELED'
       );
       
       activeOrders.forEach(o => handleSyncStatus(o._id));
@@ -416,7 +426,12 @@ function ShiprocketActivityTracker({ trackingData, isSyncing }) {
   if (activities.length === 0) {
     return (
       <div className="om-tracking-pending">
-        {isSyncing ? 'Updating live tracking...' : 'No tracking scans yet'}
+        {isSyncing ? (
+          <div className="om-sync-loader">
+             <div className="om-sync-spinner" />
+             <span>Updating tracking...</span>
+          </div>
+        ) : 'No tracking scans yet'}
       </div>
     );
   }
