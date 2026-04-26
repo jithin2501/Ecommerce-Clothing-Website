@@ -184,9 +184,13 @@ export default function OrderDetail() {
 
   // Robust delivery check
   const isDelivered = 
-    order?.trackingStatus?.toLowerCase() === 'delivered' || 
-    trackingData?.trackingStatus?.toLowerCase() === 'delivered' ||
+    order?.trackingStatus?.toUpperCase() === 'DELIVERED' || 
+    trackingData?.trackingStatus?.toUpperCase() === 'DELIVERED' ||
     (trackingData?.activities && trackingData.activities.some(a => {
+      const s = a.status?.toLowerCase() || '';
+      return s === 'delivered' || s === 'delivery_update' || s.includes('delivered');
+    })) ||
+    (order?.trackingActivities && order.trackingActivities.some(a => {
       const s = a.status?.toLowerCase() || '';
       return s === 'delivered' || s === 'delivery_update' || s.includes('delivered');
     }));
@@ -211,8 +215,14 @@ export default function OrderDetail() {
 
   useEffect(() => { 
     let intervalId;
-    if (order?._id) { 
+    if (order?._id) {
       const syncTracking = async () => {
+        // Skip sync if already delivered in DB to avoid unnecessary loading states
+        if (order.trackingStatus?.toUpperCase() === 'DELIVERED') {
+          setTrackingLoading(false);
+          return;
+        }
+
         setTrackingLoading(true);
         try {
           const res = await authFetch(`/api/payment/track/${order._id}`);
@@ -240,7 +250,7 @@ export default function OrderDetail() {
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [order?._id]);
+  }, [order?._id, order?.trackingStatus]); // Re-run if status changes to stop polling
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' });
