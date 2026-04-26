@@ -62,7 +62,8 @@
   object-fit: contain;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.1));
+  /* Soft pink glow effect */
+  filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.08)) drop-shadow(0 0 15px rgba(255, 182, 193, 0.6));
 }
 
 /* RIGHT CONTENT */
