@@ -402,7 +402,7 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
           <div className="om-drawer-section">
             <h4 className="om-sect-title"><Truck size={16} /> Live Tracking</h4>
             <ShiprocketActivityTracker 
-              trackingData={order.trackingPayload} 
+              activities={order.trackingPayload?.activities || order.trackingActivities || []} 
               isSyncing={syncing}
             />
           </div>
@@ -418,9 +418,9 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
   );
 }
 
-function ShiprocketActivityTracker({ trackingData, isSyncing }) {
-  // 2. Filter internal metadata
-  const activities = (trackingData?.activities || []).filter(a => {
+function ShiprocketActivityTracker({ activities: rawActivities, isSyncing }) {
+  // 1. Filter internal metadata
+  const activities = (rawActivities || []).filter(a => {
     const s = a.status?.toLowerCase() || '';
     return !s.includes('metadata') && !s.includes('tracking_id') && !s.includes('awb_code');
   });
