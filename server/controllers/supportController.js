@@ -84,3 +84,13 @@ exports.updateIssueStatus = async (req, res) => {
     res.status(500).json({ success: false, message: 'Failed to update issue' });
   }
 };
+exports.getIssuesByOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const issues = await SupportIssue.find({ orderId }).sort({ createdAt: 1 }).lean();
+    res.json({ success: true, data: issues });
+  } catch (error) {
+    console.error('getIssuesByOrder error:', error);
+    res.status(500).json({ success: false, message: 'Failed to fetch issues' });
+  }
+};

@@ -76,6 +76,49 @@ export default function ChatSupport() {
     runIntroFlow([]);
   }, []);
 
+  // ✅ Auto-Heal Chat History: Fetch actual image/video URLs from server if they exist
+  useEffect(() => {
+    if (order?.displayId) {
+      fetch(`/api/support/order/${order.displayId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.data.length > 0) {
+            setMessages(prev => {
+              let updated = false;
+              const next = prev.map(msg => {
+                if (msg.from === 'user' && msg.mediaFiles?.some(mf => mf.isBlob)) {
+                  // Find matching issue from server based on description or proximity
+                  // For simplicity, we match the attachments found for this order
+                  const allServerAttachments = data.data.flatMap(issue => issue.attachments || []);
+                  
+                  const healedMedia = msg.mediaFiles.map(mf => {
+                    if (mf.isBlob) {
+                      // Try to find a server attachment with same type
+                      const match = allServerAttachments.find(sa => sa.fileType === mf.type);
+                      if (match) {
+                        updated = true;
+                        return { ...mf, url: match.url, isBlob: false };
+                      }
+                    }
+                    return mf;
+                  });
+                  return { ...msg, mediaFiles: healedMedia };
+                }
+                return msg;
+              });
+              
+              if (updated) {
+                localStorage.setItem(sessionKey, JSON.stringify({ messages: next, step: step }));
+                return next;
+              }
+              return prev;
+            });
+          }
+        })
+        .catch(err => console.error("History heal failed:", err));
+    }
+  }, [order?.displayId]);
+
   const runIntroFlow = (existingMessages = []) => {
     const orderMsg = order
       ? `Hi, I need help with a recent order. #${order.displayId}`

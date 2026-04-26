@@ -11,6 +11,7 @@ const upload = multer({
 
 // User submission - Public
 router.post('/submit', upload.array('attachments', 5), supportCtrl.submitSupportIssue);
+router.get('/order/:orderId', supportCtrl.getIssuesByOrder);
 
 // Admin routes - Protected for all Admins
 router.get('/admin/issues', protect, supportCtrl.getAllIssues);
