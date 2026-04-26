@@ -182,6 +182,15 @@ export default function OrderDetail() {
   const [trackingLoading, setTrackingLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Robust delivery check
+  const isDelivered = 
+    order?.trackingStatus?.toLowerCase() === 'delivered' || 
+    trackingData?.trackingStatus?.toLowerCase() === 'delivered' ||
+    (trackingData?.activities && trackingData.activities.some(a => {
+      const s = a.status?.toLowerCase() || '';
+      return s === 'delivered' || s === 'delivery_update' || s.includes('delivered');
+    }));
+
   useEffect(() => {
     // 1. If we don't have an order (e.g. page refresh), fetch it from API
     if (!order && orderId) {
@@ -299,7 +308,7 @@ export default function OrderDetail() {
                     <div className="od-mini-updating">Updating...</div>
                   )}
                 </div>
-                {(order.trackingStatus?.toLowerCase() === 'delivered' || trackingData?.trackingStatus?.toLowerCase() === 'delivered') && (
+                {isDelivered && (
                   <div className="od-chat-section">
                     <button className="od-chat-btn" onClick={() => navigate('/support/chat', { state: { order } })}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -310,7 +319,7 @@ export default function OrderDetail() {
                   </div>
                 )}
               </div>
-              {(order.trackingStatus?.toLowerCase() === 'delivered' || trackingData?.trackingStatus?.toLowerCase() === 'delivered') && (
+              {isDelivered && (
                 <div className="od-card rate-card">
                   <h2>Rate your experience</h2>
                   <div className="od-rate-box">

@@ -373,7 +373,34 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
 }
 
 function ShiprocketActivityTracker({ trackingData, isSyncing }) {
-  const activities = trackingData?.activities || [];
+  // 1. Status Mapping Helper
+  const formatStatus = (status) => {
+    if (!status) return '';
+    const s = status.toUpperCase();
+    const mapping = {
+      'PICKED_UP': 'Shipment Picked Up',
+      'IN_TRANSIT': 'In Transit',
+      'OUT_FOR_DELIVERY': 'Out for Delivery',
+      'OFD': 'Out for Delivery',
+      'DELIVERED': 'Delivered',
+      'DELIVERY_UPDATE': 'Delivered',
+      'RECEIVED_AT_DH': 'Reached Destination Hub',
+      'MH_RECEIVED': 'Reached Processing Center',
+      'SHIPPED': 'Shipped',
+      'LPD_GENERATED': 'Shipment Ready',
+      'CREATED': 'Order Created',
+      'EXPECTED': 'Scheduled for Delivery',
+      'UNDELIVERED_ATTEMPTED': 'Delivery Attempted',
+      'REPROMISE': 'Delivery Rescheduled'
+    };
+    return mapping[s] || status.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+  };
+
+  // 2. Filter internal metadata
+  const activities = (trackingData?.activities || []).filter(a => {
+    const s = a.status?.toLowerCase() || '';
+    return !s.includes('metadata') && !s.includes('tracking_id') && !s.includes('awb_code');
+  });
 
   if (activities.length === 0) {
     return (
@@ -389,17 +416,17 @@ function ShiprocketActivityTracker({ trackingData, isSyncing }) {
   return (
     <div className="shiprocket-tracker">
       {activities.map((a, i) => (
-        <div key={i} className="sr-step">
+        <div key={i} className={`sr-step ${a.status?.toLowerCase().includes('delivered') ? 'delivered' : ''}`}>
           <div className="sr-dot-line">
             <div className="sr-dot" />
             {i < activities.length - 1 && <div className="sr-line" />}
           </div>
           <div className="sr-info">
             <div className="sr-label-row">
-              <span className="sr-status">{a.status}</span>
+              <span className="sr-status">{formatStatus(a.status)}</span>
               <span className="sr-date">{getDay(a.date)}</span>
             </div>
-            <p className="sr-activity">{a.activity}</p>
+            <p className="sr-activity">{a.activity || (a.status?.toLowerCase().includes('delivered') ? 'Order successfully delivered.' : '')}</p>
             <p className="sr-meta">
               {getDay(a.date)} - {getTime(a.date)}
               {a.location && <span> · {a.location}</span>}

@@ -392,12 +392,22 @@
 .sr-dot {
   width: 10px;
   height: 10px;
-  background: #10b981;
+  background: #3b82f6; /* Changed to Blue for in-progress */
   border-radius: 50%;
   margin-top: 5px;
   z-index: 2;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
+
+.sr-step.delivered .sr-dot {
+  background: #10b981; /* Green for delivered */
+  box-shadow: 0 0 0 6px rgba(16, 185, 129, 0.2);
+}
+
+.sr-step.delivered .sr-status {
+  color: #10b981;
+}
+
 
 .sr-line {
   flex: 1;
