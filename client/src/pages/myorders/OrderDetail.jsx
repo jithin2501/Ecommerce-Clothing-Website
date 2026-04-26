@@ -210,6 +210,9 @@ export default function OrderDetail() {
           const data = await res.json();
           if (data.success) {
             setTrackingData(data);
+            if (data.trackingStatus) {
+              setOrder(prev => ({ ...prev, trackingStatus: data.trackingStatus }));
+            }
           }
         } catch (err) {
           console.error('Tracking fetch error:', err);
@@ -296,7 +299,7 @@ export default function OrderDetail() {
                     <div className="od-mini-updating">Updating...</div>
                   )}
                 </div>
-                {order.trackingStatus?.toLowerCase() === 'delivered' && (
+                {(order.trackingStatus?.toLowerCase() === 'delivered' || trackingData?.trackingStatus?.toLowerCase() === 'delivered') && (
                   <div className="od-chat-section">
                     <button className="od-chat-btn" onClick={() => navigate('/support/chat', { state: { order } })}>
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -307,7 +310,7 @@ export default function OrderDetail() {
                   </div>
                 )}
               </div>
-              {order.trackingStatus?.toLowerCase() === 'delivered' && (
+              {(order.trackingStatus?.toLowerCase() === 'delivered' || trackingData?.trackingStatus?.toLowerCase() === 'delivered') && (
                 <div className="od-card rate-card">
                   <h2>Rate your experience</h2>
                   <div className="od-rate-box">
