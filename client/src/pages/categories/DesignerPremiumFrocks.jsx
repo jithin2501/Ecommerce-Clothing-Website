@@ -29,9 +29,9 @@ export default function DesignerPremiumFrocks() {
   return (
     <div className="catpage-wrapper">
       <SEO 
-        title="Designer & Premium Frocks"
-        description="Shop the best designer and premium kids frocks in Kodigehalli, Bangalore. Exclusive boutique collections and custom-made luxury frocks at Sumathi Trends."
-        keywords="designer kids frocks Bangalore, boutique frocks Kodigehalli, luxury kids wear, premium frocks Sumathi Trends"
+        title="Designer & Premium Kids Frocks Bangalore | 0-12 Years"
+        description="Shop the best designer and premium kids frocks in Bangalore, Karnataka. Exclusive boutique collections and custom-made luxury frocks for ages 0-12 at Sumathi Trends."
+        keywords="designer kids frocks Bangalore, boutique kids wear Bangalore, 0-12 years luxury frocks, premium kids clothing Bangalore"
         url="https://sumathitrends.com/collections/designer-premium-frocks"
       />
 

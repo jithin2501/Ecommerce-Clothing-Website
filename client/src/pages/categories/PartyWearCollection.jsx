@@ -23,9 +23,9 @@ export default function PartyWearCollection() {
   return (
     <div className="catpage-wrapper">
       <SEO 
-        title="Party Wear Kids Collection"
-        description="Best kids party wear collection in Kodigehalli, Bangalore. Discover stunning net frocks, gown styles, and sequin dresses for your child at Sumathi Trends."
-        keywords="kids party wear Bangalore, best party frocks Kodigehalli, gown style frocks, sequin kids wear, Sumathi Trends party collection"
+        title="Party Wear Kids Collection Bangalore | 0-12 Years"
+        description="Best kids party wear collection in Bangalore, Karnataka. Discover stunning net frocks, gown styles, and sequin dresses for ages 0-12 at Sumathi Trends."
+        keywords="kids party wear Bangalore, party frocks Bangalore Karnataka, 0-12 years party wear, best kids clothing Bangalore"
         url="https://sumathitrends.com/collections/party-wear-collection"
       />
 

@@ -23,9 +23,9 @@ export default function TraditionalEthnicFrocks() {
   return (
     <div className="catpage-wrapper">
       <SEO 
-        title="Traditional & Ethnic Kids Frocks"
-        description="Best traditional and ethnic kids frocks in Kodigehalli, Bangalore. Shop authentic Pattu Pavadai, Banarasi silk, and Lehenga Choli for festivals at Sumathi Trends."
-        keywords="traditional kids wear Bangalore, best ethnic frocks Kodigehalli, Pattu Pavadai Bangalore, Banarasi silk kids, Sumathi Trends ethnic wear"
+        title="Traditional & Ethnic Kids Frocks Bangalore | 0-12 Years"
+        description="Best traditional and ethnic kids frocks in Bangalore, Karnataka. Shop authentic Pattu Pavadai, Banarasi silk, and Lehenga Choli for ages 0-12 at Sumathi Trends."
+        keywords="traditional kids wear Bangalore, ethnic kids wear Karnataka, 0-12 years ethnic wear, Pattu Pavadai Bangalore, best kids clothing Bangalore"
         url="https://sumathitrends.com/collections/traditional-ethnic-frocks"
       />
 
