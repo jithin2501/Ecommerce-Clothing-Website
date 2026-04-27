@@ -271,9 +271,21 @@ export default function ProductGrid({
     <div className="pg-container" ref={gridTopRef}>
       <div className="pg-grid">
         {paginatedItems.map((product) => {
-          const firstColor = product.colors?.[0];
-          const displayName = (firstColor?.productName && firstColor.productName.trim() !== '') ? firstColor.productName : product.name;
-          const displayPriceVal = (firstColor?.price != null && firstColor.price !== '') ? firstColor.price : product.price;
+          let displayVariant = product.colors?.[0];
+          
+          if (selectedColors.length > 0) {
+            const normalizedSelected = selectedColors.map(sc => sc.toLowerCase().trim());
+            const matching = product.colors?.find(c => {
+              const variantName = (c.name || '').toLowerCase();
+              const parts = variantName.split(/[\/,&\-]+/).map(s => s.trim()).filter(Boolean);
+              return parts.some(part => normalizedSelected.includes(part)) || normalizedSelected.includes(variantName);
+            });
+            if (matching) displayVariant = matching;
+          }
+
+          const displayName = (displayVariant?.productName && displayVariant.productName.trim() !== '') ? displayVariant.productName : product.name;
+          const displayPriceVal = (displayVariant?.price != null && displayVariant.price !== '') ? displayVariant.price : product.price;
+          const displayImg = (displayVariant?.image && displayVariant.image.trim() !== '') ? displayVariant.image : product.img;
 
           return (
             <Link
@@ -282,7 +294,7 @@ export default function ProductGrid({
               className="pg-card"
             >
               <div className={`pg-img-wrap ${product.stock <= 0 ? 'pg-out-of-stock' : ''}`}>
-                <img src={product.img} alt={displayName} />
+                <img src={displayImg} alt={displayName} />
                 {product.stock <= 0 && (
                   <div className="pg-out-overlay">
                     <span>Currently not available</span>

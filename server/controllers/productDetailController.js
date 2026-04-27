@@ -133,6 +133,16 @@ const upsertProductDetail = async (req, res) => {
       }
     }
 
+    // ── Sync color gallery primary images to the color objects ──
+    const colorsWithImages = colors.map(c => {
+      const cKey = colorKey(c.name);
+      const gallery = colorGalleries.find(g => g.colorName === cKey);
+      return {
+        ...c,
+        image: gallery && gallery.images.length > 0 ? gallery.images[0] : ''
+      };
+    });
+
     const detail = await ProductDetail.findOneAndUpdate(
       { product: productId },
       {
@@ -140,7 +150,7 @@ const upsertProductDetail = async (req, res) => {
         galleryImages: finalGallery,
         colorGalleries,
         sizes,
-        colors,
+        colors: colorsWithImages,
         deliveryDate,
         specifications,
         description,
@@ -153,7 +163,7 @@ const upsertProductDetail = async (req, res) => {
     );
 
     // Sync colors, inventory and stock back to Product model for fast filtering and inventory management
-    await Product.findByIdAndUpdate(productId, { colors, inventory, stock });
+    await Product.findByIdAndUpdate(productId, { colors: colorsWithImages, inventory, stock });
 
     res.json({ success: true, data: detail });
   } catch (err) {

@@ -24,6 +24,7 @@ const colorOptionSchema = new mongoose.Schema(
     hex:         { type: String, required: true },
     hexArray:    { type: [String], default: [] },
     price:       { type: Number, default: null },
+    image:       { type: String, default: '' },
   },
   { _id: false }
 );
