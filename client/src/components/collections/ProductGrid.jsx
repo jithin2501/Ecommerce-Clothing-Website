@@ -287,15 +287,26 @@ export default function ProductGrid({
           const displayPriceVal = (displayVariant?.price != null && displayVariant.price !== '') ? displayVariant.price : product.price;
           const displayImg = (displayVariant?.image && displayVariant.image.trim() !== '') ? displayVariant.image : product.img;
 
+          // Calculate variant-specific stock if a variant is selected
+          const variantStock = (displayVariant && product.inventory)
+            ? Object.entries(product.inventory).reduce((acc, [key, qty]) => {
+                // Key format is "ColorName:Size"
+                if (key.startsWith(`${displayVariant.name}:`)) return acc + (Number(qty) || 0);
+                return acc;
+              }, 0)
+            : product.stock;
+
+          const productLink = `/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}${displayVariant ? `?color=${encodeURIComponent(displayVariant.name)}` : ''}`;
+
           return (
             <Link
               key={product._id || product.id}
-              to={`/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}`}
+              to={productLink}
               className="pg-card"
             >
-              <div className={`pg-img-wrap ${product.stock <= 0 ? 'pg-out-of-stock' : ''}`}>
+              <div className={`pg-img-wrap ${variantStock <= 0 ? 'pg-out-of-stock' : ''}`}>
                 <img src={displayImg} alt={displayName} />
-                {product.stock <= 0 && (
+                {variantStock <= 0 && (
                   <div className="pg-out-overlay">
                     <span>Currently not available</span>
                   </div>

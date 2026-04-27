@@ -23,6 +23,7 @@ export default function ProductInfo({
   oldPrice     = null,
   sizes        = [],
   colors       = [],
+  preSelectedColor = null,
   deliveryDate = '5 Mar, Thu',
   productId    = null,
   galleryImg   = '',
@@ -39,6 +40,14 @@ export default function ProductInfo({
 }) {
   const [selectedSize,  setSelectedSize]  = useState('');
   const [selectedColor, setSelectedColor] = useState(colors[0]?.name || '');
+
+  useEffect(() => {
+    if (preSelectedColor) {
+      setSelectedColor(preSelectedColor);
+    } else if (colors.length > 0 && !selectedColor) {
+      setSelectedColor(colors[0].name);
+    }
+  }, [preSelectedColor, colors]);
   const { wishlist, toggleWishlist, isWishlisted } = useWishlist();
   const { addToCart } = useCart();
   const navigate = useNavigate();
