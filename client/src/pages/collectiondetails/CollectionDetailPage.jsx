@@ -74,7 +74,6 @@ export default function CollectionDetailPage() {
   const [loading,      setLoading]      = useState(true);
   const [notFound,     setNotFound]     = useState(false);
   const [activeImages, setActiveImages] = useState([]);
-  const [initialColor, setInitialColor] = useState(null);
   
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
@@ -168,7 +167,6 @@ export default function CollectionDetailPage() {
       setLoading(true);
       setNotFound(false);
       setDetail(null);
-      setInitialColor(null);
       try {
         let resolvedId = paramProductId || null;
         if (!resolvedId && productSlug) {
@@ -186,22 +184,8 @@ export default function CollectionDetailPage() {
         if (!cancelled) {
           if (dData.success) {
             setDetail(dData.data);
-            
-            const queryColor = new URLSearchParams(location.search).get('color');
-            let initialImages = dData.data.galleryImages || [];
-            
-            if (queryColor && dData.data.colorGalleries?.length) {
-                const key = queryColor.toLowerCase().replace(/\s+/g, '_');
-                const entry = dData.data.colorGalleries.find(g => g.colorName === key);
-                if (entry?.images?.length) {
-                    initialImages = entry.images;
-                    setInitialColor(queryColor);
-                }
-            } else if (dData.data.colorGalleries?.[0]?.images?.length) {
-                initialImages = dData.data.colorGalleries[0].images;
-                setInitialColor(dData.data.colors?.[0]?.name);
-            }
-            setActiveImages(initialImages);
+            const firstColorGallery = dData.data.colorGalleries?.[0]?.images;
+            setActiveImages(firstColorGallery?.length ? firstColorGallery : (dData.data.galleryImages || []));
           } else {
             setNotFound(true);
           }
@@ -267,7 +251,6 @@ export default function CollectionDetailPage() {
               oldPrice={product?.oldPrice}
               sizes={detail.sizes}
               colors={detail.colors}
-              preSelectedColor={initialColor}
               deliveryDate={detail.deliveryDate}
               productId={detail.product?._id}
               galleryImg={activeImages?.[0]}

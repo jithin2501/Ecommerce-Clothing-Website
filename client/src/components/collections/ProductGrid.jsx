@@ -271,42 +271,19 @@ export default function ProductGrid({
     <div className="pg-container" ref={gridTopRef}>
       <div className="pg-grid">
         {paginatedItems.map((product) => {
-          let displayVariant = product.colors?.[0];
-          
-          if (selectedColors.length > 0) {
-            const normalizedSelected = selectedColors.map(sc => sc.toLowerCase().trim());
-            const matching = product.colors?.find(c => {
-              const variantName = (c.name || '').toLowerCase();
-              const parts = variantName.split(/[\/,&\-]+/).map(s => s.trim()).filter(Boolean);
-              return parts.some(part => normalizedSelected.includes(part)) || normalizedSelected.includes(variantName);
-            });
-            if (matching) displayVariant = matching;
-          }
-
-          const displayName = (displayVariant?.productName && displayVariant.productName.trim() !== '') ? displayVariant.productName : product.name;
-          const displayPriceVal = (displayVariant?.price != null && displayVariant.price !== '') ? displayVariant.price : product.price;
-          const displayImg = (displayVariant?.image && displayVariant.image.trim() !== '') ? displayVariant.image : product.img;
-
-          // Calculate variant-specific stock if a variant is selected
-          const variantStock = (displayVariant && product.inventory)
-            ? Object.entries(product.inventory).reduce((acc, [key, qty]) => {
-                // Key format is "ColorName:Size"
-                if (key.startsWith(`${displayVariant.name}:`)) return acc + (Number(qty) || 0);
-                return acc;
-              }, 0)
-            : product.stock;
-
-          const productLink = `/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}${displayVariant ? `?color=${encodeURIComponent(displayVariant.name)}` : ''}`;
+          const firstColor = product.colors?.[0];
+          const displayName = (firstColor?.productName && firstColor.productName.trim() !== '') ? firstColor.productName : product.name;
+          const displayPriceVal = (firstColor?.price != null && firstColor.price !== '') ? firstColor.price : product.price;
 
           return (
             <Link
               key={product._id || product.id}
-              to={productLink}
+              to={`/collections/${product.ageGroup || toAgeGroup(product.age)}/${toSlug(product.name)}`}
               className="pg-card"
             >
-              <div className={`pg-img-wrap ${variantStock <= 0 ? 'pg-out-of-stock' : ''}`}>
-                <img src={displayImg} alt={displayName} />
-                {variantStock <= 0 && (
+              <div className={`pg-img-wrap ${product.stock <= 0 ? 'pg-out-of-stock' : ''}`}>
+                <img src={product.img} alt={displayName} />
+                {product.stock <= 0 && (
                   <div className="pg-out-overlay">
                     <span>Currently not available</span>
                   </div>
