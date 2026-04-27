@@ -117,12 +117,23 @@ export default function ProductGrid({
   // 1. Category & Subcategory Filter
   if (selectedCategories.length > 0) {
     filtered = filtered.filter(p => {
-      const pCats = Array.isArray(p.category) ? p.category : [p.category];
-      const matchCat = pCats.some(c => selectedCategories.includes(c));
+      const pCats = (Array.isArray(p.category) ? p.category : [p.category]).map(c => c.trim());
+      
+      const matchCat = pCats.some(c => {
+        if (selectedCategories.includes(c)) return true;
+        // Fallback for combined/split names
+        if (selectedCategories.includes('Occasion & Daily Wear Frocks')) {
+          if (c === 'Occasion Wear Frocks' || c === 'Daily Wear Frocks') return true;
+        }
+        if (c === 'Occasion & Daily Wear Frocks') {
+          if (selectedCategories.includes('Occasion Wear Frocks') || selectedCategories.includes('Daily Wear Frocks')) return true;
+        }
+        return false;
+      });
       
       if (selectedSubcategories.length > 0) {
         // Match either in the 'subCategory' (backend field) or 'category' array
-        const pSubCats = Array.isArray(p.subCategory) ? p.subCategory : [p.subCategory];
+        const pSubCats = (Array.isArray(p.subCategory) ? p.subCategory : [p.subCategory]).map(s => s.trim());
         const matchSub = pSubCats.some(s => selectedSubcategories.includes(s)) || pCats.some(c => selectedSubcategories.includes(c));
         return matchCat && matchSub;
       }

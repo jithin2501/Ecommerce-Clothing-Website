@@ -3,8 +3,7 @@ import '../../styles/collections/FilterSidebar.css';
 const RATINGS = [5, 4, 3, 2, 1];
 
 const CATEGORIES = [
-  'Occasion Wear Frocks',
-  'Daily Wear Frocks',
+  'Occasion & Daily Wear Frocks',
   'Party Wear Collection',
   'Designer & Premium Frocks',
   'Traditional & Ethnic Frocks',
@@ -12,25 +11,26 @@ const CATEGORIES = [
 ];
 
 const SUBCATEGORIES_MAP = {
-  'Occasion Wear Frocks': [
+  'Occasion & Daily Wear Frocks': [
     'Birthday Party Frocks', 'Wedding / Festive Frocks', 'Reception / Evening Wear',
-    'Photoshoot Special Frocks', 'Princess / Fancy Dress'
-  ],
-  'Daily Wear Frocks': [
-    'Casual Cotton Frocks', 'Playtime Frocks', 'School Casual Frocks',
-    'Summer Wear Frocks', 'Comfortable Home Wear'
+    'Photoshoot Special Frocks', 'Princess / Fancy Dress', 'Casual Cotton Frocks',
+    'Playtime Frocks', 'School Casual Frocks', 'Summer Wear Frocks', 'Comfortable Home Wear'
   ],
   'Party Wear Collection': [
     'Net Frocks', 'Gown Style Frocks', 'Layered / Frill Frocks',
-    'Sequin / Glitter Frocks', 'Designer Party Wear'
+    'Sequin / Glitter Frocks', 'Princess Frocks', 'Satin / Silk Dress',
+    'Velvet Frocks', 'Floral Embellished Frocks', 'Indo-Western Party Gowns',
+    'High-Low Frocks'
   ],
   'Designer & Premium Frocks': [
     'Boutique Designer Frocks', 'Handwork / Embroidery Frocks',
     'Custom Made Frocks', 'Luxury Collection'
   ],
   'Traditional & Ethnic Frocks': [
-    'Pattu / Silk Frocks', 'Lehenga Style Frocks', 'Anarkali Frocks',
-    'Indo-Western Styles', 'Festival Special (Diwali, Navratri, etc.)'
+    'Pattu Pavadai (Silk Frocks)', 'Banarasi Silk Frocks', 'Lehenga Choli Frocks',
+    'Anarkali Style Frocks', 'Cotton Ethnic Frocks', 'Indo-Western Fusion Frocks',
+    'Gota Patti / Zari Work Frocks', 'Kalamkari / Block Print Frocks',
+    'Dhoti Style Frocks', 'Half-Saree Style Frocks'
   ],
   'Fabric-Based Categories': [
     'Cotton Frocks', 'Net Frocks', 'Satin Frocks', 'Silk Frocks',
