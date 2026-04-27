@@ -35,28 +35,20 @@ export default function CollectionsPage() {
   const [sortBy, setSortBy] = useState('Newest Arrivals');
   const [productCount, setProductCount] = useState(0);
 
-  const lastSyncRef = useRef();
-
+  // Sync state from location.state when navigating (e.g. from breadcrumbs/navbar)
+  // This ensures "Clicking Collections" actually resets the view
   useEffect(() => {
-    // Only sync if we have a valid state and it's different from the last one we synced.
-    // This prevents the Sidebar selection from being overwritten by the original 
-    // navigation state during URL/pagination updates.
-    const stateKey = JSON.stringify(location.state || null);
-    if (location.state && stateKey !== lastSyncRef.current) {
-      const { category: stCat, subcategory: stSub, ageGroup: stAge } = location.state;
+    const { category: stCat, subcategory: stSub, ageGroup: stAge } = location.state || {};
 
-      setSelectedCategories(stCat ? [stCat] : []);
-      setSelectedSubcategories(stSub ? [stSub] : []);
-      setSelectedAgeGroups(stAge ? [stAge] : []);
+    setSelectedCategories(stCat ? [stCat] : []);
+    setSelectedSubcategories(stSub ? [stSub] : []);
+    setSelectedAgeGroups(stAge ? [stAge] : []);
 
-      // Clear secondary filters on major navigation
-      setSelectedColors([]);
-      setPriceMin(MIN_PRICE);
-      setPriceMax(MAX_PRICE);
-      setSelectedRatings([]);
-      
-      lastSyncRef.current = stateKey;
-    }
+    // Clear secondary filters on major navigation
+    setSelectedColors([]);
+    setPriceMin(MIN_PRICE);
+    setPriceMax(MAX_PRICE);
+    setSelectedRatings([]);
   }, [location.state]);
 
   // ── Sidebar section toggle state ──
