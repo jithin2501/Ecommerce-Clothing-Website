@@ -35,21 +35,29 @@ export default function CollectionsPage() {
   const [sortBy, setSortBy] = useState('Newest Arrivals');
   const [productCount, setProductCount] = useState(0);
 
-  // Sync state from location.state when navigating (e.g. from breadcrumbs/navbar)
-  // We use location.key to ensure this only runs on actual navigations, not state updates
+  const lastSyncRef = useRef();
+
   useEffect(() => {
-    const { category: stCat, subcategory: stSub, ageGroup: stAge } = location.state || {};
+    // Only sync if we have a valid state and it's different from the last one we synced.
+    // This prevents the Sidebar selection from being overwritten by the original 
+    // navigation state during URL/pagination updates.
+    const stateKey = JSON.stringify(location.state || null);
+    if (location.state && stateKey !== lastSyncRef.current) {
+      const { category: stCat, subcategory: stSub, ageGroup: stAge } = location.state;
 
-    setSelectedCategories(stCat ? [stCat] : []);
-    setSelectedSubcategories(stSub ? [stSub] : []);
-    setSelectedAgeGroups(stAge ? [stAge] : []);
+      setSelectedCategories(stCat ? [stCat] : []);
+      setSelectedSubcategories(stSub ? [stSub] : []);
+      setSelectedAgeGroups(stAge ? [stAge] : []);
 
-    // Clear secondary filters on major navigation
-    setSelectedColors([]);
-    setPriceMin(MIN_PRICE);
-    setPriceMax(MAX_PRICE);
-    setSelectedRatings([]);
-  }, [location.key]); // Trigger on navigation, not on state-only re-renders
+      // Clear secondary filters on major navigation
+      setSelectedColors([]);
+      setPriceMin(MIN_PRICE);
+      setPriceMax(MAX_PRICE);
+      setSelectedRatings([]);
+      
+      lastSyncRef.current = stateKey;
+    }
+  }, [location.state]);
 
   // ── Sidebar section toggle state ──
   const [open, setOpen] = useState({
@@ -97,7 +105,7 @@ export default function CollectionsPage() {
           <div className="agp-right">
             <div className="agp-toolbar">
               <h2 className="agp-gallery-title" style={{ margin: 0, fontWeight: '700', color: '#1A1A1A' }}>
-                {selectedCategories.length === 1 ? selectedCategories[0] : 'All Products'} <span style={{ color: '#9CA3AF', fontWeight: '400' }}>({productCount})</span>
+                All Products <span style={{ color: '#9CA3AF', fontWeight: '400' }}>({productCount})</span>
               </h2>
               <div className="agp-sort">
                 <span>Sort by:</span>

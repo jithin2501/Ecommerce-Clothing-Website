@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useLocation } from 'react-router-dom';
 import { useWishlist } from '../../context/WishlistContext';
 import '../../styles/collections/ProductGrid.css';
 
@@ -38,6 +38,7 @@ export default function ProductGrid({
   const { toggleWishlist, isWishlisted } = useWishlist();
   const [apiProducts, setApiProducts] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
   const currentPage = parseInt(searchParams.get('page') || '1', 10);
   const PAGE_SIZE = 15;
   const gridTopRef = useRef(null);
@@ -60,7 +61,7 @@ export default function ProductGrid({
       setSearchParams(prev => {
         prev.set('page', '1');
         return prev;
-      }, { replace: true });
+      }, { replace: true, state: location.state });
     }
     lastFiltersRef.current = currentFilters;
   }, [
