@@ -203,9 +203,20 @@ export default function FilterSidebar({
                 <label className="filter-checkbox-label">
                   <input type="checkbox" checked={selectedCategories.includes(cat)}
                     onChange={() => {
-                      toggleItem(cat, selectedCategories, setSelectedCategories);
-                      // Optimization: If unchecking category, we could clear its subcategories
-                      // but showing specific subcategories based on selection is handled in rendering
+                      const isSelected = selectedCategories.includes(cat);
+                      let newCategories;
+                      if (isSelected) {
+                        newCategories = selectedCategories.filter(v => v !== cat);
+                      } else {
+                        newCategories = [...selectedCategories, cat];
+                      }
+                      setSelectedCategories(newCategories);
+
+                      // Clear subcategories that don't belong to the newly selected categories
+                      setSelectedSubcategories(prev => {
+                        const validSubcategories = newCategories.flatMap(c => SUBCATEGORIES_MAP[c] || []);
+                        return prev.filter(sub => validSubcategories.includes(sub));
+                      });
                     }}
                     className="filter-checkbox" />
                   <span className={"filter-label-text" + (selectedCategories.includes(cat) ? ' active' : '')}>{cat}</span>

@@ -36,7 +36,7 @@ export default function CollectionsPage() {
   const [productCount, setProductCount] = useState(0);
 
   // Sync state from location.state when navigating (e.g. from breadcrumbs/navbar)
-  // This ensures "Clicking Collections" actually resets the view
+  // We use location.key to ensure this only runs on actual navigations, not state updates
   useEffect(() => {
     const { category: stCat, subcategory: stSub, ageGroup: stAge } = location.state || {};
 
@@ -49,7 +49,7 @@ export default function CollectionsPage() {
     setPriceMin(MIN_PRICE);
     setPriceMax(MAX_PRICE);
     setSelectedRatings([]);
-  }, [location.state]);
+  }, [location.key]); // Trigger on navigation, not on state-only re-renders
 
   // ── Sidebar section toggle state ──
   const [open, setOpen] = useState({
@@ -97,7 +97,7 @@ export default function CollectionsPage() {
           <div className="agp-right">
             <div className="agp-toolbar">
               <h2 className="agp-gallery-title" style={{ margin: 0, fontWeight: '700', color: '#1A1A1A' }}>
-                All Products <span style={{ color: '#9CA3AF', fontWeight: '400' }}>({productCount})</span>
+                {selectedCategories.length === 1 ? selectedCategories[0] : 'All Products'} <span style={{ color: '#9CA3AF', fontWeight: '400' }}>({productCount})</span>
               </h2>
               <div className="agp-sort">
                 <span>Sort by:</span>
