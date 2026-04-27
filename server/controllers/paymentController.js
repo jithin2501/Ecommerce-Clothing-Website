@@ -94,6 +94,7 @@ exports.createOrder = async (req, res) => {
       currency,
       items: validatedItems,
       shippingAddress,
+      giftWrapping: !!giftWrapping,
       status: 'pending'
     });
 

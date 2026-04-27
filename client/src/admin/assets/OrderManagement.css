@@ -152,6 +152,20 @@
   color: #1e293b;
 }
 
+.om-amount-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.om-gift-tag {
+  font-size: 0.7rem;
+  color: #10b981;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
 .om-tracking-cell {
   display: flex;
   align-items: center;

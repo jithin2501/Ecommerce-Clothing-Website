@@ -212,7 +212,12 @@ export default function OrderManagement() {
                       <span className="om-client-sub">{o.userEmail || o.user?.email || 'N/A'}</span>
                     </div>
                   </td>
-                  <td><span className="om-amount">₹{o.amount.toLocaleString()}</span></td>
+                  <td>
+                    <div className="om-amount-cell">
+                      <span className="om-amount">₹{o.amount.toLocaleString()}</span>
+                      {o.giftWrapping && <span className="om-gift-tag">(Gift)</span>}
+                    </div>
+                  </td>
                   <td>
                     <div className="om-tracking-cell">
                       {(() => {
@@ -334,9 +339,10 @@ function OrderDrawer({ order, onClose, onSync, syncing }) {
                  `).join('')}
               </div>
               <div class="p-total-box">
-                <div class="p-total-row"><span>Sub Total (Excl. Tax)</span><span>₹${(order.amount / 1.05).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
-                <div class="p-total-row"><span>CGST (2.5%)</span><span>₹${((order.amount - (order.amount / 1.05)) / 2).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
-                <div class="p-total-row"><span>SGST (2.5%)</span><span>₹${((order.amount - (order.amount / 1.05)) / 2).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+                <div class="p-total-row"><span>Sub Total (Excl. Tax)</span><span>₹${((order.amount - (order.giftWrapping ? 50 : 0)) / 1.05).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+                <div class="p-total-row"><span>CGST (2.5%)</span><span>₹${(((order.amount - (order.giftWrapping ? 50 : 0)) - ((order.amount - (order.giftWrapping ? 50 : 0)) / 1.05)) / 2).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+                <div class="p-total-row"><span>SGST (2.5%)</span><span>₹${(((order.amount - (order.giftWrapping ? 50 : 0)) - ((order.amount - (order.giftWrapping ? 50 : 0)) / 1.05)) / 2).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
+                ${order.giftWrapping ? `<div class="p-total-row"><span>Gift Wrapping</span><span>₹50.00</span></div>` : ''}
                 <div class="p-total-row p-total-final"><span>Total Amount</span><span>₹${order.amount.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span></div>
               </div>
               <div style="margin-top: 40px; text-align: center; font-size: 9px; color: #94A3B8;">
