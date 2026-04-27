@@ -53,7 +53,7 @@ export default function WhyUs() {
               alt="Why Choose Sumathi Trends"
               className="why-img"
               onError={(e) => {
-                e.target.src = 'images/homepage/yopa.png';
+                e.target.src = 'images/homepage/why.jpg';
               }}
             />
           </div>
