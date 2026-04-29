@@ -101,6 +101,27 @@ export function WishlistProvider({ children }) {
     return () => clearTimeout(syncTimeout);
   }, [wishlist, isLoaded]);
 
+  const triggerImmediateSync = async (newWishlist) => {
+    const user = auth.currentUser;
+    if (!user) return;
+    try {
+      const syncData = newWishlist.map(item => ({
+        productId: item.id || item._id,
+        name: item.name,
+        img: item.img,
+        price: String(item.price),
+        category: Array.isArray(item.category) ? item.category[0] : item.category
+      }));
+      await authFetch('/api/client-auth/sync-wishlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: user.uid, wishlist: syncData })
+      });
+    } catch (err) {
+      console.error('Failed to immediate sync wishlist:', err);
+    }
+  };
+
   const toggleWishlist = (product) => {
     if (!auth.currentUser) {
       alert("Please login to add products to your wishlist");
@@ -111,13 +132,23 @@ export function WishlistProvider({ children }) {
     setWishlist(prev => {
       const productId = product.id || product._id;
       const exists = prev.find(p => (p.id === productId || p._id === productId));
-      if (exists) return prev.filter(p => (p.id !== productId && p._id !== productId));
-      return [...prev, { ...product, id: productId }];
+      let newWishlist;
+      if (exists) {
+        newWishlist = prev.filter(p => (p.id !== productId && p._id !== productId));
+      } else {
+        newWishlist = [...prev, { ...product, id: productId }];
+      }
+      triggerImmediateSync(newWishlist);
+      return newWishlist;
     });
   };
 
   const removeFromWishlist = (id) => {
-    setWishlist(prev => prev.filter(p => (p.id !== id && p._id !== id)));
+    setWishlist(prev => {
+      const newWishlist = prev.filter(p => (p.id !== id && p._id !== id));
+      triggerImmediateSync(newWishlist);
+      return newWishlist;
+    });
   };
 
   const isWishlisted = (id) => wishlist.some(p => (p.id === id || p._id === id));
