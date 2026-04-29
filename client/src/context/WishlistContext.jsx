@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { auth } from '../firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
@@ -20,6 +20,7 @@ function loadLocalWishlist() {
 export function WishlistProvider({ children }) {
   const [wishlist, setWishlist] = useState(loadLocalWishlist);
   const [isLoaded, setIsLoaded] = useState(false);
+  const wasLoggedIn = useRef(false);
   const navigate = useNavigate();
 
   // 1. Persist to localStorage always (for instant feedback on refresh)
@@ -31,6 +32,7 @@ export function WishlistProvider({ children }) {
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, async (user) => {
       if (user) {
+        wasLoggedIn.current = true;
         try {
           const res = await authFetch(`/api/client-auth/profile/${user.uid}`);
           const data = await res.json();
@@ -58,7 +60,12 @@ export function WishlistProvider({ children }) {
           setIsLoaded(true);
         }
       } else {
-        // If logged out, we keep the LOCAL wishlist but stop DB sync
+        // If transitioning from logged in to logged out, clear the wishlist
+        if (wasLoggedIn.current) {
+          setWishlist([]);
+          localStorage.removeItem(STORAGE_KEY);
+          wasLoggedIn.current = false;
+        }
         setIsLoaded(true);
       }
     });
