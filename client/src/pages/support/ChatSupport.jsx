@@ -325,7 +325,7 @@ export default function ChatSupport() {
           setActiveSubNav={setActiveSubNav}
         />
 
-        <main className="sh-main">
+        <main className="sh-main cs-main-wrapper">
           <div className="cs-chat-wrap">
 
             <div className="cs-chat-header">
