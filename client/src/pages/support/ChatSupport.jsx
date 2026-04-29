@@ -316,8 +316,8 @@ export default function ChatSupport() {
   const canAddMore = imgCount < 4 || vidCount < 2;
 
   return (
-    <div className="sh-page">
-      <div className="sh-container">
+    <div className="sh-page cs-page">
+      <div className="sh-container cs-container">
         <Sidebar
           activeNav={activeNav}
           setActiveNav={setActiveNav}
@@ -325,7 +325,7 @@ export default function ChatSupport() {
           setActiveSubNav={setActiveSubNav}
         />
 
-        <main className="sh-main cs-main-wrapper">
+        <main className="cs-main-wrapper">
           <div className="cs-chat-wrap">
 
             <div className="cs-chat-header">
