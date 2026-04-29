@@ -6,7 +6,7 @@
 /* ── CHAT WINDOW ── */
 .cs-container {
   align-items: stretch !important;
-  height: calc(100vh - 120px);
+  height: 620px; /* Fixed height so it stays perfectly proportioned when zooming */
   margin-top: 20px;
 }
 
