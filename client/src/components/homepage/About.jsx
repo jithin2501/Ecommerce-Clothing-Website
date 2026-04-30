@@ -28,7 +28,7 @@ export default function About() {
         <div className="about">
           <div className="about-visuals">
             <img
-              src="images/homepage/About1.png"
+              src="images/homepage/About.webp"
               alt="About Sumathi Trends"
               className="about-img"
             />

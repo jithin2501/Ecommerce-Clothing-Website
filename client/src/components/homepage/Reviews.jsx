@@ -49,7 +49,7 @@ export default function Reviews() {
         <div className="rv2-layout">
           <div className="rv2-left">
             <img
-              src="images/homepage/review.jpg"
+              src="images/homepage/review.webp"
               alt="Happy children"
               className="rv2-img"
               onError={(e) => {

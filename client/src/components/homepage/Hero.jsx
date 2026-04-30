@@ -80,9 +80,9 @@ export default function Hero() {
             </div>
 
             {/* Hidden H1 for SEO ranking without affecting design */}
-            <h1 className="sr-only" style={{ 
-              position: 'absolute', width: '1px', height: '1px', padding: '0', 
-              margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', border: '0' 
+            <h1 className="sr-only" style={{
+              position: 'absolute', width: '1px', height: '1px', padding: '0',
+              margin: '-1px', overflow: 'hidden', clip: 'rect(0, 0, 0, 0)', border: '0'
             }}>
               Kidswear & Kids Cloths in Bangalore Karnataka | 0-12 Years
             </h1>
@@ -96,7 +96,7 @@ export default function Hero() {
             </div>
 
             <p className="hero-desc">
-              Discover the <strong>Best Kids Clothing in Kodigehalli & Bangalore</strong>. 
+              Discover the <strong>Best Kids Clothing in Kodigehalli & Bangalore</strong>.
               Crafted with love using premium fabrics, designed for comfort and style for every little adventure from ages 0–12.
             </p>
 
@@ -124,13 +124,9 @@ export default function Hero() {
           {/* Right: Visuals */}
           <div className="hero-visuals">
             <img
-              src="/images/homepage/hero.png"
+              src="/images/homepage/hero.webp"
               alt="Model"
               className="main-model"
-              onError={(e) => {
-                e.target.src =
-                  'https://images.unsplash.com/photo-1519234221711-37d353664d92?q=80&w=800&auto=format&fit=crop';
-              }}
             />
           </div>
 
